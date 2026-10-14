@@ -1,0 +1,16 @@
+/.env
+/.env.*
+!/.env.example
+/.tools/
+/vendor/
+/node_modules/
+/.vscode/
+/writable/cache/
+/writable/logs/
+/writable/session/
+/.phpunit.result.cache
+/coverage/
+/public/build/
+/docs/host-probe/upload/
+*.sql
+*.zip
