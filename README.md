@@ -4,7 +4,7 @@ Local VS Code workspace for the one-month Talas AppDev project. The agreed stack
 
 ## Current state
 
-The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. Public auth routes and session-protected student/admin landing routes are configured. Database schema, first-admin provisioning, and product features are still pending. The development blueprint is in `docs/development-blueprint.md`, coding instructions are in `AGENTS.md`, and the Git/GitHub procedure is in `docs/version-control.md`.
+The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. Public auth routes and session-protected student/admin landing routes are configured. F-03 subject management is accepted on `feature/F-03-subject-management`; the isolated local MySQL-compatible database is configured, migrations are applied, and the full PHPUnit suite passes (11 tests, 56 assertions). The browser review used desktop and zoom-based narrow-width checks; a phone viewport was not separately emulated. The original shared XAMPP MariaDB data directory has a corrupt system table and was left untouched; Talas uses a separate local instance. First-admin provisioning and hosted database creation are pending. See `docs/database-setup.md` for local settings and recovery boundaries. The development blueprint is in `docs/development-blueprint.md`, coding instructions are in `AGENTS.md`, and the Git/GitHub procedure is in `docs/version-control.md`.
 
 ## Local prerequisites found
 
@@ -16,7 +16,7 @@ The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are in
 ## Next setup steps
 
 1. For Composer operations, run `C:\xampp\php\php.exe -d extension=intl -d extension=zip .tools\composer.phar install`.
-2. Create a local MySQL database and untracked `.env`; add migrations and complete database-backed auth checks and first-admin provisioning.
+2. Complete database-backed authentication checks and decide a safe first-admin provisioning flow. The isolated local database and `.env` are already configured; see `docs/database-setup.md`.
 3. Verify the specific InfinityFree account's PHP extensions, HTTPS, `.htaccess` behavior, and private-path denials before the first upload.
 
 The starter and Shield were installed from their official Composer packages. Do not substitute hand-written framework files.

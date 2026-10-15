@@ -28,9 +28,9 @@ Treat any readable private path as a release blocker. A rewrite to a public fron
 
 - [ ] Upload a reviewed snapshot over FTP/FTPS; exclude `.env`, credentials, real records, local logs, development-only packages, and backups.
 - [ ] Configure secrets through the documented protected configuration method; confirm the file cannot be fetched directly.
-- [ ] Apply reviewed migrations using the approved one-time process or reviewed SQL import. Remove any one-time setup endpoint immediately afterward.
+- [ ] Apply reviewed migrations, including the subject schema, using the approved one-time process or reviewed SQL import. Remove any one-time setup endpoint immediately afterward.
 - [ ] Use synthetic demo accounts/data only.
-- [ ] Smoke-check sign-in/out, student/admin boundaries, cross-user isolation, subject/topic/session flows, summaries, print output, HTTPS, and all protected-path denials.
+- [ ] Smoke-check sign-in/out, student/admin boundaries, subject create/list/view/edit/delete, cross-user isolation, topic/session flows, summaries, print output, HTTPS, and all protected-path denials.
 - [ ] Remove temporary probe files and confirm they are inaccessible after removal.
 - [ ] Record the deployed revision, date, checks, and any host behavior that remains unverified.
 

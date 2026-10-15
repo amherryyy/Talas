@@ -62,4 +62,4 @@ These items affect product behavior. The implementer must ask the project owner 
 
 ## Traceability status
 
-All items above are **planned, not implemented**. Link each story, pull request, and test evidence to its requirement ID as work begins. Update this document and `docs/deployment.md` when accepted behavior or deployment controls change.
+F-03 subject management is accepted on `feature/F-03-subject-management`. The owner-scoped model/controller, student routes, and server-rendered views are prepared. All migrations are applied to the isolated local MySQL-compatible database, and the full PHPUnit suite passed (11 tests, 56 assertions), including subject CRUD, validation, CSRF, role denial, cross-owner denial, and SQLite migration setup. The browser review used desktop and zoom-based narrow-width checks; a phone viewport was not separately emulated. Other requirements are planned until their corresponding stories are implemented and accepted. Link each story, pull request, and verification evidence to its requirement ID. Update this document and `docs/deployment.md` when accepted behavior or deployment controls change.

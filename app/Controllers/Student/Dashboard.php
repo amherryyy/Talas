@@ -11,7 +11,9 @@ class Dashboard extends BaseController
         return view('role_landing', [
             'pageTitle' => 'Student workspace',
             'heading'   => 'Your Talas workspace',
-            'message'   => 'Your private learning workspace will appear here as the approved course features are built.',
+            'message'   => 'Start by organizing the subjects you want to study.',
+            'actionHref'  => site_url('student/subjects'),
+            'actionLabel' => 'Manage subjects',
         ]);
     }
 }

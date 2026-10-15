@@ -11,7 +11,8 @@
         h1 { margin: 0 0 1rem; font-size: clamp(1.75rem, 5vw, 2.5rem); }
         p { max-width: 38rem; line-height: 1.65; }
         button { margin-top: 1rem; padding: .7rem 1rem; border: 0; border-radius: .5rem; color: #fff; background: #176b55; font: inherit; cursor: pointer; }
-        button:focus-visible { outline: 3px solid #e4a83a; outline-offset: 3px; }
+        button:focus-visible, a:focus-visible { outline: 3px solid #e4a83a; outline-offset: 3px; }
+        .action { display: inline-block; margin: .5rem 0; padding: .7rem 1rem; border-radius: .5rem; color: #fff; background: #176b55; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -19,6 +20,9 @@
     <p>Talas 2.0</p>
     <h1><?= esc($heading) ?></h1>
     <p><?= esc($message) ?></p>
+    <?php if (isset($actionHref, $actionLabel)): ?>
+        <p><a class="action" href="<?= esc($actionHref) ?>"><?= esc($actionLabel) ?></a></p>
+    <?php endif ?>
     <form method="post" action="<?= esc(site_url('logout')) ?>">
         <?= csrf_field() ?>
         <button type="submit">Sign out</button>
