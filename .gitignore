@@ -10,6 +10,7 @@
 /writable/session/
 /.phpunit.result.cache
 /coverage/
+/build/
 /public/build/
 /docs/host-probe/upload/
 *.sql

@@ -77,4 +77,4 @@ The formal project flow, security gates, roles, backlog transitions, implementat
 - Obtain the exact approved Phase 2 rubric or draft; the referenced chat only exposes the request, not its answer.
 - Identify the domain's exact web directory and review the production layout for this fixed document root; the temporary probe confirmed PHP, HTTPS, routing, and fixture-path denials.
 - Decide whether the instructor expects a live deployed demo or local demo plus hosted snapshot.
-- Create a local database and complete the hosted database/import-path check before database-backed authentication acceptance.
+- Keep the original XAMPP MariaDB data directory isolated from Talas because its `mysql.db` table is corrupt. The separate local Talas instance and schema are configured; complete database-backed authorization checks and the hosted database/import-path check before database-backed authentication acceptance. See [`docs/database-setup.md`](database-setup.md).

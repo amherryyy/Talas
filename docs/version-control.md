@@ -6,7 +6,7 @@ Replace example repository URLs, branch names, and file paths with the actual va
 
 ## Current repository state
 
-As checked on 2026-10-15, the repository is on an unborn `main` branch: it has no commits and no remote. The scaffold files are untracked. The owner plans to publish the repository to GitHub. Do not run `git pull` before a remote exists, and do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+As checked on 2026-10-15, `main` tracks `origin/main` at `b836274` (`chore: establish Talas CI4 foundation`); the `origin` remote is configured. The current checkout is `feature/F-03-subject-management`, based on that same commit, with the accepted F-03 implementation prepared for selective staging and integration. The owner authorized staging, committing, pushing, and merging F-03 after review; F-04 story-intake documentation remains separate and F-04 implementation must use its own branch after F-03 integration. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 
 ## One-time GitHub setup
 
