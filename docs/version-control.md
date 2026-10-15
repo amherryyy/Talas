@@ -6,7 +6,7 @@ Replace example repository URLs, branch names, and file paths with the actual va
 
 ## Current repository state
 
-As checked on 2026-10-15, `main` tracks `origin/main` at `b836274` (`chore: establish Talas CI4 foundation`); the `origin` remote is configured. The current checkout is `feature/F-03-subject-management`, based on that same commit, with the accepted F-03 implementation prepared for selective staging and integration. The owner authorized staging, committing, pushing, and merging F-03 after review; F-04 story-intake documentation remains separate and F-04 implementation must use its own branch after F-03 integration. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+As checked on 2026-10-16, the current checkout is `feature/F-04-topic-management`; F-04 through F-06 are committed as `f346f42`, and accepted F-07 is committed as `c60e6b8`. The two local story commits have not yet been published. F-03 was merged through PR #1 and the `origin` remote is configured. Never merge or deploy without separate owner authorization. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 
 ## One-time GitHub setup
 
@@ -112,7 +112,7 @@ Push a story branch only when the owner has authorized publication:
 git push -u origin feature/F-02-role-boundaries
 ```
 
-Open a pull request targeting `main`. Include the story and requirement IDs, user-visible change, security/privacy impact, checks and results, checks not run and why, AI-use log status, and known limitations. Link related deployment notes when relevant. Review the concrete GitHub diff and CI results; a green build does not replace authorization, privacy, or browser checks.
+Open a pull request targeting `main` with a complete, self-contained description. Use `.github/PULL_REQUEST_TEMPLATE.md` and fill in every applicable section: story/requirement IDs and motivation, user-visible changes, security/privacy impact, verification with actual results (including checks not run and why), AI-use log status, and known limitations or deployment impact. Link related docs when relevant. Keep the title concise and specific; write the body so a reviewer can understand the change without reconstructing it from commit messages. Review the concrete GitHub diff and CI results; a green build does not replace authorization, privacy, or browser checks.
 
 After owner review and acceptance, merge using the repository's selected GitHub review process. Do not merge or deploy on the owner's behalf. Then update local `main` with `git pull --ff-only origin main` before beginning the next story branch. Keep the branch until the merge is confirmed; delete it only through the normal GitHub cleanup after confirmation.
 

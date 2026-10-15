@@ -4,8 +4,11 @@
 /.tools/
 /vendor/
 /node_modules/
+/playwright-report/
+/test-results/
 /.vscode/
 /writable/cache/
+/writable/debugbar/
 /writable/logs/
 /writable/session/
 /.phpunit.result.cache

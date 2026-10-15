@@ -64,7 +64,7 @@ The formal project flow, security gates, roles, backlog transitions, implementat
 
 ## Test, CI, and security gates
 
-**Local tests:** Unit tests for priority order, daily-plan capacity, session duration bounds, and Aralytics totals; feature tests for registration/login, student/admin authorization, owner isolation, validation, CSRF-protected writes, subject/topic/session CRUD, and print data scoping. Manual mobile/desktop and keyboard checks cover the timer, plan, forms, and print layout.
+**Local tests:** Unit tests for priority order, daily-plan capacity, session duration bounds, and Aralytics totals; feature tests for registration/login, student/admin authorization, owner isolation, validation, CSRF-protected writes, subject/topic/session CRUD, and print data scoping. Playwright is a development-only browser test for responsive page checks; manual mobile/desktop and keyboard checks still cover interaction quality and print layout.
 
 **CI after a GitHub repo exists:** On each pull request, use a PHP version matching InfinityFree, install locked Composer dependencies, run PHP syntax/style checks and PHPUnit, then run `composer audit`. A MySQL service can run migration and focused integration tests. Keep the workflow read-only; no hosted credentials in CI. Add a dependency-update alert if available. No CI file is installed yet because there is no repo.
 
