@@ -289,15 +289,28 @@ How the student verified and can explain the result: Before the feedback update,
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```
 
-### F-06 priority acceptance
+### F-06 priority acceptance and F-07 story intake
 
 ```text
-Date / story: 2026-10-16 / F-06 owner acceptance
+Date / story: 2026-10-16 / F-06 owner acceptance and F-07 plan-generation intake
 Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
 Allowed use confirmed by: The project owner accepted F-06 after visual review and asked to continue development. Instructor/course permission remains to be checked.
-Assistance used (explanation, planning, code draft, debugging, review): Documentation update recording F-06 visual acceptance.
-Suggestions or code retained: Recorded F-06 visual acceptance; no application code changed.
-Student changes and decisions: The owner accepted the F-06 priority page on 2026-10-16.
-How the student verified and can explain the result: The owner reviewed the authenticated priority page populated with synthetic topics and accepted it; the automated verification is recorded in the F-04/F-05/F-06 verification continuation above.
+Assistance used (explanation, planning, code draft, debugging, review): Documentation updates and drafting an F-07 story brief with explicit proposed rules.
+Suggestions or code retained: Recorded F-06 visual acceptance; drafted proposed daily-plan allocation, edit, bounds, and persistence rules for owner review. No F-07 application code was written.
+Student changes and decisions: The owner accepted the F-06 priority page on 2026-10-16. At the time of this entry, F-04/F-05 final story acceptance remained pending; both were accepted later on 2026-10-16. F-07 rule proposals await owner decision.
+How the student verified and can explain the result: Compared the intake with F-07, S-02, S-03, S-04, F-06 and the development blueprint; no tests or code checks were needed because application code did not change.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-07 daily plan implementation
+
+```text
+Date / story: 2026-10-16 / implement F-07 daily plan generation and adjustment
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner approved the proposed F-07 defaults in this conversation. Instructor/course permission remains to be checked.
+Assistance used (explanation, planning, code draft, debugging, review): Plan service, owner-scoped persistence and controller, migration, server-rendered adjustment forms, tests, and documentation.
+Suggestions or code retained: Added daily generation from unfinished topics in F-06 order; duration adjustments, removal, reordering, per-date persistence, and replacement confirmation. Saved plan items retain title/subject snapshots and use owner-scoped database operations.
+Student changes and decisions: The owner approved a 15–480 minute input, one 25-minute block per unfinished topic with the last shortened to fit, editable/reorderable/removable blocks limited by the time cap, and one saved plan per local date with confirmation before replacement. The owner accepted F-07 on 2026-10-16 and authorized Git actions.
+How the student verified and can explain the result: Full PHPUnit suite passed (34 tests, 307 assertions); PHP syntax checks for changed PHP files passed; `git diff --check` passed with line-ending notices; and the F-07 migration applied to the isolated review database. Composer audit could not reach Packagist through the configured unavailable proxy. Playwright could not start a worker (`spawn EPERM`), and computer-use browser review stopped because the tool could not determine the browser URL with sufficient confidence. Manual browser review remains open.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```
