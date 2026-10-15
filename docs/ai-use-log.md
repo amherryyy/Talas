@@ -2,6 +2,17 @@
 
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
+### Playwright browser-test setup
+
+Date / story: 2026-10-15 / reusable responsive browser checks
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner explicitly requested Playwright for future responsive checks in this conversation. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Test-tool selection, configuration, responsive test implementation, and documentation.
+Suggestions or code retained: Development-only Playwright dependency and `npm test` coverage for login, subject list, and topic search/filter viewports.
+Student changes and decisions: The owner chose to use Playwright whenever responsive browser testing is needed.
+How the student verified and can explain the result: `npm test` passed the login-page responsive test at 320, 400, 768, and 1280 CSS-pixel widths. The authenticated subject/topic test was skipped because `TALAS_E2E_EMAIL` and `TALAS_E2E_PASSWORD` were not set; those credentials remain local shell variables and are never stored in the repository.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+
 **Policy status:** On 2026-10-14, the project owner directed that uncertainty about instructor rules will not block development. This log records assistance factually; the owner remains responsible for applicable course disclosure requirements.
 
 Copy this entry for each project task where an LLM materially contributed:
@@ -134,6 +145,32 @@ How the student verified and can explain the result: Confirmed XAMPP PHP 8.2.12 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### F-04 topic-management story intake
+
+```text
+Date / story: 2026-10-15 / prepare F-04 student topic-management story
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner requested the next task after accepting F-03 and answered the F-04 product-decision questions.
+Assistance used (explanation, planning, code draft, debugging, review): Backlog intake, security and privacy criteria, and story drafting.
+Suggestions or code retained: Drafted F-04 acceptance criteria, boundaries, and verification plan. No application code changed.
+Student changes and decisions: The owner approved required 120-character topic titles, duplicate titles, optional date-only due dates (past dates allowed), low/medium/high importance, not-started/in-progress/done progress, medium/not-started creation defaults, and blocking topic deletion while saved sessions reference the topic.
+How the student verified and can explain the result: Compared the brief to F-04, S-02 through S-04, and F-13 in `docs/requirements.md`; `git diff --check` passed. No tests, syntax checks, or audit were run because this was a documentation-only story intake.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### F-04 topic-management implementation
+
+```text
+Date / story: 2026-10-15 / implement F-04 student topic management
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner approved the F-04 product rules and asked to continue to the next task after F-03 acceptance; F-03 was merged before implementation began.
+Assistance used (explanation, planning, code draft, debugging, review): Owner-scoped data model and migration design, routes/controller/views, feature tests, pull request workflow documentation, and verification planning.
+Suggestions or code retained: Added the topic schema, owner-scoped topic model/controller, nested student routes, escaped server-rendered list/detail/form views, session-reference deletion guard, and tests. Added a pull request template and documented a complete description requirement for every PR; improved the F-03 PR description.
+Student changes and decisions: The owner approved required titles up to 120 characters, duplicates, optional date-only due dates, low/medium/high importance, not-started/in-progress/done progress, medium/not-started defaults, and blocking deletion while study sessions reference a topic.
+How the student verified and can explain the result: Applied migration `2026-10-15-000002_CreateTopics` to the isolated local database. Full PHPUnit suite passed with 17 tests and 135 assertions; PHPUnit emitted one warning because no code coverage driver is installed. PHP syntax checks passed for changed PHP files. Desktop browser review showed the subject topic section and the add-topic form with an optional date field and Medium / Not started defaults. Manual keyboard traversal and a narrow device viewport were not completed because computer-use input reported user activity during the browser session. No dependencies changed, so the locked dependency set is unchanged from the preceding clean audit.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ## Prior assistance recorded
 
 ### Talas workflow template adaptation
@@ -146,6 +183,44 @@ Assistance used (explanation, planning, code draft, debugging, review): Workflow
 Suggestions or code retained: Talas-specific repository settings, task brief, branch safeguards, verification statuses, database/security handling, release steps, and milestone review guidance.
 Student changes and decisions: The project owner supplied the workflow template and asked to integrate compatible practices. Review of the adaptation is pending.
 How the student verified and can explain the result: The workflow and repository instructions were read together; no application checks or tests were run because this was a documentation-only task.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-04 and F-05 owner acceptance
+
+```text
+Date / story: 2026-10-16 / F-04 topic management and F-05 search/filter acceptance
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner accepted both stories after confirming the implementation and verification checks had already been completed. Instructor/course permission remains to be checked.
+Assistance used (explanation, planning, code draft, debugging, review): Updated story status and requirements traceability to record owner acceptance.
+Suggestions or code retained: Marked F-04 and F-05 accepted; no application code changed.
+Student changes and decisions: The owner accepted F-04 topic management and F-05 search/filter on 2026-10-16.
+How the student verified and can explain the result: Acceptance relies on the recorded 26-test/248-assertion PHPUnit suite, PHP syntax checks, and the owner's previously recorded responsive and keyboard browser reviews. Current Composer audit and Playwright reruns remain limited by network access and worker startup, respectively.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-04/F-05/F-06 verification continuation
+
+```text
+Date / story: 2026-10-16 / continue verification of topic management, search/filter, and explainable priority
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Assistance used (explanation, planning, code draft, debugging, review): Re-ran the existing automated suite and PHP syntax checks, attempted dependency/browser checks, and updated verification records.
+Suggestions or code retained: Recorded 26 passing PHPUnit tests (248 assertions), successful PHP syntax checks, the restricted-network Composer audit failure, and the Playwright worker launch failure in the story records.
+Student changes and decisions: No product behavior changed. At the time of this verification entry, owner visual review and acceptance of F-06 were still pending; F-06 was accepted later on 2026-10-16.
+How the student verified and can explain the result: `php.exe -d extension=intl -d extension=sqlite3 vendor\bin\phpunit --no-coverage` passed (26 tests, 248 assertions); PHP `-l` passed for all changed PHP files; `git diff --check` passed with line-ending notices. `composer audit --locked` could not reach Packagist. `npm test` failed before browser execution because Node could not spawn its Playwright worker (`EPERM`). A local request returned HTTP 500 because the existing isolated MariaDB instance failed to start with a corrupt `mysql.db` privilege table; no repair or reinitialization was attempted. To keep that directory untouched, a separate disposable database was initialized under ignored `.tools/`, all migrations were applied, and a synthetic student with four topics was created. The authenticated priority route then returned HTTP 200 with unfinished topics and excluded the done topic. Owner visual acceptance is still pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### F-06 explainable topic priority
+
+```text
+Date / story: 2026-10-15 / F-06 explainable topic priority
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner approved the priority formula and tie-breaking rules in this conversation. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Requirements refinement, service/controller/view implementation, test drafting, and documentation.
+Suggestions or code retained: Owner-scoped unfinished-topic ranking with visible score reasons, a pure calculation service, and unit/feature/Playwright coverage.
+Student changes and decisions: The owner selected the importance, due-date, progress, exclusion, and sorting defaults.
+How the student verified and can explain the result: The full PHPUnit suite passed (26 tests, 248 assertions), PHP syntax checks passed for changed PHP files, and the locked Composer audit found no advisories. The authenticated Playwright page check was skipped because synthetic-account environment variables were not set.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```
 
@@ -198,5 +273,31 @@ Assistance used (explanation, planning, code draft, debugging, review): Story pl
 Suggestions or code retained: Draft story scope, security acceptance criteria, boundaries, readiness blockers, and proposed implementation sequence.
 Student changes and decisions: The project owner ordered authentication as the first development slice, chose open student registration, approved a private admin demo account with a separate synthetic student account for any public demo, approved the student/admin route split, and chose to defer the database/import check. The first-admin bootstrap mechanism remains unresolved.
 How the student verified and can explain the result: Compared the draft with F-01, F-02, S-01, S-04 and the development blueprint; no application code or tests were run.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-05 search and filter
+
+```text
+Date / story: 2026-10-15 / F-05 subject and topic search/filter implementation
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner approved the F-05 search and filter scope in this conversation. Instructor/course permission remains to be checked.
+Assistance used (explanation, planning, code draft, debugging, review): Product-scope refinement, implementation, test drafting, and documentation updates.
+Suggestions or code retained: Owner-scoped subject/topic search, combined topic filters, POST forms to keep search terms out of URLs, deterministic due-date states, and accessible feedback for invalid search/filter input plus result counts.
+Student changes and decisions: The owner selected search across subject names and topic titles, with subject, importance, progress, and due-date-state topic filters.
+How the student verified and can explain the result: Before the feedback update, `php.exe -d extension=intl -d extension=sqlite3 vendor\bin\phpunit --no-coverage` passed (21 tests, 205 assertions). After the update, PHP syntax checks passed for both changed controllers and both search views; `git diff --check` passed with line-ending notices. Feature tests were not rerun. Composer files were unchanged, so the most recent locked dependency audit result from 2026-10-15 (no advisories) remains applicable. The owner reports the keyboard review passed and identified the feedback gap; responsive browser review remains pending.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-06 priority acceptance
+
+```text
+Date / story: 2026-10-16 / F-06 owner acceptance
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner accepted F-06 after visual review and asked to continue development. Instructor/course permission remains to be checked.
+Assistance used (explanation, planning, code draft, debugging, review): Documentation update recording F-06 visual acceptance.
+Suggestions or code retained: Recorded F-06 visual acceptance; no application code changed.
+Student changes and decisions: The owner accepted the F-06 priority page on 2026-10-16.
+How the student verified and can explain the result: The owner reviewed the authenticated priority page populated with synthetic topics and accepted it; the automated verification is recorded in the F-04/F-05/F-06 verification continuation above.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```

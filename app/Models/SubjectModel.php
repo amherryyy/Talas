@@ -35,6 +35,18 @@ class SubjectModel extends Model
             ->findAll();
     }
 
+    /** @return list<array<string, mixed>> */
+    public function searchForOwner(int $ownerId, string $query): array
+    {
+        $builder = $this->builder()->where('user_id', $ownerId);
+
+        if ($query !== '') {
+            $builder->like('name', $query);
+        }
+
+        return $builder->orderBy('name', 'ASC')->get()->getResultArray();
+    }
+
     /** @return array<string, mixed>|null */
     public function findForOwner(int $subjectId, int $ownerId): ?array
     {

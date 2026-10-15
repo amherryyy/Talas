@@ -80,6 +80,25 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $this->assertSame([], (new App\Models\SubjectModel())->findAllForOwner((int) $student->id));
     }
 
+    public function testSubjectSearchIsOwnerScopedAndKeepsSearchTextOutOfTheUrl(): void
+    {
+        $owner = $this->createUser('subject-search-owner', 'student');
+        $otherStudent = $this->createUser('subject-search-other', 'student');
+        $subjects = new App\Models\SubjectModel();
+        $ownedId = $subjects->insert(['user_id' => $owner->id, 'name' => 'Biology lab'], true);
+        $foreignId = $subjects->insert(['user_id' => $otherStudent->id, 'name' => 'Biology seminar'], true);
+        $this->assertNotFalse($ownedId);
+        $this->assertNotFalse($foreignId);
+
+        $this->authenticateAs($owner);
+        $response = $this->postAuthenticated('student/subjects/search', ['query' => 'Biology']);
+
+        $response->assertOK();
+        $response->assertSee('Biology lab');
+        $response->assertDontSee('Biology seminar');
+        $this->assertSame('', $response->response()->getHeaderLine('Location'));
+    }
+
     public function testAnotherStudentCannotReadEditUpdateOrDeleteSubject(): void
     {
         $owner = $this->createUser('student-owner', 'student');

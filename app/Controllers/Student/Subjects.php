@@ -4,6 +4,7 @@ namespace App\Controllers\Student;
 
 use App\Controllers\BaseController;
 use App\Models\SubjectModel;
+use App\Models\TopicModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 
@@ -15,6 +16,30 @@ class Subjects extends BaseController
 
         return view('student/subjects/index', [
             'subjects' => $subjects->findAllForOwner($this->ownerId()),
+            'query' => '',
+            'errors' => [],
+        ]);
+    }
+
+    public function search(): string
+    {
+        $query = $this->request->getPost('query');
+        $errors = [];
+        if ($query === null) {
+            $query = '';
+        } elseif (! is_string($query)) {
+            $errors[] = 'Enter a text search term.';
+            $query = '';
+        } elseif (mb_strlen($query) > 120) {
+            $errors[] = 'Search terms must be 120 characters or fewer.';
+        }
+        $query = mb_substr(trim($query), 0, 120);
+        $ownerId = $this->ownerId();
+
+        return view('student/subjects/index', [
+            'subjects' => (new SubjectModel())->searchForOwner($ownerId, $query),
+            'query' => $query,
+            'errors' => $errors,
         ]);
     }
 
@@ -49,6 +74,7 @@ class Subjects extends BaseController
     {
         return view('student/subjects/show', [
             'subject' => $this->ownedSubject($subjectId),
+            'topics'  => (new TopicModel())->findAllForSubjectOwner($subjectId, $this->ownerId()),
         ]);
     }
 

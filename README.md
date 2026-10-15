@@ -4,7 +4,7 @@ Local VS Code workspace for the one-month Talas AppDev project. The agreed stack
 
 ## Current state
 
-The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. Public auth routes and session-protected student/admin landing routes are configured. F-03 subject management is accepted on `feature/F-03-subject-management`; the isolated local MySQL-compatible database is configured, migrations are applied, and the full PHPUnit suite passes (11 tests, 56 assertions). The browser review used desktop and zoom-based narrow-width checks; a phone viewport was not separately emulated. The original shared XAMPP MariaDB data directory has a corrupt system table and was left untouched; Talas uses a separate local instance. First-admin provisioning and hosted database creation are pending. See `docs/database-setup.md` for local settings and recovery boundaries. The development blueprint is in `docs/development-blueprint.md`, coding instructions are in `AGENTS.md`, and the Git/GitHub procedure is in `docs/version-control.md`.
+The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. Public auth routes and session-protected student/admin landing routes are configured. F-03 subject management is accepted and merged to `main` through PR #1. F-04 topic management, F-05 search/filter, and F-06 explainable priority were accepted by the owner on 2026-10-16. The full PHPUnit suite passed for those slices (26 tests, 248 assertions); current dependency-audit and Playwright reruns are limited by network access and worker startup. Topic migrations are applied to the isolated local MySQL-compatible database. The original shared XAMPP MariaDB data directory has a corrupt system table and was left untouched; Talas uses a separate local instance. First-admin provisioning and hosted database creation are pending. See `docs/database-setup.md` for local settings and recovery boundaries. The development blueprint is in `docs/development-blueprint.md`, coding instructions are in `AGENTS.md`, and the Git/GitHub procedure is in `docs/version-control.md`.
 
 ## Local prerequisites found
 
@@ -12,6 +12,7 @@ The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are in
 - XAMPP PHP is at `C:\xampp\php\php.exe` (8.2.12). MySQL tools are under `C:\xampp\mysql\bin`.
 - The PHP `intl` DLL exists but is disabled in XAMPP's default configuration. Use `-d extension=intl` for local CLI commands. The ZIP DLL also needs `-d extension=zip` for Composer archive installs.
 - Composer is kept project-local at `.tools/composer.phar` (ignored by Git); run it with `C:\xampp\php\php.exe .tools\composer.phar`.
+- Playwright is a development-only dependency for browser layout checks. Setup and commands are in [`docs/browser-testing.md`](docs/browser-testing.md); it is not part of the deployed Talas app.
 
 ## Next setup steps
 
