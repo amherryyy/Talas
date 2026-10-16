@@ -32,6 +32,7 @@ $routes->group('student', ['filter' => ['session', 'exclusive-role:student']], s
     $routes->post('plan/items/(:num)/remove', 'Student\\Plans::removeItem/$1', ['as' => 'student.plan.items.remove']);
     $routes->post('plan/items/(:num)/move/(:alpha)', 'Student\\Plans::moveItem/$1/$2', ['as' => 'student.plan.items.move']);
     $routes->get('sessions', 'Student\\StudySessions::index', ['as' => 'student.sessions.index']);
+    $routes->get('aralytics', 'Student\\Aralytics::index', ['as' => 'student.aralytics']);
     $routes->post('sessions', 'Student\\StudySessions::create', ['as' => 'student.sessions.create']);
     $routes->get('sessions/(:num)/edit', 'Student\\StudySessions::edit/$1', ['as' => 'student.sessions.edit']);
     $routes->post('sessions/(:num)', 'Student\\StudySessions::update/$1', ['as' => 'student.sessions.update']);

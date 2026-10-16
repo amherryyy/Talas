@@ -59,7 +59,35 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.goto('student/sessions');
     await expect(page.getByRole('heading', { name: 'Study sessions' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/sessions');
+
+    await page.goto('student/aralytics');
+    await expect(page.getByRole('heading', { name: 'Aralytics' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Print report' })).toBeVisible();
+    await expectNoHorizontalOverflow(page, '/student/aralytics');
   }
+
+  await page.getByRole('link', { name: 'Last 30 days' }).click();
+  await expect(page.getByRole('heading', { name: 'Study activity: Last 30 days' })).toBeVisible();
+  await page.getByRole('link', { name: 'All time' }).click();
+  await expect(page.getByRole('heading', { name: 'Study activity: All time' })).toBeVisible();
+
+  await page.goto('student/aralytics');
+  for (let tab = 0; tab < 13; tab++) {
+    await page.keyboard.press('Tab');
+  }
+  await expect(page.getByRole('button', { name: 'Print report' })).toBeFocused();
+  await page.evaluate(() => {
+    window.__talasPrintCalled = false;
+    window.print = () => { window.__talasPrintCalled = true; };
+  });
+  await page.keyboard.press('Enter');
+  expect(await page.evaluate(() => window.__talasPrintCalled)).toBe(true);
+
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.locator('header')).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Print report' })).toBeHidden();
+  await expect(page.getByRole('heading', { name: 'Dated sessions' })).toBeVisible();
+  await page.emulateMedia({ media: 'screen' });
 
   await page.setViewportSize({ width: 400, height: 850 });
   await page.goto('student/sessions');

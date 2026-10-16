@@ -340,3 +340,16 @@ Student changes and decisions: The owner set the F-08 duration and lifecycle rul
 How the student verified and can explain the result: PHPUnit passed (40 tests, 358 assertions); changed PHP files passed `php -l`; the timer JavaScript and Playwright spec passed `node --check`; `git diff --check` passed; the F-08 migration applied to the isolated review database; and Composer audit reported no security advisories after network access was allowed. Both Playwright tests passed with the local synthetic review account, covering 320, 400, 768, and 1280 pixel widths and timer start/pause/resume/stop/review/discard without saving. The owner visually reviewed and accepted the result.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```
+
+### F-09 Aralytics summaries and printable report
+
+```text
+Date / story: 2026-10-16 / implement F-09 Aralytics summaries and printable report
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner approved the summary metrics, periods, print report contents, and F-08 PR #3 merge before this implementation. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Product-rule recording, owner-scoped report service and controller, responsive/print view, tests, and documentation.
+Suggestions or code retained: Added date-period summaries for total minutes, session count, average length, subject totals, topic breakdown, and dated sessions. Added a print stylesheet that keeps report content while hiding navigation and controls.
+Student changes and decisions: The owner selected total minutes, session count, average length, and subject totals for today, 7 days, 30 days, and all time; the printable report includes the period, totals, subject/topic breakdown, and dated sessions. Private check-ins stay excluded by default.
+How the student verified and can explain the result: PHPUnit passed (46 tests, 397 assertions); PHP syntax checks, JavaScript syntax checks, and `git diff --check` passed. Both Playwright tests passed with the synthetic review account, including 320, 400, 768, and 1280 pixel widths, period selection, print action, and print media. The report and print screenshots were visually reviewed, and keyboard focus was checked. Composer audit could not reach Packagist through the configured proxy. No separate PHP style tool is configured. Owner acceptance remains pending.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```

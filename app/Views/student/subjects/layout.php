@@ -45,6 +45,7 @@
             <a href="<?= esc(site_url('student/priority')) ?>">Priority</a>
             <a href="<?= esc(site_url('student/plan')) ?>">Plan</a>
             <a href="<?= esc(site_url('student/sessions')) ?>">Sessions</a>
+            <a href="<?= esc(site_url('student/aralytics')) ?>">Aralytics</a>
             <form class="inline" method="post" action="<?= esc(site_url('logout')) ?>">
                 <?= csrf_field() ?>
                 <button class="button secondary" type="submit">Sign out</button>

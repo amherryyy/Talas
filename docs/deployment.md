@@ -30,7 +30,7 @@ Treat any readable private path as a release blocker. A rewrite to a public fron
 - [ ] Configure secrets through the documented protected configuration method; confirm the file cannot be fetched directly.
 - [ ] Apply reviewed migrations, including subjects, topics, daily plans, and study sessions, using the approved one-time process or reviewed SQL import. Remove any one-time setup endpoint immediately afterward.
 - [ ] Use synthetic demo accounts/data only.
-- [ ] Smoke-check sign-in/out, student/admin boundaries, subject and topic create/list/view/edit/delete, search and combined topic filters, daily-plan generation and adjustments within the available-time cap, timer review and explicit session save, saved-session edit/delete, cross-user isolation, subject/topic deletion restrictions while referenced by sessions, summaries, print output, HTTPS, and all protected-path denials.
+- [ ] Smoke-check sign-in/out, student/admin boundaries, subject and topic create/list/view/edit/delete, search and combined topic filters, daily-plan generation and adjustments within the available-time cap, timer review and explicit session save, saved-session edit/delete, cross-user isolation, subject/topic deletion restrictions while referenced by sessions, Aralytics periods (today, 7 days, 30 days, all time), summary and subject/topic totals, dated sessions, print layout, HTTPS, and all protected-path denials.
 - [ ] Remove temporary probe files and confirm they are inaccessible after removal.
 - [ ] Record the deployed revision, date, checks, and any host behavior that remains unverified.
 
