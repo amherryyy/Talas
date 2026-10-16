@@ -4,7 +4,7 @@
 
 ## Project-specific settings
 
-- **Default branch:** `main`, tracking the configured `origin` remote. F-03 is merged; F-04 through F-06 and accepted F-07 are committed locally on `feature/F-04-topic-management`. Those story commits have not yet been published. Follow [`docs/version-control.md`](version-control.md) for selective staging, commits, pushes, and pull requests.
+- **Default branch:** `main`, tracking the configured `origin` remote. F-03 through F-07 are merged through PRs #1 and #2. F-08 is in progress on `feature/F-08-study-sessions`; see [`docs/version-control.md`](version-control.md) for the current worktree and selective staging, commit, push, and pull-request procedure.
 - **Runtime and dependencies:** PHP with CodeIgniter 4 and Shield, Composer, MySQL/MariaDB, server-rendered views, CSS, and plain JavaScript. Node/npm is approved only for development-time Playwright browser tests; it adds no frontend build or production runtime dependency. Keep it out of hosting uploads.
 - **Required checks:** Follow `AGENTS.md`: relevant unit/feature tests, PHP syntax/style checks, dependency audit, manual browser check for changed interactions, and owner-isolation/direct-URL checks for auth, data-access, or deployment changes. Report checks individually and do not claim checks that did not run.
 - **Database:** CodeIgniter migrations and safe synthetic seed data against local MySQL/MariaDB. Talas uses a separate loopback-only local MariaDB instance because the original shared XAMPP data directory has a corrupt system table; hosted creation/import is pending. See [`docs/database-setup.md`](database-setup.md) and `docs/deployment.md`.
@@ -13,7 +13,7 @@
 - **Review and approval:** One implementer plus human review and project-owner acceptance. Sensitive changes may receive a second independent review only if requested. No merge or release without the required human decision.
 - **Production smoke check:** No production application is deployed. The temporary hosting probe was removed after its checks; use `docs/deployment.md` for recorded host evidence and verify the Talas application after its first approved deployment.
 
-The branch and repository automation status below reflects the repository on 2026-10-14. Refresh these values when the Git setup, framework installation, or deployment target changes.
+The branch and repository automation status below was refreshed on 2026-10-16. Refresh these values when the Git setup, framework installation, or deployment target changes.
 
 ## Repository guidance, skills, and automation inventory
 
@@ -27,7 +27,7 @@ Keep instructions, available tools, and enforced checks distinct so nobody assum
 | Framework guardrail manifests | No Flower or equivalent framework manifests are present. The official CI4/Shield starter is installed. | Keep project policy in reviewed repository instructions. Add machine-readable policy only when a selected tool can validate it and the rules have been reviewed for PHP, CodeIgniter, privacy, and hosting constraints. |
 | CI | `.github/workflows/` is absent; Composer manifests and lockfile are present. Documented checks are not currently enforced by CI. | After the GitHub repository exists, add a PHP workflow using the locked Composer dependencies, PHP compatibility matching the target host, relevant tests and style checks, and `composer audit`. Use a synthetic local/test database where needed, least permissions, and pinned third-party actions. Do not add Node-only checks. |
 | Git hooks | `.git/hooks/` contains Git sample hooks only; no `core.hooksPath`, Husky, or custom hooks are configured. | No hook setup is needed yet. If later adopted, keep hooks fast and local; CI and documented review remain authoritative. Do not make local hooks the only security gate. |
-| Git collaboration | GitHub remote is configured; `main` contains the foundation and merged F-03 subject-management PR. F-04 through F-06 are committed on a story branch; F-07 remains local and uncommitted. No CI workflow is configured. | Use selective staging for each story, protect `main`, merge reviewed pull requests, and report that checks are not CI-enforced until a workflow exists. See [`docs/version-control.md`](version-control.md). |
+| Git collaboration | GitHub remote is configured; F-03 through F-07 are merged to `main` through PRs #1 and #2. F-08 is in progress on a story branch. No CI workflow is configured. | Use selective staging for each story, protect `main`, merge reviewed pull requests, and report that checks are not CI-enforced until a workflow exists. See [`docs/version-control.md`](version-control.md). |
 
 This inventory was refreshed on 2026-10-15. Recheck the actual checkout before relying on it. Do not transfer RoomScouter-specific Next.js, Supabase, Flower, npm audit, or Husky decisions into Talas by analogy.
 

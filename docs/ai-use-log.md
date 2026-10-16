@@ -302,6 +302,19 @@ How the student verified and can explain the result: Compared the intake with F-
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```
 
+### F-08 study-session story intake
+
+```text
+Date / story: 2026-10-16 / prepare F-08 study timer and saved-session story
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner asked to continue with the next backlog task and approved the F-08 session bounds/correction rule. Instructor/course permission remains to be checked.
+Assistance used (explanation, planning, code draft, debugging, review): Requirements refinement, story drafting, and review of existing subject/topic ownership and deletion constraints.
+Suggestions or code retained: Drafted explicit timer review/save, interruption, owner-scoping, edit/delete, and validation criteria. No F-08 application code has been written yet.
+Student changes and decisions: The owner approved 1–480 whole minutes, explicit save, editing/deleting saved sessions, and blocking subject deletion while a saved session references it.
+How the student verified and can explain the result: Compared the draft with F-08, F-03, F-04, S-01 through S-04, and the existing subject/topic deletion behavior. No application tests were run because this intake changed no executable code.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
 ### F-07 daily plan implementation
 
 ```text
@@ -312,5 +325,18 @@ Assistance used (explanation, planning, code draft, debugging, review): Plan ser
 Suggestions or code retained: Added daily generation from unfinished topics in F-06 order; duration adjustments, removal, reordering, per-date persistence, and replacement confirmation. Saved plan items retain title/subject snapshots and use owner-scoped database operations.
 Student changes and decisions: The owner approved a 15–480 minute input, one 25-minute block per unfinished topic with the last shortened to fit, editable/reorderable/removable blocks limited by the time cap, and one saved plan per local date with confirmation before replacement. The owner accepted F-07 on 2026-10-16 and authorized Git actions.
 How the student verified and can explain the result: Full PHPUnit suite passed (34 tests, 307 assertions); PHP syntax checks for changed PHP files passed; `git diff --check` passed with line-ending notices; and the F-07 migration applied to the isolated review database. Composer audit could not reach Packagist through the configured unavailable proxy. Playwright could not start a worker (`spawn EPERM`), and computer-use browser review stopped because the tool could not determine the browser URL with sufficient confidence. Manual browser review remains open.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-08 study-session implementation
+
+```text
+Date / story: 2026-10-16 / implement and accept F-08 study timer and saved sessions
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner asked to continue with the next backlog task and approved 1–480 minute sessions, explicit saving, edit/delete, and blocking subject deletion while a saved session references it. Instructor/course permission remains to be checked.
+Assistance used (explanation, planning, code draft, debugging, review): Session schema and migration, owner-scoped model/controller/routes, timer UI and JavaScript, feature tests, documentation, and verification.
+Suggestions or code retained: Added timer review before explicit save, owner-scoped subject/topic validation, session edit/delete with confirmation, and subject deletion protection for saved session history.
+Student changes and decisions: The owner set the F-08 duration and lifecycle rules, chose to prevent subject deletion while saved sessions refer to it, and accepted F-08 on 2026-10-16 after reviewing the browser result. PR #3 was opened against `main`.
+How the student verified and can explain the result: PHPUnit passed (40 tests, 358 assertions); changed PHP files passed `php -l`; the timer JavaScript and Playwright spec passed `node --check`; `git diff --check` passed; the F-08 migration applied to the isolated review database; and Composer audit reported no security advisories after network access was allowed. Both Playwright tests passed with the local synthetic review account, covering 320, 400, 768, and 1280 pixel widths and timer start/pause/resume/stop/review/discard without saving. The owner visually reviewed and accepted the result.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```

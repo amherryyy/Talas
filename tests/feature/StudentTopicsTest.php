@@ -284,22 +284,22 @@ final class StudentTopicsTest extends CIUnitTestCase
         ], true);
         $this->assertNotFalse($topicId);
 
-        $db = db_connect('tests');
-        $db->query('CREATE TABLE db_study_sessions (id INTEGER PRIMARY KEY AUTOINCREMENT, topic_id INTEGER NULL)');
-        try {
-            $db->table('study_sessions')->insert(['topic_id' => $topicId]);
+        (new App\Models\StudySessionModel())->insert([
+            'user_id' => (int) $student->id,
+            'subject_id' => $subjectId,
+            'topic_id' => $topicId,
+            'duration_minutes' => 25,
+            'completed_at' => '2026-10-16 10:00:00',
+        ]);
 
-            $deleteResponse = $this->postAuthenticated('student/subjects/' . $subjectId . '/topics/' . $topicId . '/delete');
-            $deleteResponse->assertRedirect();
-            $deleteResponse->assertSessionHas('error');
-            $this->assertNotNull((new App\Models\TopicModel())->findForSubjectOwner(
-                $subjectId,
-                (int) $topicId,
-                (int) $student->id,
-            ));
-        } finally {
-            $db->query('DROP TABLE db_study_sessions');
-        }
+        $deleteResponse = $this->postAuthenticated('student/subjects/' . $subjectId . '/topics/' . $topicId . '/delete');
+        $deleteResponse->assertRedirect();
+        $deleteResponse->assertSessionHas('error');
+        $this->assertNotNull((new App\Models\TopicModel())->findForSubjectOwner(
+            $subjectId,
+            (int) $topicId,
+            (int) $student->id,
+        ));
     }
 
     public function testAdminAndSignedOutUsersCannotUseTopicRoutes(): void

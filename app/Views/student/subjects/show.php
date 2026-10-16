@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <h1><?= esc($subject['name']) ?></h1>
 <p><a href="<?= esc(site_url('student/subjects')) ?>">Back to subjects</a></p>
-<p class="muted">Deleting a subject cannot be undone. Deletion is blocked while it has topics.</p>
+<p class="muted">Deleting a subject cannot be undone. Deletion is blocked while it has topics or saved study sessions.</p>
 <section aria-labelledby="topics-heading">
     <div class="actions">
         <h2 id="topics-heading">Topics</h2>

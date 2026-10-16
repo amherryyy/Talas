@@ -66,6 +66,19 @@ class SubjectModel extends Model
 
     public function deleteForOwner(int $subjectId, int $ownerId): bool
     {
+        if ($this->db->tableExists('study_sessions')) {
+            $hasSavedSessions = $this->db->table('study_sessions')
+                ->join('subjects', 'subjects.id = study_sessions.subject_id')
+                ->where('subjects.id', $subjectId)
+                ->where('subjects.user_id', $ownerId)
+                ->limit(1)
+                ->countAllResults() > 0;
+
+            if ($hasSavedSessions) {
+                return false;
+            }
+        }
+
         if ($this->db->tableExists('topics')) {
             $hasTopics = $this->db->table('subjects')
                 ->join('topics', 'topics.subject_id = subjects.id')
