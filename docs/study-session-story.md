@@ -2,7 +2,7 @@
 
 **Requirement:** F-08
 
-**Status:** Accepted by the owner on 2026-10-16 after automated checks and browser review.
+**Status:** Accepted by the owner on 2026-10-16 after automated checks and browser review; submitted as [PR #3](https://github.com/amherryyy/Talas/pull/3).
 
 ## User story
 

@@ -6,7 +6,7 @@ Replace example repository URLs, branch names, and file paths with the actual va
 
 ## Current repository state
 
-As checked on 2026-10-16, `main` is at `e8f56bb` after F-03 through F-07 merged through PRs #1 and #2. The current checkout is `feature/F-08-study-sessions`, based on that `main`; F-08 is owner-accepted and being prepared for pull-request review. The `origin` remote is configured. A pre-existing untracked `.github/` path is outside F-08 and must remain untouched. Never merge or deploy without separate owner authorization. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+As checked on 2026-10-16, `main` is at `e8f56bb` after F-03 through F-07 merged through PRs #1 and #2. The current checkout is `feature/F-08-study-sessions`, based on that `main`; accepted F-08 is published for review in [PR #3](https://github.com/amherryyy/Talas/pull/3). The `origin` remote is configured. A pre-existing untracked `.github/` path is outside F-08 and must remain untouched. Never merge or deploy without separate owner authorization. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 
 ## One-time GitHub setup
 
