@@ -22,6 +22,8 @@
         .button.danger, button.danger { background: #9b302a; }
         .subject-list { list-style: none; padding: 0; margin: 1rem 0; }
         .subject-list li { border-top: 1px solid #dce7df; padding: .9rem 0; overflow-wrap: anywhere; }
+        .timer-display { margin: 1rem 0 .25rem; font-variant-numeric: tabular-nums; font-size: clamp(2rem, 10vw, 3.5rem); font-weight: 750; }
+        fieldset { margin: 1rem 0; padding: 1rem; border: 1px solid #dce7df; border-radius: .6rem; }
         label { display: block; font-weight: 650; margin: 1rem 0 .35rem; }
         input[type=text], input[type=date], input[type=search], input[type=number], select { display: block; width: 100%; max-width: 36rem; padding: .7rem; border: 1px solid #71847a; border-radius: .4rem; font: inherit; background: #fff; }
         .notice { padding: .75rem 1rem; border-radius: .5rem; background: #e9f1ec; }
@@ -42,6 +44,7 @@
             <a href="<?= esc(site_url('student/topics')) ?>">Topics</a>
             <a href="<?= esc(site_url('student/priority')) ?>">Priority</a>
             <a href="<?= esc(site_url('student/plan')) ?>">Plan</a>
+            <a href="<?= esc(site_url('student/sessions')) ?>">Sessions</a>
             <form class="inline" method="post" action="<?= esc(site_url('logout')) ?>">
                 <?= csrf_field() ?>
                 <button class="button secondary" type="submit">Sign out</button>

@@ -55,5 +55,24 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.goto('student/priority');
     await expect(page.getByRole('heading', { name: 'Priority topics' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/priority');
+
+    await page.goto('student/sessions');
+    await expect(page.getByRole('heading', { name: 'Study sessions' })).toBeVisible();
+    await expectNoHorizontalOverflow(page, '/student/sessions');
+  }
+
+  await page.setViewportSize({ width: 400, height: 850 });
+  await page.goto('student/sessions');
+  const subjects = page.getByLabel('Subject');
+  if (await subjects.count() > 0 && await subjects.locator('option').count() > 1) {
+    await subjects.selectOption({ index: 1 });
+    await page.getByRole('button', { name: 'Start timer' }).click();
+    await page.getByRole('button', { name: 'Pause' }).click();
+    await page.getByRole('button', { name: 'Resume' }).click();
+    await page.getByRole('button', { name: 'Stop and review' }).click();
+    await expect(page.getByRole('group', { name: 'Review before saving' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Save session' })).toBeEnabled();
+    await page.getByRole('button', { name: 'Discard this result' }).click();
+    await expect(page.getByText('Timer discarded. No session was saved.')).toBeVisible();
   }
 });

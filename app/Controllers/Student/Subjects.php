@@ -108,7 +108,7 @@ class Subjects extends BaseController
         $subjects = new SubjectModel();
         if (! $subjects->deleteForOwner($subjectId, $this->ownerId())) {
             return redirect()->to(site_url('student/subjects/' . $subjectId))
-                ->with('error', 'This subject still has topics. Move or remove them before deleting the subject.');
+                ->with('error', 'This subject has topics or saved study sessions. Remove them before deleting the subject.');
         }
 
         return redirect()->to(site_url('student/subjects'))
