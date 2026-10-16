@@ -29,7 +29,7 @@ $env:PLAYWRIGHT_BROWSERS_PATH = '0'
 npm.cmd test
 ```
 
-The test suite checks the login page at 320, 400, 768, and 1280 CSS pixels. It also checks the subject list, topic search/filter, and Priority pages at those sizes when test credentials are provided. These checks assert that the page content fits the viewport without horizontal overflow and that the primary controls remain visible.
+The test suite checks the login page at 320, 400, 768, and 1280 CSS pixels. It also checks the subject list, topic search/filter, Priority, Sessions, and Aralytics pages at those sizes when test credentials are provided. It checks that Aralytics print media hides navigation and controls while retaining report content. These checks assert that page content fits the viewport without horizontal overflow and that primary controls remain visible.
 
 For authenticated checks, use a **synthetic student account** and set its credentials only in the current shell:
 
