@@ -362,7 +362,72 @@ Tool and model: OpenAI Codex; exact serving model identifier was not exposed in 
 Allowed use confirmed by: The project owner approved concise, general tips adapted from reputable education sources, shown as fixed student dashboard cards with source links and no personalization or AI. Instructor/course disclosure requirements remain the owner's responsibility.
 Assistance used (explanation, planning, code draft, debugging, review): Source research, content catalog, student dashboard view, feature/unit/browser checks, and documentation.
 Suggestions or code retained: Added four short cards on spaced review, retrieval practice, explanatory questions, and worked examples followed by practice, paraphrased from the What Works Clearinghouse practice guide.
-Student changes and decisions: The owner approved the recommended content scope and dashboard placement on 2026-10-16, then accepted the implementation on 2026-10-17. The accepted implementation is submitted in PR #5.
+Student changes and decisions: The owner approved the recommended content scope and dashboard placement on 2026-10-16, then accepted the implementation on 2026-10-17. The accepted implementation was merged through PR #5 on 2026-10-17 (merge commit `ce44d12`).
 How the student verified and can explain the result: PHPUnit passed (49 tests, 431 assertions) with coverage disabled; PHP syntax and JavaScript syntax checks passed, as did `git diff --check`. Composer audit reached Packagist after clearing the injected proxy variables for the Composer process and reported no security advisories; Composer proceeded without its unwritable cache. Both Playwright tests passed with the synthetic review account, including the dashboard and four source links at 320, 400, 768, and 1280 px, keyboard focus on a source link, and no horizontal overflow. Visual screenshots at 320 and 1280 px were reviewed. No separate PHP style tool is configured. The owner accepted F-10 on 2026-10-17.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-11 private workload and energy check-ins
+
+```text
+Date / story: 2026-10-17 / implement F-11 private workload and energy check-ins
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner approved two 1–5 ratings, multiple check-ins per day, edit/delete, and retention until student deletion. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Product decision recording, migration, owner-scoped model/controller/routes, server-rendered views, tests, and documentation.
+Suggestions or code retained: Added private workload and energy rating records with application-local timestamps. No free-text notes, automatic expiry, admin access, or inclusion in Aralytics/reports.
+Student changes and decisions: The owner chose both ratings, multiple entries per day, and editable/deletable records retained until the student deletes them.
+How the student verified and can explain the result: Full PHPUnit passed (56 tests, 500 assertions) with coverage disabled. Changed PHP syntax and the Playwright spec JavaScript syntax passed. Composer audit found no security advisories after clearing injected proxy variables for that process; Composer proceeded without its unwritable cache. The check-in migration applied to the isolated local review DB and `migrate:status --all` showed it in batch 4. Both Playwright tests passed with the synthetic review account, covering 320, 400, 768, and 1280 px widths, check-in create/edit/delete, and keyboard focus between rating controls; mobile (390 px) and desktop (1280 px) screenshots were reviewed. Feature tests verify invalid input, CSRF, student/admin boundaries, owner isolation, deletion confirmation, and exclusion from admin, topic search, and Aralytics output. No separate PHP style tool is configured. Hosted behavior and production deployment were not checked.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-11 private weekly reflection summary
+
+```text
+Date / story: 2026-10-17 / add a weekly reflection summary to F-11 private check-ins
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner selected a weekly pattern summary from three product options. The summary uses a last-7-days window and counts entries rated high workload (4–5) and low energy (1–2); instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Requirements inspection, deterministic summary design, service/controller/view implementation, and story/log documentation.
+Suggestions or code retained: Added an owner-scoped, application-local weekly count on the private check-in page. It reports counts only, makes no health or learning claims, and does not change the study plan.
+Student changes and decisions: The owner chose the weekly pattern summary option.
+How the student verified and can explain the result: Not run in this task. The implementation follows the existing application-local seven-calendar-day window used by Aralytics; local browser confirmation remains pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### F-09/F-11 private rule-based pattern summary
+
+```text
+Date / story: 2026-10-17 / add owner-only check-in pattern counts to Aralytics
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner selected private rule-based patterns. This supersedes the earlier default that kept all check-in data out of Aralytics. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Scope clarification, deterministic counting design, owner-scoped controller/service/view changes, and requirement, privacy, deployment, and story documentation updates.
+Suggestions or code retained: Added separate counts for high workload (4–5), low energy (1–2), and their co-occurrence in the selected Aralytics period. The summary is student-only, not printed, and does not train a model, assess, predict, or change a plan.
+Student changes and decisions: The owner chose the private rule-based pattern option.
+How the student verified and can explain the result: Not run in this task. Browser review and tests for the amendment remain pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### F-09/F-11 check-in rating distribution chart
+
+```text
+Date / story: 2026-10-17 / add a rating-distribution chart to private Aralytics patterns
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner selected rating-distribution bars for workload and energy ratings across the selected Aralytics period. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Native SVG/CSS chart implementation, accessible numeric equivalent, and browser/deployment documentation updates.
+Suggestions or code retained: Added paired bars for ratings 1–5 with counts shown in SVG and a matching data table. The chart is owner-only and omitted from print; no chart library or runtime build dependency was added.
+Student changes and decisions: The owner chose rating-distribution bars.
+How the student verified and can explain the result: Not run in this task. Responsive layout, screen-reader description/table equivalence, and print hiding need browser review.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Duno rebrand
+
+```text
+Date / story: 2026-10-17 / implement the Duno rebrand in the active Talas repository
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner supplied and approved the Duno wordmark, tagline, product-area names, palette, and Eureka lightbulb/salakot mascot concept. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Repository inspection, shared student and auth presentation updates, product labels, brand documentation, tests, and visual review.
+Suggestions or code retained: Added the Duno brand to the Shield login/register layout, student layout, role landing page, and product-area screens; kept existing application routes and data behavior. Added brand instructions and an identity guide with palette tokens and mascot export requirements.
+Student changes and decisions: The owner approved duno., “Your Little Study Buddy.”, Duno Focus, Duno Plan, Duno Guide, Duno Timer, retained Aralytics, and the specified four-color palette. The approved mascot image was unavailable in the conversation/repository, so no substitute artwork was created; the required export is recorded in the brand guide.
+How the student verified and can explain the result: PHPUnit passed (56 tests, 509 assertions) with in-memory SQLite; PHP syntax, browser-spec syntax, and `git diff --check` passed. Composer audit found no security advisories. Playwright's login-page responsive check passed at 320, 400, 768, and 1280 px; the authenticated browser journey was skipped because no synthetic E2E credentials were configured. Login and registration screens were visually reviewed in the browser. No separate PHP style tool is configured. No deployment or production database changes were made.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```

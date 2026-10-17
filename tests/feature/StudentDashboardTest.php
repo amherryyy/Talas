@@ -35,8 +35,14 @@ final class StudentDashboardTest extends CIUnitTestCase
 
         $response = $this->getAuthenticated('student');
         $response->assertOK();
-        $response->assertSee('Your Talas workspace');
-        $response->assertSee('Study ideas');
+        $response->assertSee('Your study space');
+        $response->assertSee('duno.');
+        $response->assertSee('Your Little Study Buddy.');
+        $response->assertSee('Duno Focus');
+        $response->assertSee('Duno Plan');
+        $response->assertSee('Duno Guide');
+        $response->assertSee('Duno Timer');
+        $response->assertSee('Aralytics');
         $response->assertSee('Revisit a topic later');
         $response->assertSee('Try recalling before rereading');
         $response->assertSee('Explain why or how');

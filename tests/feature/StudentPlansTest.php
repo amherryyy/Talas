@@ -43,6 +43,7 @@ final class StudentPlansTest extends CIUnitTestCase
 
         $page = $this->getAuthenticated('student/plan');
         $page->assertOK();
+        $page->assertSee('Duno Plan');
         $page->assertSee('Today’s study plan');
         $this->postAuthenticated('student/plan/generate', ['available_minutes' => '60'])->assertRedirect();
 

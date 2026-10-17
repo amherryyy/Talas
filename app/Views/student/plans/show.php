@@ -1,8 +1,8 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<h1>Today’s study plan</h1>
-<p class="muted">Plan for <?= esc($today) ?>. Blocks follow your unfinished topics’ priority order. You can change the order, duration, or remove a block.</p>
+<h1>Duno Plan</h1>
+<p class="muted">Today’s study plan · <?= esc($today) ?>. Blocks follow your unfinished topics’ priority order. You can change the order, duration, or remove a block.</p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">

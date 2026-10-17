@@ -42,6 +42,7 @@ final class StudentStudySessionsTest extends CIUnitTestCase
 
         $page = $this->getAuthenticated('student/sessions');
         $page->assertOK();
+        $page->assertSee('Duno Timer');
         $page->assertSee('Time a session');
         $this->postAuthenticated('student/sessions', [
             'subject_id' => (string) $subjectId,

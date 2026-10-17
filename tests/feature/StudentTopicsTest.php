@@ -175,6 +175,7 @@ final class StudentTopicsTest extends CIUnitTestCase
 
         $page = $this->getAuthenticated('student/priority');
         $page->assertOK();
+        $page->assertSee('Duno Focus');
         $page->assertSeeInOrder([
             'Today low importance',
             'Later high importance',

@@ -29,7 +29,7 @@ $env:PLAYWRIGHT_BROWSERS_PATH = '0'
 npm.cmd test
 ```
 
-The test suite checks the login page at 320, 400, 768, and 1280 CSS pixels. It also checks the student dashboard and study idea cards, subject list, topic search/filter, Priority, Sessions, and Aralytics pages at those sizes when test credentials are provided. It checks keyboard access to a suggestion source link and that Aralytics print media hides navigation and controls while retaining report content. These checks assert that page content fits the viewport without horizontal overflow and that primary controls remain visible.
+The test suite checks the login page at 320, 400, 768, and 1280 CSS pixels. With test credentials it checks the student dashboard and study idea cards, subject list, topic search/filter, Priority, Sessions, private Check-ins, and Aralytics pages at those sizes. It checks keyboard access to a suggestion source link and Print report control, check-in create/edit/delete, and that Aralytics print media hides navigation and controls while retaining report content. These checks assert that page content fits the viewport without horizontal overflow and that primary controls remain visible. The rating-distribution chart and its numeric table still need a manual review at mobile and desktop widths, including confirmation that print output hides the private chart.
 
 For authenticated checks, use a **synthetic student account** and set its credentials only in the current shell:
 
@@ -39,7 +39,7 @@ $env:TALAS_E2E_PASSWORD = 'your-local-test-password'
 npm.cmd test
 ```
 
-Do not commit credentials or add real student records to test fixtures. When these variables are absent, the login page check still runs and the authenticated page check is reported as skipped. The test account is only used to sign in and load read-only pages.
+Do not commit credentials or add real student records to test fixtures. When these variables are absent, the login page check still runs and the authenticated page check is reported as skipped. The authenticated check uses a synthetic account and creates, edits, and deletes one synthetic private check-in during the run.
 
 Useful commands:
 

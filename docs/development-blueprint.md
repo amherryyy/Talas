@@ -1,8 +1,10 @@
-# Talas development blueprint
+# Duno development blueprint
 
-**Status:** Local Talas repository at `C:\xampp\htdocs\Talas`. CodeIgniter 4 and Shield were selected by the project owner. The official starter is installed; authentication and product features remain to be implemented.
+**Status:** Local Duno repository at `C:\xampp\htdocs\Talas`. The repository folder retains its historical Talas name. CodeIgniter 4 and Shield were selected by the project owner. The official starter is installed; authentication and product features remain to be implemented. The approved identity, palette, product names, and mascot export requirements are in `docs/brand-identity.md`.
 
 ## Decisions and source of requirements
+
+Duno is the current user-facing product identity. The Talas 2.0 proposal name is retained only as historical source context. Follow `docs/brand-identity.md` for the approved wordmark, tagline, module names, palette, and mascot export requirements.
 
 The latest editable **Talas 2.0 Phase 1 proposal** is the product baseline. It describes a one-month responsive website for students to organize subjects and topics, add due dates and progress, see rule-based priorities, adjust a daily study plan, time study sessions, review simple summaries, print reports, and optionally record a private workload or energy check-in. It also includes student/admin accounts, brief study suggestions, and a basic admin view. The older Talas proposal supplies the name **Aralytics** for simple observations, plus search and filtering. The latest proposal deliberately removes CHED claims and treats study suggestions as a supporting feature. The referenced AppDev chat mentions Phase 2, but its answer content is unavailable through the chat reference; this plan does not claim to reproduce an approved Phase 2 specification.
 
@@ -51,6 +53,7 @@ talas/
   writable/                    # logs/cache/sessions, denied from web
   docs/requirements.md         # Phase 1 traceability and decisions
   docs/deployment.md           # InfinityFree upload and denial checks
+  docs/brand-identity.md       # Duno naming, palette, and mascot export requirements
   .github/workflows/ci.yml     # add when GitHub repository exists
 ```
 

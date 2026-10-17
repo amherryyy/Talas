@@ -41,8 +41,8 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.setViewportSize({ width, height: 850 });
 
     await page.goto('student');
-    await expect(page.getByRole('heading', { name: 'Your Talas workspace' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Study ideas' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Your study space' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Duno Guide' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'What Works Clearinghouse practice guide (2007)' })).toHaveCount(4);
     await expectNoHorizontalOverflow(page, '/student');
 
@@ -59,12 +59,18 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await expectNoHorizontalOverflow(page, '/student/topics');
 
     await page.goto('student/priority');
-    await expect(page.getByRole('heading', { name: 'Priority topics' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Duno Focus' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/priority');
 
     await page.goto('student/sessions');
-    await expect(page.getByRole('heading', { name: 'Study sessions' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Duno Timer' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/sessions');
+
+    await page.goto('student/check-ins');
+    await expect(page.getByRole('heading', { name: 'Private check-ins' })).toBeVisible();
+    await expect(page.getByLabel('Workload')).toBeVisible();
+    await expect(page.getByLabel('Energy')).toBeVisible();
+    await expectNoHorizontalOverflow(page, '/student/check-ins');
 
     await page.goto('student/aralytics');
     await expect(page.getByRole('heading', { name: 'Aralytics' })).toBeVisible();
@@ -73,7 +79,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   }
 
   await page.goto('student');
-  for (let tab = 0; tab < 10; tab++) {
+  for (let tab = 0; tab < 12; tab++) {
     await page.keyboard.press('Tab');
   }
   await expect(page.locator('#study-ideas-heading').locator('..').getByRole('link').first()).toBeFocused();
@@ -85,7 +91,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expect(page.getByRole('heading', { name: 'Study activity: All time' })).toBeVisible();
 
   await page.goto('student/aralytics');
-  for (let tab = 0; tab < 13; tab++) {
+  for (let tab = 0; tab < 15; tab++) {
     await page.keyboard.press('Tab');
   }
   await expect(page.getByRole('button', { name: 'Print report' })).toBeFocused();
@@ -101,6 +107,28 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expect(page.getByRole('button', { name: 'Print report' })).toBeHidden();
   await expect(page.getByRole('heading', { name: 'Dated sessions' })).toBeVisible();
   await page.emulateMedia({ media: 'screen' });
+
+  await page.setViewportSize({ width: 400, height: 850 });
+  await page.goto('student/check-ins');
+  await page.locator('#workload-rating').focus();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#energy-rating')).toBeFocused();
+  await page.getByLabel('Workload').selectOption('4');
+  await page.getByLabel('Energy').selectOption('3');
+  await page.getByRole('button', { name: 'Save private check-in' }).click();
+  await expect(page.getByText('Private check-in saved.')).toBeVisible();
+  const checkIn = page.locator('.subject-list li').first();
+  await expect(checkIn).toContainText('Workload: 4/5 · Energy: 3/5');
+  const savedTime = await checkIn.locator('time').getAttribute('datetime');
+  await checkIn.getByRole('link', { name: 'Edit' }).click();
+  await page.getByLabel('Workload').selectOption('2');
+  await page.getByRole('button', { name: 'Save changes' }).click();
+  await expect(page.locator('.subject-list li').first()).toContainText('Workload: 2/5 · Energy: 3/5');
+  await expect(page.locator('.subject-list li').first().locator('time')).toHaveAttribute('datetime', savedTime);
+  await page.locator('.subject-list li').first().getByRole('link', { name: 'Delete' }).click();
+  await page.getByRole('button', { name: 'Delete check-in' }).click();
+  await expect(page.getByText('Private check-in deleted.')).toBeVisible();
+  await expect(page.getByText('You have no saved check-ins.')).toBeVisible();
 
   await page.setViewportSize({ width: 400, height: 850 });
   await page.goto('student/sessions');

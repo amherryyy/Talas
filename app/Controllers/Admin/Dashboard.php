@@ -10,7 +10,7 @@ class Dashboard extends BaseController
     {
         return view('role_landing', [
             'pageTitle' => 'Admin workspace',
-            'heading'   => 'Talas administration',
+            'heading'   => 'Duno administration',
             'message'   => 'The approved aggregate admin view will be built here. No student records or check-in details are displayed.',
         ]);
     }

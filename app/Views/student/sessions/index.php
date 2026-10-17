@@ -1,7 +1,7 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<h1>Study sessions</h1>
+<h1>Duno Timer</h1>
 <p>Time a session for one of your subjects, review the duration, and save it when you are ready.</p>
 
 <?php if ($errors !== []): ?>

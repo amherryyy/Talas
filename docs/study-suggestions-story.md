@@ -1,7 +1,7 @@
 # F-10 curated study suggestions
 
 **Requirement:** F-10 (Should)
-**Status:** Owner-accepted on `feature/F-10-study-suggestions` on 2026-10-17; under review in [PR #5](https://github.com/amherryyy/Talas/pull/5).
+**Status:** Owner-accepted on `feature/F-10-study-suggestions` on 2026-10-17; merged to `main` through [PR #5](https://github.com/amherryyy/Talas/pull/5) on 2026-10-17 (merge commit `ce44d12`).
 
 ## Approved product decision
 

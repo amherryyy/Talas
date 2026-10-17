@@ -22,6 +22,7 @@ class Plans extends BaseController
             'errors' => session()->getFlashdata('errors') ?? [],
             'availableMinutes' => old('available_minutes', ''),
             'confirmReplacement' => false,
+            'pageTitle' => 'Duno Plan',
         ]);
     }
 
@@ -47,6 +48,7 @@ class Plans extends BaseController
                 'errors' => [],
                 'availableMinutes' => $minutes,
                 'confirmReplacement' => true,
+                'pageTitle' => 'Duno Plan',
             ]);
         }
 

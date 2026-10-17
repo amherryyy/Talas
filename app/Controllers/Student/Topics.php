@@ -17,6 +17,7 @@ class Topics extends BaseController
 
         return view('student/topics/priority', [
             'topics' => (new TopicPriorityService())->rank($topics),
+            'pageTitle' => 'Duno Focus',
         ]);
     }
 
