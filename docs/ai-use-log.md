@@ -484,6 +484,19 @@ How the student verified and can explain the result: Not run in this task. Respo
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### F-11 follow-up verification
+
+```text
+Date / story: 2026-10-17 / verify the weekly check-in summary and Aralytics rating chart
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue with the next F-11 verification task after accepting the local milestone. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Added focused assertions for weekly owner-scoped counts and rating distributions, strengthened browser assertions for chart visibility, responsive fit, and print exclusion, and updated verification records.
+Suggestions or code retained: PHPUnit now checks last-seven-day and owner filtering plus exact workload/energy count-table values. Playwright checks the chart and table at 400px and 1280px and their omission from print.
+Student changes and decisions: The owner had already approved the weekly pattern summary and rating-distribution chart for the local milestone.
+How the student verified and can explain the result: Focused PHPUnit passed (11 tests, 107 assertions) with XAMPP PHP loading intl and SQLite. Playwright passed 2/2 tests with the synthetic local student account. The chart and table rendered at both checked widths without horizontal overflow; print media hid them while retaining dated session content. No dependency or production files changed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### Duno rebrand
 
 ```text

@@ -57,6 +57,35 @@ final class StudentCheckInsTest extends CIUnitTestCase
         $page->assertSee('Workload: 1/5 · Energy: 5/5');
     }
 
+    public function testWeeklySummaryAndAralyticsChartUseOnlyRecentOwnerCheckIns(): void
+    {
+        $owner = $this->createUser('checkin-pattern-owner', 'student');
+        $other = $this->createUser('checkin-pattern-other', 'student');
+        $model = new CheckInModel();
+        $today = new DateTimeImmutable('today', new DateTimeZone(config('App')->appTimezone));
+
+        $model->createForOwner((int) $owner->id, 5, 2, $today->format('Y-m-d') . ' 08:00:00');
+        $model->createForOwner((int) $owner->id, 3, 4, $today->format('Y-m-d') . ' 09:00:00');
+        $model->createForOwner((int) $owner->id, 1, 5, $today->format('Y-m-d') . ' 10:00:00');
+        $model->createForOwner((int) $owner->id, 2, 5, $today->modify('-8 days')->format('Y-m-d') . ' 10:00:00');
+        $model->createForOwner((int) $other->id, 5, 1, $today->format('Y-m-d') . ' 11:00:00');
+        $this->authenticateAs($owner);
+
+        $checkIns = $this->getAuthenticated('student/check-ins');
+        $checkIns->assertOK();
+        $checkIns->assertSee('Of 3 check-ins, 1 had both a high workload rating');
+        $checkIns->assertSee('and a low energy rating');
+        $checkIns->assertDontSee('Of 4 check-ins');
+
+        $report = $this->getAuthenticated('student/aralytics');
+        $report->assertOK();
+        $html = $report->response()->getBody();
+        $this->assertStringContainsString('<title id="rating-chart-title">Workload and energy ratings for Last 7 days</title>', $html);
+        $this->assertStringContainsString('<caption>Check-in counts by rating</caption>', $html);
+        $this->assertStringContainsString('<tr><th scope="row">Workload</th><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>', $html);
+        $this->assertStringContainsString('<tr><th scope="row">Energy</th><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>', $html);
+    }
+
     public function testRatingsMustBeBetweenOneAndFive(): void
     {
         $student = $this->createUser('checkin-validation', 'student');
