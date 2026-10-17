@@ -271,7 +271,7 @@ Tool and model: OpenAI Codex; exact serving model identifier was not exposed in 
 Allowed use confirmed by: Not confirmed; the project owner asked to start development planning. Instructor/course permission remains to be checked.
 Assistance used (explanation, planning, code draft, debugging, review): Story planning and requirements traceability.
 Suggestions or code retained: Draft story scope, security acceptance criteria, boundaries, readiness blockers, and proposed implementation sequence.
-Student changes and decisions: The project owner ordered authentication as the first development slice, chose open student registration, approved a private admin demo account with a separate synthetic student account for any public demo, approved the student/admin route split, and chose to defer the database/import check. The first-admin bootstrap mechanism remains unresolved.
+Student changes and decisions: At the time of this entry, the project owner ordered authentication as the first development slice, chose open student registration, approved a private admin demo account with a separate synthetic student account for any public demo, approved the student/admin route split, and chose to defer the database/import check. The first-admin bootstrap mechanism was unresolved then; the local setup path is recorded in the later entry below.
 How the student verified and can explain the result: Compared the draft with F-01, F-02, S-01, S-04 and the development blueprint; no application code or tests were run.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
 ```
@@ -365,4 +365,30 @@ Suggestions or code retained: Added four short cards on spaced review, retrieval
 Student changes and decisions: The owner approved the recommended content scope and dashboard placement on 2026-10-16, then accepted the implementation on 2026-10-17. The accepted implementation is submitted in PR #5.
 How the student verified and can explain the result: PHPUnit passed (49 tests, 431 assertions) with coverage disabled; PHP syntax and JavaScript syntax checks passed, as did `git diff --check`. Composer audit reached Packagist after clearing the injected proxy variables for the Composer process and reported no security advisories; Composer proceeded without its unwritable cache. Both Playwright tests passed with the synthetic review account, including the dashboard and four source links at 320, 400, 768, and 1280 px, keyboard focus on a source link, and no horizontal overflow. Visual screenshots at 320 and 1280 px were reviewed. No separate PHP style tool is configured. The owner accepted F-10 on 2026-10-17.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-12 aggregate admin dashboard
+
+```text
+Date / story: 2026-10-17 / implement the approved F-12 admin dashboard aggregates
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner approved the recommended aggregate cards: student account count, subject count, topic count, saved study-session count, and total saved study minutes. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Requirements review, aggregate service/controller/view implementation, and story and traceability updates.
+Suggestions or code retained: Added five aggregate-only cards. Student-group users also assigned to admin are excluded. The page exposes no names, emails, individual study records, check-in values/patterns, exports, or drill-down routes. After the owner reported excessive phone scrolling, tightened the card spacing and changed the narrow-screen grid to two columns.
+Student changes and decisions: The owner approved aggregate cards with no drill-down and accepted F-12 for the local milestone on 2026-10-17 after reviewing the dashboard and confirming the compact phone layout was better.
+How the student verified and can explain the result: Focused admin feature tests passed (3 tests, 27 assertions) and the full PHPUnit suite passed (52 tests, 458 assertions) with in-memory SQLite; the PHPUnit coverage warning was avoided with `--no-coverage`. PHP syntax checks passed for the changed controller, service, test, and view; no separate PHP style tool is configured. `git diff --check` passed. `composer audit --locked` reported no advisories after clearing injected proxy variables for that process; Composer proceeded without its unwritable cache. Playwright passed the login-page responsive check at 320, 400, 768, and 1280 px; the authenticated student test was skipped because credentials were not configured. The owner viewed the admin dashboard, reported excessive scrolling on phone widths, reviewed the compact two-column adjustment, and confirmed it is better. The owner accepted F-12 for the local milestone on 2026-10-17; hosted deployment checks remain pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Local first-admin bootstrap
+
+```text
+Date / story: 2026-10-17 / add a private local admin setup command
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner asked to add a local admin account after the F-12 route correctly denied access. The owner approved a development-only CLI bootstrap; instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Shield API inspection, guarded CLI/service implementation, feature tests, and authentication/database documentation.
+Suggestions or code retained: Added admin:create-local, limited to development mode and loopback databases. It refuses when an admin already exists, creates an admin-only account through Shield, generates a strong one-time password within Shield's 72-byte bcrypt input limit, and does not write the password to a file or log. No public route was added.
+Student changes and decisions: The owner approved adding a local admin setup path to enable the F-12 review.
+How the student verified and can explain the result: Focused bootstrap tests passed (3 tests, 29 assertions), including development/loopback policy checks and verification that the generated password is within 72 bytes and hashes correctly. The full suite passed earlier (55 tests, 484 assertions) before this password-length fix; PHP syntax checks and `git diff --check` passed after it. `spark list` displays `admin:create-local`. The Composer dependency audit had already reported no advisories for this unchanged lockfile. The first command attempt targeted the configured database on port 3307, which refused the connection. Added ignored local helper `.tools/run-review-admin-bootstrap.php` to load the same port-3308 `talas_review` override used by the browser review server. Account creation and authenticated browser review remain pending; the owner should run that helper and keep the one-time password private.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

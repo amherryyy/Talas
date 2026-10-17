@@ -3,15 +3,15 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Services\AdminDashboardSummaryService;
 
 class Dashboard extends BaseController
 {
     public function index(): string
     {
-        return view('role_landing', [
-            'pageTitle' => 'Admin workspace',
-            'heading'   => 'Talas administration',
-            'message'   => 'The approved aggregate admin view will be built here. No student records or check-in details are displayed.',
+        return view('admin/dashboard', [
+            'pageTitle' => 'Duno admin dashboard',
+            'summary' => (new AdminDashboardSummaryService())->summarize(),
         ]);
     }
 }

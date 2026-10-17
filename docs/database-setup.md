@@ -24,6 +24,10 @@ Start-Process -FilePath C:\xampp\mysql\bin\mysqld.exe -ArgumentList '--defaults-
 
 ## Run the local web app
 
+For the first local admin account, apply all migrations and run C:\xampp\php\php.exe -d extension=intl spark admin:create-local from the repository root. This command is limited to development mode and a loopback database and refuses to create another admin. It prints a generated password once; keep it private and do not paste it into chat or commit it. Hosted admin provisioning is separate and remains unresolved.
+
+When using the temporary review database on port 3308, the normal Spark command does not load its connection override. From the repository root, run `C:\xampp\php\php.exe -d extension=intl .tools\run-review-admin-bootstrap.php` instead. This local helper loads the same loopback `talas_review` connection used by the browser review server, then invokes the guarded command. It prompts for the username and email and displays the generated password once.
+
 Start CodeIgniter's development server directly with XAMPP PHP so the `intl` extension flag is present in the web-server process. Running `spark serve` with `-d extension=intl` starts a child server that does not inherit that flag on this setup.
 
 ```powershell
