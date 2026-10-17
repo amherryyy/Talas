@@ -6,7 +6,7 @@ Replace example repository URLs, branch names, and file paths with the actual va
 
 ## Current repository state
 
-As checked on 2026-10-16, F-08 was merged to `main` through PR #3 (merge commit `cc663dc`). The current checkout is `feature/F-09-aralytics`, based on the updated `main` at `cc663dc`. The `origin` remote is configured. A pre-existing untracked `.github/` path is outside F-09 and must remain untouched. Never merge or deploy without separate owner authorization. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+As checked on 2026-10-16, F-09 was merged to `main` through PR #4 (merge commit `32898e5`). The current checkout is `feature/F-10-study-suggestions`, based on the updated `main` at `32898e5`. The `origin` remote is configured. A pre-existing untracked `.github/` path is outside F-10 and must remain untouched. Never merge or deploy without separate owner authorization. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 
 ## One-time GitHub setup
 

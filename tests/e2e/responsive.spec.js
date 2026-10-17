@@ -40,6 +40,12 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   for (const width of viewportWidths) {
     await page.setViewportSize({ width, height: 850 });
 
+    await page.goto('student');
+    await expect(page.getByRole('heading', { name: 'Your Talas workspace' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Study ideas' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'What Works Clearinghouse practice guide (2007)' })).toHaveCount(4);
+    await expectNoHorizontalOverflow(page, '/student');
+
     await page.goto('student/subjects');
     await expect(page.getByRole('heading', { name: 'Your subjects' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/subjects');
@@ -66,6 +72,13 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await expectNoHorizontalOverflow(page, '/student/aralytics');
   }
 
+  await page.goto('student');
+  for (let tab = 0; tab < 10; tab++) {
+    await page.keyboard.press('Tab');
+  }
+  await expect(page.locator('#study-ideas-heading').locator('..').getByRole('link').first()).toBeFocused();
+
+  await page.goto('student/aralytics');
   await page.getByRole('link', { name: 'Last 30 days' }).click();
   await expect(page.getByRole('heading', { name: 'Study activity: Last 30 days' })).toBeVisible();
   await page.getByRole('link', { name: 'All time' }).click();
