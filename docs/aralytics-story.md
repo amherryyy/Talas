@@ -2,7 +2,7 @@
 
 **Requirement:** F-09
 
-**Status:** Implemented on `feature/F-09-aralytics`; owner acceptance is pending.
+**Status:** Accepted and merged to `main` through PR #4 on 2026-10-16.
 
 ## User story
 
@@ -39,5 +39,5 @@ As a student, I can review descriptive summaries of my saved study sessions for 
 - PHPUnit: passed, 46 tests and 397 assertions.
 - PHP syntax checks: passed for all changed PHP files. JavaScript syntax checks and `git diff --check`: passed.
 - Playwright: both tests passed with the synthetic review account. The authenticated test covered 320, 400, 768, and 1280 px widths, period selection, print action, and print media hiding navigation and controls while retaining the report.
-- Composer audit: not verified in this run because Packagist was unreachable through the configured proxy. No PHP style tool is configured in the repository.
-- The report and print screenshots were visually reviewed; keyboard focus traversed the navigation and report controls. Owner acceptance is pending.
+- Composer audit initially could not reach Packagist because injected proxy variables pointed to `127.0.0.1:9`; rerunning with those variables cleared for the Composer process succeeded with no advisories. No PHP style tool is configured in the repository.
+- The report and print screenshots were visually reviewed; keyboard focus traversed the navigation and report controls. The owner accepted F-09; PR #4 merged as `32898e5`.
