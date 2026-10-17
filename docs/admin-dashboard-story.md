@@ -30,6 +30,7 @@ The counts include records owned by student-group accounts. Accounts also assign
 - Focused admin dashboard feature tests passed: 3 tests and 27 assertions. The full PHPUnit suite passed: 52 tests and 458 assertions, using in-memory SQLite. PHPUnit reported no code-coverage driver; coverage was disabled for the passing full-suite run.
 - PHP syntax checks passed for the admin controller, aggregate service, feature test, and dashboard view. No separate PHP style tool is configured in the repository. `git diff --check` passed.
 - `composer audit --locked` reported no security advisories. Composer proceeded without its unwritable local cache after clearing injected proxy variables for the audit process.
-- Playwright passed the login-page responsive check at 320, 400, 768, and 1280 px. The authenticated student browser test was skipped because test credentials were not set. An authenticated admin browser check and visual review of the dashboard remain pending.
+- Playwright passed the student responsive journey at 320, 400, 768, and 1280 px, including a 403 when the student requested `/admin`.
+- The owner signed into the local admin account and viewed `/index.php/admin` in Brave at an emulated 440 CSS-pixel phone width. The page showed all five aggregate cards in the compact two-column layout and the privacy note; no names, account identities, or individual records were displayed.
 - No schema changes or hosted database/deployment checks were made.
 - The owner reported excessive scrolling on narrow screens, then reviewed the two-column layout and confirmed it is better before accepting F-12 for the local milestone. Hosted deployment checks remain pending.

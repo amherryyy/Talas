@@ -2,10 +2,10 @@
 
 <?= $this->section('content') ?>
 <style {csp-style-nonce}>
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: .75rem; }
-    .summary-card, .report-section { padding: 1rem; border: 1px solid var(--duno-line); border-radius: .65rem; background: #fff; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: .6rem; }
+    .summary-card, .report-section { padding: .8rem; border: 1px solid var(--duno-line); border-radius: .65rem; background: #fff; }
     .summary-card p { margin: .25rem 0 0; font-size: 1.25rem; font-weight: 700; }
-    .report-section { margin-top: 1rem; }
+    .report-section { margin-top: .75rem; }
     .report-table { width: 100%; border-collapse: collapse; }
     .report-table th, .report-table td { padding: .55rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--duno-line); }
     .report-table th:last-child, .report-table td:last-child { text-align: right; }
@@ -22,7 +22,8 @@
     .chart-swatch.energy { background: var(--duno-mint); border: 1px solid #37634e; }
     @media (max-width: 36rem) {
         .report-table { font-size: .9rem; }
-        .report-table th, .report-table td { padding: .4rem .25rem; }
+        .report-table th, .report-table td { padding: .32rem .2rem; }
+        .summary-card, .report-section { padding: .65rem; }
     }
     @media print {
         body { padding: 0; color: #000; background: #fff; }
@@ -36,7 +37,7 @@
 </style>
 
 <h1>Aralytics</h1>
-<p class="muted">A descriptive summary of your saved study sessions.</p>
+<p class="muted">Study-session totals for the selected period.</p>
 
 <div class="actions no-print report-controls" aria-label="Report controls">
     <span>Period:</span>
@@ -52,11 +53,11 @@
 
     <section class="report-section no-print" aria-labelledby="check-in-pattern-heading">
         <h3 id="check-in-pattern-heading">Your private check-in pattern</h3>
-        <p class="muted">From your check-ins for <?= esc($checkInSummary['period_label']) ?>. This describes your ratings only; it is not an assessment or prediction. It is private to you and is not included in printed reports.</p>
+        <p class="muted">Private to you; descriptive, not an assessment or prediction. Excluded from print.</p>
         <?php if ($checkInSummary['check_in_count'] === 0): ?>
             <p>No check-ins recorded in this period.</p>
         <?php else: ?>
-            <p>Across <?= esc((string) $checkInSummary['check_in_count']) ?> check-ins: workload was high (4–5) <?= esc((string) $checkInSummary['high_workload_count']) ?> times, energy was low (1–2) <?= esc((string) $checkInSummary['low_energy_count']) ?> times, and both ratings occurred together <?= esc((string) $checkInSummary['high_workload_low_energy_count']) ?> times.</p>
+            <p><?= esc((string) $checkInSummary['check_in_count']) ?> check-ins: high workload (4–5) <?= esc((string) $checkInSummary['high_workload_count']) ?>; low energy (1–2) <?= esc((string) $checkInSummary['low_energy_count']) ?>; both <?= esc((string) $checkInSummary['high_workload_low_energy_count']) ?>.</p>
             <h4>Rating distribution</h4>
             <?php $ratingChartMax = max(1, max($checkInSummary['workload_distribution']), max($checkInSummary['energy_distribution'])); ?>
             <?php $ratingChartBase = 220; $ratingChartHeight = 168; ?>

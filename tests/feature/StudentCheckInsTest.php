@@ -39,7 +39,7 @@ final class StudentCheckInsTest extends CIUnitTestCase
         $page = $this->getAuthenticated('student/check-ins');
         $page->assertOK();
         $page->assertSee('Private check-ins');
-        $page->assertSee('individual entries and that summary are excluded from admin views and printed reports');
+        $page->assertSee('Only you can see check-ins; Aralytics shows pattern counts.');
 
         $this->postAuthenticated('student/check-ins', ['workload_rating' => '1', 'energy_rating' => '5'])->assertRedirect();
         $this->postAuthenticated('student/check-ins', ['workload_rating' => '5', 'energy_rating' => '2'])->assertRedirect();

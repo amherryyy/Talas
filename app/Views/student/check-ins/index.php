@@ -2,8 +2,8 @@
 
 <?= $this->section('content') ?>
 <h1>Private check-ins</h1>
-<p>Record a quick snapshot of how heavy your workload feels and your current energy. Your entries are visible only to you. Aralytics may show a private count of rating patterns; individual entries and that summary are excluded from admin views and printed reports.</p>
-<p class="muted">You may save more than one check-in a day. Entries stay here until you delete them.</p>
+<p>Log workload and energy for your own reflection. Only you can see check-ins; Aralytics shows pattern counts. Admin views and printed reports exclude them.</p>
+<p class="muted">Multiple check-ins per day are allowed. Entries stay until you delete them.</p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -30,14 +30,14 @@
                 <option value="<?= esc((string) $rating) ?>"<?= (string) old('energy_rating', '') === (string) $rating ? ' selected' : '' ?>><?= esc($label) ?></option>
             <?php endforeach ?>
         </select>
-        <p class="muted">Choose one rating from 1 to 5 for each. This is optional and is not an assessment.</p>
+        <p class="muted">Rate each from 1 to 5. This is optional, not an assessment.</p>
         <button type="submit">Save private check-in</button>
     </form>
 </section>
 
 <section aria-labelledby="check-in-summary-heading">
     <h2 id="check-in-summary-heading">Your last 7 days</h2>
-    <p class="muted">This private summary counts your check-ins from <?= esc($summary['start_date']) ?> through <?= esc($summary['end_date']) ?>. It describes your ratings only; it is not an assessment.</p>
+    <p class="muted">Your ratings from <?= esc($summary['start_date']) ?> through <?= esc($summary['end_date']) ?>; descriptive only, not an assessment.</p>
     <?php if ($summary['check_in_count'] === 0): ?>
         <p>You have no check-ins from the last 7 days yet.</p>
     <?php else: ?>

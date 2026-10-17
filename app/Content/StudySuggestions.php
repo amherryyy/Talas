@@ -12,25 +12,25 @@ final class StudySuggestions
         [
             'id' => 'space-reviews',
             'title' => 'Revisit a topic later',
-            'body' => 'Pick one topic to review in a later study session instead of doing every review in one sitting.',
+            'body' => 'Review one topic again in a later study session.',
             'recommendation' => 'Recommendation 1: Space learning over time.',
         ],
         [
             'id' => 'recall-from-memory',
             'title' => 'Try recalling before rereading',
-            'body' => 'Close your notes and write or say what you remember, then check your materials for gaps.',
+            'body' => 'Recall the key points before checking your notes for gaps.',
             'recommendation' => 'Recommendation 5b: Use quizzes to revisit key content.',
         ],
         [
             'id' => 'explain-the-idea',
             'title' => 'Explain why or how',
-            'body' => 'Ask yourself why a key idea works or how two ideas connect, then write a short explanation.',
+            'body' => 'Explain why an idea works or how two ideas connect.',
             'recommendation' => 'Recommendation 7: Ask deep explanatory questions.',
         ],
         [
             'id' => 'example-then-practice',
             'title' => 'Read an example, then try one',
-            'body' => 'Review a worked solution, try a similar problem on your own, and check your steps afterward.',
+            'body' => 'Study a worked example, solve a similar problem, then check your steps.',
             'recommendation' => 'Recommendation 2: Alternate worked examples and problem-solving.',
         ],
     ];

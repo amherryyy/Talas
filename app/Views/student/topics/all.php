@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1>Search topics</h1>
-<p>Search your topic titles and subject names, then narrow the results with filters.</p>
+<p>Search topics or subjects, then filter the results.</p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">

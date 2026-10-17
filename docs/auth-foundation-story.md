@@ -1,6 +1,6 @@
 # Draft story: authentication and role foundation
 
-**Status:** Local student/admin route boundaries and a one-time development-only first-admin command are implemented. End-to-end acceptance and hosted database/import verification remain pending.
+**Status:** Local Shield registration, login/logout, invalid-credential behavior, and student/admin route boundaries pass focused feature tests against in-memory SQLite. Playwright confirmed that a synthetic student can sign in against the local MySQL review database and receives 403 from `/admin`. The owner also signed into the local admin account and viewed the protected `/admin` dashboard in the browser. Hosted database/import verification remains pending.
 
 ## Story
 
@@ -53,13 +53,13 @@ Routes use Shield's session and permission filters plus an app role filter. The 
 ## Readiness constraints
 
 - The owner deferred creation of a database, so the host phpMyAdmin import path is unverified.
-- Shield config, public auth routes, CSRF, rate limiting, role-protected dashboard routes, and data-free landing pages are configured locally. The bootstrap command is implemented; local database availability, hosted database/import, and end-to-end auth-flow verification remain pending.
+- Shield config, public auth routes, CSRF, rate limiting, role-protected dashboard routes, and data-free landing pages are configured locally. Focused feature tests exercise registration (including an attempted admin-role submission), login, logout, invalid credentials, signed-out access, and student/admin route boundaries with in-memory SQLite. Playwright confirmed a synthetic student login and 403 response from `/admin` against the local MySQL review database. The owner signed in using the existing local admin account and viewed `/index.php/admin`; the admin-allowed route is also covered by in-memory SQLite feature tests. Hosted database/import verification remains pending.
 
 ## Proposed implementation sequence after Ready
 
 1. Install the official CodeIgniter app starter and Shield using reviewed, locked Composer versions. **Complete:** CI4 4.7.5 and Shield 1.4.1 are recorded in `composer.lock`.
 2. Configure session, CSRF, authentication routes, and role authorization through framework facilities. **In progress:** Shield config is installed; registration/login are rate-limited, CSRF is enabled globally for state-changing requests, logout is POST-only, public registration defaults to `student`, remember-me and magic links are disabled, and last-active tracking is off. `/student` requires a session and student role while rejecting admin members; `/admin` requires a session, admin role, and `admin.access` permission. The student route remains a placeholder; the admin route now shows aggregate dashboard cards.
-3. Add focused tests for signed-out, student, and admin allowed/denied paths after the database and bootstrap paths are ready.
+3. **Local verification complete:** Focused in-memory SQLite feature tests cover public registration, login/logout, invalid credentials, signed-out access, and student/admin allowed/denied routes. Playwright verified synthetic student login and the student-to-admin denial against the local MySQL review database. The owner manually signed into the local admin account and loaded the protected admin dashboard. Hosted database/import checks remain pending.
 4. Review the diff, security behavior, and local checks before the owner accepts the slice.
 
 This story records the approved authentication scope and route split. The local first-admin setup is documented below; hosted provisioning remains outside that command.

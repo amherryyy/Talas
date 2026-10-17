@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1>Your subjects</h1>
-<p>Organize the subjects you want to study. Only you can access your list.</p>
+<p>Manage the subjects you want to study. Only you can see this list.</p>
 <p><a class="button" href="<?= esc(site_url('student/subjects/new')) ?>">Add a subject</a></p>
 
 <?php if ($errors !== []): ?>

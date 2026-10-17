@@ -41,6 +41,19 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### Local review admin password recovery
+
+```text
+Date / story: 2026-10-17 / recover local review admin access
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner reported not knowing the local admin password while continuing the requested admin-access verification. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Located the local admin identity, used a temporary development-only command guarded to the exact loopback review database, reset the credential through CodeIgniter Shield, and verified the persisted password hash.
+Suggestions or code retained: No reset command or credential was retained in the repository. A random password was printed once and was not written to a file or application log.
+Student changes and decisions: The owner wanted to regain access to the existing local admin account.
+How the student verified and can explain the result: The temporary command required development mode, loopback host, database `talas_review`, port 3308, and the expected admin-only account. Shield's password service verified the new password against the saved hash inside a transaction before it committed. No hosted account was changed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### Initial repository staging
 
 ```text
@@ -51,6 +64,19 @@ Assistance used (explanation, planning, code draft, debugging, review): Git igno
 Suggestions or code retained: Staged the initial project snapshot; excluded local .vscode settings, Composer tooling/dependencies, runtime data, and temporary hosting-probe fixtures; simplified .gitignore; updated probe docs and stale authentication status in AGENTS.md; removed trailing whitespace from robots.txt.
 Student changes and decisions: Owner requested staging only. No commit, remote setup, or push was requested or performed.
 How the student verified and can explain the result: Git ignore patterns and staged paths were inspected; common credential patterns were not found in staged text. `git diff --cached --check` initially found trailing whitespace in public/robots.txt; it was corrected and the final check passed. No application tests were run because this is a version-control setup task.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Authentication and role verification
+
+```text
+Date / story: 2026-10-17 / verify local authentication and role boundaries
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner asked to begin the authentication and access-permission verification task. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed auth routes, Shield configuration, role filters, existing feature coverage, added focused Shield auth-flow feature tests, and updated verification notes.
+Suggestions or code retained: Added tests for student registration despite an attempted submitted admin role, valid login and logout, and invalid login; reused route tests for signed-out and cross-role boundaries. The tests use in-memory SQLite and synthetic data only.
+Student changes and decisions: No product behavior changed.
+How the student verified and can explain the result: 15 focused authentication/authorization feature tests passed (105 assertions) with in-memory SQLite. The full PHPUnit suite passed (65 tests, 582 assertions) with `--no-coverage`. Playwright passed 2 tests; the authenticated browser journey signed in as the existing synthetic student against the isolated MySQL review database and confirmed `/admin` returned 403. Two stale copy assertions in the compact check-in and study-plan tests were updated to match current page text. MariaDB required local process access to start; no data repair, permission change, or hosted database action was made. The owner later signed into the local admin account and viewed its protected dashboard; hosting checks remain pending.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
@@ -184,6 +210,45 @@ Suggestions or code retained: Talas-specific repository settings, task brief, br
 Student changes and decisions: The project owner supplied the workflow template and asked to integrate compatible practices. Review of the adaptation is pending.
 How the student verified and can explain the result: The workflow and repository instructions were read together; no application checks or tests were run because this was a documentation-only task.
 Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+```
+
+### F-13 responsive and keyboard verification
+
+```text
+Date / story: 2026-10-17 / F-13 responsive layout and keyboard verification
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The project owner asked to proceed to the next task after completing the F-01 auth-flow coverage.
+Assistance used (explanation, planning, code draft, debugging, review): Audited existing browser coverage, extended the responsive matrix, and recorded remaining verification in the story, browser-testing guide, and requirements traceability.
+Suggestions or code retained: The Playwright matrix includes the daily plan at 320, 400, 768, and 1280 CSS pixels. The runner reads credentials from the ignored `.tools/review-account.txt` when present, accepts environment overrides, uses focus-until-target keyboard checks, and verifies cleanup of only the check-in created by the test. The daily-plan heading assertion now matches the page's Duno Plan heading.
+Student changes and decisions: The owner asked to stop repeating manual credential setup and authorized making the test use the existing local synthetic account. The owner accepted F-13 and the compact-content follow-up after reviewing it.
+How the student verified and can explain the result: `node --check tests/e2e/responsive.spec.js` and `git diff --check` passed. After the compact-content follow-up, `PLAYWRIGHT_BROWSERS_PATH=0 npm.cmd test` passed both tests using the ignored local review account without credential environment variables. The authenticated test covered the student page matrix at 320, 400, 768, and 1280 px, keyboard reachability, Aralytics print behavior, and check-in create/edit/delete while preserving pre-existing synthetic check-ins. A restricted process environment first returned `spawn EPERM`; rerunning where the worker could start passed. The owner's earlier server failures were caused by `spark serve` dropping the `intl` extension flag and a standard rewrite router using the wrong database; browser-testing instructions now start PHP directly with the review router and port-3308 override. The owner reviewed the compact phone layout.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### F-13 compact-content follow-up
+
+```text
+Date / story: 2026-10-17 / reduce unnecessary scrolling on narrow student screens
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner accepted F-13 and requested that lengthy content and phone scrolling be reduced. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Audited student views, shared navigation, and repeated explanatory copy, then implemented a focused responsive-density update.
+Suggestions or code retained: Added a native keyboard-accessible disclosure for student navigation on phone widths, removed its duplicate Priority link, tightened narrow-screen card/list/table spacing, and shortened repeated dashboard, plan, timer, check-in, and Aralytics copy while retaining core details and controls.
+Student changes and decisions: The owner asked to minimize scrolling while retaining useful content and accepted the compact follow-up for now.
+How the student verified and can explain the result: The owner reviewed and accepted the compact-content changes. Afterward, the full Playwright suite passed (2 tests) with the synthetic local review account, the full PHPUnit suite passed (65 tests, 582 assertions), changed PHP and JavaScript syntax checks passed, and `git diff --check` passed. The authenticated browser journey covered the responsive matrix, keyboard reachability, Aralytics print behavior, and check-in create/edit/delete while preserving existing synthetic entries.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Local admin recovery and browser verification
+
+```text
+Date / story: 2026-10-17 / recover local review-admin access and finish F-12 browser verification
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner reported not knowing the local admin password and then signed in to the local review account. This work changed only the isolated development review database; hosted credentials and accounts were not touched.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the local account boundary, reset the existing local admin credential through Shield's password hashing API, and inspected the authenticated dashboard in the browser.
+Suggestions or code retained: No application code or credentials were retained for the reset. The password was shared directly with the owner and was not added to files or logs. The browser check confirmed the protected local admin route and the aggregate-only page content.
+Student changes and decisions: The owner signed in and asked to proceed with the needed local verification.
+How the student verified and can explain the result: The owner loaded `/index.php/admin` in the authenticated local browser. At an emulated 440 CSS-pixel phone width, the page displayed five aggregate cards in two columns and the privacy note, without names or individual student records. Authentication and admin dashboard tests passed (6 tests, 43 assertions); the full PHPUnit suite passed (65 tests, 582 assertions). The Playwright responsive suite passed (2 tests) after the F-13 compact-content follow-up. Hosted account behavior and deployment remain unverified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
 ### F-04 and F-05 owner acceptance
@@ -453,6 +518,6 @@ Allowed use confirmed by: The project owner asked to add a local admin account a
 Assistance used (explanation, planning, code draft, debugging, review): Shield API inspection, guarded CLI/service implementation, feature tests, and authentication/database documentation.
 Suggestions or code retained: Added admin:create-local, limited to development mode and loopback databases. It refuses when an admin already exists, creates an admin-only account through Shield, generates a random 24-character one-time password (above Shield's 8-character minimum and within the bcrypt 72-byte cap), and does not write the password to a file or log. No public route was added.
 Student changes and decisions: The owner approved adding a local admin setup path to enable the F-12 review.
-How the student verified and can explain the result: After changing generated passwords to 24 random characters, the focused bootstrap tests passed (3 tests, 30 assertions), covering development/loopback policy, the 8-character minimum, the 72-byte bcrypt cap, and password hashing. PHP syntax checks and `git diff --check` passed. The full suite passed earlier (55 tests, 484 assertions) before this generator adjustment. `spark list` displays `admin:create-local`. The Composer dependency audit had already reported no advisories for this unchanged lockfile. The first command attempt targeted the configured database on port 3307, which refused the connection. Added ignored local helper `.tools/run-review-admin-bootstrap.php` to load the same port-3308 `talas_review` override used by the browser review server. Account creation and authenticated browser review remain pending; the owner should run that helper and keep the one-time password private.
+How the student verified and can explain the result: After changing generated passwords to 24 random characters, the focused bootstrap tests passed (3 tests, 30 assertions), covering development/loopback policy, the 8-character minimum, the 72-byte bcrypt cap, and password hashing. PHP syntax checks and `git diff --check` passed. The full suite passed earlier (55 tests, 484 assertions) before this generator adjustment. `spark list` displays `admin:create-local`. The Composer dependency audit had already reported no advisories for this unchanged lockfile. The first command attempt targeted the configured database on port 3307, which refused the connection. The owner used an ignored local helper to load the same port-3308 `talas_review` override used by the browser review server, created the local account, recovered access later, and manually viewed the protected dashboard. Hosted admin provisioning remains pending; never point the local bootstrap at a hosted database.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
