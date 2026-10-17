@@ -43,9 +43,10 @@ final class LocalAdminBootstrapTest extends CIUnitTestCase
 
         $this->assertNotNull($account);
         $this->assertTrue($bootstrap->adminExists());
-        $this->assertGreaterThanOrEqual(64, strlen($account['password']));
+        $this->assertSame(24, strlen($account['password']));
+        $this->assertGreaterThanOrEqual(config(Auth::class)->minimumPasswordLength, strlen($account['password']));
         $this->assertLessThanOrEqual(72, strlen($account['password']));
-        $this->assertStringContainsString('Duno!', $account['password']);
+        $this->assertMatchesRegularExpression('/\A[A-Za-z0-9_-]{24}\z/', $account['password']);
 
         $user = (new UserModel())->findById($account['user_id']);
         $this->assertNotNull($user);

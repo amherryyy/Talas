@@ -36,8 +36,9 @@ class LocalAdminBootstrapService
         }
 
         $db = db_connect();
-        // Shield's default bcrypt validator limits passwords to 72 bytes.
-        $password = 'Duno!' . bin2hex(random_bytes(30)) . 'Aa1!';
+        // 18 random bytes produce a manageable 24-character password, above
+        // Shield's configured 8-character minimum and below bcrypt's 72-byte cap.
+        $password = rtrim(strtr(base64_encode(random_bytes(18)), '+/', '-_'), '=');
         $db->transBegin();
 
         try {
