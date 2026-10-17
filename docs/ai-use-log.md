@@ -497,6 +497,19 @@ How the student verified and can explain the result: Focused PHPUnit passed (11 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### Local deployment security preflight
+
+```text
+Date / story: 2026-10-17 / continue release-readiness checks for local migration and path-denial behavior
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue with the next release-readiness task. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Checked local migration state and direct web paths, ran the real project root .htaccess rules through a temporary loopback-only Apache instance, and updated release/deployment status documentation.
+Suggestions or code retained: Recorded local path-denial evidence and clarified that local admin/auth setup is complete while host database/import, hosted admin provisioning, and host checks remain pending.
+Student changes and decisions: No hosting account or hosted database was changed.
+How the student verified and can explain the result: Local migration status showed all application, Shield, and Settings migrations applied. Temporary Apache returned 403 for .env, app, writable, vendor, tests, docs, and composer.json paths, and 200 for one public JavaScript asset; the server was stopped after the check. The PHP built-in server also returned 404 for private paths under its public document root. Host database/import and live access checks could not be verified locally.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### Duno rebrand
 
 ```text

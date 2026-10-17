@@ -8,7 +8,7 @@ Local VS Code workspace for the one-month Duno study-planning app. Its product a
 
 The approved Duno identity and mascot export requirements are in [`docs/brand-identity.md`](docs/brand-identity.md).
 
-The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. F-03 through F-10 are merged to `main` through PRs #1–#5; F-10 was merged on 2026-10-17 (merge commit `ce44d12`). F-11 private workload and energy check-ins, including the owner-approved Aralytics pattern summary and chart, are accepted for the local development milestone on `feature/F-11-private-check-ins`; release verification remains pending. The approved behavior is documented in `docs/private-check-in-story.md`. Topic, plan, session, and private check-in migrations are applied to the isolated local review database. The original shared XAMPP MariaDB data directory has a corrupt system table and was left untouched; Talas uses a separate local instance. First-admin provisioning and hosted database creation are pending. See `docs/database-setup.md` for local settings and recovery boundaries. The development blueprint is in `docs/development-blueprint.md`, coding instructions are in `AGENTS.md`, and the Git/GitHub procedure is in `docs/version-control.md`.
+The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. F-03 through F-10 are merged to `main` through PRs #1–#5; F-10 was merged on 2026-10-17 (merge commit `ce44d12`). F-11 private workload and energy check-ins, including the owner-approved Aralytics pattern summary and chart, are accepted for the local development milestone; focused tests and browser checks pass locally, while hosted release verification remains pending. F-11, F-12, and F-13 are integrated on local branch `feature/F-13-responsive-accessibility`. The approved behavior is documented in `docs/private-check-in-story.md`. Topic, plan, session, and private check-in migrations are applied to the isolated local review database. The original shared XAMPP MariaDB data directory has a corrupt system table and was left untouched; Talas uses a separate local instance. Local first-admin setup is implemented and was used for review; hosted database creation/import and hosted admin provisioning remain pending. See `docs/database-setup.md` for local settings and recovery boundaries. The development blueprint is in `docs/development-blueprint.md`, coding instructions are in `AGENTS.md`, and the Git/GitHub procedure is in `docs/version-control.md`.
 
 ## Local prerequisites found
 
@@ -21,8 +21,8 @@ The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are in
 ## Next setup steps
 
 1. For Composer operations, run `C:\xampp\php\php.exe -d extension=intl -d extension=zip .tools\composer.phar install`.
-2. Complete database-backed authentication checks and decide a safe first-admin provisioning flow. The isolated local database and `.env` are already configured; see `docs/database-setup.md`.
-3. Verify the specific InfinityFree account's PHP extensions, HTTPS, `.htaccess` behavior, and private-path denials before the first upload.
+2. Create the host database through the InfinityFree panel and confirm the supported phpMyAdmin import or migration path; keep host credentials separate from local `.env` values. See `docs/deployment.md` and `docs/database-setup.md`.
+3. Before upload, verify the target domain's assigned web directory and repeat the root `.htaccess` privacy checks on the host. Local Apache confirms the repository deny rules, but host behavior remains unverified.
 
 The starter and Shield were installed from their official Composer packages. Do not substitute hand-written framework files.
 

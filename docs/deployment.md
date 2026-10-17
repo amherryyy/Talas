@@ -52,6 +52,6 @@ Treat any readable private path as a release blocker. A rewrite to a public fron
 | `/system/probe.txt` denial (fixture uploaded) | User reports 403/404; fixture contents not exposed. | 2026-10-14 | Passed |
 | `/tests/probe.txt` denial (fixture uploaded) | User reports 403/404; fixture contents not exposed. | 2026-10-14 | Passed |
 | `/docs/probe.txt` denial (fixture uploaded) | User reports 403/404; fixture contents not exposed. | 2026-10-14 | Passed |
-| Talas root `.htaccess` against real project paths | Root deny rules now cover application, dependency, writable, test, docs, config, and local-tool paths. They have not yet been checked through local Apache or the host. | 2026-10-14 | Not verified |
+| Talas root `.htaccess` against real project paths | A temporary Apache 2.4.58 instance bound only to `127.0.0.1:8085` returned 403 for `/.env`, `app/Config/Routes.php`, `writable`, `vendor`, `tests`, `docs`, and `composer.json`; the public Aralytics JavaScript asset returned 200. The temporary instance was stopped. Host-specific path behavior remains unverified. | 2026-10-17 | Passed locally; host pending |
 | Temporary probe cleanup | User reports removing `talas-host-probe`; confirms its public marker URL returns 404 Not Found. | 2026-10-14 | Passed |
 | Database import/migration path | User confirms the MySQL Databases panel is accessible; no database has been created. phpMyAdmin access and the Import tab are deferred by owner decision. | 2026-10-14 | Pending |
