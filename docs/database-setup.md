@@ -6,10 +6,10 @@ Talas is configured to use a separate XAMPP MariaDB 10.4.32 instance through Cod
 
 The `talas_local` database uses `utf8mb4`. The application connects with the dedicated `talas_app` account, which has privileges only on `talas_local.*`. Its generated password is stored only in the ignored root `.env`; do not commit, upload, or print that file. The root `.htaccess` denies dotfiles. The `.env` is ignored by Git.
 
-All current migrations are applied to the fresh local database with `php spark migrate --all`: CodeIgniter Shield auth tables, CodeIgniter Settings tables, and Talas's subjects table. `php spark migrate:status --all` confirmed all five migrations in batch 1. The initial default `php spark migrate` attempt failed because it ran the app migration before Shield created `users`; it applied no migrations. Using `--all` then ran migrations in timestamp order and completed successfully. The local `php.ini` does not enable `intl` for CLI by default, so run Spark commands with `-d extension=intl`, for example:
+The original `talas_local` database and its `3307` server were used for initial schema work. The shared XAMPP MariaDB data directory later showed a corrupt system table; preserve it and do not use it for new migration verification. The review database described below is the active isolated target for local browser and schema review. The initial default `php spark migrate` attempt failed because it ran the app migration before Shield created `users`; it applied no migrations. Using `--all` then ran migrations in timestamp order and completed successfully. The local `php.ini` does not enable `intl` for CLI by default, so run Spark commands with `-d extension=intl`, for example:
 
 ```powershell
-C:\xampp\php\php.exe -d extension=intl spark migrate:status --all
+C:\xampp\php\php.exe -d extension=intl -d auto_prepend_file=.tools/talas-review-env.php spark migrate:status --all
 ```
 
 To start the isolated instance after it has stopped:
@@ -20,9 +20,13 @@ Start-Process -FilePath C:\xampp\mysql\bin\mysqld.exe -ArgumentList '--defaults-
 
 **Current startup issue (2026-10-16):** A local UI-review startup attempt failed because MariaDB reported `Index for table '.\\mysql\\db' is corrupt` and could not open the privilege tables. The web app consequently returned HTTP 500 while connecting to MariaDB. No repair, table replacement, or reinitialization was attempted. Preserve `data-talas` and review a recovery plan before making changes to it.
 
-**Temporary local review setup (2026-10-16):** To keep the existing directory untouched, a separate MariaDB 10.4.32 instance is running on `127.0.0.1:3308` with its data directory and connection override under ignored `.tools/`. All current migrations, including `2026-10-16-000004_CreateStudySessions`, are applied to its separate `talas_review` database. It contains synthetic student data for F-06 review. The web server runs at `http://127.0.0.1:8080` using the temporary review router. The repository `.env` and the existing `data-talas` directory were not changed by this setup. Keep the local server and review database running until owner review is complete.
+**Temporary local review setup (2026-10-16; updated 2026-10-17):** To keep the existing directory untouched, a separate MariaDB 10.4.32 instance is running on `127.0.0.1:3308` with its data directory and connection override under ignored `.tools/`. All current migrations through `2026-10-17-000005_CreateCheckIns` are applied to its separate `talas_review` database; `migrate:status --all` confirmed the check-in migration in batch 4 at 2026-10-17 02:35 UTC. It contains synthetic student data for review. The web server runs at `http://127.0.0.1:8080` using the temporary review router. The repository `.env` and the existing `data-talas` directory were not changed by this setup. Keep the local server and review database running until owner review is complete.
 
 ## Run the local web app
+
+For the first local admin account, apply all migrations and run C:\xampp\php\php.exe -d extension=intl spark admin:create-local from the repository root. This command is limited to development mode and a loopback database and refuses to create another admin. It prints a generated password once; keep it private and do not paste it into chat or commit it. Hosted admin provisioning is separate and remains unresolved.
+
+When using the temporary review database on port 3308, the normal Spark command does not load its connection override. From the repository root, run `C:\xampp\php\php.exe -d extension=intl .tools\run-review-admin-bootstrap.php` instead. This local helper loads the same loopback `talas_review` connection used by the browser review server, then invokes the guarded command. It prompts for the username and email and displays the generated password once.
 
 Start CodeIgniter's development server directly with XAMPP PHP so the `intl` extension flag is present in the web-server process. Running `spark serve` with `-d extension=intl` starts a child server that does not inherit that flag on this setup.
 
@@ -30,12 +34,12 @@ Start CodeIgniter's development server directly with XAMPP PHP so the `intl` ext
 & C:\xampp\php\php.exe -d extension=intl -S 127.0.0.1:8080 -t public vendor\codeigniter4\framework\system\rewrite.php
 ```
 
-Open `http://127.0.0.1:8080/login` in a browser. Keep the isolated Talas database on port 3307; do not start or target the original shared XAMPP database on port 3306 for this app.
+Open `http://127.0.0.1:8080/login` in a browser. The review router connects to the isolated review database on port 3308; do not target the corrupt 3307 instance or the original shared XAMPP database on port 3306 for this app.
 
 The original shared XAMPP data directory remains separate and was not repaired or initialized over. A read-only check reported its `mysql.db` system table corrupt (Aria error 176). Do not run `REPAIR TABLE`, replace system-table files, or initialize over that existing directory as ordinary app setup; recovery could affect other local databases and accounts. Its earlier loopback-only configuration backup is `C:\xampp\mysql\bin\my.ini.talas-backup`.
 
-The PHPUnit connection remains separate and uses in-memory SQLite. Do not point test configuration at production or the hosted database. F-03 still needs database-backed tests/checks, owner-isolation and direct-route checks, browser verification, and owner acceptance; they were not part of database provisioning.
+The PHPUnit connection remains separate and uses in-memory SQLite. Do not point test configuration at production or the hosted database. The owner reports the hosted database was created and the schema import succeeded on 2026-10-18. The owner confirms phpMyAdmin shows 15 tables and nine migration rows. Hosted application connectivity remains pending.
 
 ## InfinityFree database
 
-Hosted database creation and phpMyAdmin import remain pending. Create the database through the hosting panel when ready, then configure hosted credentials separately through the documented protected deployment method. Never reuse the local `.env`, local database user, or local password on the host.
+The owner reports creating the hosted database and successfully importing the schema through phpMyAdmin on 2026-10-18. The reviewed schema-only file is [`duno-hosted-initial-schema.sql`](deployment.md#initial-hosted-database-import); it contains the current CodeIgniter, Shield, Settings, and Duno schema plus migration tracking rows, but no user or study data. Import it only once into that new, empty database. The owner confirms the 15-table count and nine-row migration ledger in phpMyAdmin. App connectivity is not yet configured or verified. Configure host credentials in a separate root `.env` as described in `docs/deployment.md`; never reuse the local `.env`. Never reuse or upload the local `.env`, local database user, or local password.

@@ -43,11 +43,11 @@ class AuthGroups extends ShieldAuthGroups
     public array $groups = [
         'student' => [
             'title'       => 'Student',
-            'description' => 'Standard Talas student account.',
+            'description' => 'Standard Duno student account.',
         ],
         'admin' => [
             'title'       => 'Admin',
-            'description' => 'Talas administrator with aggregate-view access.',
+            'description' => 'Duno administrator with aggregate-view access.',
         ],
     ];
 

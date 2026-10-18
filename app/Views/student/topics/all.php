@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1>Search topics</h1>
-<p>Search your topic titles and subject names, then narrow the results with filters.</p>
+<p>Search topics or subjects, then filter the results.</p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -50,7 +50,7 @@
     </select>
 
     <div class="actions">
-        <button type="submit">Apply filters</button>
+        <button type="submit"><span class="solar-icon solar-icon-filter" aria-hidden="true"></span> Apply filters</button>
         <a class="button secondary" href="<?= esc(site_url('student/topics')) ?>">Clear</a>
     </div>
 </form>

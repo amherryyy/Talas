@@ -1,13 +1,13 @@
 # Deployment and security gate
 
-**Target:** InfinityFree free hosting. This document is a preflight and release checklist, not evidence that a specific account has passed it. No host account has been inspected from this repository.
+**Target:** InfinityFree free hosting. This document is a preflight and release checklist, not evidence that deployment is complete. The owner confirms the domain `talas-dev.page.gd` maps to `htdocs`; other account details remain subject to the verification record below.
 
 ## Before framework installation
 
 - [ ] Confirm the specific account PHP version is compatible with the pinned CodeIgniter 4 and Shield releases.
 - [ ] Confirm `intl`, `mbstring`, and MySQLi/PDO MySQL are enabled on the account.
 - [ ] Confirm HTTPS works and determine how the account handles `.htaccess` rewrites and deny rules.
-- [ ] In the hosting Domains list, identify the exact web directory mapped to the target domain (often `htdocs` or `<domain>/htdocs`); plan the deployable arrangement so application code, dependencies, writable data, and configuration are not directly downloadable. The document root cannot be assumed to be the same for every domain.
+- [x] In the hosting Domains list, identify the exact web directory mapped to the target domain. The owner confirms `talas-dev.page.gd` maps to `htdocs` (2026-10-18). The prepared layout puts the front controller and public assets at that root while deny rules protect the application, vendor, and writable paths. Confirm any future domain mappings separately.
 - [ ] Use only a disposable database and synthetic records for the first probe.
 
 Do not infer these results from provider marketing pages or local XAMPP behavior. Record observed account behavior, date, and evidence below before selecting the dependency versions and deployment layout.
@@ -26,11 +26,11 @@ Treat any readable private path as a release blocker. A rewrite to a public fron
 
 ## Release checklist
 
-- [ ] Upload a reviewed snapshot over FTP/FTPS; exclude `.env`, credentials, real records, local logs, development-only packages, and backups.
+- [ ] Upload a reviewed snapshot over FTP/FTPS; include `public/assets/images/duno-mascot.png`, `public/assets/icons/solar/`, and the matching CSS; exclude `.env`, credentials, real records, local logs, development-only packages, and backups.
 - [ ] Configure secrets through the documented protected configuration method; confirm the file cannot be fetched directly.
-- [ ] Apply reviewed migrations, including subjects, topics, daily plans, and study sessions, using the approved one-time process or reviewed SQL import. Remove any one-time setup endpoint immediately afterward.
+- [ ] Apply reviewed migrations, including subjects, topics, daily plans, study sessions, and private check-ins, using the approved one-time process or reviewed SQL import. Remove any one-time setup endpoint immediately afterward.
 - [ ] Use synthetic demo accounts/data only.
-- [ ] Smoke-check sign-in/out, student/admin boundaries, subject and topic create/list/view/edit/delete, search and combined topic filters, daily-plan generation and adjustments within the available-time cap, timer review and explicit session save, saved-session edit/delete, cross-user isolation, subject/topic deletion restrictions while referenced by sessions, Aralytics periods (today, 7 days, 30 days, all time), summary and subject/topic totals, dated sessions, print layout, curated study suggestion cards and source links, HTTPS, and all protected-path denials.
+- [ ] Smoke-check sign-in/out, student/admin boundaries, aggregate-only admin dashboard totals (student accounts, subjects, topics, saved sessions, and saved study minutes), absence of identities/study details/check-in values or patterns, subject and topic create/list/view/edit/delete, search and combined topic filters, daily-plan generation and adjustments within the available-time cap, timer review and explicit session save, saved-session edit/delete, private check-in create/list/edit/delete with multiple entries per day, the owner-only last-7-days check-in summary and its empty state, selected-period Aralytics pattern counts and paired rating bars with matching numeric table, chart exclusion from print/admin/search/exports, check-in owner isolation, subject/topic deletion restrictions while referenced by sessions, Aralytics periods (today, 7 days, 30 days, all time), study summary and subject/topic totals, dated sessions, print layout, curated study suggestion cards and source links, HTTPS, and all protected-path denials.
 - [ ] Remove temporary probe files and confirm they are inaccessible after removal.
 - [ ] Record the deployed revision, date, checks, and any host behavior that remains unverified.
 
@@ -52,6 +52,28 @@ Treat any readable private path as a release blocker. A rewrite to a public fron
 | `/system/probe.txt` denial (fixture uploaded) | User reports 403/404; fixture contents not exposed. | 2026-10-14 | Passed |
 | `/tests/probe.txt` denial (fixture uploaded) | User reports 403/404; fixture contents not exposed. | 2026-10-14 | Passed |
 | `/docs/probe.txt` denial (fixture uploaded) | User reports 403/404; fixture contents not exposed. | 2026-10-14 | Passed |
-| Talas root `.htaccess` against real project paths | Root deny rules now cover application, dependency, writable, test, docs, config, and local-tool paths. They have not yet been checked through local Apache or the host. | 2026-10-14 | Not verified |
+| Talas root `.htaccess` against real project paths | A temporary Apache 2.4.58 instance bound only to `127.0.0.1:8085` returned 403 for `/.env`, `app/Config/Routes.php`, `writable`, `vendor`, `tests`, `docs`, and `composer.json`; the public Aralytics JavaScript asset returned 200. The temporary instance was stopped. Host-specific path behavior remains unverified. | 2026-10-17 | Passed locally; host pending |
 | Temporary probe cleanup | User reports removing `talas-host-probe`; confirms its public marker URL returns 404 Not Found. | 2026-10-14 | Passed |
-| Database import/migration path | User confirms the MySQL Databases panel is accessible; no database has been created. phpMyAdmin access and the Import tab are deferred by owner decision. | 2026-10-14 | Pending |
+| Database import/migration path | Owner reports creating the hosted database and successfully importing the schema-only initial file on 2026-10-18. The owner confirms phpMyAdmin shows 15 tables and nine rows in `migrations`; app connection remains unconfigured. | 2026-10-18 | Imported; schema verified by owner |
+
+### Initial hosted database import
+
+For a newly created, empty hosted database, select that database in phpMyAdmin and import [`duno-hosted-initial-schema.sql`](duno-hosted-initial-schema.sql). The file creates the 15 current CodeIgniter, Shield, Settings, and Duno tables and records the nine already-applied migrations. It contains no account or study records and does not create or select a database. Do not import it into a database with existing tables, import it twice, upload a local database backup, or include this SQL file in the public FTP deployment. After import, verify that the `migrations` table contains nine rows before configuring the hosted app. The owner confirmed 15 tables and nine migration rows in phpMyAdmin. App connectivity remains unverified.
+
+### Hosted application database configuration
+
+Use the exact MySQL hostname, database name, username, password, and port shown in the hosting Control Panel. Do not assume `localhost`, and do not share the password in chat. For the prepared `htdocs` layout, create a host-specific `.env` in `htdocs`, alongside `index.php`, `app`, and `vendor` (the deployable package intentionally omits `spark`). Never upload or reuse the local development `.env`. Set these values using the host's actual details:
+
+```dotenv
+CI_ENVIRONMENT = production
+app.baseURL = 'https://YOUR-DOMAIN/'
+database.default.hostname = 'HOST-MYSQL-HOSTNAME'
+database.default.database = 'HOST-DATABASE-NAME'
+database.default.username = 'HOST-DATABASE-USERNAME'
+database.default.password = 'HOST-DATABASE-PASSWORD'
+database.default.DBDriver = MySQLi
+database.default.port = HOST-MYSQL-PORT
+database.default.DBDebug = false
+```
+
+Upload the prepared application package first, without `.env`, and confirm `https://YOUR-DOMAIN/.env` returns 403 or 404. Then upload the host-specific `.env` into `htdocs` and repeat that request; it must still return 403 or 404 before signing in or adding records. Do not put the environment file in a publicly served assets directory. If the deployed folder layout changes, adjust the configuration path and access-denial check before uploading secrets.

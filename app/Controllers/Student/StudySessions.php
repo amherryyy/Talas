@@ -24,7 +24,7 @@ class StudySessions extends BaseController
             'topics' => (new TopicModel())->findAllForOwner($ownerId),
             'errors' => session()->getFlashdata('errors') ?? [],
             'reviewing' => is_string($rawDuration) && $rawDuration !== '',
-            'pageTitle' => 'Study sessions',
+            'pageTitle' => 'Duno Timer',
         ]);
     }
 
@@ -63,7 +63,7 @@ class StudySessions extends BaseController
             'subjects' => (new SubjectModel())->findAllForOwner($ownerId),
             'topics' => (new TopicModel())->findAllForOwner($ownerId),
             'errors' => session()->getFlashdata('errors') ?? [],
-            'pageTitle' => 'Edit study session',
+            'pageTitle' => 'Edit timer session',
         ]);
     }
 
@@ -102,7 +102,7 @@ class StudySessions extends BaseController
 
         return view('student/sessions/delete', [
             'studySession' => $studySession,
-            'pageTitle' => 'Delete study session',
+            'pageTitle' => 'Delete timer session',
         ]);
     }
 

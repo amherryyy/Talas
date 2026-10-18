@@ -1,6 +1,6 @@
 # Draft story: authentication and role foundation
 
-**Status:** Doing; acceptance scope approved on 2026-10-14. Student/admin route boundaries and data-free landing pages are implemented. End-to-end acceptance remains pending because the first-admin bootstrap method and database/import path are unresolved.
+**Status:** Local Shield registration, login/logout, invalid-credential behavior, and student/admin route boundaries pass focused feature tests against in-memory SQLite. Playwright confirmed that a synthetic student can sign in against the local MySQL review database and receives 403 from `/admin`. The owner also signed into the local admin account and viewed the protected `/admin` dashboard in the browser. Hosted database/import verification remains pending.
 
 ## Story
 
@@ -24,6 +24,7 @@ As a Talas user, I can use the approved account flow to register or receive an a
 7. State-changing forms use framework CSRF protection; sessions use secure settings suitable for the HTTPS host.
 8. Login throttling and password handling use Shield/framework facilities; no plaintext password storage is introduced.
 9. Tests cover signed-out, student, and admin access for allowed and denied routes.
+10. The public root page uses the approved Duno identity, explains the study flow and product areas, links signed-out visitors to registration/sign-in, and links signed-in students/admins to their authorized workspace. Accounts without a recognized role receive a sign-out path and no workspace link.
 
 ## Boundaries
 
@@ -46,21 +47,26 @@ Owner approved this split on 2026-10-14:
 
 Routes use Shield's session and permission filters plus an app role filter. The app filter rejects admin-group members from student routes even if an account is accidentally assigned both groups; the student/admin boundary therefore does not rely on groups being mutually exclusive by convention. This follows Shield's [controller filters](https://shield.codeigniter.com/latest/references/controller_filters/) and [authorization guidance](https://shield.codeigniter.com/1.4/references/authorization/).
 
-## Remaining owner decision
+## Remaining setup work
 
-- Choose the secure setup method for the private first-admin demo account. The hosting database/import path remains deferred, and InfinityFree SSH/server Composer cannot be assumed.
+- Hosted admin provisioning and the hosting database/import path remain deferred. Do not use the local CLI bootstrap against a hosted database.
 
 ## Readiness constraints
 
 - The owner deferred creation of a database, so the host phpMyAdmin import path is unverified.
-- Shield config, public auth routes, CSRF, rate limiting, role-protected dashboard routes, and data-free landing pages are configured locally; the local/host database, migration, admin bootstrap, and auth-flow verification remain pending.
-- The first-admin bootstrap method still needs a secure implementation decision before the full role flow can be accepted.
+- Shield config, public auth routes, CSRF, rate limiting, role-protected dashboard routes, and data-free landing pages are configured locally. Focused feature tests exercise registration (including an attempted admin-role submission), login, logout, invalid credentials, signed-out access, and student/admin route boundaries with in-memory SQLite. Playwright confirmed a synthetic student login and 403 response from `/admin` against the local MySQL review database. The owner signed in using the existing local admin account and viewed `/index.php/admin`; the admin-allowed route is also covered by in-memory SQLite feature tests. Hosted database/import verification remains pending.
 
 ## Proposed implementation sequence after Ready
 
 1. Install the official CodeIgniter app starter and Shield using reviewed, locked Composer versions. **Complete:** CI4 4.7.5 and Shield 1.4.1 are recorded in `composer.lock`.
-2. Configure session, CSRF, authentication routes, and role authorization through framework facilities. **In progress:** Shield config is installed; registration/login are rate-limited, CSRF is enabled globally for state-changing requests, logout is POST-only, public registration defaults to `student`, remember-me and magic links are disabled, and last-active tracking is off. `/student` requires a session and student role while rejecting admin members; `/admin` requires a session, admin role, and `admin.access` permission. Both routes render only static placeholder copy.
-3. Add focused tests for signed-out, student, and admin allowed/denied paths after the database and bootstrap paths are ready.
+2. Configure session, CSRF, authentication routes, and role authorization through framework facilities. **In progress:** Shield config is installed; registration/login are rate-limited, CSRF is enabled globally for state-changing requests, logout is POST-only, public registration defaults to `student`, remember-me and magic links are disabled, and last-active tracking is off. `/student` requires a session and student role while rejecting admin members; `/admin` requires a session, admin role, and `admin.access` permission. The student route remains a placeholder; the admin route now shows aggregate dashboard cards.
+3. **Local verification complete:** Focused in-memory SQLite feature tests cover public registration, login/logout, invalid credentials, signed-out access, and student/admin allowed/denied routes. Playwright verified synthetic student login and the student-to-admin denial against the local MySQL review database. The owner manually signed into the local admin account and loaded the protected admin dashboard. Hosted database/import checks remain pending.
 4. Review the diff, security behavior, and local checks before the owner accepts the slice.
 
-This draft records the approved authentication scope and route split. It does not choose the secure first-admin bootstrap mechanism.
+This story records the approved authentication scope and route split. The local first-admin setup is documented below; hosted provisioning remains outside that command.
+
+## Local first-admin setup
+
+After applying all local migrations, run C:\xampp\php\php.exe -d extension=intl spark admin:create-local from the repository root. The command runs only when CI_ENVIRONMENT=development, requires the configured database host to be loopback, and refuses to create a second admin. Enter a unique username and email when prompted. It creates an admin-only account with a generated password and prints that password once. Copy it directly into a password manager; it is not written to a file or application log.
+
+This command is for the local development database only. It cannot create a hosted admin account and must not be pointed at a remote database.

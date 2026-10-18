@@ -1,10 +1,10 @@
-# Talas coding-agent instructions
+# Duno coding-agent instructions
 
 CodeIgniter 4 is the agreed framework. The official CI4 starter 4.7.5 and Shield 1.4.1 are installed; the local authentication foundation is configured, while database-backed auth behavior and migrations remain unverified.
 
 ## Product and scope
 
-Build the one-month Talas 2.0 course MVP described in `docs/requirements.md`. Keep the browser experience responsive and the rule-based priority, plan, and Aralytics outputs explainable. Preserve student ownership and private optional check-ins. Do not add AI recommendations, background workers, native apps, or features outside the approved backlog.
+Build the one-month Duno course MVP described in `docs/requirements.md`. Follow `docs/brand-identity.md` for the user-facing name, palette, and product areas: Duno Focus, Duno Plan, Duno Guide, and Duno Timer. Retain Aralytics. Keep the browser experience responsive and the rule-based priority, plan, and Aralytics outputs explainable. Preserve student ownership and private optional check-ins. Do not add AI recommendations, background workers, native apps, or features outside the approved backlog.
 
 ## Stack and deployment
 

@@ -1,8 +1,8 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<h1>Study sessions</h1>
-<p>Time a session for one of your subjects, review the duration, and save it when you are ready.</p>
+<h1>Duno Timer</h1>
+<p>Time a session, review its duration, then choose whether to save it.</p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -34,7 +34,7 @@
                     <option value="<?= esc((string) $topic['id']) ?>" data-subject-id="<?= esc((string) $topic['subject_id']) ?>"<?= (string) $topic['id'] === (string) $selectedTopic ? ' selected' : '' ?>><?= esc($topic['title'] . ' — ' . $topic['subject_name']) ?></option>
                 <?php endforeach ?>
             </select>
-            <p class="muted">The selected topic must belong to the chosen subject.</p>
+            <p class="muted">Choose a topic from the selected subject.</p>
 
             <p class="timer-display" role="timer" aria-label="Elapsed study time"><output data-elapsed>00:00:00</output></p>
             <p class="muted" data-timer-status role="status">Timer is idle. Starting or stopping it will not save a session.</p>

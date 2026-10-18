@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= esc($pageTitle) ?> · Talas</title>
+    <title><?= esc($pageTitle) ?> · duno.</title>
     <style {csp-style-nonce}>
-        :root { color-scheme: light; font-family: system-ui, sans-serif; color: #18342d; background: #f4f7f4; }
+        :root { color-scheme: light; font-family: system-ui, sans-serif; color: #292641; background: #F7F6FC; }
         body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 1.25rem; box-sizing: border-box; }
-        main { width: min(100%, 42rem); box-sizing: border-box; padding: clamp(1.5rem, 5vw, 3rem); background: #fff; border: 1px solid #dce7df; border-radius: 1rem; }
+        main { width: min(100%, 42rem); box-sizing: border-box; padding: clamp(1.5rem, 5vw, 3rem); background: #fff; border: 1px solid #E5E2F0; border-radius: 1rem; }
         h1 { margin: 0 0 1rem; font-size: clamp(1.75rem, 5vw, 2.5rem); }
         p { max-width: 38rem; line-height: 1.65; }
-        button { margin-top: 1rem; padding: .7rem 1rem; border: 0; border-radius: .5rem; color: #fff; background: #176b55; font: inherit; cursor: pointer; }
-        button:focus-visible, a:focus-visible { outline: 3px solid #e4a83a; outline-offset: 3px; }
-        .action { display: inline-block; margin: .5rem 0; padding: .7rem 1rem; border-radius: .5rem; color: #fff; background: #176b55; text-decoration: none; }
+        button { margin-top: 1rem; padding: .7rem 1rem; border: 0; border-radius: .5rem; color: #fff; background: #7465D8; font: inherit; cursor: pointer; }
+        button:hover, .action:hover { background: #5D50BF; }
+        button:focus-visible, a:focus-visible { outline: 3px solid #7465D8; outline-offset: 3px; }
+        .action { display: inline-block; margin: .5rem 0; padding: .7rem 1rem; border-radius: .5rem; color: #fff; background: #7465D8; text-decoration: none; }
+        .brand { margin: 0; color: #7465D8; font-size: 1.4rem; font-weight: 750; letter-spacing: -.04em; }
+        .tagline { width: max-content; margin: .15rem 0 1.5rem; padding-bottom: .2rem; border-bottom: 2px solid #FFDA92; color: #615D78; font-size: .92rem; }
     </style>
 </head>
 <body>
 <main>
-    <p>Talas 2.0</p>
+    <p class="brand">duno.</p>
+    <p class="tagline">Your Little Study Buddy.</p>
     <h1><?= esc($heading) ?></h1>
     <p><?= esc($message) ?></p>
     <?php if (isset($actionHref, $actionLabel)): ?>

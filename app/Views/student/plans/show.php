@@ -1,8 +1,8 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<h1>Today’s study plan</h1>
-<p class="muted">Plan for <?= esc($today) ?>. Blocks follow your unfinished topics’ priority order. You can change the order, duration, or remove a block.</p>
+<h1>Duno Plan</h1>
+<p class="muted">Today’s plan · <?= esc($today) ?>. Blocks follow topic priority; adjust, move, or remove them.</p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -30,7 +30,7 @@
         <?= csrf_field() ?>
         <label for="available_minutes">Available study time today (minutes)</label>
         <input id="available_minutes" name="available_minutes" type="number" min="15" max="480" step="1" required value="<?= esc((string) ($availableMinutes !== '' ? $availableMinutes : ($plan['available_minutes'] ?? ''))) ?>">
-        <p class="muted">Choose 15 to 480 minutes. Each unfinished topic gets one 25-minute block, shortened when less time remains.</p>
+        <p class="muted">Choose 15 to 480 minutes. Each unfinished topic gets a 25-minute block, shortened to fit.</p>
         <button type="submit">Build plan</button>
     </form>
 </section>
@@ -41,7 +41,7 @@
     <?php $plannedMinutes = array_sum(array_map(static fn (array $item): int => (int) $item['duration_minutes'], $plan['items'])); ?>
     <section aria-labelledby="plan-blocks-heading">
         <h2 id="plan-blocks-heading">Your blocks</h2>
-        <p role="status">Planned: <?= esc((string) $plannedMinutes) ?> of <?= esc((string) $plan['available_minutes']) ?> minutes. <?= esc((string) ((int) $plan['available_minutes'] - $plannedMinutes)) ?> minutes unplanned.</p>
+        <p role="status">Planned <?= esc((string) $plannedMinutes) ?> of <?= esc((string) $plan['available_minutes']) ?> minutes; <?= esc((string) ((int) $plan['available_minutes'] - $plannedMinutes)) ?> unplanned.</p>
         <?php if ($plan['items'] === []): ?>
             <p class="muted">No unfinished topics are available to plan today.</p>
         <?php else: ?>

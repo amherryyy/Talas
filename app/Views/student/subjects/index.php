@@ -2,8 +2,8 @@
 
 <?= $this->section('content') ?>
 <h1>Your subjects</h1>
-<p>Organize the subjects you want to study. Only you can access your list.</p>
-<p><a class="button" href="<?= esc(site_url('student/subjects/new')) ?>">Add a subject</a></p>
+<p>Manage the subjects you want to study. Only you can see this list.</p>
+<p><a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> Add a subject</a></p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -18,7 +18,7 @@
     <label for="subject-query">Search subjects</label>
     <input id="subject-query" name="query" type="search" maxlength="120" value="<?= esc($query) ?>" autocomplete="off">
     <div class="actions">
-        <button type="submit">Search</button>
+        <button type="submit"><span class="solar-icon solar-icon-magnifier" aria-hidden="true"></span> Search</button>
         <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>">Clear</a>
     </div>
 </form>

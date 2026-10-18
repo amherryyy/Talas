@@ -1,8 +1,9 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<h1>Priority topics</h1>
-<p>Unfinished topics are ranked using their importance, due date, and progress. Each score shows how it was calculated.</p>
+<h1>Duno Focus</h1>
+<p class="muted">Your priority list</p>
+<p>Unfinished topics rank by importance, due date, and progress. Each score shows why.</p>
 
 <?php if ($topics === []): ?>
     <p class="muted">No unfinished topics yet. Topics marked done are left off this list.</p>
