@@ -17,4 +17,5 @@
 /public/build/
 /docs/host-probe/upload/
 *.sql
+!docs/duno-hosted-initial-schema.sql
 *.zip

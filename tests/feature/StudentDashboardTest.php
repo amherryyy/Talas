@@ -38,6 +38,7 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response->assertSee('Your study space');
         $response->assertSee('duno.');
         $response->assertSee('Your Little Study Buddy.');
+        $response->assertSee('assets/images/duno-mascot.png');
         $response->assertSee('Duno Focus');
         $response->assertSee('Duno Plan');
         $response->assertSee('Duno Guide');
@@ -49,6 +50,10 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response->assertSee('Read an example, then try one');
         $response->assertSee('https://ies.ed.gov/ncee/wwc/practiceguide/1');
         $response->assertSee('rel="noopener noreferrer"');
+        $studentHtml = $response->response()->getBody();
+        $this->assertStringContainsString('aria-label="Student navigation"', $studentHtml);
+        $this->assertStringContainsString('aria-current="page"', $studentHtml);
+        $this->assertStringContainsString('index.php/student/aralytics', $studentHtml);
     }
 
     public function testSuggestionsDoNotAppearOnAdminWorkspaceAndStudentRouteDeniesAdmin(): void
@@ -61,6 +66,9 @@ final class StudentDashboardTest extends CIUnitTestCase
         $adminResponse->assertOK();
         $adminResponse->assertDontSee('Study ideas');
         $adminResponse->assertDontSee('Revisit a topic later');
+        $adminHtml = $adminResponse->response()->getBody();
+        $this->assertStringContainsString('aria-label="Admin navigation"', $adminHtml);
+        $this->assertStringContainsString('index.php/admin', $adminHtml);
 
         auth()->logout();
         $response = $this->get('student');

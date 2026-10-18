@@ -1,0 +1,27 @@
+<?php
+$currentPath = trim(service('uri')->getPath(), '/');
+$currentPath = preg_replace('#^index\.php/?#', '', $currentPath);
+$active = match (true) {
+    $currentPath === 'student' => 'home',
+    str_contains($currentPath, '/priority') => 'focus',
+    str_contains($currentPath, '/plan') => 'plan',
+    str_contains($currentPath, '/sessions') => 'timer',
+    str_contains($currentPath, '/aralytics') => 'aralytics',
+    default => null,
+};
+$items = [
+    ['label' => 'Home', 'href' => site_url('student'), 'icon' => 'home', 'key' => 'home'],
+    ['label' => 'Focus', 'href' => site_url('student/priority'), 'icon' => 'target', 'key' => 'focus'],
+    ['label' => 'Plan', 'href' => site_url('student/plan'), 'icon' => 'calendar', 'key' => 'plan'],
+    ['label' => 'Timer', 'href' => site_url('student/sessions'), 'icon' => 'stopwatch', 'key' => 'timer'],
+    ['label' => 'Aralytics', 'href' => site_url('student/aralytics'), 'icon' => 'chart-2', 'key' => 'aralytics'],
+];
+?>
+<nav class="student-bottom-nav" aria-label="Student navigation">
+    <?php foreach ($items as $item): ?>
+        <a href="<?= esc($item['href']) ?>"<?= $active === $item['key'] ? ' aria-current="page"' : '' ?>>
+            <span class="student-bottom-nav-mark solar-icon solar-icon-<?= esc($item['icon']) ?>" aria-hidden="true"></span>
+            <span><?= esc($item['label']) ?></span>
+        </a>
+    <?php endforeach ?>
+</nav>

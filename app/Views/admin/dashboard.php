@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($pageTitle) ?> · Duno</title>
+    <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css')) ?>">
     <style {csp-style-nonce}>
         :root { color-scheme: light; font-family: system-ui, sans-serif; color: #282444; background: #F7F6FC; }
         * { box-sizing: border-box; }
@@ -35,7 +36,7 @@
         }
     </style>
 </head>
-<body>
+<body class="has-mobile-navigation">
 <div class="shell">
     <header>
         <p><span class="wordmark">duno.</span><br><span class="muted">Admin</span></p>
@@ -59,5 +60,7 @@
         <p class="privacy-note">This dashboard shows totals only. It does not display account names, individual study records, or private check-in information.</p>
     </main>
 </div>
+<footer class="icon-credit"><small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> icon set by 480 Design, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>.</small></footer>
+<?= $this->include('partials/admin_bottom_nav') ?>
 </body>
 </html>

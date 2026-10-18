@@ -2,6 +2,39 @@
 
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
+### Solar Icons app subset
+
+Date / story: 2026-10-19 / install interface icons
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested that the Solar Icons app be used to download and install icons needed by Duno. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Checked the official Solar Icons static-asset documentation and licenses, downloaded the pinned package, selected ten SVG icons for navigation and common controls, integrated them as CSS masks, and documented deployment and attribution.
+Suggestions or code retained: Ten Linear SVG assets in `public/assets/icons/solar/`, CSS mappings in `public/assets/css/student-navigation.css`, and usage notes in `docs/solar-icons.md`.
+Student changes and decisions: The owner selected Solar Icons; the project continues to use static PHP/CSS and local FTP-ready assets without adding a runtime package.
+How the student verified and can explain the result: Icon files are copied from `@solar-icons/static` 2.3.3; the visible app footer credits Solar Icons and 480 Design under CC BY 4.0. PHP syntax and feature checks are recorded with this change.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+
+### Compact mobile menu
+
+Date / story: 2026-10-19 / F-13 mobile navigation refinement
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested a compact menu that opens when clicked. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Changed the student and public header menus to use a compact hamburger control with a scrollable dropdown on small screens; updated the navigation decision note.
+Suggestions or code retained: Menu markup/styles in `app/Views/home.php` and `app/Views/student/subjects/layout.php`.
+Student changes and decisions: The owner requested the menu affordance and compact clicked state; desktop secondary links remain available.
+How the student verified and can explain the result: Automated feature suite and PHP syntax checks are recorded with this change. A manual phone-sized browser review remains pending.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+
+### Duno mascot and brand-board integration
+
+Date / story: 2026-10-19 / Duno branding refresh
+Tool and model: OpenAI Codex with built-in image generation; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the Duno brand board and explicitly asked to use it as the branding and app mascot for now. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Adapted the supplied board into a transparent static mascot illustration, integrated it into the public welcome page and signed-in student dashboard, and updated brand/requirements notes.
+Suggestions or code retained: `public/assets/images/duno-mascot.png` and responsive view markup/styles in `app/Views/home.php` and `app/Views/student/dashboard.php`.
+Student changes and decisions: The owner approved the mascot direction for interim use. Additional mascot expressions and a final vector/logo export remain future options.
+How the student verified and can explain the result: The generated transparent PNG was visually inspected against the supplied board. Both changed views pass PHP syntax checks; the full PHPUnit suite passes (67 tests, 613 assertions) with one warning because no code coverage driver is installed. A local mobile browser check confirmed the public menu opens on click, the four tool icons render, and icon requests succeed; signed-in student/admin navigation and mascot layout still need a full visual review.
+Disclosure location or requirement: Instructor's required format/location not yet confirmed; consult instructor and update this entry as needed.
+
 ### Playwright browser-test setup
 
 Date / story: 2026-10-15 / reusable responsive browser checks
@@ -545,5 +578,44 @@ Assistance used (explanation, planning, code draft, debugging, review): Shield A
 Suggestions or code retained: Added admin:create-local, limited to development mode and loopback databases. It refuses when an admin already exists, creates an admin-only account through Shield, generates a random 24-character one-time password (above Shield's 8-character minimum and within the bcrypt 72-byte cap), and does not write the password to a file or log. No public route was added.
 Student changes and decisions: The owner approved adding a local admin setup path to enable the F-12 review.
 How the student verified and can explain the result: After changing generated passwords to 24 random characters, the focused bootstrap tests passed (3 tests, 30 assertions), covering development/loopback policy, the 8-character minimum, the 72-byte bcrypt cap, and password hashing. PHP syntax checks and `git diff --check` passed. The full suite passed earlier (55 tests, 484 assertions) before this generator adjustment. `spark list` displays `admin:create-local`. The Composer dependency audit had already reported no advisories for this unchanged lockfile. The first command attempt targeted the configured database on port 3307, which refused the connection. The owner used an ignored local helper to load the same port-3308 `talas_review` override used by the browser review server, created the local account, recovered access later, and manually viewed the protected dashboard. Hosted admin provisioning remains pending; never point the local bootstrap at a hosted database.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Initial hosted database schema
+
+```text
+Date / story: 2026-10-18 / prepare initial hosted schema import
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner created a new hosted database and requested preparation of the import file. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the deployment procedure and migration status; generated and reviewed a schema-only SQL import from the isolated local database after confirming all application, Shield, and Settings migrations were applied.
+Suggestions or code retained: Added `docs/duno-hosted-initial-schema.sql`, containing 15 table definitions and nine migration-ledger rows. Removed local AUTO_INCREMENT counters; included no user, subject, topic, plan, session, check-in, settings, or authentication records. Updated the deployment instructions and allowed only this reviewed artifact through the SQL dump ignore rule.
+Student changes and decisions: The owner reported that the hosted database exists and phpMyAdmin's Import tab is open. The owner reports the phpMyAdmin schema import succeeded. No credential setup, FTP upload, or application deployment was performed.
+How the student verified and can explain the result: Local CodeIgniter migration status reports all nine expected migrations applied. The export was checked for exactly 15 table definitions, no database creation/selection, no DROP statements, no local AUTO_INCREMENT counters, and only the migration ledger insert. The owner confirmed phpMyAdmin shows 15 tables and nine migration rows. Application connectivity remains unverified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Duno public start page
+
+```text
+Date / story: 2026-10-19 / replace the CodeIgniter starter screen with a Duno public start page
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to make a proper Duno start page and deferred hosting while continuing local app development. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Applied the frontend design skill, reviewed brand guidance and existing routes, and implemented the server-rendered start page, role-aware workspace links, product overview, and traceability updates.
+Suggestions or code retained: Replaced the root response to the CodeIgniter welcome view with a Duno page using the approved wordmark, tagline, color palette, and product names. It includes registration/sign-in links, the study flow, responsive layout, light/dark themes, keyboard focus styles, reduced-motion support, and a private-check-in note. No unapproved mascot artwork, frontend framework, or runtime dependency was added.
+Student changes and decisions: The owner requested a proper Duno start page after choosing to finish local development before hosting.
+How the student verified and can explain the result: PHP syntax checks passed for the Home controller and view, and `git diff --check` passed. PHPUnit and browser checks were not run in this task; visual review remains pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Mobile-inspired Duno start page refinement
+
+```text
+Date / story: 2026-10-19 / refine the public Duno start page from owner-provided mobile UI references
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied screenshots and asked that they be used as inspiration. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Adapted the start page to a mobile-first rounded tool grid, a compact functional menu, and signed-in student bottom navigation; checked the linked destinations against current Duno routes and brand guidance.
+Suggestions or code retained: Added rounded cards for Duno Focus, Duno Plan, Duno Timer, and Aralytics, plus a Duno Guide link to the existing study suggestions. Added a shared, route-aware fixed mobile navigation for the public start page and signed-in student/admin areas; desktop navigation remains at the top. Added a PHPUnit feature check for the public page content and account links. Kept the palette and naming from the brand guide; did not copy the reference app's character, coins, streak, upload, media, or live features. Kept sign-in/sign-up, role-aware workspace links, optional check-in privacy text, keyboard focus, dark mode, and reduced-motion support.
+Student changes and decisions: The owner said to use the supplied mobile UI screenshots as inspiration for the proper start page.
+How the student verified and can explain the result: The focused Home feature check passed (1 test, 13 assertions). The full PHPUnit suite passed after the shared-navigation follow-up (67 tests, 613 assertions), with PHP 8.2.12 and the available `intl` and `sqlite3` extensions enabled for the test process. PHPUnit reports that no code coverage driver is installed. PHP syntax checks and `git diff --check` passed for the controller, shared views, partials, stylesheet, and feature tests. A local mobile browser check confirmed the public menu opens on click, the four tool icons render, and icon requests succeed; signed-in student/admin navigation and mascot layout still need a full visual review.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

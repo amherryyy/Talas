@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($pageTitle ?? 'Subjects') ?> · duno.</title>
+    <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css')) ?>">
     <style {csp-style-nonce}>
-        :root { color-scheme: light; font-family: system-ui, sans-serif; color: var(--duno-ink); background: var(--duno-canvas); --duno-purple: #7465D8; --duno-mint: #B9E8D1; --duno-gold: #FFDA92; --duno-canvas: #F7F6FC; --duno-ink: #292641; --duno-muted: #615D78; --duno-line: #E5E2F0; }
+        :root { color-scheme: light; font-family: system-ui, sans-serif; color: var(--duno-ink); background: var(--duno-canvas); --duno-purple: #7465D8; --duno-mint: #B9E8D1; --duno-gold: #FFDA92; --duno-lavender: #EDE9FE; --duno-canvas: #F7F6FC; --duno-ink: #2E2E3A; --duno-muted: #615D78; --duno-line: #E5E2F0; }
         * { box-sizing: border-box; }
         body { margin: 0; min-height: 100vh; padding: 1rem; }
         .shell { width: min(100%, 56rem); margin: 0 auto; }
@@ -15,7 +16,7 @@
         .brand-wordmark { margin: 0; color: var(--duno-purple); font-size: 1.45rem; font-weight: 800; letter-spacing: -.05em; line-height: 1; }
         .brand-tagline { width: max-content; margin: 0; padding-bottom: .12rem; border-bottom: 2px solid var(--duno-gold); color: var(--duno-muted); font-size: .78rem; }
         nav, .actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
-        .student-menu { flex: 1 1 auto; }
+        .student-menu { position: relative; flex: 1 1 auto; }
         .student-menu > summary { display: none; }
         .student-menu nav { justify-content: flex-end; }
         main { line-height: 1.55; }
@@ -43,11 +44,15 @@
             header, main { padding: .8rem; border-radius: .7rem; }
             header { align-items: flex-start; gap: .6rem; margin-bottom: .6rem; }
             nav, .actions { gap: .45rem .6rem; }
-            .student-menu { flex: 0 1 auto; }
-            .student-menu > summary { display: flex; align-items: center; width: max-content; min-height: 44px; padding: .45rem .7rem; border-radius: .4rem; background: #EFEDFA; color: var(--duno-ink); cursor: pointer; }
-            .student-menu > summary:hover { background: var(--duno-mint); }
-            .student-menu[open] { flex-basis: 100%; }
-            .student-menu nav { justify-content: flex-start; margin-top: .5rem; font-size: .94rem; }
+            .student-menu { flex: 0 0 auto; }
+            .student-menu > summary { display: grid; width: 44px; height: 44px; place-items: center; border: 1px solid var(--duno-line); border-radius: 50%; background: #fff; color: var(--duno-ink); cursor: pointer; box-shadow: 0 2px 8px rgb(42 37 79 / 7%); }
+            .student-menu > summary:hover, .student-menu[open] > summary { background: #EFEDFA; }
+        .student-menu > summary .solar-icon { width: 21px; height: 21px; }
+            .student-menu nav { position: absolute; z-index: 20; top: calc(100% + .45rem); right: 0; display: grid; width: min(17rem, calc(100vw - 1.5rem)); max-height: min(70vh, 30rem); align-content: start; gap: .2rem; overflow-y: auto; margin: 0; padding: .5rem; border: 1px solid var(--duno-line); border-radius: .9rem; background: #fff; box-shadow: 0 12px 32px rgb(34 30 60 / 18%); font-size: .92rem; }
+            .student-menu nav a { padding: .62rem .7rem; border-radius: .55rem; text-decoration: none; }
+            .student-menu nav a:hover, .student-menu nav a:focus-visible { background: #EFEDFA; }
+            .student-menu nav form { padding: .25rem; }
+            .student-menu nav button { width: 100%; text-align: left; }
             .brand-tagline { max-width: 12rem; }
             .subject-list { margin: .5rem 0; }
             .subject-list li { padding: .55rem 0; }
@@ -55,16 +60,16 @@
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
     </style>
 </head>
-<body>
+<body class="has-mobile-navigation">
 <div class="shell">
     <header>
         <a class="brand-lockup" href="<?= esc(site_url('student')) ?>" aria-label="duno. — Your Little Study Buddy. Home">
             <span class="brand-wordmark">duno.</span>
             <span class="brand-tagline">Your Little Study Buddy.</span>
         </a>
-        <details class="student-menu" data-responsive-menu open>
-            <summary>Menu</summary>
-            <nav aria-label="Student navigation">
+        <details class="student-menu" data-responsive-menu>
+            <summary aria-label="Toggle student menu"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span></summary>
+            <nav aria-label="More student pages">
                 <a href="<?= esc(site_url('student/priority')) ?>">Duno Focus</a>
                 <a href="<?= esc(site_url('student/subjects')) ?>">Subjects</a>
                 <a href="<?= esc(site_url('student/topics')) ?>">Topics</a>
@@ -90,6 +95,8 @@
         <?= $this->renderSection('content') ?>
     </main>
 </div>
+<footer class="icon-credit"><small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> icon set by 480 Design, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>.</small></footer>
+<?= $this->include('partials/mobile_bottom_nav') ?>
 <script src="<?= esc(base_url('assets/js/student-navigation.js')) ?>" defer></script>
 </body>
 </html>

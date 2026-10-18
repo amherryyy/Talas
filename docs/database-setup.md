@@ -38,8 +38,8 @@ Open `http://127.0.0.1:8080/login` in a browser. The review router connects to t
 
 The original shared XAMPP data directory remains separate and was not repaired or initialized over. A read-only check reported its `mysql.db` system table corrupt (Aria error 176). Do not run `REPAIR TABLE`, replace system-table files, or initialize over that existing directory as ordinary app setup; recovery could affect other local databases and accounts. Its earlier loopback-only configuration backup is `C:\xampp\mysql\bin\my.ini.talas-backup`.
 
-The PHPUnit connection remains separate and uses in-memory SQLite. Do not point test configuration at production or the hosted database. Hosted database creation and import verification remain pending.
+The PHPUnit connection remains separate and uses in-memory SQLite. Do not point test configuration at production or the hosted database. The owner reports the hosted database was created and the schema import succeeded on 2026-10-18. The owner confirms phpMyAdmin shows 15 tables and nine migration rows. Hosted application connectivity remains pending.
 
 ## InfinityFree database
 
-Hosted database creation and phpMyAdmin import remain pending. Create the database through the hosting panel when ready, then configure hosted credentials separately through the documented protected deployment method. Never reuse the local `.env`, local database user, or local password on the host.
+The owner reports creating the hosted database and successfully importing the schema through phpMyAdmin on 2026-10-18. The reviewed schema-only file is [`duno-hosted-initial-schema.sql`](deployment.md#initial-hosted-database-import); it contains the current CodeIgniter, Shield, Settings, and Duno schema plus migration tracking rows, but no user or study data. Import it only once into that new, empty database. The owner confirms the 15-table count and nine-row migration ledger in phpMyAdmin. App connectivity is not yet configured or verified. Configure host credentials in a separate root `.env` as described in `docs/deployment.md`; never reuse the local `.env`. Never reuse or upload the local `.env`, local database user, or local password.

@@ -24,6 +24,7 @@ As a Talas user, I can use the approved account flow to register or receive an a
 7. State-changing forms use framework CSRF protection; sessions use secure settings suitable for the HTTPS host.
 8. Login throttling and password handling use Shield/framework facilities; no plaintext password storage is introduced.
 9. Tests cover signed-out, student, and admin access for allowed and denied routes.
+10. The public root page uses the approved Duno identity, explains the study flow and product areas, links signed-out visitors to registration/sign-in, and links signed-in students/admins to their authorized workspace. Accounts without a recognized role receive a sign-out path and no workspace link.
 
 ## Boundaries
 

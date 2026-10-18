@@ -50,7 +50,7 @@
     </select>
 
     <div class="actions">
-        <button type="submit">Apply filters</button>
+        <button type="submit"><span class="solar-icon solar-icon-filter" aria-hidden="true"></span> Apply filters</button>
         <a class="button secondary" href="<?= esc(site_url('student/topics')) ?>">Clear</a>
     </div>
 </form>
