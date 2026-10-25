@@ -43,6 +43,9 @@ jobs:
       - name: Install locked dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
+      - name: Prepare CodeIgniter writable directories
+        run: mkdir -p writable/cache writable/logs writable/session writable/debugbar
+
       - name: Check PHP syntax
         run: |
           php -l spark
