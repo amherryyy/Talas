@@ -619,3 +619,16 @@ Student changes and decisions: The owner said to use the supplied mobile UI scre
 How the student verified and can explain the result: The focused Home feature check passed (1 test, 13 assertions). The full PHPUnit suite passed after the shared-navigation follow-up (67 tests, 613 assertions), with PHP 8.2.12 and the available `intl` and `sqlite3` extensions enabled for the test process. PHPUnit reports that no code coverage driver is installed. PHP syntax checks and `git diff --check` passed for the controller, shared views, partials, stylesheet, and feature tests. A local mobile browser check confirmed the public menu opens on click, the four tool icons render, and icon requests succeed; signed-in student/admin navigation and mascot layout still need a full visual review.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### GitHub Actions and Dependabot CI automation
+
+```text
+Date / story: 2026-10-25 / R-03 GitHub Actions PHP quality workflow
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to add CI automation and continue improving the project. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected repository instructions, the current branch and working tree, Composer/PHPUnit configuration, and the existing local CI branch. Checked official GitHub Actions release and security guidance for immutable action pins and minimum workflow permissions.
+Suggestions or code retained: Added a GitHub Actions workflow for pull requests to main, pushes to main, and manual dispatch. It checks PHP 8.2 and 8.4, validates Composer files, installs locked dependencies, lints PHP, runs PHPUnit, and audits locked dependencies. Third-party actions are pinned to full SHAs and workflow permissions are read-only. Added weekly Dependabot updates for Composer and GitHub Actions. No production database, deployment secret, or PHP style tool is configured.
+Student changes and decisions: The owner requested CI automation and authorized proceeding with the required publication work. The owner chose to defer further investigation of the hosted /.env response.
+How the student verified and can explain the result: Reviewed workflow scope and action pins against official release and secure-use guidance. `git diff --check` passed. The local test suite, dependency audit, YAML parser, and first GitHub Actions run were not run; the hosted run will report the first CI result. Existing unrelated workspace changes were preserved.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
