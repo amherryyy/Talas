@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\StudySessionModel;
 use App\Models\SubjectModel;
 use App\Models\TopicModel;
+use App\Services\StudyProgressionService;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 use DateTimeImmutable;
@@ -35,19 +36,23 @@ class StudySessions extends BaseController
             return $input;
         }
 
-        $sessionId = (new StudySessionModel())->createForOwner(
-            $this->ownerId(),
+        $ownerId = $this->ownerId();
+        $sessionModel = new StudySessionModel();
+        $xpBefore = $sessionModel->totalMinutesForOwner($ownerId);
+        $completedAt = $this->now();
+        $sessionId = $sessionModel->createForOwner(
+            $ownerId,
             $input['subject_id'],
             $input['topic_id'],
             $input['duration_minutes'],
-            $this->now(),
+            $completedAt,
         );
 
         if ($sessionId === false) {
             return redirect()->to(site_url('student/sessions'))->withInput()->with('error', 'The session could not be saved. Please check your selections and try again.');
         }
 
-        return redirect()->to(site_url('student/sessions'))->with('success', 'Study session saved.');
+        return $this->sessionSavedRedirect($xpBefore, $xpBefore + $input['duration_minutes']);
     }
 
     public function edit(int $sessionId): string
@@ -70,7 +75,8 @@ class StudySessions extends BaseController
     public function update(int $sessionId): RedirectResponse
     {
         $ownerId = $this->ownerId();
-        if ((new StudySessionModel())->findForOwner($sessionId, $ownerId) === null) {
+        $session = (new StudySessionModel())->findForOwner($sessionId, $ownerId);
+        if ($session === null) {
             throw PageNotFoundException::forPageNotFound();
         }
 
@@ -79,6 +85,7 @@ class StudySessions extends BaseController
             return $input;
         }
 
+        $xpBefore = (new StudySessionModel())->totalMinutesForOwner($ownerId);
         if (! (new StudySessionModel())->updateForOwner(
             $sessionId,
             $ownerId,
@@ -90,7 +97,9 @@ class StudySessions extends BaseController
                 ->withInput()->with('error', 'The session could not be updated. Please check your selections and try again.');
         }
 
-        return redirect()->to(site_url('student/sessions'))->with('success', 'Study session updated.');
+        $xpAfter = $xpBefore - (int) $session['duration_minutes'] + $input['duration_minutes'];
+
+        return $this->sessionSavedRedirect($xpBefore, $xpAfter, 'Study session updated.');
     }
 
     public function delete(int $sessionId): string
@@ -177,5 +186,32 @@ class StudySessions extends BaseController
         $timezone = new DateTimeZone(config('App')->appTimezone);
 
         return (new DateTimeImmutable('now', $timezone))->format('Y-m-d H:i:s');
+    }
+
+    private function sessionSavedRedirect(int $xpBefore, int $xpAfter, string $message = 'Study session saved.'): RedirectResponse
+    {
+        $progression = new StudyProgressionService();
+        $previousLevel = $progression->levelForXp($xpBefore);
+        $newLevel = $progression->levelForXp($xpAfter);
+        $response = redirect()->to(site_url('student/sessions'))->with('success', $message);
+
+        if ($newLevel['level'] <= $previousLevel['level']) {
+            return $response;
+        }
+
+        $newUnlocks = array_values(array_map(
+            static fn (array $unlock): string => $unlock['name'],
+            array_filter(
+                StudyProgressionService::UNLOCKS,
+                static fn (array $unlock): bool => $unlock['level'] > $previousLevel['level'] && $unlock['level'] <= $newLevel['level'],
+            ),
+        ));
+
+        return $response->with('level_up', [
+            'level' => $newLevel['level'],
+            'name' => $newLevel['name'],
+            'total_xp' => $xpAfter,
+            'unlocks' => $newUnlocks,
+        ]);
     }
 }

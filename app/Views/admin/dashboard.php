@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
     <title><?= esc($pageTitle) ?> · duno.</title>
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css?v=20261025-ui1')) ?>">
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/duno-ui.css?v=20261025-ui7')) ?>">
+    <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
+    <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
 </head>
 <body class="duno-admin has-mobile-navigation">
 <a class="skip-link" href="#main-content">Skip to main content</a>

@@ -14,14 +14,14 @@
     <div class="workspace-hero-art" aria-hidden="true">
         <span class="hero-orbit hero-orbit-one"></span>
         <span class="hero-orbit hero-orbit-two"></span>
-        <img class="dashboard-mascot" src="<?= esc(base_url('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" fetchpriority="high">
+        <img class="dashboard-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" fetchpriority="high">
         <span class="hero-art-label">one step at a time</span>
     </div>
 </section>
 
 <dialog class="check-in-dialog" data-check-in-prompt data-prompt-date="<?= esc($checkInPromptDate) ?>" data-prompt-user="<?= esc($checkInPromptUserKey) ?>" data-prompt-satisfied="<?= $checkInPromptSatisfied ? 'true' : 'false' ?>" aria-labelledby="check-in-prompt-title" aria-describedby="check-in-prompt-description">
     <div class="check-in-dialog-head">
-        <img class="check-in-mascot" src="<?= esc(base_url('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true">
+        <span class="mascot-stage" aria-hidden="true"><img class="check-in-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285"></span>
         <button type="button" class="check-in-dialog-close" data-check-in-dismiss aria-label="Close check-in prompt">×</button>
     </div>
     <p class="workspace-kicker">A small pause before you begin</p>
@@ -67,7 +67,7 @@
             <button type="button" class="button secondary" data-check-in-dismiss>Not now</button>
         </div>
     </form>
-    <script src="<?= esc(base_url('assets/js/check-in-prompt.js?v=20261025-prompt1')) ?>" defer></script>
+    <script src="<?= esc(duno_asset('assets/js/check-in-prompt.js')) ?>" defer></script>
 </dialog>
 <noscript><p class="notice">You can add an optional private energy and study-load check-in any time. <a href="<?= esc(site_url('student/check-ins')) ?>">Open check-ins</a>.</p></noscript>
 

@@ -14,12 +14,13 @@ $items = [
     ['label' => 'Focus', 'href' => site_url('student/priority'), 'icon' => 'target', 'key' => 'focus'],
     ['label' => 'Plan', 'href' => site_url('student/plan'), 'icon' => 'calendar', 'key' => 'plan'],
     ['label' => 'Timer', 'href' => site_url('student/sessions'), 'icon' => 'stopwatch', 'key' => 'timer'],
+    ['label' => 'Guide', 'href' => site_url('student#guide-heading'), 'icon' => 'book-2', 'key' => 'guide'],
     ['label' => 'Aralytics', 'href' => site_url('student/aralytics'), 'icon' => 'chart-2', 'key' => 'aralytics'],
 ];
 ?>
 <nav class="student-bottom-nav" aria-label="Student navigation">
     <?php foreach ($items as $item): ?>
-        <a href="<?= esc($item['href']) ?>"<?= $active === $item['key'] ? ' aria-current="page"' : '' ?>>
+        <a href="<?= esc($item['href']) ?>"<?= $active === $item['key'] ? ' aria-current="page"' : '' ?><?= $item['key'] === 'guide' ? ' data-guide-nav' : '' ?><?= $item['key'] === 'home' ? ' data-home-nav' : '' ?>>
             <span class="student-bottom-nav-mark solar-icon solar-icon-<?= esc($item['icon']) ?>" aria-hidden="true"></span>
             <span><?= esc($item['label']) ?></span>
         </a>

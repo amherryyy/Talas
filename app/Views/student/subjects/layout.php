@@ -5,42 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
     <title><?= esc($pageTitle ?? 'Your study space') ?> · duno.</title>
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css?v=20261025-ui1')) ?>">
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/duno-ui.css?v=20261025-ui7')) ?>">
+    <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
+    <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
 </head>
 <body class="duno-workspace has-mobile-navigation">
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <div class="shell">
+    <?php
+    $currentPath = trim(service('uri')->getPath(), '/');
+    $currentPath = preg_replace('#^index\.php/?#', '', $currentPath);
+    $primaryLinks = [
+        ['label' => 'Focus', 'path' => 'student/priority', 'icon' => 'target'],
+        ['label' => 'Plan', 'path' => 'student/plan', 'icon' => 'calendar'],
+        ['label' => 'Timer', 'path' => 'student/sessions', 'icon' => 'stopwatch'],
+        ['label' => 'Guide', 'path' => 'student#guide-heading', 'icon' => 'book-2'],
+        ['label' => 'Aralytics', 'path' => 'student/aralytics', 'icon' => 'chart-2'],
+    ];
+    ?>
     <header class="app-header">
-        <a class="brand-lockup" href="<?= esc(site_url('student')) ?>" aria-label="duno. — Your Little Study Buddy. Home">
+        <a class="brand-lockup" href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav aria-label="duno. — Your Little Study Buddy. Home">
             <span class="brand-wordmark">duno.</span>
             <span class="brand-tagline">Your Little Study Buddy.</span>
         </a>
-        <?php
-        $currentPath = trim(service('uri')->getPath(), '/');
-        $currentPath = preg_replace('#^index\.php/?#', '', $currentPath);
-        $primaryLinks = [
-            ['label' => 'Focus', 'path' => 'student/priority', 'icon' => 'target'],
-            ['label' => 'Plan', 'path' => 'student/plan', 'icon' => 'calendar'],
-            ['label' => 'Timer', 'path' => 'student/sessions', 'icon' => 'stopwatch'],
-            ['label' => 'Aralytics', 'path' => 'student/aralytics', 'icon' => 'chart-2'],
-        ];
-        ?>
         <nav class="workspace-nav" aria-label="Primary student navigation">
             <?php foreach ($primaryLinks as $link): ?>
-                <?php $isCurrent = $currentPath === $link['path'] || str_starts_with($currentPath, $link['path'] . '/'); ?>
-                <a href="<?= esc(site_url($link['path'])) ?>"<?= $isCurrent ? ' aria-current="page"' : '' ?>>
+                <?php $isGuide = $link['label'] === 'Guide'; $isCurrent = ! $isGuide && ($currentPath === $link['path'] || str_starts_with($currentPath, $link['path'] . '/')); ?>
+                <a href="<?= esc(site_url($link['path'])) ?>"<?= $isCurrent ? ' aria-current="page"' : '' ?><?= $isGuide ? ' data-guide-nav' : '' ?>>
                     <span class="solar-icon solar-icon-<?= esc($link['icon']) ?>" aria-hidden="true"></span><?= esc($link['label']) ?>
                 </a>
             <?php endforeach ?>
         </nav>
-        <details class="student-menu">
+        <details class="student-menu" data-student-menu>
             <summary aria-label="Open more student pages"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span>More</span></summary>
             <nav aria-label="More student pages">
-                <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?>>Home</a>
+                <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav>Home</a>
                 <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') ? ' aria-current="page"' : '' ?>>Subjects</a>
                 <a href="<?= esc(site_url('student/topics')) ?>"<?= str_contains($currentPath, 'topics') ? ' aria-current="page"' : '' ?>>Topics</a>
-                <a href="<?= esc(site_url('student#study-ideas-heading')) ?>">Duno Guide</a>
                 <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>>Private check-ins</a>
                 <form method="post" action="<?= esc(site_url('logout')) ?>">
                     <?= csrf_field() ?>
@@ -61,5 +61,10 @@
 </div>
 <footer class="icon-credit"><small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small></footer>
 <?= $this->include('partials/mobile_bottom_nav') ?>
+<?php if ($levelUp = session()->getFlashdata('level_up')): ?>
+    <?= $this->include('student/partials/level_up_dialog', ['levelUp' => $levelUp]) ?>
+<?php endif ?>
+<script src="<?= esc(duno_asset('assets/js/student-navigation.js')) ?>" defer></script>
+<?php if ($levelUp): ?><script src="<?= esc(duno_asset('assets/js/level-up.js')) ?>" defer></script><?php endif ?>
 </body>
 </html>

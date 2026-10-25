@@ -945,3 +945,29 @@ Student changes and decisions: R-09 is accepted by the owner. R-08's existing re
 How the student verified and can explain the result: Inspected the existing CSS responsive and reduced-motion rules, views, story docs, and worktree. PHP syntax and browser review are pending; no automated tests were run.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### Navigation, motion, and static asset caching follow-up
+
+```text
+Date / story: 2026-10-25 / R-08 navigation, motion, and safe asset caching
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested a faster, easier-to-follow overall navigation, clearer cards and actions, animation, level-up mascot feedback, an animated check-in prompt, and caching where useful.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the current CI4 views, static assets, student session flow, progression rules, Apache package builder, requirements, deployment guidance, and existing frontend patterns; drafted targeted navigation, presentation, level-up feedback, asset-versioning, cache-header, and documentation changes.
+Suggestions or code retained: Added a direct Guide destination in the desktop and mobile student navigation, a sticky desktop header, menu dismissal behavior, a more balanced tool-card grid, mascot entrance motion for check-ins and level-up feedback, server-generated level-up flash data after saved-session threshold crossings, timestamped asset URLs, and seven-day Apache caching for static files only. No framework, dependency, page cache, schema change, or check-in-based progression was added.
+Student changes and decisions: The owner requested the scope and caching only where appropriate. Dynamic pages containing student data stay uncached. The owner has not reviewed or accepted the final interactions.
+How the student verified and can explain the result: Not run in this session; no tests, syntax checks, dependency audit, browser review, or host check was run. The live host was not modified. InfinityFree support for optional mod_expires/mod_headers directives remains unverified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### History query optimization follow-up
+
+```text
+Date / story: 2026-10-25 / reduce unbounded history reads for summaries
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to apply optimizations that preserve existing quality and UI/UX.
+Assistance used (explanation, planning, code draft, debugging, review): Replaced full-history PHP work for progression totals with owner-scoped SQL aggregates and a bounded recent session window; bounded date-based Aralytics reads to the six-month progression window and filtered check-in summary reads by the selected date range. Kept the all-time report and history screens intact.
+Suggestions or code retained: Updated StudySessionModel, CheckInModel, StudyProgressionService, Dashboard and Aralytics controllers, and the R-08 follow-up story. No schema, package, or visible UI changes were made.
+Student changes and decisions: The owner requested optimization while preserving quality and the user experience. The owner later authorized staging, committing, version-control work, and upload. No stage, commit, push, merge, or deployment has happened yet.
+How the student verified and can explain the result: The complete PHPUnit suite passed (73 tests, 677 assertions); syntax lint passed for 139 PHP files; Composer validation passed; locked dependency audit reported no advisories. The production package was built and inspected for expected root files, private-path deny rules, matching changed-source hash, and `.env` exclusion. Local browser review was unavailable because neither a browser session nor local Apache was available. Runtime performance and InfinityFree behavior remain unmeasured.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```

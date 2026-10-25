@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <aside class="timer-rhythm-card" aria-labelledby="timer-rhythm-title">
-                    <img class="timer-mascot" src="<?= esc(base_url('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true">
+                    <img class="timer-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true">
                     <span class="timer-rhythm-mark" aria-hidden="true">◷</span>
                     <p class="timer-focus-kicker">A rhythm to try</p>
                     <h3 id="timer-rhythm-title">Give focus a little shape</h3>
@@ -108,5 +108,5 @@
         </ul>
     <?php endif ?>
 </section>
-<script src="<?= esc(base_url('assets/js/study-sessions.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/study-sessions.js')) ?>" defer></script>
 <?= $this->endSection() ?>

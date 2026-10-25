@@ -92,3 +92,4 @@ F-03 subject management is accepted and merged to `main` through PR #1. F-04 top
 
 - **R-08 UI/UX redesign:** accepted by the owner on 2026-10-25. Owner-requested mascot presence and motion follow-up is tracked in [`ui-ux-redesign-story.md`](ui-ux-redesign-story.md).
 - **R-09 study progression:** accepted by the owner on 2026-10-25, including level thresholds, names, badges, and unlock descriptions.
+- **R-08/R-09 navigation and motion follow-up:** requested by the owner on 2026-10-25; implementation is prepared for review in [`navigation-and-motion-polish-story.md`](navigation-and-motion-polish-story.md). Static files use versioned asset URLs and optional seven-day Apache caching; private server-rendered pages are not page-cached.

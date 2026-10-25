@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
     <title><?= $this->renderSection('title') ?> · duno.</title>
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/duno-ui.css?v=20261025-ui7')) ?>">
+    <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
     <?= $this->renderSection('pageStyles') ?>
 </head>
 <body class="duno-auth">
@@ -27,7 +27,7 @@
                     <li>Look back at your study activity</li>
                 </ul>
             </div>
-            <img src="<?= esc(base_url('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true">
+            <img src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true">
         </aside>
     </main>
     <?= $this->renderSection('pageScripts') ?>

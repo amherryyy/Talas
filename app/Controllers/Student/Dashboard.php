@@ -19,7 +19,14 @@ class Dashboard extends BaseController
         $todayDate = $today->format('Y-m-d');
         $ownerId = (int) auth()->id();
         $hasCheckInToday = (new CheckInModel())->hasRecordForOwnerOnDate($ownerId, $todayDate);
-        $sessions = (new StudySessionModel())->findAllForOwner($ownerId);
+        $todayStart = $today->setTime(0, 0);
+        $sessionModel = new StudySessionModel();
+        $lifetimeTotals = $sessionModel->progressionTotalsForOwner($ownerId);
+        $recentSessions = $sessionModel->findForOwnerPeriod(
+            $ownerId,
+            $todayStart->modify('first day of this month')->modify('-5 months')->format('Y-m-d H:i:s'),
+            $todayStart->modify('+1 day')->format('Y-m-d H:i:s'),
+        );
 
         return view('student/dashboard', [
             'pageTitle' => 'Duno workspace',
@@ -30,7 +37,12 @@ class Dashboard extends BaseController
             'checkInPromptUserKey' => (string) auth()->id(),
             'checkInPromptSatisfied' => $hasCheckInToday || session()->getFlashdata('check_in_prompt_completed') === true,
             'checkInErrors' => session()->getFlashdata('check_in_errors') ?? [],
-            'progression' => (new StudyProgressionService())->summarize($sessions, $today, $timezone),
+            'progression' => (new StudyProgressionService())->summarize(
+                $recentSessions,
+                $today,
+                $timezone,
+                $lifetimeTotals,
+            ),
         ]);
     }
 }

@@ -37,5 +37,5 @@
         <a class="button secondary" href="<?= esc(site_url('student/sessions')) ?>">Cancel</a>
     </div>
 </form>
-<script src="<?= esc(base_url('assets/js/study-sessions.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/study-sessions.js')) ?>" defer></script>
 <?= $this->endSection() ?>

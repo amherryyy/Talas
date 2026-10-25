@@ -24,6 +24,50 @@ class StudySessionModel extends Model
             ->get()->getResultArray();
     }
 
+    /** @return list<array<string, mixed>> */
+    public function findForOwnerPeriod(int $ownerId, ?string $start, ?string $end): array
+    {
+        $builder = $this->ownerQuery($ownerId);
+        if ($start !== null) {
+            $builder->where('study_sessions.completed_at >=', $start);
+        }
+        if ($end !== null) {
+            $builder->where('study_sessions.completed_at <', $end);
+        }
+
+        return $builder
+            ->orderBy('study_sessions.completed_at', 'DESC')
+            ->orderBy('study_sessions.id', 'DESC')
+            ->get()->getResultArray();
+    }
+
+    public function totalMinutesForOwner(int $ownerId): int
+    {
+        $row = $this->db->table('study_sessions')
+            ->select('COALESCE(SUM(duration_minutes), 0) AS total_minutes', false)
+            ->where('user_id', $ownerId)
+            ->get()->getRowArray();
+
+        return (int) ($row['total_minutes'] ?? 0);
+    }
+
+    /** @return array{total_minutes: int, session_count: int, study_days: int} */
+    public function progressionTotalsForOwner(int $ownerId): array
+    {
+        $totals = $this->db->table('study_sessions')
+            ->select('COALESCE(SUM(duration_minutes), 0) AS total_minutes', false)
+            ->select('COUNT(*) AS session_count', false)
+            ->select('COUNT(DISTINCT DATE(completed_at)) AS study_days', false)
+            ->where('user_id', $ownerId)
+            ->get()->getRowArray() ?? [];
+
+        return [
+            'total_minutes' => (int) ($totals['total_minutes'] ?? 0),
+            'session_count' => (int) ($totals['session_count'] ?? 0),
+            'study_days' => (int) ($totals['study_days'] ?? 0),
+        ];
+    }
+
     /** @return array<string, mixed>|null */
     public function findForOwner(int $sessionId, int $ownerId): ?array
     {
