@@ -16,7 +16,7 @@
 <?php $action = $isEditing
     ? site_url('student/subjects/' . $subject['id'] . '/topics/' . $topic['id'])
     : site_url('student/subjects/' . $subject['id'] . '/topics'); ?>
-<form method="post" action="<?= esc($action) ?>">
+<form class="topic-form" method="post" action="<?= esc($action) ?>">
     <?= csrf_field() ?>
     <label for="title">Topic title</label>
     <input id="title" name="title" type="text" maxlength="120" required autocomplete="off" value="<?= esc(old('title', $topic['title'] ?? '')) ?>" aria-describedby="title-help">

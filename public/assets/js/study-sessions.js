@@ -30,6 +30,7 @@
     const form = timer.querySelector('[data-session-form]');
     const elapsedOutput = timer.querySelector('[data-elapsed]');
     const status = timer.querySelector('[data-timer-status]');
+    const timerLabel = timer.querySelector('[data-timer-label]');
     const review = timer.querySelector('[data-review]');
     const durationInput = timer.querySelector('#duration-minutes');
     const startButton = timer.querySelector('[data-start]');
@@ -47,6 +48,19 @@
     let intervalId = null;
     let state = timer.dataset.reviewing === 'true' ? 'stopped' : 'idle';
     let unsaved = state === 'stopped';
+
+    const setState = (nextState) => {
+        state = nextState;
+        timer.dataset.timerState = state;
+        timerLabel.textContent = {
+            idle: 'Ready when you are',
+            running: 'Focus in progress',
+            paused: 'Paused for a moment',
+            stopped: 'Review before saving',
+        }[state];
+    };
+
+    setState(state);
 
     if (state === 'stopped') {
         review.hidden = false;
@@ -79,7 +93,7 @@
 
     const startTimer = () => {
         startedAt = performance.now();
-        state = 'running';
+        setState('running');
         unsaved = true;
         lockReferences(true);
         startButton.disabled = true;
@@ -94,7 +108,7 @@
     const pauseTimer = () => {
         accumulatedMs = elapsedMilliseconds();
         startedAt = null;
-        state = 'paused';
+        setState('paused');
         window.clearInterval(intervalId);
         intervalId = null;
         renderTime();
@@ -109,7 +123,7 @@
             accumulatedMs = elapsedMilliseconds();
         }
         startedAt = null;
-        state = 'stopped';
+        setState('stopped');
         unsaved = true;
         window.clearInterval(intervalId);
         intervalId = null;
@@ -135,7 +149,7 @@
         intervalId = null;
         accumulatedMs = 0;
         startedAt = null;
-        state = 'idle';
+        setState('idle');
         unsaved = false;
         review.hidden = true;
         durationInput.value = '';

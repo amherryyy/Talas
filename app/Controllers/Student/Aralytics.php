@@ -7,6 +7,7 @@ use App\Models\CheckInModel;
 use App\Models\StudySessionModel;
 use App\Services\AralyticsService;
 use App\Services\CheckInSummaryService;
+use App\Services\StudyProgressionService;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -26,8 +27,9 @@ class Aralytics extends BaseController
             : '7_days';
         $timezone = new DateTimeZone(config('App')->appTimezone);
         $now = new DateTimeImmutable('now', $timezone);
+        $sessions = (new StudySessionModel())->findAllForOwner((int) $owner->id);
         $summary = (new AralyticsService())->summarize(
-            (new StudySessionModel())->findAllForOwner((int) $owner->id),
+            $sessions,
             $period,
             $now,
             $timezone,
@@ -43,6 +45,7 @@ class Aralytics extends BaseController
             'summary' => $summary,
             'checkInSummary' => $checkInSummary,
             'periods' => AralyticsService::PERIODS,
+            'progression' => (new StudyProgressionService())->summarize($sessions, $now, $timezone),
             'appTimezone' => $timezone->getName(),
             'pageTitle' => 'Aralytics',
         ]);

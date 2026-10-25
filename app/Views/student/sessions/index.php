@@ -15,35 +15,61 @@
 <?php else: ?>
     <?php $selectedSubject = old('subject_id', ''); ?>
     <?php $selectedTopic = old('topic_id', ''); ?>
-    <section aria-labelledby="timer-heading" data-study-timer data-reviewing="<?= $reviewing ? 'true' : 'false' ?>">
+    <section aria-labelledby="timer-heading" data-study-timer data-reviewing="<?= $reviewing ? 'true' : 'false' ?>" data-timer-state="<?= $reviewing ? 'stopped' : 'idle' ?>">
         <h2 id="timer-heading">Time a session</h2>
         <form method="post" action="<?= esc(site_url('student/sessions')) ?>" data-session-form>
             <?= csrf_field() ?>
-            <label for="session-subject">Subject</label>
-            <select id="session-subject" name="subject_id" required data-subject-select>
-                <option value="">Choose a subject</option>
-                <?php foreach ($subjects as $subject): ?>
-                    <option value="<?= esc((string) $subject['id']) ?>"<?= (string) $subject['id'] === (string) $selectedSubject ? ' selected' : '' ?>><?= esc($subject['name']) ?></option>
-                <?php endforeach ?>
-            </select>
-
-            <label for="session-topic">Topic (optional)</label>
-            <select id="session-topic" name="topic_id" data-topic-select>
-                <option value="">No topic</option>
-                <?php foreach ($topics as $topic): ?>
-                    <option value="<?= esc((string) $topic['id']) ?>" data-subject-id="<?= esc((string) $topic['subject_id']) ?>"<?= (string) $topic['id'] === (string) $selectedTopic ? ' selected' : '' ?>><?= esc($topic['title'] . ' — ' . $topic['subject_name']) ?></option>
-                <?php endforeach ?>
-            </select>
-            <p class="muted">Choose a topic from the selected subject.</p>
-
-            <p class="timer-display" role="timer" aria-label="Elapsed study time"><output data-elapsed>00:00:00</output></p>
-            <p class="muted" data-timer-status role="status">Timer is idle. Starting or stopping it will not save a session.</p>
-            <div class="actions">
-                <button type="button" data-start>Start timer</button>
-                <button type="button" class="button secondary" data-pause disabled>Pause</button>
-                <button type="button" class="button secondary" data-resume disabled>Resume</button>
-                <button type="button" class="button secondary" data-stop disabled>Stop and review</button>
-                <button type="button" class="danger" data-discard disabled>Discard timer</button>
+            <div class="timer-workspace-grid">
+                <div class="timer-focus-card" data-timer-focus-card>
+                    <div class="timer-focus-topline">
+                        <span class="timer-focus-kicker">Duno Focus session</span>
+                        <span class="timer-state-pill" data-timer-label>Ready when you are</span>
+                    </div>
+                    <div class="timer-reference-fields">
+                        <div>
+                            <label for="session-subject">Subject</label>
+                            <select id="session-subject" name="subject_id" required data-subject-select>
+                                <option value="">Choose a subject</option>
+                                <?php foreach ($subjects as $subject): ?>
+                                    <option value="<?= esc((string) $subject['id']) ?>"<?= (string) $subject['id'] === (string) $selectedSubject ? ' selected' : '' ?>><?= esc($subject['name']) ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="session-topic">Topic <span class="muted">(optional)</span></label>
+                            <select id="session-topic" name="topic_id" data-topic-select>
+                                <option value="">No topic</option>
+                                <?php foreach ($topics as $topic): ?>
+                                    <option value="<?= esc((string) $topic['id']) ?>" data-subject-id="<?= esc((string) $topic['subject_id']) ?>"<?= (string) $topic['id'] === (string) $selectedTopic ? ' selected' : '' ?>><?= esc($topic['title'] . ' — ' . $topic['subject_name']) ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+                    </div>
+                    <p class="timer-display" role="timer" aria-label="Elapsed study time"><output data-elapsed>00:00:00</output></p>
+                    <p class="timer-status" data-timer-status role="status">Choose a subject, then start when you’re ready. Your time is never saved automatically.</p>
+                    <div class="actions timer-actions">
+                        <button type="button" data-start>Start timer</button>
+                        <button type="button" class="button secondary" data-pause disabled>Pause</button>
+                        <button type="button" class="button secondary" data-resume disabled>Resume</button>
+                        <button type="button" class="button secondary" data-stop disabled>Stop and review</button>
+                        <button type="button" class="danger" data-discard disabled>Discard timer</button>
+                    </div>
+                </div>
+                <aside class="timer-rhythm-card" aria-labelledby="timer-rhythm-title">
+                    <img class="timer-mascot" src="<?= esc(base_url('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true">
+                    <span class="timer-rhythm-mark" aria-hidden="true">◷</span>
+                    <p class="timer-focus-kicker">A rhythm to try</p>
+                    <h3 id="timer-rhythm-title">Give focus a little shape</h3>
+                    <div class="timer-rhythm-option">
+                        <strong>Pomodoro</strong>
+                        <span>25 min focus · 5 min break</span>
+                    </div>
+                    <div class="timer-rhythm-option">
+                        <strong>Longer block</strong>
+                        <span>50 min focus · 10 min break</span>
+                    </div>
+                    <p class="muted">Pick what feels manageable. Pause the timer for breaks; only running time is counted.</p>
+                </aside>
             </div>
 
             <fieldset data-review hidden>

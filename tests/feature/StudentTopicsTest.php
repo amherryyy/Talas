@@ -112,7 +112,7 @@ final class StudentTopicsTest extends CIUnitTestCase
 
         $noMatches = $this->postAuthenticated('student/topics', ['query' => 'No matching record']);
         $noMatches->assertOK();
-        $noMatches->assertSee('No topics match those search and filter choices.');
+        $noMatches->assertSee('No topics match these filters.');
     }
 
     public function testTopicFiltersCombineAndDueDateStatesExcludeCompletedWork(): void
@@ -202,7 +202,7 @@ final class StudentTopicsTest extends CIUnitTestCase
 
         $page = $this->getAuthenticated('student/priority');
         $page->assertOK();
-        $page->assertSee('No unfinished topics yet.');
+        $page->assertSee('No unfinished topics are on your list right now.');
         $page->assertDontSee('Only completed item');
     }
 

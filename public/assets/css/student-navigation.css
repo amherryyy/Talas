@@ -28,7 +28,7 @@
 
 .student-bottom-nav { display: none; }
 
-@media (max-width: 32rem) {
+@media (max-width: 52rem) {
     body.has-mobile-navigation { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
 
     .student-bottom-nav {

@@ -32,7 +32,9 @@ class CheckIns extends BaseController
 
     public function create(): RedirectResponse
     {
-        $input = $this->validRatingInput('student/check-ins');
+        $returnToDashboard = $this->request->getPost('return_to') === 'student';
+        $returnPath = $returnToDashboard ? 'student' : 'student/check-ins';
+        $input = $this->validRatingInput($returnPath);
         if ($input instanceof RedirectResponse) {
             return $input;
         }
@@ -45,7 +47,11 @@ class CheckIns extends BaseController
         );
 
         if ($created === false) {
-            return redirect()->to(site_url('student/check-ins'))->withInput()->with('error', 'The check-in could not be saved. Please try again.');
+            return redirect()->to(site_url($returnPath))->withInput()->with('error', 'The check-in could not be saved. Please try again.');
+        }
+
+        if ($returnToDashboard) {
+            return redirect()->to(site_url('student'))->with('success', 'Private check-in saved.')->with('check_in_prompt_completed', true);
         }
 
         return redirect()->to(site_url('student/check-ins'))->with('success', 'Private check-in saved.');
@@ -133,6 +139,10 @@ class CheckIns extends BaseController
             'energy_rating' => 'required|is_natural_no_zero|greater_than_equal_to[1]|less_than_equal_to[5]',
         ];
         if (! $this->validateData($data, $rules)) {
+            if ($returnPath === 'student') {
+                return redirect()->to(site_url($returnPath))->withInput()->with('check_in_errors', $this->validator->getErrors());
+            }
+
             return redirect()->to(site_url($returnPath))->withInput()->with('errors', $this->validator->getErrors());
         }
 

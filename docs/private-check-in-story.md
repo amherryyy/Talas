@@ -1,7 +1,7 @@
 # F-11 private workload and energy check-ins
 
 **Requirement:** F-11 (Should)
-**Status:** Owner accepted for the local development milestone on 2026-10-17; integrated on `main` at `c83f664` as of 2026-10-25. Hosted release verification remains pending.
+**Status:** Owner accepted for the local development milestone on 2026-10-17; integrated on `main` at `c83f664` as of 2026-10-25. The owner reports R-04 hosted verification is all good; detailed owner-reported privacy evidence is in [`deployment.md`](deployment.md).
 **Owner decision:** Approved on 2026-10-17.
 
 ## Approved product behavior
@@ -14,6 +14,7 @@
 - No free-text notes are collected.
 - The student sees a private summary of check-ins from the last 7 application-local calendar days. It counts entries where workload is rated 4–5 and energy is rated 1–2, without interpreting the ratings or changing the study plan.
 - Aralytics may show separate private counts for the selected period: high workload (4–5), low energy (1–2), and entries where both occur together. This is deterministic counting, not model training, assessment, prediction, or plan adjustment.
+- On the student dashboard, show one optional check-in prompt per student per application-local day when no check-in has been recorded yet that day. The prompt asks how demanding or stressful study feels and about current study energy; it can be dismissed for the day, and no rating is saved until the student submits. Keep the established workload and energy fields and privacy behavior.
 
 ## Privacy and security
 
@@ -35,6 +36,8 @@
 8. The owner sees a private last-7-days summary with the total check-in count and the count of entries rated high workload (4–5) and low energy (1–2); empty periods are explained. The summary is descriptive, owner-scoped, and absent from admin, search, print, and export views.
 9. Student Aralytics shows owner-scoped counts for high workload, low energy, and their co-occurrence in the selected period. It shows an empty state when no check-ins exist and never changes the study plan.
 10. Student Aralytics shows paired workload/energy bars for rating counts 1–5 in the selected period, with a matching numeric table for accessibility. The responsive chart and table are omitted from print, admin, search, and exports.
+
+11. When the student has no check-in for the current application-local date, the dashboard offers the optional modal no more than once per day per browser account. Dismissal skips it for that day; keyboard users can focus, complete, dismiss, or close it; only explicit form submission records ratings.
 
 ## Verification record
 

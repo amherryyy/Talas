@@ -6,7 +6,15 @@
 <p>Unfinished topics rank by importance, due date, and progress. Each score shows why.</p>
 
 <?php if ($topics === []): ?>
-    <p class="muted">No unfinished topics yet. Topics marked done are left off this list.</p>
+    <section class="empty-state" aria-labelledby="focus-empty-heading">
+        <span class="empty-state-mark" aria-hidden="true"><span class="solar-icon solar-icon-target"></span></span>
+        <h2 id="focus-empty-heading">Your next step starts with a topic.</h2>
+        <p>No unfinished topics are on your list right now. Topics marked done stay out of Duno Focus.</p>
+        <div class="actions">
+            <a class="button" href="<?= esc(site_url('student/topics')) ?>"><span class="solar-icon solar-icon-book-2" aria-hidden="true"></span>Browse topics</a>
+            <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>">Manage subjects</a>
+        </div>
+    </section>
 <?php else: ?>
     <ol class="subject-list" aria-label="Topics ranked by priority">
         <?php foreach ($topics as $topic): ?>
