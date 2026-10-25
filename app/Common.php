@@ -13,3 +13,21 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+if (! function_exists('duno_asset')) {
+    /**
+     * Return a public asset URL with a file timestamp for safe browser cache busting.
+     */
+    function duno_asset(string $path): string
+    {
+        $assetPath = ltrim(str_replace('\\', '/', $path), '/');
+        if (str_contains($assetPath, '..')) {
+            return base_url($assetPath);
+        }
+
+        $assetFile = FCPATH . str_replace('/', DIRECTORY_SEPARATOR, $assetPath);
+        $version = is_file($assetFile) ? (string) filemtime($assetFile) : null;
+
+        return base_url($assetPath) . ($version === null ? '' : '?v=' . rawurlencode($version));
+    }
+}

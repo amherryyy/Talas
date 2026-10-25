@@ -94,6 +94,20 @@ ServerSignature Off
 <IfModule !mod_rewrite.c>
     ErrorDocument 404 index.php
 </IfModule>
+
+# Cache file-versioned static assets only. App pages include private student data.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    <FilesMatch "\.(?:css|js|png|gif|jpe?g|svg|webp|ico|woff2?)$">
+        ExpiresDefault "access plus 7 days"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(?:css|js|png|gif|jpe?g|svg|webp|ico|woff2?)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+</IfModule>
 '@
     [System.IO.File]::WriteAllText((Join-Path $packageRoot '.htaccess'), $rootHtaccess, $utf8NoBom)
 

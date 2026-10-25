@@ -193,5 +193,5 @@
         <?php endif ?>
     </section>
 </article>
-<script src="<?= esc(base_url('assets/js/aralytics-print.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/aralytics-print.js')) ?>" defer></script>
 <?= $this->endSection() ?>

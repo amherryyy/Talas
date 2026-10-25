@@ -258,8 +258,8 @@ $joinUrl = site_url('register');
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
     </style>
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css?v=20261025-ui1')) ?>">
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/duno-ui.css?v=20261025-ui7')) ?>">
+    <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
+    <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
 </head>
 <body class="duno-landing <?= ! $isLoggedIn || $isStudent || $isAdmin ? 'has-mobile-navigation' : '' ?>">
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -320,7 +320,7 @@ $joinUrl = site_url('register');
                     <?php endif ?>
                 </div>
             </div>
-            <img class="welcome-mascot" src="<?= esc(base_url('assets/images/duno-mascot.png')) ?>" alt="Duno, a cheerful lightbulb study buddy wearing a Filipino salakot" width="1228" height="1285" fetchpriority="high">
+            <img class="welcome-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="Duno, a cheerful lightbulb study buddy wearing a Filipino salakot" width="1228" height="1285" fetchpriority="high">
         </div>
     </section>
 
@@ -393,7 +393,7 @@ $joinUrl = site_url('register');
 
 <footer class="shell footer">duno. &middot; Your Little Study Buddy.<small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> icon set by 480 Design, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>.</small></footer>
 <?php if (! $isLoggedIn): ?>
-<script type="module" src="<?= esc(base_url('assets/js/public-bottom-nav.js')) ?>"></script>
+<script type="module" src="<?= esc(duno_asset('assets/js/public-bottom-nav.js')) ?>"></script>
 <?php endif ?>
 </body>
 </html>

@@ -27,16 +27,17 @@ class StudyProgressionService
     /**
      * Summarize progression and deterministic activity insights from owner-scoped saved sessions.
      *
-     * @param list<array<string, mixed>> $sessions
+     * @param list<array<string, mixed>> $sessions Sessions in the six-month display window.
+     * @param array{total_minutes: int, session_count: int, study_days: int}|null $lifetimeTotals
      * @return array<string, mixed>
      */
-    public function summarize(array $sessions, DateTimeImmutable $now, DateTimeZone $timezone): array
+    public function summarize(array $sessions, DateTimeImmutable $now, DateTimeZone $timezone, ?array $lifetimeTotals = null): array
     {
         $today = $now->setTimezone($timezone)->setTime(0, 0);
         $currentStart = $today->modify('-29 days');
         $previousStart = $today->modify('-59 days');
         $tomorrow = $today->modify('+1 day');
-        $xp = 0;
+        $xp = $lifetimeTotals['total_minutes'] ?? 0;
         $studyDates = [];
         $dailyMinutes = [];
         $weekdayMinutes = array_fill(1, 7, 0);
@@ -61,7 +62,9 @@ class StudyProgressionService
             $localCompletedAt = $completedAt->setTimezone($timezone);
             $date = $localCompletedAt->format('Y-m-d');
             $month = $localCompletedAt->format('Y-m');
-            $xp += $minutes;
+            if ($lifetimeTotals === null) {
+                $xp += $minutes;
+            }
             $studyDates[$date] = true;
 
             if ($localCompletedAt >= $currentStart && $localCompletedAt < $tomorrow) {
@@ -77,14 +80,8 @@ class StudyProgressionService
             }
         }
 
-        $levelIndex = 0;
-        foreach (self::LEVELS as $index => $level) {
-            if ($xp < $level['xp']) {
-                break;
-            }
-            $levelIndex = $index;
-        }
-        $currentLevel = self::LEVELS[$levelIndex];
+        $currentLevel = $this->levelForXp($xp);
+        $levelIndex = $currentLevel['level'] - 1;
         $nextLevel = self::LEVELS[$levelIndex + 1] ?? null;
         $levelStartXp = $currentLevel['xp'];
         $nextLevelXp = $nextLevel['xp'] ?? $levelStartXp;
@@ -99,9 +96,9 @@ class StudyProgressionService
         }
 
         $badges = [
-            ['key' => 'first-session', 'name' => 'First Session', 'description' => 'Saved your first study session.', 'unlocked' => count($sessions) >= 1],
+            ['key' => 'first-session', 'name' => 'First Session', 'description' => 'Saved your first study session.', 'unlocked' => ($lifetimeTotals['session_count'] ?? count($sessions)) >= 1],
             ['key' => 'two-hours', 'name' => 'Two Hours', 'description' => 'Saved 120 minutes of study time.', 'unlocked' => $xp >= 120],
-            ['key' => 'five-study-days', 'name' => 'Five Study Days', 'description' => 'Studied on five different days.', 'unlocked' => count($studyDates) >= 5],
+            ['key' => 'five-study-days', 'name' => 'Five Study Days', 'description' => 'Studied on five different days.', 'unlocked' => ($lifetimeTotals['study_days'] ?? count($studyDates)) >= 5],
             ['key' => 'ten-hours', 'name' => 'Ten Hours', 'description' => 'Saved 600 minutes of study time.', 'unlocked' => $xp >= 600],
             ['key' => 'long-haul', 'name' => 'Long Haul', 'description' => 'Saved 1,200 minutes of study time.', 'unlocked' => $xp >= 1200],
         ];
@@ -136,7 +133,7 @@ class StudyProgressionService
             'unlocks' => $unlocks,
             'next_unlock' => $nextUnlock,
             'badges' => $badges,
-            'study_days_all_time' => count($studyDates),
+            'study_days_all_time' => $lifetimeTotals['study_days'] ?? count($studyDates),
             'study_days_last_30' => count(array_filter($dailyMinutes, static fn (int $minutes): bool => $minutes > 0)),
             'daily_minutes_last_30' => $dailySummary,
             'weekday_minutes_last_30' => $weekdaySummary,
@@ -150,5 +147,19 @@ class StudyProgressionService
             'current_30_day_end' => $today->format('Y-m-d'),
             'period_end' => $today->format('Y-m-d'),
         ];
+    }
+
+    /** @return array{level: int, name: string, xp: int} */
+    public function levelForXp(int $xp): array
+    {
+        $currentLevel = self::LEVELS[0];
+        foreach (self::LEVELS as $level) {
+            if ($xp < $level['xp']) {
+                break;
+            }
+            $currentLevel = $level;
+        }
+
+        return $currentLevel;
     }
 }

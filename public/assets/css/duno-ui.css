@@ -42,7 +42,9 @@ body.duno-workspace { padding: 0 1.25rem 2rem; }
 body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .duno-workspace .shell { width: min(100%, 76rem); margin-inline: auto; }
 .duno-workspace .app-header {
-    position: relative;
+    position: sticky;
+    z-index: 20;
+    top: 0;
     display: flex;
     min-height: 5.4rem;
     align-items: center;
@@ -53,7 +55,9 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
     border: 0;
     border-bottom: 1px solid var(--duno-line);
     border-radius: 0;
-    background: transparent;
+    background: rgb(247 246 252 / 94%);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 5px 16px rgb(47 39 95 / 3%);
 }
 .brand-lockup { display: grid; flex: none; gap: .12rem; text-decoration: none; }
 .brand-wordmark { margin: 0; color: var(--duno-purple); font-size: 1.85rem; font-weight: 850; letter-spacing: -.075em; line-height: .95; }
@@ -79,6 +83,10 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .workspace-nav a:hover,
 .student-menu > summary:hover { background: rgb(255 255 255 / 78%); color: var(--duno-ink); }
 .workspace-nav a[aria-current="page"] { border-color: #ded8ff; background: var(--duno-paper); color: var(--duno-purple-deep); box-shadow: 0 4px 14px rgb(47 39 95 / 6%); }
+.workspace-nav a[aria-current="page"] { position: relative; }
+.workspace-nav a[aria-current="page"]::after { position: absolute; right: .8rem; bottom: -.22rem; left: .8rem; height: 2px; border-radius: 2px; background: var(--duno-purple); content: ""; }
+.workspace-nav a:active,
+.student-menu > summary:active { transform: translateY(1px); }
 .workspace-nav .solar-icon { width: 1.1rem; height: 1.1rem; }
 .student-menu { position: relative; flex: none; }
 .student-menu > summary { border-color: var(--duno-line); background: rgb(255 255 255 / 76%); color: var(--duno-ink); cursor: pointer; list-style: none; }
@@ -102,7 +110,10 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
     border-radius: 1rem;
     background: var(--duno-paper);
     box-shadow: var(--duno-shadow);
+    transform-origin: top right;
+    animation: menu-arrive 150ms ease-out both;
 }
+@keyframes menu-arrive { from { opacity: 0; transform: translateY(-.25rem) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .student-menu nav a,
 .student-menu nav button { display: block; width: 100%; padding: .68rem .75rem; border: 0; border-radius: .65rem; background: transparent; color: var(--duno-ink); font: inherit; text-align: left; text-decoration: none; cursor: pointer; }
 .student-menu nav a:hover,
@@ -175,7 +186,8 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .duno-workspace .button.danger,
 .duno-workspace button.danger { border-color: var(--duno-danger); color: #fff; background: var(--duno-danger); }
 .duno-workspace button:disabled { cursor: not-allowed; opacity: .48; }
-.duno-workspace .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; margin-top: .85rem; }
+.duno-workspace .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; margin-top: .85rem; }
+.duno-workspace main a:not(.button):hover { color: #4635a4; text-decoration-thickness: .12em; }
 .duno-workspace label { display: block; margin: 1rem 0 .35rem; color: var(--duno-ink); font-size: .9rem; font-weight: 680; }
 .duno-workspace input[type="text"],
 .duno-workspace input[type="date"],
@@ -387,15 +399,20 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 .dashboard-section-heading h2 { margin: 0; }
 .dashboard-section-heading .workspace-kicker { margin-bottom: .25rem; }
 .dashboard-section-heading > a { flex: none; font-size: .88rem; font-weight: 700; text-decoration: none; }
-.dashboard-tool-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(8rem, auto); gap: .75rem; }
-.dashboard-tool-card { display: flex; min-height: 15rem; grid-column: span 3; flex-direction: column; align-items: flex-start; padding: 1.05rem; border: 1px solid var(--duno-line); border-radius: 1.1rem; background: var(--duno-paper); color: var(--duno-ink) !important; text-decoration: none; box-shadow: 0 4px 14px rgb(47 39 95 / 3%); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
-.dashboard-tool-card.focus-tool { min-height: 30.75rem; grid-column: span 6; grid-row: span 2; padding: 1.5rem; background: linear-gradient(145deg, #fff 15%, #f0edff 100%); }
-.dashboard-tool-card.aralytics-tool { grid-column: span 6; }
+.dashboard-tool-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(15rem, auto); gap: 1rem; }
+.dashboard-tool-card { position: relative; display: flex; min-height: 16rem; grid-column: span 5; flex-direction: column; align-items: flex-start; overflow: hidden; padding: clamp(1.2rem, 2.5vw, 1.65rem); border: 1px solid var(--duno-line); border-radius: 1.25rem; background: var(--duno-paper); color: var(--duno-ink) !important; text-decoration: none; box-shadow: 0 7px 18px rgb(47 39 95 / 5%); transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background-color 200ms ease; }
+.dashboard-tool-card::before { position: absolute; top: 0; bottom: 0; left: 0; width: .28rem; background: var(--tool-accent, var(--duno-purple)); content: ""; opacity: .8; }
+.dashboard-tool-card.focus-tool { min-height: 17rem; grid-column: span 7; grid-row: auto; background: linear-gradient(135deg, #fff 15%, #f0edff 100%); --tool-accent: var(--duno-purple); }
+.dashboard-tool-card.plan-tool { --tool-accent: #52916e; }
+.dashboard-tool-card.timer-tool { grid-column: span 5; --tool-accent: #c88b20; }
+.dashboard-tool-card.aralytics-tool { grid-column: span 7; --tool-accent: #5887b6; }
 .dashboard-tool-card.focus-tool .dashboard-tool-icon { width: 3.2rem; height: 3.2rem; }
 .dashboard-tool-card.focus-tool .dashboard-tool-title { font-size: 1.55rem; }
 .dashboard-tool-card.focus-tool .dashboard-tool-copy { max-width: 26rem; font-size: .95rem; }
-.dashboard-tool-card:hover { transform: translateY(-3px); border-color: #d3ccf5; box-shadow: 0 14px 28px rgb(47 39 95 / 8%); }
-.dashboard-tool-icon { display: grid; width: 2.65rem; height: 2.65rem; place-items: center; margin-bottom: 1.2rem; border-radius: .85rem; background: var(--duno-lavender); color: var(--duno-purple-deep); }
+.dashboard-tool-card:hover { transform: translateY(-3px); border-color: #d3ccf5; box-shadow: 0 16px 32px rgb(47 39 95 / 9%); }
+.dashboard-tool-card:focus-visible { outline-offset: 4px; box-shadow: 0 0 0 4px rgb(116 101 216 / 15%), 0 12px 24px rgb(47 39 95 / 8%); }
+.dashboard-tool-icon { display: grid; width: 2.8rem; height: 2.8rem; place-items: center; margin-bottom: 1.2rem; border-radius: .9rem; background: var(--duno-lavender); color: var(--duno-purple-deep); transition: transform 200ms ease; }
+.dashboard-tool-card:hover .dashboard-tool-icon { transform: translateY(-2px) rotate(-4deg); }
 .dashboard-tool-icon .solar-icon { width: 1.3rem; height: 1.3rem; }
 .plan-tool .dashboard-tool-icon { background: var(--duno-mint); color: #326c52; }
 .timer-tool .dashboard-tool-icon { background: #fff3d9; color: #765000; }
@@ -403,7 +420,10 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 .dashboard-tool-title { font-size: 1.17rem; font-weight: 760; letter-spacing: -.035em; }
 .dashboard-tool-copy { margin-top: .4rem; color: var(--duno-muted); font-size: .84rem; line-height: 1.5; }
 .dashboard-tool-link { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: .5rem; margin-top: auto; padding-top: 1.2rem; color: var(--duno-purple-deep); font-size: .82rem; font-weight: 740; }
+.dashboard-tool-link span[aria-hidden="true"] { transition: transform 180ms ease; }
+.dashboard-tool-card:hover .dashboard-tool-link span[aria-hidden="true"] { transform: translateX(.2rem); }
 .guide-section { margin-top: 3rem; padding: clamp(1.1rem, 3vw, 1.7rem); border-radius: 1.35rem; background: #eeebf7; }
+.guide-section h2 { scroll-margin-top: 6.5rem; }
 .guide-section .dashboard-section-heading { align-items: center; }
 .guide-section .dashboard-section-heading h2 { margin: 0; }
 .suggestion-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin: 1rem 0 0; padding: 0; list-style: none; }
@@ -416,6 +436,10 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 .duno-workspace .check-in-dialog::backdrop { background: rgb(25 22 43 / 56%); backdrop-filter: blur(4px); }
 .duno-workspace .check-in-dialog[open] { animation: check-in-enter .22s ease-out both; }
 @keyframes check-in-enter { from { opacity: 0; transform: translateY(.7rem) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.mascot-stage { display: grid; place-items: center; transform-origin: center bottom; }
+.duno-workspace .check-in-dialog[open] .mascot-stage,
+.level-up-dialog[open] .mascot-stage { animation: mascot-welcome 760ms cubic-bezier(.2, .9, .25, 1.25) both; }
+@keyframes mascot-welcome { 0% { opacity: 0; transform: translateY(.75rem) scale(.76) rotate(-8deg); } 68% { opacity: 1; transform: translateY(-.18rem) scale(1.08) rotate(4deg); } 100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); } }
 .check-in-mascot { display: block; width: 4.5rem; height: 4.5rem; object-fit: contain; filter: drop-shadow(0 .4rem .55rem rgb(75 61 134 / 14%)); animation: mascot-float 4.4s ease-in-out infinite; }
 .check-in-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; }
 .check-in-dialog-mark { display: grid; width: 3rem; height: 3rem; place-items: center; border-radius: 1rem; color: var(--duno-purple-deep); background: var(--duno-lavender); }
@@ -440,6 +464,16 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 .duno-workspace .check-in-prompt-actions button { min-width: 10rem; }
 .duno-workspace .check-in-dialog .errors { margin: .5rem 0; }
 .duno-workspace .progression-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(12rem, .8fr) minmax(14rem, 1fr); align-items: center; gap: 1.2rem; margin: 1.2rem 0 1.8rem; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid #dcd6f5; border-radius: 1.25rem; background: linear-gradient(120deg, #f1efff, #fff 62%, #eef9f2); box-shadow: 0 8px 24px rgb(47 39 95 / 5%); }
+.level-up-dialog { width: min(29rem, calc(100vw - 2rem)); max-width: none; padding: clamp(1.4rem, 5vw, 2.2rem); border: 1px solid #dcd6f5; border-radius: 1.5rem; color: var(--duno-ink); background: linear-gradient(145deg, #fff 10%, #f4f1ff 100%); box-shadow: 0 28px 90px rgb(24 19 52 / 24%); text-align: center; }
+.level-up-dialog::backdrop { background: rgb(25 22 43 / 58%); backdrop-filter: blur(4px); }
+.level-up-dialog[open] { animation: check-in-enter .22s ease-out both; }
+.level-up-dialog-content { display: grid; justify-items: center; }
+.level-up-mascot { display: block; width: 7rem; height: 7rem; object-fit: contain; filter: drop-shadow(0 .6rem .8rem rgb(75 61 134 / 18%)); animation: mascot-float 3.8s ease-in-out .75s infinite; }
+.duno-workspace .level-up-dialog h2 { margin: .15rem 0 .4rem; color: var(--duno-purple-deep); font-size: clamp(1.45rem, 5vw, 1.9rem); }
+.level-up-dialog p { margin: .35rem 0; }
+.level-up-unlocks { width: 100%; margin: .8rem 0 1rem; padding: .85rem 1rem; border: 1px solid #d5e8dc; border-radius: .9rem; background: #f4fbf6; text-align: left; }
+.level-up-unlocks ul { margin: .35rem 0 0; padding-left: 1.2rem; color: #28513b; }
+.level-up-dialog button { margin-top: .8rem; }
 .progression-overview { display: flex; min-width: 0; align-items: center; gap: .85rem; }
 .progression-level-mark { display: grid; width: 3.35rem; height: 3.35rem; flex: 0 0 auto; place-items: center; border: 2px solid #fff; border-radius: 1.1rem; color: #fff; background: var(--duno-purple); box-shadow: 0 5px 14px rgb(93 70 196 / 24%); font-size: 1rem; font-weight: 850; }
 .progression-copy { min-width: 0; }
@@ -510,7 +544,7 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
     .duno-workspace .timer-rhythm-option,
     .duno-workspace .timer-rhythm-card > .muted { grid-column: 1 / -1; }
     .duno-workspace .workspace-nav { display: none; }
-    .duno-workspace .app-header { margin-bottom: 1.2rem; }
+    .duno-workspace .app-header { position: relative; margin-bottom: 1.2rem; }
     .duno-workspace.has-mobile-navigation { padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
     .duno-workspace .student-bottom-nav { display: grid; }
     .duno-landing .tool-grid,
