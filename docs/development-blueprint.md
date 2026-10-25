@@ -54,7 +54,7 @@ talas/
   docs/requirements.md         # Phase 1 traceability and decisions
   docs/deployment.md           # InfinityFree upload and denial checks
   docs/brand-identity.md       # Duno naming, palette, and mascot export requirements
-  .github/workflows/ci.yml     # add when GitHub repository exists
+  .github/workflows/ci.yml     # PHP quality checks
 ```
 
 **Initial entities:** Shield users/groups, subjects (owner), topics (subject, due date, importance, progress), availability blocks, plan items, study sessions, curated study suggestions, and optional check-ins. Start with one MySQL database. Index owner/date foreign keys. Keep check-ins separate from admin aggregate views and omit them from exports unless a student explicitly chooses them.
@@ -69,7 +69,7 @@ The formal project flow, security gates, roles, backlog transitions, implementat
 
 **Local tests:** Unit tests for priority order, daily-plan capacity, session duration bounds, and Aralytics totals; feature tests for registration/login, student/admin authorization, owner isolation, validation, CSRF-protected writes, subject/topic/session CRUD, and print data scoping. Playwright is a development-only browser test for responsive page checks; manual mobile/desktop and keyboard checks still cover interaction quality and print layout.
 
-**CI after a GitHub repo exists:** On each pull request, use a PHP version matching InfinityFree, install locked Composer dependencies, run PHP syntax/style checks and PHPUnit, then run `composer audit`. A MySQL service can run migration and focused integration tests. Keep the workflow read-only; no hosted credentials in CI. Add a dependency-update alert if available. No CI file is installed yet because there is no repo.
+**CI:** GitHub Actions runs on pull requests to `main`, pushes to `main`, and manual dispatch. Its PHP 8.2/8.4 matrix validates Composer, installs locked dependencies, lints PHP, runs PHPUnit, and audits locked dependencies. Weekly Dependabot updates are enabled for Composer and GitHub Actions. Workflow permissions are read-only and third-party action versions are pinned to full SHAs. No MySQL-backed CI service or PHP style tool is configured. The first GitHub run is pending.
 
 **Security release checks:** Password hashing via framework APIs; secure session cookies over HTTPS; login throttling; CSRF protection; output escaping; parameterized queries; per-record ownership checks; strict input validation; role authorization; production error mode; secrets excluded from Git; minimal retention of optional check-ins; no study data in logs. Test direct web access to `.env`, `app`, `writable`, `vendor`/`system`, and backup files after every deployment. Use dummy accounts and data in the public demo.
 
