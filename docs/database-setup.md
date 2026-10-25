@@ -38,7 +38,7 @@ Open `http://127.0.0.1:8080/login` in a browser. The review router connects to t
 
 The original shared XAMPP data directory remains separate and was not repaired or initialized over. A read-only check reported its `mysql.db` system table corrupt (Aria error 176). Do not run `REPAIR TABLE`, replace system-table files, or initialize over that existing directory as ordinary app setup; recovery could affect other local databases and accounts. Its earlier loopback-only configuration backup is `C:\xampp\mysql\bin\my.ini.talas-backup`.
 
-The PHPUnit connection remains separate and uses in-memory SQLite. Do not point test configuration at production or the hosted database. The owner reports the hosted database was created and the schema import succeeded on 2026-10-18. The owner confirms phpMyAdmin shows 15 tables and nine migration rows. Hosted application connectivity remains pending.
+The PHPUnit connection remains separate and uses in-memory SQLite. Do not point test configuration at production or the hosted database. The owner reports the hosted database was created and the schema import succeeded on 2026-10-18; phpMyAdmin showed 15 tables and nine migration rows. On 2026-10-25, hosted registration, login, persistent session, and logout succeeded, confirming application database connectivity. A separate synthetic admin account was promoted through its Shield group row in phpMyAdmin; it reaches the aggregate admin dashboard, while the student account receives Forbidden on `/index.php?/admin`. The owner chose not to pursue the `/.env` browser response further and deferred broader hosted acceptance checks; see [`deployment.md`](deployment.md) for recorded results and limitations.
 
 ## InfinityFree database
 

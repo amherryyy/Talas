@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Content\StudySuggestions;
+
 class Home extends BaseController
 {
     public function index(): string
@@ -30,6 +32,9 @@ class Home extends BaseController
             'role'          => $role,
             'workspaceUrl'  => $workspaceUrl,
             'workspaceLabel' => $workspaceLabel,
+            'suggestions' => StudySuggestions::ITEMS,
+            'suggestionSourceUrl' => StudySuggestions::SOURCE_URL,
+            'suggestionSourceName' => StudySuggestions::SOURCE_NAME,
         ]);
     }
 }

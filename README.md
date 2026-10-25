@@ -6,9 +6,9 @@ Local VS Code workspace for the one-month Duno study-planning app. Its product a
 
 ## Current state
 
-The approved Duno identity and mascot export requirements are in [`docs/brand-identity.md`](docs/brand-identity.md).
+The approved Duno identity and mascot requirements are in [`docs/brand-identity.md`](docs/brand-identity.md). The restart board and attention list are in [`docs/project-overview-and-restart.md`](docs/project-overview-and-restart.md).
 
-The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. F-03 through F-10 are merged to `main` through PRs #1–#5; F-10 was merged on 2026-10-17 (merge commit `ce44d12`). F-11 private workload and energy check-ins, including the owner-approved Aralytics pattern summary and chart, are accepted for the local development milestone; focused tests and browser checks pass locally, while hosted release verification remains pending. F-11, F-12, and F-13 are integrated on local branch `feature/F-13-responsive-accessibility`. The approved behavior is documented in `docs/private-check-in-story.md`. Topic, plan, session, and private check-in migrations are applied to the isolated local review database. The original shared XAMPP MariaDB data directory has a corrupt system table and was left untouched; Talas uses a separate local instance. Local first-admin setup is implemented and was used for review; the owner reports hosted database creation and confirms 15 imported tables and nine migration rows; hosted app configuration and admin provisioning remain pending. See `docs/database-setup.md` for local settings and recovery boundaries. The development blueprint is in `docs/development-blueprint.md`, coding instructions are in `AGENTS.md`, and the Git/GitHub procedure is in `docs/version-control.md`.
+The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are installed and locked in Composer. F-03 through F-10 were accepted and merged through PRs #1 to #5. F-11 through F-13 are accepted for the local milestone and integrated on `main` at `c83f664` (2026-10-25 review). On 2026-10-25, the owner deployed a reviewed `htdocs` package through InfinityFree File Manager and verified the public homepage/assets, hosted student registration/login, the admin dashboard, and student denial of the admin route. The upload came from `main` at `c83f664` plus uncommitted worktree changes; remaining host checks are listed in [`docs/deployment.md`](docs/deployment.md). Local and hosted synthetic auth review is documented. The signed-out navigation is implemented as Home, Tools, Guide, and Join, and the owner confirmed the guest experience is all good. CI automation and weekly Dependabot Composer/Actions updates merged in [PR #7](https://github.com/amherryyy/Talas/pull/7). The PHP 8.2/8.4 jobs passed with 67 tests and 612 assertions on each version, and the PHP 8.4 dependency audit found no advisories. The owner confirms `main` now requires pull requests and both PHP checks. Talas uses a separate local MariaDB instance because the original shared XAMPP data directory has a corrupt system table; it remains untouched. See [`docs/database-setup.md`](docs/database-setup.md).
 
 ## Local prerequisites found
 
@@ -18,13 +18,9 @@ The official CodeIgniter 4 app starter 4.7.5 and CodeIgniter Shield 1.4.1 are in
 - Composer is kept project-local at `.tools/composer.phar` (ignored by Git); run it with `C:\xampp\php\php.exe .tools\composer.phar`.
 - Playwright is a development-only dependency for browser layout checks. Setup and commands are in [`docs/browser-testing.md`](docs/browser-testing.md); it is not part of the deployed Duno app.
 
-## Next setup steps
+## Next steps
 
-1. For Composer operations, run `C:\xampp\php\php.exe -d extension=intl -d extension=zip .tools\composer.phar install`.
-2. Configure a host-specific `.env` in the application root using the values shown by the hosting panel; never reuse the local `.env`. See the protected configuration steps in `docs/deployment.md`. See `docs/deployment.md` and `docs/database-setup.md`.
-3. Before upload, verify the target domain's assigned web directory and repeat the root `.htaccess` privacy checks on the host. Local Apache confirms the repository deny rules, but host behavior remains unverified.
-
-The starter and Shield were installed from their official Composer packages. Do not substitute hand-written framework files.
+Use [`docs/project-overview-and-restart.md`](docs/project-overview-and-restart.md) for the ordered local review, documentation, CI, and release tasks. For host setup, follow [`docs/deployment.md`](docs/deployment.md) and [`docs/database-setup.md`](docs/database-setup.md); never reuse the local `.env` or put host credentials in Git.
 
 ## Open in VS Code
 

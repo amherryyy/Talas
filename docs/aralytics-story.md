@@ -2,7 +2,7 @@
 
 **Requirement:** F-09
 
-**Status:** Original study-activity report accepted and merged to `main` through PR #4 on 2026-10-16. Private check-in pattern and chart amendment accepted for the local development milestone on 2026-10-17; release verification remains pending on `feature/F-11-private-check-ins`.
+**Status:** Original study-activity report accepted and merged to `main` through PR #4 on 2026-10-16. Private check-in pattern and chart amendment accepted for the local development milestone on 2026-10-17 and integrated on `main` at `c83f664` as of 2026-10-25; hosted release verification remains pending.
 
 ## User story
 
