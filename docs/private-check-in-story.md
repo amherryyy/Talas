@@ -1,7 +1,7 @@
 # F-11 private workload and energy check-ins
 
 **Requirement:** F-11 (Should)
-**Status:** Owner accepted for the local development milestone on `feature/F-11-private-check-ins` on 2026-10-17.
+**Status:** Owner accepted for the local development milestone on 2026-10-17; integrated on `main` at `c83f664` as of 2026-10-25. Hosted release verification remains pending.
 **Owner decision:** Approved on 2026-10-17.
 
 ## Approved product behavior

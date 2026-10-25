@@ -1,7 +1,7 @@
 # F-12 admin dashboard aggregates
 
 **Requirement:** F-12 (Should)
-**Status:** Accepted by the owner for the local milestone on 2026-10-17. Implementation is on `feature/F-12-admin-dashboard`; hosted deployment checks remain pending.
+**Status:** Accepted by the owner for the local milestone on 2026-10-17; integrated on `main` at `c83f664` as of 2026-10-25. Hosted deployment checks remain pending.
 **Owner decision:** The owner approved the recommended aggregate cards on 2026-10-17.
 
 ## Approved scope

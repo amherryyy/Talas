@@ -1,7 +1,7 @@
 <?php
 $isStudent = $role === 'student';
 $isAdmin = $role === 'admin';
-$canOpenStudentTools = $isStudent || ! $isLoggedIn;
+$canOpenStudentTools = $isStudent;
 $tools = [
     [
         'name' => 'Duno Focus',
@@ -91,7 +91,7 @@ $joinUrl = site_url('register');
         }
         .topbar-inner { display: flex; min-height: 5rem; align-items: center; justify-content: space-between; gap: 1rem; }
         .brand { display: inline-flex; flex-direction: column; text-decoration: none; line-height: 1.1; }
-        .wordmark { font-size: 1.65rem; font-weight: 850; letter-spacing: -.07em; }
+        .wordmark { color: var(--purple); font-size: 1.65rem; font-weight: 850; letter-spacing: -.07em; }
         .tagline { margin-top: .2rem; color: var(--muted); font-size: .72rem; font-weight: 600; }
         .top-actions { display: flex; align-items: center; gap: .6rem; }
         .pill, .menu summary {
@@ -108,6 +108,7 @@ $joinUrl = site_url('register');
             font-weight: 700;
             padding: .55rem 1rem;
             text-decoration: none;
+            white-space: nowrap;
         }
         .pill-primary { border-color: var(--purple); background: var(--purple); color: #fff; }
         .menu { position: relative; }
@@ -134,6 +135,7 @@ $joinUrl = site_url('register');
         .menu-button { width: 100%; border: 0; border-radius: .6rem; background: transparent; color: inherit; cursor: pointer; font: inherit; padding: .65rem .75rem; text-align: left; }
         .menu-button:hover { background: var(--canvas); }
         .main { padding-top: clamp(1.25rem, 4vw, 3rem); }
+        #home, #tools, #guide { scroll-margin-top: 6rem; }
         .welcome {
             position: relative;
             overflow: hidden;
@@ -207,6 +209,16 @@ $joinUrl = site_url('register');
         .guide-note strong { display: block; }
         .guide-note span { color: #514d67; font-size: .87rem; }
         .guide-link { flex: none; color: var(--purple-dark); font-weight: 800; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+        .public-guide { margin: clamp(2rem, 5vw, 3.5rem) 0 1.5rem; scroll-margin-top: 6rem; }
+        .public-guide h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.04em; }
+        .public-guide-intro { margin: .4rem 0 1rem; color: var(--muted); }
+        .public-guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin: 0; padding: 0; list-style: none; }
+        .public-guide-card { height: 100%; padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); box-shadow: 0 8px 24px rgb(42 37 79 / 4%); }
+        .public-guide-card h3 { margin: 0 0 .4rem; font-size: 1rem; }
+        .public-guide-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+        .public-guide-card .guide-recommendation { margin-top: .65rem; font-size: .78rem; }
+        .public-guide-source { margin: .8rem 0 0; color: var(--muted); font-size: .78rem; }
+        .public-guide-source a { color: var(--purple-dark); font-weight: 700; }
         .privacy-note { max-width: 54rem; margin: 1.2rem auto 1.5rem; color: var(--muted); font-size: .84rem; text-align: center; }
         .footer { padding: .25rem 0 1.5rem; color: var(--muted); font-size: .78rem; text-align: center; }
         .footer small { display: block; margin-top: .35rem; }
@@ -232,7 +244,14 @@ $joinUrl = site_url('register');
             .tool-description { font-size: .78rem; }
             .section-heading { align-items: flex-start; flex-direction: column; gap: .15rem; }
             .guide-note { align-items: flex-start; flex-direction: column; }
+            .public-guide-grid { grid-template-columns: 1fr; }
             .student-bottom-nav { --bottom-nav-surface: rgb(255 255 255 / 96%); }
+        }
+        @media (max-width: 400px) {
+            .top-actions > .pill:not(.pill-primary) { display: none; }
+        }
+        @media (max-width: 360px) {
+            .top-actions > .pill-primary { display: none; }
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
@@ -249,6 +268,7 @@ $joinUrl = site_url('register');
                 --purple-dark: #c7c0ff;
                 --shadow: 0 12px 30px rgb(0 0 0 / 18%);
             }
+            .topbar { border-bottom-color: var(--line); background: rgb(23 22 36 / 94%); }
             .welcome::after { opacity: .15; }
             .lavender .tool-mark { background: #35304f; color: #d2ccff; }
             .mint .tool-mark { background: #263d35; color: #b9e8d1; }
@@ -267,7 +287,7 @@ $joinUrl = site_url('register');
     </style>
     <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css')) ?>">
 </head>
-<body class="<?= $isLoggedIn && ($isStudent || $isAdmin) ? 'has-mobile-navigation' : '' ?>">
+<body class="<?= ! $isLoggedIn || $isStudent || $isAdmin ? 'has-mobile-navigation' : '' ?>">
 <header class="topbar">
     <div class="shell topbar-inner">
         <a class="brand" href="<?= esc(site_url('/')) ?>" aria-label="duno. home">
@@ -306,7 +326,7 @@ $joinUrl = site_url('register');
 </header>
 
 <main class="shell main">
-    <section class="welcome" aria-labelledby="welcome-heading">
+    <section class="welcome" id="home" aria-labelledby="welcome-heading">
         <div class="welcome-layout">
             <div class="welcome-copy">
                 <p class="overline"><?= $isStudent ? 'Your study space' : 'A little more focus, one step at a time' ?></p>
@@ -329,14 +349,14 @@ $joinUrl = site_url('register');
         </div>
     </section>
 
-    <section aria-labelledby="tools-heading">
+    <section id="tools" aria-labelledby="tools-heading">
         <div class="section-heading">
             <h2 id="tools-heading"><?= $isStudent ? 'Pick a place to begin' : 'A simple study toolkit' ?></h2>
             <p><?= $isStudent ? 'Your tools, ready when you are.' : 'Four small tools to support your study routine.' ?></p>
         </div>
         <div class="tool-grid">
             <?php foreach ($tools as $tool): ?>
-                <?php $toolUrl = $isStudent ? site_url($tool['path']) : $joinUrl; ?>
+                <?php $toolUrl = site_url($tool['path']); ?>
                 <?php if ($canOpenStudentTools): ?>
                 <a class="tool-card <?= esc($tool['tone']) ?>" href="<?= esc($toolUrl) ?>">
                 <?php else: ?>
@@ -357,6 +377,24 @@ $joinUrl = site_url('register');
         </div>
     </section>
 
+    <?php if (! $isLoggedIn): ?>
+    <section class="public-guide" id="guide" aria-labelledby="guide-heading">
+        <h2 id="guide-heading">Duno Guide</h2>
+        <p class="public-guide-intro">Short, general study ideas. Choose what fits your course.</p>
+        <ul class="public-guide-grid">
+            <?php foreach ($suggestions as $suggestion): ?>
+            <li>
+                <article class="public-guide-card" aria-labelledby="public-suggestion-<?= esc($suggestion['id']) ?>">
+                    <h3 id="public-suggestion-<?= esc($suggestion['id']) ?>"><?= esc($suggestion['title']) ?></h3>
+                    <p><?= esc($suggestion['body']) ?></p>
+                    <p class="guide-recommendation"><?= esc($suggestion['recommendation']) ?></p>
+                </article>
+            </li>
+            <?php endforeach ?>
+        </ul>
+        <p class="public-guide-source">Adapted from <a href="<?= esc($suggestionSourceUrl) ?>" rel="noopener noreferrer"><?= esc($suggestionSourceName) ?></a>.</p>
+    </section>
+    <?php else: ?>
     <aside class="guide-note" aria-label="Duno Guide">
         <p><span class="solar-icon solar-icon-book-2" aria-hidden="true"></span><span><strong>Duno Guide</strong><span>Short, curated study ideas you can try when they fit your course.</span></span></p>
         <?php if ($isStudent || $isAdmin || ! $isLoggedIn): ?>
@@ -365,6 +403,7 @@ $joinUrl = site_url('register');
         </a>
         <?php endif ?>
     </aside>
+    <?php endif ?>
 
     <p class="privacy-note">Workload and energy check-ins are optional and private to the student who records them. They are not shown in admin summaries or study reports.</p>
 </main>
@@ -373,8 +412,13 @@ $joinUrl = site_url('register');
 <?= $this->include('partials/mobile_bottom_nav') ?>
 <?php elseif ($isAdmin): ?>
 <?= $this->include('partials/admin_bottom_nav') ?>
+<?php elseif (! $isLoggedIn): ?>
+<?= $this->include('partials/guest_bottom_nav') ?>
 <?php endif ?>
 
 <footer class="shell footer">duno. &middot; Your Little Study Buddy.<small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> icon set by 480 Design, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>.</small></footer>
+<?php if (! $isLoggedIn): ?>
+<script type="module" src="<?= esc(base_url('assets/js/public-bottom-nav.js')) ?>"></script>
+<?php endif ?>
 </body>
 </html>

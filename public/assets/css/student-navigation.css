@@ -63,7 +63,8 @@
         text-decoration: none;
     }
 
-    .student-bottom-nav a[aria-current="page"] {
+    .student-bottom-nav a[aria-current="page"],
+    .student-bottom-nav a[aria-current="location"] {
         background: var(--bottom-nav-active-surface, #f0edff);
         color: var(--bottom-nav-active-ink, #5746bd);
     }
@@ -71,4 +72,6 @@
     .student-bottom-nav a:active { transform: translateY(1px); }
     .student-bottom-nav-mark { width: 1.35rem; height: 1.35rem; }
     .student-bottom-nav-admin { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .guest-bottom-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .guest-bottom-nav a { white-space: nowrap; }
 }

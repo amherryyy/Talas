@@ -1,6 +1,6 @@
 # Story: responsive and keyboard-ready experience (F-13)
 
-**Status:** F-13 and its compact-content follow-up were accepted by the owner on 2026-10-17.
+**Status:** F-13 and its compact-content follow-up were accepted by the owner on 2026-10-17 and integrated on `main` at `c83f664` as of 2026-10-25. The owner approved the signed-out public navigation mapping on 2026-10-25 and confirmed the guest experience is all good after review.
 
 ## Story
 
@@ -27,4 +27,4 @@ As a student, I can use the main Talas experience on a narrow phone or desktop, 
 
 ## Remaining verification
 
-- No additional local verification is pending for this story. Hosted behavior remains unverified.
+- The owner manually reviewed the signed-in student and admin experiences and reported them all good on 2026-10-25. The public page desktop and phone-like layout, menu click/keyboard operation, and visible focus were also reviewed locally. After the guest bar and public Guide section were implemented, the owner confirmed the guest experience is all good. The bar links Home, Tools, and Guide to public sections, with Join linking to student registration and Sign in remaining in the top menu. Hosted behavior remains unverified.

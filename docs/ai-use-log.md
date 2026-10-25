@@ -2,6 +2,114 @@
 
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
+### Project pause restart inventory
+
+Date / story: 2026-10-25 / overview the project and initialize the restart task board
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner requested an overall project overview, restart tasks after a pause, and a list of items needing attention. Instructor/course disclosure requirements remain the owner's responsibility.
+
+Assistance used (explanation, planning, code draft, debugging, review): Read the project guidance, requirements, deployment notes, story records, Git state, and recent history; reconciled the current project snapshot and created a small local restart board.
+
+Suggestions or code retained: Added [`project-overview-and-restart.md`](project-overview-and-restart.md) with project scope, current snapshot, prioritized tasks, prerequisites, and attention items; updated the README current-state and next-step summary.
+
+Student changes and decisions: No product behavior or runtime code changed. The worktree had an existing untracked `.github/PULL_REQUEST_TEMPLATE.md`, which was left untouched. No branch, issue, stage, commit, push, merge, or deployment was created.
+
+How the student verified and can explain the result: Inspected the current branch (`main` at `c83f664`), refs, tracked worktree state, requirements, deployment evidence, workflow, stories, and AI-use log. No tests, syntax checks, dependency audit, or browser checks were run because this change only creates a project status/task record and README summary.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### R-06 authenticated plan review closeout
+
+Date / story: 2026-10-25 / close the current authenticated Plan journey review
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner stated that R-06 is done and that there is no current issue.
+
+Assistance used (explanation, planning, code draft, debugging, review): Recorded the owner-reported completion in the restart board, F-07 story, workflow status, and requirements traceability.
+
+Suggestions or code retained: No product behavior or runtime code changed. The F-07 review is recorded as owner-reported complete with no current issue; earlier automated browser limitations remain in the historical record.
+
+Student changes and decisions: Documentation only. No data, credentials, or hosting settings changed.
+
+How the student verified and can explain the result: The owner reported no current issue after the authenticated Plan review. `git diff --check` passed after documentation updates; no test suite or dependency audit was run for this documentation-only closeout.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### R-07 signed-out public navigation
+
+Date / story: 2026-10-25 / implement the owner-approved signed-out mobile navigation
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner approved Home, Tools, Guide, and Join as the guest bottom-navigation items. Instructor/course disclosure requirements remain the owner's responsibility.
+
+Assistance used (explanation, planning, code draft, debugging, review): Added the guest-only fixed mobile bar, section anchors and active-section indication, and left sign-in in the existing top menu. After the owner reported that Guide appeared not to navigate, expanded its public target into a full section using the same four approved static study tips and source link already shown on the student dashboard. Guest tool cards remain previews so visitors are directed to Join to access student tools.
+
+Suggestions or code retained: Added `app/Views/partials/guest_bottom_nav.php` and `public/assets/js/public-bottom-nav.js`; updated the public home view and navigation CSS to show and track the bar for signed-out visitors. The Guide anchor now lands on the public curated tip cards with source attribution. Added the JS asset to the deployment checklist and reconciled F-13 status notes.
+
+Student changes and decisions: The owner selected the four labels and destinations, reported that Guide did not appear to go anywhere, and then confirmed that the updated guest experience is all good. No credentials, data, hosting settings, or authentication state were changed.
+
+How the student verified and can explain the result: `php -l app/Controllers/Home.php`, `php -l app/Views/home.php`, `node --check public/assets/js/public-bottom-nav.js`, and `git diff --check` passed. A local signed-out GET to `/` returned HTTP 200 and rendered all four guide cards, their source attribution, Home, Tools, Guide, Join, and the JavaScript module; the JavaScript asset returned HTTP 200. The owner reviewed the updated guest experience and confirmed all good. No test suite was run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### R-04 InfinityFree deployment preflight
+
+Date / story: 2026-10-25 / begin the host deployment-readiness task
+
+Tool and model: OpenAI Codex with web search for current InfinityFree support information; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to start R-04 and requested guidance that catches deployment errors before they risk the project. Instructor/course disclosure requirements remain the owner's responsibility.
+
+Assistance used (explanation, planning, code draft, debugging, review): Read the repository deployment/development guidance, deployment layout, root and private-path `.htaccess` rules, `Paths.php`, and public front controller. Reviewed current provider support information for FTP and database connectivity constraints.
+
+Suggestions or code retained: Recorded R-04 as active. Added a deployment-preparation note identifying that copying `public/index.php` unchanged into the confirmed `htdocs` root would make its `../app/Config/Paths.php` include point outside that web root. Also noted that the root `.htaccess` protects private paths but lacks the route rewrites from `public/.htaccess`, and that local `writable/` contains cache/debugbar data that must be excluded. Added `scripts/Build-InfinityFreePackage.ps1` to assemble the fixed-root package with a corrected entry point, combined rewrite/deny rules, production-only Composer dependencies, fresh writable directories, and no `.env`, tests, docs, local tools, or local writable data. Its output is an ignored unique directory under `build/` and is not uploaded automatically. The owner reports PHP 8.4.27 with `intl`, `mbstring`, `mysqli`, and `pdo_mysql` available; the runtime diagnostic was deleted and its URL now returns 404.
+
+Student changes and decisions: The owner-reported host probe found the domain mapped to `htdocs`, HTTPS, and rewrite behavior; the owner reports the schema import succeeded and has now supplied the latest runtime result (PHP 8.4.27; all four required extensions available). No host account was accessed, no credential requested or changed, and no application file was uploaded.
+
+How the student verified and can explain the result: Inspected source paths and Apache rules against the documented `htdocs` layout; the front-controller mismatch follows directly from the relative include. The owner first reported 403 for the temporary runtime-check URL and site homepage, then provided PHP 8.4.27 and `yes` for `intl`, `mbstring`, `mysqli`, and `pdo_mysql` after checking the `htdocs/.htaccess` rules; the owner later confirmed the diagnostic URL returns 404 after deletion. The homepage 403 was observed before Duno was deployed. Reviewed InfinityFree support results indicating full PHP information is unavailable from the control panel, FTP upload uses an FTP client, and hosted database access should be tested from PHP on the host rather than from local desktop tools. The package builder assembled `build/infinityfree-htdocs-package-20261025/`; Composer pruned 30 development-only packages from the staging copy without modifying source `vendor/`. Inventory checks passed. Local Apache syntax and private-path checks passed for the final package: six private paths returned 403 and a public navigation JavaScript asset returned 200. The temporary Apache process was stopped. App PHP routing and host package checks remain pending. No application feature tests or deployment were run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### R-01 public browser review and header polish
+
+Date / story: 2026-10-25 / R-01 local browser review of Duno public experience
+
+Tool and model: OpenAI Codex with computer-use browser control; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner said to proceed with the Ready local browser-review task after the restart board was created. Instructor/course disclosure requirements remain the owner's responsibility.
+
+Assistance used (explanation, planning, code draft, debugging, review): Opened the current local Duno page, reviewed the public layout at desktop width and a phone-like browser zoom, exercised the menu by click and keyboard, and made a limited CSS correction for dark-mode brand contrast and narrow-header wrapping.
+
+Suggestions or code retained: Updated `app/Views/home.php` to color the wordmark with the Duno purple, give the dark top bar a dark surface, keep action labels on one line, and hide secondary header actions at narrow widths while retaining the hamburger menu entries.
+
+Student changes and decisions: No data or hosting settings were changed. The public F-13 bottom navigation is absent for signed-out visitors in the current view; the required destination behavior for its items is unclear, so this was recorded for owner decision in R-07 instead of being invented. The owner later manually reviewed the signed-in student and admin experiences and reported all good on 2026-10-25.
+
+How the student verified and can explain the result: Brave displayed the public Duno page from the isolated local review server at 1536px desktop width and approximately 380px effective width via browser zoom. The menu opened by click and by Space after Tab focus; visible focus outlines appeared on the brand, account links, and menu control. The public mascot and tool cards rendered at desktop width. `C:\xampp\php\php.exe -l app/Views/home.php` and `git diff --check` passed. Playwright's headless browser launch failed with Windows `spawn EPERM`, so no automated viewport matrix ran. The owner manually signed in to the local student and admin accounts and reported the views all good. The agent did not enter credentials or operate the authentication forms.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### R-02 status documentation reconciliation
+
+Date / story: 2026-10-25 / reconcile project status documentation with the current `main` snapshot
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner requested a project overview and restart task board, then continued the first local review task and reported the signed-in student and admin views all good. Instructor/course disclosure requirements remain the owner's responsibility.
+
+Assistance used (explanation, planning, code draft, debugging, review): Compared the current `main` snapshot with the README, workflow gates and automation inventory, requirements traceability, and F-11 through F-13/auth story headers. Updated stale branch/state claims while preserving historical PR and verification records.
+
+Suggestions or code retained: Updated the README, workflow, requirements traceability, and related story status/verification notes to identify F-11 through F-13 and the auth foundation as integrated in `main` at `c83f664`. Recorded the owner's local student/admin review. Kept the R-07 guest bottom-navigation decision and F-07 plan browser follow-up open.
+
+Student changes and decisions: Documentation only; no application behavior changed. No files were staged or published.
+
+How the student verified and can explain the result: Compared status notes with the `main` checkout and story/PR history; `git diff --check` passed after the edits. No test suite or dependency audit was run for this documentation-only task.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### Solar Icons app subset
 
 Date / story: 2026-10-19 / install interface icons
@@ -74,6 +182,19 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### Staged accumulated project changes
+
+```text
+Date / story: 2026-10-25 / stage reviewed guest-navigation, deployment-tooling, and status-documentation changes
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner explicitly instructed the agent to stage the reviewed project changes. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the repository staging procedure, working-tree paths, tracked diff, new guest-navigation files, project board, PR template, and InfinityFree package builder. Staged the 22 explicitly listed project paths, then corrected formatting issues found by the staged whitespace check and refreshed the two affected staged documents.
+Suggestions or code retained: The changes include the public guest-navigation implementation, deployment package builder, PR template, and related project status and deployment documentation. No credentials or environment file were included.
+Student changes and decisions: The owner first authorized staging, then explicitly authorized a commit on `feature/project-restart-release-prep`. No push, merge, or deployment was authorized or performed.
+How the student verified and can explain the result: Before committing, `git status --short` showed 22 staged paths and no unstaged changes; `git diff --cached --check` passed after formatting fixes. After committing, the worktree was clean. No tests were run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### Local review admin password recovery
 
 ```text
@@ -86,6 +207,42 @@ Student changes and decisions: The owner wanted to regain access to the existing
 How the student verified and can explain the result: The temporary command required development mode, loopback host, database `talas_review`, port 3308, and the expected admin-only account. Shield's password service verified the new password against the saved hash inside a transaction before it committed. No hosted account was changed.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### Local review credentials recovery after project pause
+
+Date / story: 2026-10-25 / restore local synthetic student and admin sign-in for the resumed browser review
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner reported forgetting the local signed-in account credentials while continuing the local browser review. Earlier project notes record owner authorization to recover the local review admin account. Instructor/course disclosure requirements remain the owner's responsibility.
+
+Assistance used (explanation, planning, code draft, debugging, review): Located the ignored synthetic student credential file and recovered the local admin account through a temporary CodeIgniter Shield command guarded to development mode, loopback host, port 3308, database `talas_review`, and exactly one admin-only account.
+
+Suggestions or code retained: The student credentials remain in the existing ignored `.tools/review-account.txt`. A fresh admin password was generated, saved only to ignored `.tools/local-review-admin-credentials.txt`, and verified against the persisted Shield password hash. The temporary recovery command and runner were removed after use; no credential is recorded in this log.
+
+Student changes and decisions: Only the local synthetic admin password changed. No hosted account, database, or credential was changed. No staging, commit, push, or deployment occurred.
+
+How the student verified and can explain the result: The review database on loopback port 3308 was already running. CodeIgniter migrations reported all nine expected migrations applied. The temporary command refused any database except development `talas_review` on loopback port 3308 and verified the password through Shield before commit. The local login route returned HTTP 200. Open the ignored credential files locally; do not copy their contents into Git or the project log.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Shorter local synthetic student password
+
+Date / story: 2026-10-25 / shorten the synthetic student password for the resumed local browser review
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner said the synthetic student password was lengthy after the local review credentials had been recovered. Instructor/course disclosure requirements remain the owner's responsibility.
+
+Assistance used (explanation, planning, code draft, debugging, review): Generated a shorter password and updated the matching local synthetic student account through CodeIgniter Shield.
+
+Suggestions or code retained: The 12-character password passed the configured Shield password checks, was saved and verified through Shield, and replaced the password in ignored `.tools/review-account.txt`. The temporary command and runner were removed after use; no credential is recorded in this log.
+
+Student changes and decisions: Only the local synthetic student password changed. No hosted account, database, or credential was changed.
+
+How the student verified and can explain the result: The command was guarded to development mode, loopback port 3308, database `talas_review`, and the exact student-only account identified by the existing ignored credential file. Shield verification succeeded. Open `.tools/review-account.txt` locally to retrieve the updated password.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
 ### Initial repository staging
 
@@ -620,15 +777,41 @@ How the student verified and can explain the result: The focused Home feature ch
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
-### GitHub Actions and Dependabot CI automation
+### InfinityFree hosted deployment and authorization verification
+
+```text
+Date / story: 2026-10-25 / R-04 InfinityFree hosted deployment checks
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to proceed with the InfinityFree project setup and performed the upload and hosting-account actions. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Guided package upload through the provider File Manager, interpreted live browser results, and reconciled deployment/workflow/restart documentation with owner-reported evidence.
+Suggestions or code retained: The owner imported the prepared package archive. The owner confirmed the updated `.htaccess` and root `index.php` markers, Duno homepage, public JavaScript asset, private-path denials, synthetic student registration/login/session, and a separate hosted admin account promoted through phpMyAdmin. The admin dashboard displayed the approved aggregate view; the student received Forbidden at `/index.php?/admin`. No hosting credentials or passwords were requested or received.
+Student changes and decisions: The owner chose WinSCP/File Manager hosting steps and manually performed the upload, registration, admin-group change, and browser checks.
+How the student verified and can explain the result: Owner reports the homepage and public asset loaded; the checked private app/vendor/writable/Composer paths returned 403. Owner confirms the hosted `.htaccess` contains the dotfile denial rule. DevTools Network showed the `/.env` request failed without an HTTP status (`ERR_EMPTY_RESPONSE`), so the host response is not verified as an HTTP denial. Owner reports student registration/login/session checks passed, the admin dashboard was accessible, and the student was forbidden from the admin route. Owner also confirms the remote ZIP archive was removed, core synthetic-student checks covered subjects/topics, planning, timer sessions, check-ins, and Aralytics, cross-student check-in privacy/admin-visibility checks were completed previously, and a hosted plan with one unfinished topic stayed at 15 planned of 15 available minutes while a 16-minute edit was rejected. Owner asked to defer the remaining detailed hosted acceptance walkthrough for now. No automated tests were run in this verification-only continuation.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### CI automation and dependency updates
 
 ```text
 Date / story: 2026-10-25 / R-03 GitHub Actions PHP quality workflow
 Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
 Allowed use confirmed by: The owner asked to add CI automation and continue improving the project. Instructor/course disclosure requirements remain the owner's responsibility.
-Assistance used (explanation, planning, code draft, debugging, review): Inspected repository instructions, the current branch and working tree, Composer/PHPUnit configuration, and the existing local CI branch. Checked official GitHub Actions release and security guidance for immutable action pins and minimum workflow permissions.
-Suggestions or code retained: Added a GitHub Actions workflow for pull requests to main, pushes to main, and manual dispatch. It checks PHP 8.2 and 8.4, validates Composer files, installs locked dependencies, lints PHP, runs PHPUnit, and audits locked dependencies. Third-party actions are pinned to full SHAs and workflow permissions are read-only. Added weekly Dependabot updates for Composer and GitHub Actions. No production database, deployment secret, or PHP style tool is configured.
-Student changes and decisions: The owner requested CI automation and authorized proceeding with the required publication work. The owner chose to defer further investigation of the hosted /.env response.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the repository instructions, current branch and dirty worktree, Composer/PHPUnit configuration, and existing local CI branch. Checked official GitHub Actions release and security guidance for immutable action pins and minimum workflow permissions.
+Suggestions or code retained: Added `.github/workflows/ci.yml` for pull requests and `main` pushes, with manual dispatch, read-only repository permission, PHP 8.2/8.4 matrix, locked Composer validation/install, PHP syntax lint, PHPUnit, and Composer dependency audit. Pinned checkout and setup-php actions to full SHAs. Added weekly Dependabot updates for Composer and GitHub Actions. No deployment secrets or production database are used. No PHP style tool is configured, so the workflow does not claim style linting.
+Student changes and decisions: The owner chose not to pursue the hosted `/.env` browser response further and deferred the detailed host walkthrough; documentation records those decisions without claiming an HTTP denial. The owner asked for CI before additional project improvement work.
 How the student verified and can explain the result: Reviewed workflow scope and action pins against official release and secure-use guidance; `git diff --check` passed locally. The first GitHub run passed Composer validation/install and PHP syntax, then found missing CodeIgniter writable directories, causing 67 test errors. After adding a directory setup step, both PHP 8.2 and 8.4 jobs passed: PHPUnit reported 67 tests and 612 assertions in each job, and `composer audit --locked` found no advisories on PHP 8.4. The local suite and a separate YAML parser were not run. Existing unrelated workspace changes were preserved.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Local checkout reconciliation after CI merge
+
+```text
+Date / story: 2026-10-25 / reconcile local main after R-03 merged
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to proceed with the needed local workspace reconciliation. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Compared the local worktree with remote main, fetched the merged CI history, confirmed the index had no staged changes, and advanced local main's Git metadata/index using a mixed reset that preserved the worktree. Updated local status documentation to reflect PR #7's merge and the owner's branch-protection confirmation.
+Suggestions or code retained: Local `main` now points to `34fa405`, matching `origin/main`. Existing modifications and untracked files remain unstaged and intact; the merged `.github` workflow and Dependabot files now match the remote base. No application code was discarded or uploaded.
+Student changes and decisions: The owner confirmed that `main` requires pull requests and the PHP 8.2/8.4 checks. The detailed R-04 hosted walkthrough remains deferred.
+How the student verified and can explain the result: `git status -sb` shows local `main` aligned with `origin/main`; the existing 17 tracked modifications and five untracked entries remain in the worktree. `git diff --check` passed. No tests or deployment were run.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

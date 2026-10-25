@@ -1,7 +1,7 @@
 # Story: daily plan generation
 
 **Requirement:** F-07
-**Status:** Accepted by the owner on 2026-10-16. Automated verification passed; manual browser review remains unverified because browser control could not identify the active tab URL.
+**Status:** Accepted by the owner on 2026-10-16. The owner reports the authenticated Plan journey review is complete with no current issue on 2026-10-25. The earlier automated browser review could not start in this environment; hosted behavior remains unverified.
 
 ## User story
 
@@ -32,4 +32,4 @@ The owner approved these defaults on 2026-10-16. F-07 implementation follows the
 - Invalid durations and topic IDs are rejected server-side.
 - Cross-student plan and topic reads/writes are denied, including direct requests.
 - Routes require student authorization and state changes require CSRF.
-- Keyboard and narrow-screen browser review covers generation and adjustments. This remains unverified: Playwright could not start a worker (`spawn EPERM`), and computer-use control stopped at its browser URL safety check.
+- Keyboard and narrow-screen browser review covers generation and adjustments. The owner reports the authenticated Plan journey review is complete with no current issue on 2026-10-25. Playwright previously could not start a worker (`spawn EPERM`); no automated browser matrix was run for that attempt.
