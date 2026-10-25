@@ -1,7 +1,7 @@
 # Duno project overview and restart board
 
 **Reviewed:** 2026-10-25
-**Repository snapshot:** `origin/main` is at `34fa405`; the reviewed project changes are committed on `feature/project-restart-release-prep`. The branch has not been pushed.
+**Repository snapshot:** `origin/main` is at `34fa405`; PR #9 contains the reviewed project changes from `feature/project-restart-release-prep`. Its PHP 8.2/8.4 CI jobs passed; the PR is open and unmerged.
 **Purpose:** Resume work after the project pause and keep the remaining work visible. This board follows the states in [`ai-agent-workflow.md`](ai-agent-workflow.md). It is a local project record, not a GitHub issue board.
 
 ## Project overview
@@ -37,7 +37,7 @@ R-01, R-02, R-03, R-06, and R-07 are complete. R-04 remains in live host verific
 - **Release expectation:** the exact Phase 2 rubric and live-demo expectation are not in the repository.
 - **Plan review:** the owner reports the authenticated Plan journey review is complete with no current issue. Hosted behavior and production release checks remain pending.
 - **Disclosure:** the AI-use log records assistance, but the instructor's required disclosure format/location remains for the owner to confirm.
-- **Repository handling:** `origin/main` remains at `34fa405`. The 22 reviewed paths are committed on `feature/project-restart-release-prep`; the worktree is clean and the branch has not been pushed. Review the commit before opening a pull request.
+- **Repository handling:** `origin/main` remains at `34fa405`. The 22 reviewed paths are in [PR #9](https://github.com/amherryyy/Talas/pull/9) from `feature/project-restart-release-prep`; the PHP 8.2/8.4 CI jobs passed. The PR awaits owner review and merge.
 
 ## Restart sequence
 

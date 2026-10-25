@@ -195,6 +195,19 @@ How the student verified and can explain the result: Before committing, `git sta
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### Validate and publish project restart PR
+
+```text
+Date / story: 2026-10-25 / R-02, R-04, R-07 validation and PR #9
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner instructed the agent to continue after the staged changes were committed and then authorized branch publication and pull request creation. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Ran the existing local PHP checks, PHP/JavaScript/PowerShell syntax checks, and published the feature branch. Opened PR #9 against `main` and updated its description with the actual validation results and limitations.
+Suggestions or code retained: Published the guest navigation, public Guide, InfinityFree package builder, and related status/deployment documentation as PR #9. No credentials or environment files were published.
+Student changes and decisions: PR #9 is open and unmerged. No deployment or merge was performed.
+How the student verified and can explain the result: Local PHPUnit passed 67 tests and 613 assertions with `intl` and `sqlite3` enabled; PHP syntax passed for 137 files; Composer validation, JavaScript syntax, and PowerShell syntax passed. The local dependency audit could not reach Packagist from this environment. GitHub Actions then passed on PHP 8.2 and PHP 8.4, including the PHP 8.4 locked dependency audit. The package builder and hosted upload were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### Local review admin password recovery
 
 ```text
