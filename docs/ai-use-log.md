@@ -841,3 +841,107 @@ Student changes and decisions: The package was not uploaded. The previously depl
 How the student verified and can explain the result: The script completed successfully; the package had only expected root entries, no `.env`, no root Composer manifests, no unexpected root files, a syntactically valid `index.php`, matching SHA-256 hashes for the home controller/view, public navigation assets, and study suggestion content, and the expected private-path/dotfile deny rules. The package includes vendor dependencies, whose direct path is denied. No live-host check was performed.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### Post-merge repository status reconciliation
+
+```text
+Date / story: 2026-10-25 / reconcile project status after PR #9 and PR #10 merged
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner said to continue after authorizing the PR #10 merge. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Checked GitHub merge status and CI for PR #10, synchronized the local Git refs, and updated repository/deployment status documentation to reflect the merged PRs and distinguish the validated local package from the older live upload.
+Suggestions or code retained: Updated README, project workflow, restart board, deployment notes, and this log. No application code, configuration, credentials, or hosted data changed.
+Student changes and decisions: The owner authorized merging PR #10. PR #9 and PR #10 are merged; the newer locally validated package remains unuploaded and must be rebuilt from current `main` before release.
+How the student verified and can explain the result: GitHub reports PR #10 merged at `4c02a39`; its PHP 8.2 and 8.4 CI jobs passed. The local branch was created from updated `origin/main` at that merge. `git diff --check` passed. No automated tests, syntax checks, dependency audit, browser checks, or deployment were run because this is a documentation-only status reconciliation.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Current-main InfinityFree package preparation
+
+```text
+Date / story: 2026-10-25 / R-04 rebuild the upload candidate from current main
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner said to proceed with the next project work after PR #10 merged. The package was prepared locally only; no upload/deployment authorization was given in this step. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Ran the repository package builder from the clean branch at current `main` and inspected the output, selected source hashes, entry-point syntax, deny rules, and ZIP contents.
+Suggestions or code retained: Created ignored directory `build/infinityfree-htdocs-20261025-162031/` and archive `build/infinityfree-htdocs-main-4c02a39.zip`. No application source, secrets, or hosted records were changed.
+Student changes and decisions: The archive is not uploaded; the existing site remains on the earlier mixed-worktree snapshot. Host-specific `.env` must remain private and is not included.
+How the student verified and can explain the result: The package root contained only expected paths; no `.env` or Composer manifests were present; `index.php` passed PHP syntax; SHA-256 matched the Home controller/view and public navigation script; `.htaccess` contained the app/vendor/writable and dotfile denials. The ZIP includes hidden `.htaccess`, `index.php`, and no `.env`. Composer could not reach Packagist and used the copied locked dependencies, removing 30 development packages. `git diff --check` passed. No tests or live-host checks were run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-04 owner acceptance and R-05 intake
+
+```text
+Date / story: 2026-10-25 / record R-04 owner acceptance and start R-05
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner confirmed R-04 is all good and directed continuation with R-05. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Searched the repository for the Phase 2 rubric, submission guide, and live-demo requirements; updated the restart and deployment status records from the owner's R-04 acceptance.
+Suggestions or code retained: Marked R-04 done by owner confirmation and R-05 active. Prepared the specific instructor questions needed to resolve course expectations. No application code or hosted configuration changed.
+Student changes and decisions: The owner accepted R-04. The exact deployed revision was not stated, so documentation distinguishes owner acceptance from independent confirmation of the uploaded commit. R-05 remains dependent on the instructor/course materials.
+How the student verified and can explain the result: Repository search found no Phase 2 rubric, submission guide, or live-demo instruction. `git diff --check` passed. No tests, browser checks, or deployment actions were run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-05 course decision and live demo preparation
+
+```text
+Date / story: 2026-10-25 / record course demo decision and prepare runbook
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner reported there is no separate Phase 2 rubric and that a live demo is required. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Updated course/release status notes and prepared a demo outline based on the approved MVP features and existing synthetic-account checks.
+Suggestions or code retained: Marked R-05 complete for the rubric/demo-format decision and added `docs/live-demo-runbook.md` with a flexible walkthrough, synthetic-account safety notes, and the remaining AI-disclosure question. No product behavior or application code changed.
+Student changes and decisions: The owner confirms there is no separate Phase 2 rubric and the course requires a live demo. No duration or scoring criteria were supplied; the runbook makes no assumptions about either. The exact AI-use disclosure format/location remains open.
+How the student verified and can explain the result: Reviewed the outline against `docs/requirements.md`, `docs/development-blueprint.md`, and the recorded hosted smoke-check evidence. `git diff --check` passed. No tests, browser checks, or deployment actions were run.
+Disclosure location or requirement: This entry; confirm the instructor's required disclosure format and location before submission.
+```
+
+### R-09 study progression and Aralytics unlocks
+
+```text
+Date / story: 2026-10-25 / R-09 study progression and unlockable Aralytics
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested gamified leveling and selected the option to keep core Aralytics open while unlocking optional extras with study XP.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected current owner-scoped session and check-in summary flows; drafted the progression service, dashboard level and badge cards, optional level-gated analytics views, and requirement/story records.
+Suggestions or code retained: Progression is calculated as one XP per explicitly saved study minute. Levels at 120, 300, 600, and 1,200 XP unlock 30-day activity, weekday patterns, a 30-day comparison, and a six-month trend. No migration or runtime service was added. Check-ins do not affect progression.
+Student changes and decisions: The owner chose not to gate the existing core report. Level thresholds and insight names are an explainable initial design recorded for owner review.
+How the student verified and can explain the result: The new progression unit test and four related feature files passed: 25 tests and 253 assertions with `--no-coverage` on the isolated in-memory SQLite configuration. Coverage includes XP thresholds/unlocks, local date boundaries, owner-scoped totals, recalculation after session edits/deletes, and check-ins earning no XP. PHP syntax checks and `git diff --check` passed. The synthetic Level 1 dashboard and Aralytics pages were manually reviewed at 390px and 1280px; the locked insight cards fit the viewport. Levels 2–5 remain for browser review. XAMPP PHP needs `-d extension=php_intl.dll`; the isolated review DB is reachable and has nine applied migrations. The browser review ran on an unused port with a local router that suppresses the development toolbar.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 responsive browser review and timer spacing adjustment
+
+```text
+Date / story: 2026-10-25 / R-08 UI and UX redesign follow-up
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested substantial UI/UX changes and directed continuation with the project tasks. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Started the isolated local review server with XAMPP's intl DLL and review database; used Playwright manually with the synthetic student and admin accounts to capture local-only screenshots at 390px and 1280px for guest, sign-in, dashboard, Timer, Aralytics, subjects, Focus, Plan, check-ins, and admin pages. Manually started and paused the Timer without saving a session and confirmed the daily check-in dialog opens after its delay.
+Suggestions or code retained: The mobile fixed navigation partially covered the Timer's Stop and review control. Reduced the small-screen timer display top margin from 2rem to 1rem and incremented the shared CSS cache version to ui5. Review screenshots remain under ignored `.tools/ui-review-20261025/`; no test harness or credentials were committed.
+Student changes and decisions: The owner has not yet accepted the redesign or progression thresholds. The check-in is optional and the Timer still requires explicit save.
+How the student verified and can explain the result: The local synthetic sign-in/admin routes and reviewed screens returned HTTP 200 at phone and desktop sizes. Timer start/pause worked, displayed elapsed time, and produced no app JavaScript errors after suppressing the local development toolbar. PHP syntax checks and `git diff --check` passed. Registration and the add-subject form were reviewed; topic forms, keyboard/reduced-motion review, and higher progression unlock states remain outstanding. No hosted site or configuration was changed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 accessibility/topic review and R-09 progression-state review
+
+```text
+Date / story: 2026-10-25 / R-08 and R-09 local verification follow-up
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested continuing the UI/UX and progression work. All browser and data checks used localhost and the isolated synthetic review account. No upload or deployment was authorized.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected existing view and CSS patterns; updated focus styling and topic detail/form presentation; corrected stale browser and feature-test expectations after the redesigned copy changed; ran PHPUnit and Playwright locally; reviewed responsive screenshots for topic screens and progression levels.
+Suggestions or code retained: Topic details use a responsive facts panel and topic forms use a contained surface. Keyboard focus now has a 3px outline, including fields and the skip link; the field focus cascade was corrected after a browser check exposed that it hid the outline. The reduced-motion preference was checked. E2E checks cover topic create/detail/edit/delete, focus visibility, and reduced motion.
+Student changes and decisions: The owner has not yet accepted the final R-08 visuals or the R-09 level thresholds/names/unlocks. Temporary study sessions used for level-state screenshots were removed through the app confirmation flow. The account was verified back at its pre-review 1 XP baseline. Temporary harnesses were removed; review screenshots remain in ignored `.tools/ui-review-20261025/`.
+How the student verified and can explain the result: Playwright passed 3 tests, including responsive routes, student denial of the admin route, timer and check-in interactions, print behavior, keyboard focus, reduced motion, and topic screens at 400px and 1280px. Level 2–5 Aralytics states matched the expected locked/unlocked counts at 400px and 1280px; the existing Level 1 state was reviewed earlier. Four targeted PHPUnit files passed with 25 tests and 311 assertions using XAMPP PHP with `intl` and `sqlite3`. PHP syntax checks and `git diff --check` passed. The first PHPUnit invocation lacked required local extensions; after loading them, two stale UI-copy assertions failed and were updated; the rerun passed. No dependencies changed, so no new dependency audit was run. No hosted app, hosted database, or production configuration was changed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08/R-09 owner acceptance and mascot follow-up
+
+```text
+Date / story: 2026-10-25 / record R-08 and R-09 acceptance; implement mascot follow-up
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner accepted the R-08 redesign and R-09 progression behavior, then requested more mascot appearance and animation on screen.
+Assistance used (explanation, planning, code draft, debugging, review): Updated story and project status records; added the existing mascot PNG to the private check-in prompt and Timer rhythm card; added gentle CSS float motion, with a slightly faster motion while the Timer runs; aligned mobile layout and cache-busted shared CSS references.
+Suggestions or code retained: No new art, dependency, application behavior, or progression rule was introduced. The mascot remains decorative; the existing reduced-motion media rule disables animation.
+Student changes and decisions: R-09 is accepted by the owner. R-08's existing redesign is accepted; the newly requested mascot follow-up remains for visual review. No staging, commit, upload, or deployment was authorized.
+How the student verified and can explain the result: Inspected the existing CSS responsive and reduced-motion rules, views, story docs, and worktree. PHP syntax and browser review are pending; no automated tests were run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```

@@ -24,26 +24,27 @@ If the runner fails at startup with `Error: spawn EPERM` in `WorkerHost.startRun
 
 ## Run
 
-The synthetic browser account is stored in the isolated review database on port `3308`. Check whether it is running:
+The synthetic browser account is stored in the isolated review database on port `3308`. Check connectivity through the review connection instead of relying only on the listener listing:
 
 ```powershell
-Get-NetTCPConnection -LocalPort 3308 -State Listen -ErrorAction SilentlyContinue
+C:\xampp\php\php.exe -d extension=php_intl.dll -d auto_prepend_file=.tools/talas-review-env.php spark migrate:status --all
 ```
 
-If the command returns no listener, start the review database in the background:
+If the database is unreachable, check whether an existing MariaDB process owns the review files before starting another instance. Do not launch a duplicate while `ibdata1` is in use.
 
 ```powershell
 Start-Process -FilePath C:\xampp\mysql\bin\mysqld.exe -ArgumentList '--defaults-file=C:\xampp\htdocs\Talas\.tools\my-talas-review.ini' -WindowStyle Hidden
 ```
 
-Start the web app from the repository root using the review router. It loads the private port-3308 connection override and PHP's `intl` extension. Do not use `spark serve` here: it launches a child PHP process that does not inherit the `-d extension=intl` flag, and the regular `public` rewrite router would use the default `.env` database on port `3307`.
+Start the web app from the repository root using the local review router. It loads the private port-3308 connection override and PHP's `intl` extension. Do not use `spark serve` here: it launches a child PHP process that does not inherit the extension flag, and the regular `public` rewrite router would use the default `.env` database on port `3307`. Choose a free port; older local PHP servers may still occupy `8080`.
 
 ```powershell
 Set-Location C:\xampp\htdocs\Talas
-C:\xampp\php\php.exe -d extension=intl -S localhost:8080 -t public .tools\talas-review-router.php
+Set-Item Env:app.baseURL -Value 'http://localhost:18080/'
+C:\xampp\php\php.exe -d extension=php_intl.dll -S 127.0.0.1:18080 -t public .tools\talas-review-router-quiet.php
 ```
 
-Leave the server running. The `localhost:8080` host matches `app/Config/App.php` and the Playwright default, keeping the browser session cookie on the same host. If another server is already using port 8080, stop it first. In a second terminal, run:
+Leave the server running. The `app.baseURL` override keeps links and session cookies on the review port. In a second terminal, run:
 
 ```powershell
 $env:PLAYWRIGHT_BROWSERS_PATH = '0'

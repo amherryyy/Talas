@@ -17,9 +17,11 @@
         .brand { margin: 0; color: #7465D8; font-size: 1.4rem; font-weight: 750; letter-spacing: -.04em; }
         .tagline { width: max-content; margin: .15rem 0 1.5rem; padding-bottom: .2rem; border-bottom: 2px solid #FFDA92; color: #615D78; font-size: .92rem; }
     </style>
+    <link rel="stylesheet" href="<?= esc(base_url('assets/css/duno-ui.css?v=20261025-ui7')) ?>">
 </head>
-<body>
-<main>
+<body class="duno-role">
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<main id="main-content">
     <p class="brand">duno.</p>
     <p class="tagline">Your Little Study Buddy.</p>
     <h1><?= esc($heading) ?></h1>

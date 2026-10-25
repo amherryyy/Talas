@@ -44,10 +44,11 @@ $joinUrl = site_url('register');
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
+    <meta name="description" content="Organize study topics, plan the time you have, and keep track of your sessions with Duno.">
     <title>duno. &mdash; Your Little Study Buddy.</title>
     <style {csp-style-nonce}>
         :root {
-            color-scheme: light dark;
+            color-scheme: light;
             --canvas: #f7f6fc;
             --surface: #fff;
             --ink: #2e2e3a;
@@ -72,7 +73,7 @@ $joinUrl = site_url('register');
             padding: 0 0 calc(2rem + env(safe-area-inset-bottom));
             background: var(--canvas);
             color: var(--ink);
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+            font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
             line-height: 1.5;
         }
         a { color: inherit; }
@@ -256,38 +257,12 @@ $joinUrl = site_url('register');
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                color-scheme: dark;
-                --canvas: #171624;
-                --surface: #211f31;
-                --ink: #f5f3ff;
-                --muted: #bbb8ce;
-                --line: #39364d;
-                --purple: #a69bff;
-                --purple-dark: #c7c0ff;
-                --shadow: 0 12px 30px rgb(0 0 0 / 18%);
-            }
-            .topbar { border-bottom-color: var(--line); background: rgb(23 22 36 / 94%); }
-            .welcome::after { opacity: .15; }
-            .lavender .tool-mark { background: #35304f; color: #d2ccff; }
-            .mint .tool-mark { background: #263d35; color: #b9e8d1; }
-            .gold .tool-mark { background: #463b26; color: #ffda92; }
-            .blue .tool-mark { background: #29384b; color: #c9e2ff; }
-            .guide-note { border-color: #514a79; background: #2a263e; }
-            .guide-note span { color: #cbc6e7; }
-            :root {
-                --bottom-nav-line: #39364d;
-                --bottom-nav-surface: rgb(33 31 49 / 97%);
-                --bottom-nav-muted: #bbb8ce;
-                --bottom-nav-active-surface: #393350;
-                --bottom-nav-active-ink: #c7c0ff;
-            }
-        }
     </style>
-    <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css')) ?>">
+    <link rel="stylesheet" href="<?= esc(base_url('assets/css/student-navigation.css?v=20261025-ui1')) ?>">
+    <link rel="stylesheet" href="<?= esc(base_url('assets/css/duno-ui.css?v=20261025-ui7')) ?>">
 </head>
-<body class="<?= ! $isLoggedIn || $isStudent || $isAdmin ? 'has-mobile-navigation' : '' ?>">
+<body class="duno-landing <?= ! $isLoggedIn || $isStudent || $isAdmin ? 'has-mobile-navigation' : '' ?>">
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <header class="topbar">
     <div class="shell topbar-inner">
         <a class="brand" href="<?= esc(site_url('/')) ?>" aria-label="duno. home">
@@ -325,7 +300,7 @@ $joinUrl = site_url('register');
     </div>
 </header>
 
-<main class="shell main">
+<main class="shell main" id="main-content">
     <section class="welcome" id="home" aria-labelledby="welcome-heading">
         <div class="welcome-layout">
             <div class="welcome-copy">

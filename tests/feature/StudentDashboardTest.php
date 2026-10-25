@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CheckInModel;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Models\UserModel;
 use CodeIgniter\Shield\Test\AuthenticationTesting;
@@ -54,6 +55,18 @@ final class StudentDashboardTest extends CIUnitTestCase
         $this->assertStringContainsString('aria-label="Student navigation"', $studentHtml);
         $this->assertStringContainsString('aria-current="page"', $studentHtml);
         $this->assertStringContainsString('index.php/student/aralytics', $studentHtml);
+    }
+
+    public function testPrivateCheckInsDoNotEarnStudyXp(): void
+    {
+        $student = $this->createUser('check-in-no-xp-student', 'student');
+        (new CheckInModel())->createForOwner((int) $student->id, 5, 1, date('Y-m-d H:i:s'));
+        $this->authenticateAs($student);
+
+        $response = $this->getAuthenticated('student');
+        $response->assertOK();
+        $response->assertSee('Level 1');
+        $response->assertSee('0 study XP');
     }
 
     public function testSuggestionsDoNotAppearOnAdminWorkspaceAndStudentRouteDeniesAdmin(): void

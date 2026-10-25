@@ -1,43 +1,10 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<style {csp-style-nonce}>
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: .6rem; }
-    .summary-card, .report-section { padding: .8rem; border: 1px solid var(--duno-line); border-radius: .65rem; background: #fff; }
-    .summary-card p { margin: .25rem 0 0; font-size: 1.25rem; font-weight: 700; }
-    .report-section { margin-top: .75rem; }
-    .report-table { width: 100%; border-collapse: collapse; }
-    .report-table th, .report-table td { padding: .55rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--duno-line); }
-    .report-table th:last-child, .report-table td:last-child { text-align: right; }
-    .rating-chart { display: block; width: 100%; max-width: 42rem; height: auto; margin: 1rem auto; }
-    .rating-chart .grid-line, .rating-chart .axis-line { stroke: var(--duno-line); stroke-width: 1; }
-    .rating-chart text { fill: var(--duno-ink); font: 12px system-ui, sans-serif; }
-    .rating-chart .workload-bar { fill: var(--duno-purple); }
-    .rating-chart .energy-bar { fill: var(--duno-mint); stroke: #37634e; stroke-width: .5; }
-    .rating-chart .bar-count { font-weight: 700; }
-    .chart-legend { display: flex; flex-wrap: wrap; gap: .75rem 1rem; justify-content: center; }
-    .chart-legend span { display: inline-flex; align-items: center; gap: .4rem; }
-    .chart-swatch { display: inline-block; width: .8rem; height: .8rem; border-radius: .15rem; }
-    .chart-swatch.workload { background: var(--duno-purple); }
-    .chart-swatch.energy { background: var(--duno-mint); border: 1px solid #37634e; }
-    @media (max-width: 36rem) {
-        .report-table { font-size: .9rem; }
-        .report-table th, .report-table td { padding: .32rem .2rem; }
-        .summary-card, .report-section { padding: .65rem; }
-    }
-    @media print {
-        body { padding: 0; color: #000; background: #fff; }
-        .shell { width: 100%; }
-        header, .no-print { display: none !important; }
-        main, .summary-card, .report-section { padding: .4rem; border: 0; border-radius: 0; }
-        h1, h2, h3 { page-break-after: avoid; }
-        tr { page-break-inside: avoid; }
-        a { color: #000; text-decoration: none; }
-    }
-</style>
-
 <h1>Aralytics</h1>
 <p class="muted">Study-session totals for the selected period.</p>
+
+<?= $this->include('student/partials/progression_card', ['progression' => $progression]) ?>
 
 <div class="actions no-print report-controls" aria-label="Report controls">
     <span>Period:</span>
@@ -99,6 +66,77 @@
                 </tbody>
             </table>
         <?php endif ?>
+    </section>
+
+    <section class="progression-insights no-print" aria-labelledby="progression-insights-heading">
+        <div class="dashboard-section-heading">
+            <div><p class="workspace-kicker">Earned with your saved study time</p><h3 id="progression-insights-heading">Your unlocked insights</h3></div>
+            <p class="muted">Core Aralytics stays open at every level.</p>
+        </div>
+        <div class="progression-insight-grid">
+            <?php foreach ($progression['unlocks'] as $unlock): ?>
+                <section class="progression-insight<?= $unlock['unlocked'] ? ' is-unlocked' : ' is-locked' ?>" aria-labelledby="insight-<?= esc($unlock['key']) ?>">
+                    <p class="insight-unlock-level"><?= $unlock['unlocked'] ? 'Unlocked' : 'Level ' . esc((string) $unlock['level']) . ' · ' . esc((string) $unlock['xp']) . ' XP' ?></p>
+                    <h4 id="insight-<?= esc($unlock['key']) ?>"><?= esc($unlock['name']) ?></h4>
+                    <p class="muted"><?= esc($unlock['description']) ?></p>
+                    <?php if (! $unlock['unlocked']): ?>
+                        <progress value="<?= esc((string) min($progression['xp'], $unlock['xp'])) ?>" max="<?= esc((string) $unlock['xp']) ?>" aria-label="Progress to unlock <?= esc($unlock['name']) ?>"></progress>
+                        <p class="muted"><?= esc((string) max(0, $unlock['xp'] - $progression['xp'])) ?> XP to go</p>
+                    <?php elseif ($unlock['key'] === 'rhythm'): ?>
+                        <p><strong><?= esc((string) $progression['study_days_last_30']) ?> of 30 days</strong> had saved study time.</p>
+                        <div class="rhythm-map" role="img" aria-label="Daily saved study time over the past 30 days. A table of exact minutes is available below.">
+                            <?php foreach ($progression['daily_minutes_last_30'] as $day): ?>
+                                <?php $intensity = $day['minutes'] === 0 ? 0 : ($day['minutes'] < 25 ? 1 : ($day['minutes'] < 50 ? 2 : 3)); ?>
+                                <span class="rhythm-day intensity-<?= $intensity ?>" aria-hidden="true"><?= esc(date('j', strtotime($day['date']))) ?></span>
+                            <?php endforeach ?>
+                        </div>
+                        <details class="insight-values">
+                            <summary>Day-by-day minutes</summary>
+                            <table class="report-table"><thead><tr><th scope="col">Date</th><th scope="col">Saved minutes</th></tr></thead><tbody>
+                                <?php foreach ($progression['daily_minutes_last_30'] as $day): ?>
+                                    <tr><th scope="row"><?= esc(date('M j', strtotime($day['date']))) ?></th><td><?= esc((string) $day['minutes']) ?></td></tr>
+                                <?php endforeach ?>
+                            </tbody></table>
+                        </details>
+                    <?php elseif ($unlock['key'] === 'weekdays'): ?>
+                        <?php $weekdayMax = max(1, ...array_column($progression['weekday_minutes_last_30'], 'minutes')); ?>
+                        <div class="weekday-pattern-list">
+                            <?php foreach ($progression['weekday_minutes_last_30'] as $weekday): ?>
+                                <div class="weekday-pattern-row">
+                                    <span><?= esc($weekday['day']) ?></span>
+                                    <progress value="<?= esc((string) $weekday['minutes']) ?>" max="<?= esc((string) $weekdayMax) ?>" aria-label="<?= esc($weekday['day'] . ': ' . $weekday['minutes'] . ' saved minutes in the past 30 days') ?>"></progress>
+                                    <strong><?= esc((string) $weekday['minutes']) ?> min</strong>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
+                    <?php elseif ($unlock['key'] === 'momentum'): ?>
+                        <div class="momentum-comparison">
+                            <div><span><?= esc(date('M j', strtotime($progression['previous_30_day_start']))) ?>–<?= esc(date('M j', strtotime($progression['previous_30_day_end']))) ?></span><strong><?= esc((string) $progression['previous_30_day_minutes']) ?> min</strong></div>
+                            <div><span><?= esc(date('M j', strtotime($progression['current_30_day_start']))) ?>–<?= esc(date('M j', strtotime($progression['current_30_day_end']))) ?></span><strong><?= esc((string) $progression['current_30_day_minutes']) ?> min</strong></div>
+                        </div>
+                        <?php if ($progression['30_day_minutes_change'] > 0): ?>
+                            <p>That’s <?= esc((string) $progression['30_day_minutes_change']) ?> more saved minutes than the previous 30-day period.</p>
+                        <?php elseif ($progression['30_day_minutes_change'] < 0): ?>
+                            <p>That’s <?= esc((string) abs($progression['30_day_minutes_change'])) ?> fewer saved minutes than the previous 30-day period.</p>
+                        <?php else: ?>
+                            <p>Saved study minutes match the previous 30-day period.</p>
+                        <?php endif ?>
+                    <?php elseif ($unlock['key'] === 'six_months'): ?>
+                        <?php $monthMax = max(1, ...array_column($progression['monthly_minutes_last_6'], 'minutes')); ?>
+                        <div class="month-trend-list">
+                            <?php foreach ($progression['monthly_minutes_last_6'] as $month): ?>
+                                <div class="month-trend-row">
+                                    <span><?= esc(date('M Y', strtotime($month['month'] . '-01'))) ?></span>
+                                    <progress value="<?= esc((string) $month['minutes']) ?>" max="<?= esc((string) $monthMax) ?>" aria-label="<?= esc(date('F Y', strtotime($month['month'] . '-01')) . ': ' . $month['minutes'] . ' saved minutes') ?>"></progress>
+                                    <strong><?= esc((string) $month['minutes']) ?> min</strong>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
+                        <p class="muted">Current month includes activity through today.</p>
+                    <?php endif ?>
+                </section>
+            <?php endforeach ?>
+        </div>
     </section>
 
     <section class="summary-grid" aria-label="Summary totals">

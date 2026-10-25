@@ -25,7 +25,18 @@
 
 <p class="muted" role="status"><?= count($subjects) ?> subject<?= count($subjects) === 1 ? '' : 's' ?> found.</p>
 <?php if ($subjects === []): ?>
-    <p class="muted"><?= $query === '' ? 'You have not added any subjects yet.' : 'No subjects match your search.' ?></p>
+    <section class="empty-state" aria-labelledby="subjects-empty-heading">
+        <span class="empty-state-mark" aria-hidden="true"><span class="solar-icon solar-icon-book-2"></span></span>
+        <h2 id="subjects-empty-heading"><?= $query === '' ? 'Start with a subject.' : 'No subjects match that search.' ?></h2>
+        <p><?= $query === '' ? 'Add a course or class to keep its topics and study sessions together.' : 'Try another search, or clear the filter to see your full subject list.' ?></p>
+        <div class="actions">
+            <?php if ($query !== ''): ?>
+                <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>">Clear search</a>
+            <?php else: ?>
+                <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span>Add your first subject</a>
+            <?php endif ?>
+        </div>
+    </section>
 <?php else: ?>
     <ul class="subject-list">
         <?php foreach ($subjects as $subject): ?>

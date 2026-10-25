@@ -70,7 +70,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.setViewportSize({ width, height: 850 });
 
     await page.goto('student');
-    await expect(page.getByRole('heading', { name: 'Your study space' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Make a little progress today.' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Duno Guide' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'What Works Clearinghouse practice guide (2007)' })).toHaveCount(4);
     await expectNoHorizontalOverflow(page, '/student');
@@ -80,8 +80,8 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await expectNoHorizontalOverflow(page, '/student/subjects');
 
     await page.goto('student/topics');
-    await expect(page.getByRole('heading', { name: 'Search topics' })).toBeVisible();
-    await expect(page.getByLabel('Search')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Find a topic' })).toBeVisible();
+    await expect(page.getByLabel('Search topics and subjects')).toBeVisible();
     await expect(page.getByLabel('Importance')).toBeVisible();
     await expect(page.getByLabel('Progress')).toBeVisible();
     await expect(page.getByLabel('Due date')).toBeVisible();
@@ -132,6 +132,17 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   const printButton = page.getByRole('button', { name: 'Print report' });
   await tabUntilFocused(page, printButton);
   await expect(printButton).toBeFocused();
+  const focusRing = await printButton.evaluate(element => {
+    const style = getComputedStyle(element);
+    return { outlineStyle: style.outlineStyle, outlineWidth: style.outlineWidth };
+  });
+  expect(focusRing).toEqual({ outlineStyle: 'solid', outlineWidth: '3px' });
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const reducedTransition = await printButton.evaluate(element => getComputedStyle(element).transitionDuration);
+  expect(Number.parseFloat(reducedTransition)).toBeLessThan(0.001);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+
   await page.evaluate(() => {
     window.__talasPrintCalled = false;
     window.print = () => { window.__talasPrintCalled = true; };
@@ -200,5 +211,71 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await expect(page.getByRole('button', { name: 'Save session' })).toBeEnabled();
     await page.getByRole('button', { name: 'Discard this result' }).click();
     await expect(page.getByText('Timer discarded. No session was saved.')).toBeVisible();
+  }
+});
+
+test('topic detail and add/edit forms are usable at phone and desktop widths', async ({ page }) => {
+  test.setTimeout(60_000);
+  test.skip(!email || !password, 'Provide a synthetic student account in .tools/review-account.txt or set TALAS_E2E_EMAIL and TALAS_E2E_PASSWORD to run authenticated page checks.');
+
+  await page.setViewportSize({ width: 400, height: 850 });
+  await page.goto('login');
+  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.waitForURL(url => !url.pathname.endsWith('/login'), { timeout: 10_000, waitUntil: 'domcontentloaded' });
+  await page.goto('student/subjects');
+
+  const subjects = await page.locator('.subject-list a').evaluateAll(links => links.map(link => ({
+    href: link.getAttribute('href'),
+    name: link.textContent.trim(),
+  })));
+  const reviewSubject = subjects.find(subject => subject.name.length >= 2);
+  test.skip(!reviewSubject, 'The synthetic review account needs a named subject before topic detail and forms can be reviewed.');
+  const subjectHref = reviewSubject.href;
+  const subjectId = subjectHref?.match(/subjects\/(\d+)/)?.[1];
+  expect(subjectId).toBeTruthy();
+  const topicTitle = `Review topic ${Date.now()}`;
+  let createdTopicHref = null;
+
+  try {
+    await page.goto(`student/subjects/${subjectId}/topics/new`);
+    await expect(page.getByRole('heading', { name: /Add a topic in/ })).toBeVisible();
+    await expectNoHorizontalOverflow(page, '/student/topics/new');
+    const titleField = page.getByLabel('Topic title');
+    await tabUntilFocused(page, titleField, 30);
+    await expect(titleField).toBeFocused();
+    const focusOutline = await titleField.evaluate(element => getComputedStyle(element).outlineWidth);
+    expect(focusOutline).toBe('3px');
+
+    await titleField.fill(topicTitle);
+    await page.getByRole('button', { name: 'Create topic' }).click();
+    createdTopicHref = page.url();
+    await expect(page.getByRole('heading', { name: topicTitle })).toBeVisible();
+
+    for (const width of [400, 1280]) {
+      await page.setViewportSize({ width, height: 850 });
+      await page.goto(createdTopicHref);
+      await expect(page.getByRole('heading', { name: topicTitle })).toBeVisible();
+      await expect(page.locator('.topic-detail-card')).toBeVisible();
+      await expect(page.getByText('A topic used by a saved study session cannot be deleted.')).toBeVisible();
+      await expectNoHorizontalOverflow(page, '/student/topics/detail');
+
+      await page.getByRole('link', { name: 'Edit' }).click();
+      await expect(page.getByLabel('Topic title')).toHaveValue(topicTitle);
+      await expectNoHorizontalOverflow(page, '/student/topics/edit');
+    }
+
+    await page.getByRole('button', { name: 'Save changes' }).click();
+    await page.getByRole('button', { name: 'Delete topic' }).click();
+    await expect(page.locator('.subject-list a').filter({ hasText: topicTitle })).toHaveCount(0);
+  } finally {
+    if (createdTopicHref) {
+      await page.goto(createdTopicHref).catch(() => {});
+      const deleteTopic = page.getByRole('button', { name: 'Delete topic' });
+      if (await deleteTopic.count().catch(() => 0)) {
+        await deleteTopic.click().catch(() => {});
+      }
+    }
   }
 });

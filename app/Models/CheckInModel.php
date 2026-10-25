@@ -24,6 +24,18 @@ class CheckInModel extends Model
             ->get()->getResultArray();
     }
 
+    public function hasRecordForOwnerOnDate(int $ownerId, string $date): bool
+    {
+        $timezone = new DateTimeZone(config('App')->appTimezone);
+        $start = new DateTimeImmutable($date . ' 00:00:00', $timezone);
+        $end = $start->modify('+1 day');
+
+        return $this->ownerQuery($ownerId)
+            ->where('check_ins.recorded_at >=', $start->format('Y-m-d H:i:s'))
+            ->where('check_ins.recorded_at <', $end->format('Y-m-d H:i:s'))
+            ->countAllResults() > 0;
+    }
+
     /** @return array<string, mixed>|null */
     public function findForOwner(int $checkInId, int $ownerId): ?array
     {

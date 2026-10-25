@@ -55,6 +55,35 @@ final class StudentAralyticsTest extends CIUnitTestCase
         $response->assertDontSee('Private subject');
         $response->assertSee('Print report');
         $response->assertSee('Dated sessions');
+        $response->assertSee('60 study XP');
+        $response->assertDontSee('540 study XP');
+    }
+
+    public function testProgressionRecalculatesFromCurrentSavedSessionRecords(): void
+    {
+        $student = $this->createUser('aralytics-progression');
+        $subjectId = $this->createSubject((int) $student->id, 'Biology');
+        $sessionId = $this->createSession((int) $student->id, $subjectId, null, 119, $this->localDate('today') . ' 09:00:00');
+        $this->authenticateAs($student);
+
+        $before = $this->getAuthenticated('student/aralytics');
+        $before->assertOK();
+        $before->assertSee('119 study XP');
+        $before->assertSee('Level 1');
+
+        $sessions = new StudySessionModel();
+        $this->assertTrue($sessions->updateForOwner($sessionId, (int) $student->id, $subjectId, null, 120));
+        $afterUpdate = $this->getAuthenticated('student/aralytics');
+        $afterUpdate->assertOK();
+        $afterUpdate->assertSee('120 study XP');
+        $afterUpdate->assertSee('Level 2');
+        $afterUpdate->assertSee('30-day study rhythm');
+
+        $this->assertTrue($sessions->deleteForOwner($sessionId, (int) $student->id));
+        $afterDelete = $this->getAuthenticated('student/aralytics');
+        $afterDelete->assertOK();
+        $afterDelete->assertSee('0 study XP');
+        $afterDelete->assertSee('Level 1');
     }
 
     public function testSelectedTodayAndAllTimePeriodsAndInvalidPeriodFallback(): void
