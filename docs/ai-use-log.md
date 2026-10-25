@@ -828,3 +828,16 @@ Student changes and decisions: The owner confirmed that `main` requires pull req
 How the student verified and can explain the result: `git status -sb` shows local `main` aligned with `origin/main`; the existing 17 tracked modifications and five untracked entries remain in the worktree. `git diff --check` passed. No tests or deployment were run.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### InfinityFree package builder validation
+
+```text
+Date / story: 2026-10-25 / R-04 package preparation verification
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked for the next project task; the local package check was performed without uploading or deploying it. Instructor/course disclosure requirements remain the owner's responsibility.
+Assistance used (explanation, planning, code draft, debugging, review): Ran `scripts/Build-InfinityFreePackage.ps1` from the PR branch into a new ignored output directory and inspected the generated root layout, deny rules, entry point, and selected source-to-package hashes.
+Suggestions or code retained: Generated `build/infinityfree-htdocs-package-pr9-20261025`. Composer could not reach Packagist, but completed using the copied locked dependency tree and removed 30 development packages. No source files or credentials were changed or copied.
+Student changes and decisions: The package was not uploaded. The previously deployed archive came from an older mixed worktree snapshot and is not replaced by this local package.
+How the student verified and can explain the result: The script completed successfully; the package had only expected root entries, no `.env`, no root Composer manifests, no unexpected root files, a syntactically valid `index.php`, matching SHA-256 hashes for the home controller/view, public navigation assets, and study suggestion content, and the expected private-path/dotfile deny rules. The package includes vendor dependencies, whose direct path is denied. No live-host check was performed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
