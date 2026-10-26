@@ -34,7 +34,11 @@
         <p class="privacy-note">This dashboard shows totals only. It does not display account names, individual study records, or private check-in information.</p>
     </main>
 </div>
-<footer class="icon-credit"><small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small></footer>
+<footer class="icon-credit app-footer">
+    <span class="app-footer-brand">duno.</span>
+    <span>Your Little Study Buddy.</span>
+    <small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small>
+</footer>
 <?= $this->include('partials/admin_bottom_nav') ?>
 </body>
 </html>

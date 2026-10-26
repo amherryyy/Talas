@@ -13,6 +13,10 @@
     --duno-gold: #ffda92;
     --duno-danger: #9b302a;
     --duno-shadow: 0 18px 44px rgb(47 39 95 / 8%);
+    --duno-glass: rgb(255 255 255 / 80%);
+    --duno-glass-soft: rgb(255 255 255 / 72%);
+    --duno-glass-border: rgb(255 255 255 / 88%);
+    --duno-glass-shadow: 0 14px 34px rgb(62 53 116 / 8%), inset 0 1px 0 rgb(255 255 255 / 84%);
     --duno-focus: 0 0 0 3px rgb(116 101 216 / 25%);
     font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
     color: var(--duno-ink);
@@ -464,6 +468,13 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 .duno-workspace .check-in-prompt-actions button { min-width: 10rem; }
 .duno-workspace .check-in-dialog .errors { margin: .5rem 0; }
 .duno-workspace .progression-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(12rem, .8fr) minmax(14rem, 1fr); align-items: center; gap: 1.2rem; margin: 1.2rem 0 1.8rem; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid #dcd6f5; border-radius: 1.25rem; background: linear-gradient(120deg, #f1efff, #fff 62%, #eef9f2); box-shadow: 0 8px 24px rgb(47 39 95 / 5%); }
+.streak-chip { display: inline-flex; align-items: center; gap: .65rem; margin: 0 0 1.5rem; padding: .6rem .85rem; border: 1px solid #f0d8b3; border-radius: 999px; color: #6d4213; background: #fff9ee; }
+.streak-flame { display: inline-block; font-size: 1.45rem; line-height: 1; transform-origin: center bottom; }
+.streak-flame.is-new { animation: streak-flame-pop 850ms ease-out both; }
+@keyframes streak-flame-pop { 0% { opacity: .4; transform: scale(.55) translateY(.4rem); } 55% { opacity: 1; transform: scale(1.35) translateY(-.1rem) rotate(-8deg); } 75% { transform: scale(.92) rotate(5deg); } 100% { transform: scale(1) rotate(0); } }
+.streak-chip strong, .streak-caption { display: block; }
+.streak-caption, .progression-xp-rule { color: var(--duno-muted); font-size: .75rem; }
+.streak-reward-notice { margin-bottom: .7rem; }
 .level-up-dialog { width: min(29rem, calc(100vw - 2rem)); max-width: none; padding: clamp(1.4rem, 5vw, 2.2rem); border: 1px solid #dcd6f5; border-radius: 1.5rem; color: var(--duno-ink); background: linear-gradient(145deg, #fff 10%, #f4f1ff 100%); box-shadow: 0 28px 90px rgb(24 19 52 / 24%); text-align: center; }
 .level-up-dialog::backdrop { background: rgb(25 22 43 / 58%); backdrop-filter: blur(4px); }
 .level-up-dialog[open] { animation: check-in-enter .22s ease-out both; }
@@ -621,6 +632,235 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* Shared glass surfaces: translucent enough to show the tinted canvas, opaque enough to keep text clear. */
+.duno-workspace .app-header {
+    position: sticky;
+    top: .55rem;
+    min-height: 4.45rem;
+    margin: .55rem 0 1.25rem;
+    padding: .55rem .8rem;
+    border: 1px solid var(--duno-glass-border);
+    border-radius: 1.1rem;
+    background: rgb(250 249 255 / 82%);
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+.brand-wordmark { font-size: 1.7rem; }
+.brand-tagline { font-size: .66rem; }
+.workspace-nav { gap: .16rem; }
+.workspace-nav a,
+.student-menu > summary { min-height: 2.45rem; gap: .36rem; padding: .45rem .65rem; font-size: .83rem; }
+.workspace-nav .solar-icon { width: 1rem; height: 1rem; }
+.student-menu > summary { border-color: rgb(255 255 255 / 90%); background: rgb(255 255 255 / 74%); }
+.student-menu nav {
+    width: min(14rem, calc(100vw - 2rem));
+    padding: .4rem;
+    border-color: var(--duno-glass-border);
+    background: rgb(255 255 255 / 88%);
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+.student-menu nav a,
+.student-menu nav button { padding: .58rem .68rem; font-size: .9rem; }
+
+.duno-landing .topbar {
+    border-bottom-color: rgb(255 255 255 / 68%);
+    background: rgb(247 246 252 / 82%);
+    box-shadow: 0 8px 24px rgb(47 39 95 / 4%);
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+.duno-landing .topbar-inner { min-height: 4.4rem; }
+.duno-landing .wordmark { font-size: 1.62rem; }
+.duno-landing .tagline { font-size: .68rem; }
+.duno-landing .top-actions { gap: .42rem; }
+.duno-landing .pill,
+.duno-landing .menu summary { min-height: 2.5rem; padding: .45rem .78rem; font-size: .83rem; }
+.duno-landing .menu summary { width: 2.45rem; height: 2.45rem; padding: 0; border-color: var(--duno-glass-border); background: rgb(255 255 255 / 78%); box-shadow: var(--duno-glass-shadow); }
+.duno-landing .menu[open] summary { background: rgb(237 233 254 / 88%); }
+.duno-landing .menu-panel {
+    width: min(13rem, calc(100vw - 2rem));
+    min-width: 0;
+    padding: .42rem;
+    border-color: var(--duno-glass-border);
+    border-radius: .9rem;
+    background: rgb(255 255 255 / 88%);
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+.duno-landing .menu-panel a,
+.duno-landing .menu-button { padding: .58rem .68rem; font-size: .88rem; }
+
+.duno-workspace .subject-list li,
+.duno-workspace .topic-filter-form,
+.duno-workspace .topic-detail-card,
+.duno-workspace .topic-form,
+.duno-workspace .report-section,
+.duno-workspace article[aria-labelledby="report-title"],
+.duno-workspace .summary-card,
+.duno-workspace .suggestion-card,
+.duno-workspace .progression-insight,
+.duno-workspace .dashboard-tool-card,
+.duno-workspace .timer-rhythm-card,
+.duno-workspace .check-in-dialog,
+.duno-workspace .level-up-dialog,
+.duno-workspace .empty-state,
+.duno-auth .card,
+.duno-auth .auth-aside,
+.duno-admin .admin-main,
+.duno-admin .summary-card,
+.duno-role main,
+.duno-landing .welcome,
+.duno-landing .tool-card,
+.duno-landing .public-guide,
+.duno-landing .public-guide-card,
+.duno-landing .guide-note {
+    border-color: var(--duno-glass-border);
+    background-color: var(--duno-glass);
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(14px) saturate(135%);
+    -webkit-backdrop-filter: blur(14px) saturate(135%);
+}
+.duno-workspace .subject-list li,
+.duno-workspace .topic-filter-form,
+.duno-workspace .topic-detail-card,
+.duno-workspace .topic-form,
+.duno-workspace .report-section,
+.duno-workspace article[aria-labelledby="report-title"],
+.duno-workspace .summary-card,
+.duno-workspace .suggestion-card,
+.duno-workspace .progression-insight,
+.duno-workspace .dashboard-tool-card,
+.duno-admin .summary-card,
+.duno-landing .tool-card,
+.duno-landing .public-guide-card { background-color: var(--duno-glass-soft); }
+.duno-workspace .progression-card {
+    border-color: var(--duno-glass-border);
+    background: linear-gradient(120deg, rgb(237 233 254 / 82%), rgb(255 255 255 / 78%) 62%, rgb(228 245 236 / 80%));
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(14px) saturate(135%);
+    -webkit-backdrop-filter: blur(14px) saturate(135%);
+}
+.duno-workspace .timer-focus-card {
+    border-color: var(--duno-glass-border);
+    background: radial-gradient(ellipse at 100% 0%, rgb(237 233 254 / 84%) 0, transparent 42%), linear-gradient(145deg, rgb(255 255 255 / 84%) 10%, rgb(248 246 255 / 78%) 100%);
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(14px) saturate(135%);
+    -webkit-backdrop-filter: blur(14px) saturate(135%);
+}
+.duno-workspace [data-timer-state="running"] .timer-focus-card {
+    background: radial-gradient(ellipse at 50% 45%, rgb(238 234 255 / 86%) 0, transparent 58%), linear-gradient(145deg, rgb(251 250 255 / 88%) 0, rgb(241 238 255 / 82%) 100%);
+}
+.duno-workspace .timer-rhythm-card { background: linear-gradient(155deg, rgb(240 250 244 / 86%) 0, rgb(255 255 255 / 76%) 78%); }
+.duno-workspace .progression-insight.is-unlocked { background: linear-gradient(150deg, rgb(255 255 255 / 78%), rgb(248 252 249 / 80%)); }
+.duno-workspace .check-in-dialog { background: rgb(255 255 255 / 92%); }
+.duno-workspace .level-up-dialog { background: linear-gradient(145deg, rgb(255 255 255 / 92%) 10%, rgb(244 241 255 / 90%) 100%); }
+.duno-workspace .empty-state { background: rgb(255 255 255 / 80%); }
+.duno-workspace .workspace-hero {
+    border-color: var(--duno-glass-border);
+    background: linear-gradient(112deg, rgb(255 255 255 / 85%) 0%, rgb(255 255 255 / 79%) 58%, rgb(240 237 255 / 82%) 100%);
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(14px) saturate(135%);
+    -webkit-backdrop-filter: blur(14px) saturate(135%);
+}
+.duno-workspace .dashboard-tool-card,
+.duno-workspace .dashboard-tool-card.focus-tool { background-color: var(--duno-glass-soft); }
+.duno-workspace .dashboard-tool-card.focus-tool { background: linear-gradient(135deg, rgb(255 255 255 / 82%) 15%, rgb(240 237 255 / 78%) 100%); }
+.duno-workspace .dashboard-tool-card:hover,
+.duno-landing .tool-card:hover { background-color: rgb(255 255 255 / 92%); }
+.duno-landing .welcome { background: linear-gradient(112deg, rgb(255 255 255 / 86%) 0%, rgb(255 255 255 / 82%) 58%, rgb(241 237 255 / 84%) 100%); }
+.duno-landing .public-guide { background: rgb(238 235 247 / 78%); }
+.duno-landing .guide-note { background: rgb(240 237 255 / 80%); }
+.duno-landing .footer { padding-top: .8rem; border-top: 1px solid rgb(120 110 158 / 15%); }
+.student-bottom-nav {
+    --bottom-nav-surface: rgb(255 255 255 / 90%);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+.duno-admin .admin-header {
+    min-height: 4.45rem;
+    margin: .55rem 0 1.2rem;
+    padding: .55rem .8rem;
+    border: 1px solid var(--duno-glass-border);
+    border-radius: 1.1rem;
+    background: rgb(250 249 255 / 82%);
+    box-shadow: var(--duno-glass-shadow);
+    backdrop-filter: blur(18px) saturate(145%);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+}
+.duno-admin .admin-brand .wordmark { font-size: 1.62rem; }
+.duno-landing .student-bottom-nav { --bottom-nav-surface: rgb(255 255 255 / 90%); }
+
+.app-footer {
+    display: flex;
+    width: min(100% - 2rem, 76rem);
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: .2rem .45rem;
+    margin: .25rem auto 1rem;
+    padding: .8rem .5rem 0;
+    border-top: 1px solid rgb(120 110 158 / 15%);
+    color: var(--duno-muted);
+    font-size: .78rem;
+    text-align: center;
+}
+.app-footer-brand { color: var(--duno-purple-deep); font-weight: 800; letter-spacing: -.035em; }
+.app-footer small { flex-basis: 100%; margin-top: .12rem; font-size: .7rem; }
+.app-footer a { color: inherit; }
+
+.app-tour[hidden] { display: none !important; }
+.app-tour {
+    position: fixed;
+    z-index: 60;
+    right: clamp(1rem, 3vw, 2rem);
+    bottom: 1.25rem;
+    width: min(26rem, calc(100vw - 2rem));
+    max-height: min(72vh, 30rem);
+    overflow: auto;
+    padding: 1.1rem 1.2rem 1.2rem;
+    border: 1px solid var(--duno-glass-border);
+    border-radius: 1.2rem;
+    color: var(--duno-ink);
+    background: rgb(255 255 255 / 94%);
+    box-shadow: 0 20px 55px rgb(45 37 92 / 20%), inset 0 1px 0 rgb(255 255 255 / 95%);
+    backdrop-filter: blur(22px) saturate(145%);
+    -webkit-backdrop-filter: blur(22px) saturate(145%);
+    animation: tour-arrive 220ms ease-out both;
+}
+@keyframes tour-arrive { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: translateY(0); } }
+.app-tour-topline { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.app-tour-topline .workspace-kicker { margin: 0; font-size: .7rem; }
+.app-tour-skip { min-height: 2rem !important; padding: .2rem .45rem !important; border-color: transparent !important; color: var(--duno-muted) !important; background: transparent !important; box-shadow: none !important; font-size: .78rem !important; }
+.app-tour-skip:hover { color: var(--duno-purple-deep) !important; text-decoration: underline; }
+.app-tour h2 { margin: .55rem 0 .35rem; font-size: 1.35rem; }
+.app-tour-copy { margin: 0; color: var(--duno-muted); font-size: .9rem; line-height: 1.55; }
+.app-tour-actions { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1rem; }
+.app-tour-actions button { min-height: 2.45rem; padding: .48rem .8rem; font-size: .84rem; }
+.app-tour-actions button:disabled { opacity: 0; pointer-events: none; }
+[data-tour-target].is-tour-highlighted {
+    position: relative;
+    z-index: 2;
+    outline: 3px solid var(--duno-purple);
+    outline-offset: 4px;
+    filter: drop-shadow(0 0 .45rem rgb(116 101 216 / 32%));
+}
+
+@media (max-width: 52rem) {
+    .duno-workspace .app-header { position: relative; top: auto; margin: .35rem 0 1rem; padding: .5rem .65rem; }
+    .app-tour { right: .75rem; bottom: calc(5.45rem + env(safe-area-inset-bottom)); left: .75rem; width: auto; max-height: min(60vh, 26rem); padding: 1rem; }
+}
+@media (max-width: 32rem) {
+    .duno-landing .topbar-inner { min-height: 4.2rem; }
+    .duno-landing .pill,
+    .duno-landing .menu summary { min-height: 2.4rem; font-size: .78rem; }
+    .app-footer { width: min(100% - 1.5rem, 76rem); }
+    .duno-admin .admin-header { margin: .35rem 0 1rem; padding: .5rem .65rem; }
 }
 @media print {
     body.duno-workspace { padding: 0; color: #000; background: #fff; }

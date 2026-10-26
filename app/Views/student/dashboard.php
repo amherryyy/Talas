@@ -1,7 +1,7 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<section class="workspace-hero" aria-labelledby="dashboard-heading">
+<section class="workspace-hero" aria-labelledby="dashboard-heading" data-tour-target="start">
     <div class="workspace-hero-copy">
         <p class="workspace-kicker">Your study space</p>
         <h1 id="dashboard-heading">Make a little progress today.</h1>
@@ -79,25 +79,25 @@
         <a href="<?= esc(site_url('student/subjects')) ?>">View subjects <span aria-hidden="true">→</span></a>
     </div>
     <div class="dashboard-tool-grid">
-        <a class="dashboard-tool-card focus-tool" href="<?= esc(site_url('student/priority')) ?>">
+        <a class="dashboard-tool-card focus-tool" href="<?= esc(site_url('student/priority')) ?>" data-tour-target="focus">
             <span class="dashboard-tool-icon"><span class="solar-icon solar-icon-target" aria-hidden="true"></span></span>
             <span class="dashboard-tool-title">Duno Focus</span>
             <span class="dashboard-tool-copy">See unfinished topics ranked by their due dates, importance, and progress.</span>
             <span class="dashboard-tool-link">Choose a topic <span aria-hidden="true">↗</span></span>
         </a>
-        <a class="dashboard-tool-card plan-tool" href="<?= esc(site_url('student/plan')) ?>">
+        <a class="dashboard-tool-card plan-tool" href="<?= esc(site_url('student/plan')) ?>" data-tour-target="plan">
             <span class="dashboard-tool-icon"><span class="solar-icon solar-icon-calendar" aria-hidden="true"></span></span>
             <span class="dashboard-tool-title">Duno Plan</span>
             <span class="dashboard-tool-copy">Turn the time you have today into a plan you can adjust.</span>
             <span class="dashboard-tool-link">Shape today <span aria-hidden="true">↗</span></span>
         </a>
-        <a class="dashboard-tool-card timer-tool" href="<?= esc(site_url('student/sessions')) ?>">
+        <a class="dashboard-tool-card timer-tool" href="<?= esc(site_url('student/sessions')) ?>" data-tour-target="timer">
             <span class="dashboard-tool-icon"><span class="solar-icon solar-icon-stopwatch" aria-hidden="true"></span></span>
             <span class="dashboard-tool-title">Duno Timer</span>
             <span class="dashboard-tool-copy">Time a study session and save it when you choose.</span>
             <span class="dashboard-tool-link">Start a session <span aria-hidden="true">↗</span></span>
         </a>
-        <a class="dashboard-tool-card aralytics-tool" href="<?= esc(site_url('student/aralytics')) ?>">
+        <a class="dashboard-tool-card aralytics-tool" href="<?= esc(site_url('student/aralytics')) ?>" data-tour-target="aralytics">
             <span class="dashboard-tool-icon"><span class="solar-icon solar-icon-chart-2" aria-hidden="true"></span></span>
             <span class="dashboard-tool-title">Aralytics</span>
             <span class="dashboard-tool-copy">Look back at your saved study time and sessions.</span>
@@ -106,7 +106,7 @@
     </div>
 </section>
 
-<section class="guide-section" id="study-ideas-heading" aria-labelledby="guide-heading">
+<section class="guide-section" id="study-ideas-heading" aria-labelledby="guide-heading" data-tour-target="guide">
     <div class="dashboard-section-heading">
         <div><p class="workspace-kicker">A few ideas to try</p><h2 id="guide-heading">Duno Guide</h2></div>
         <p class="muted">General suggestions. Pick what fits your course.</p>

@@ -1,5 +1,7 @@
 # Navigation, motion, and safe asset caching follow-up
 
+**Status:** Implementation merged through PR #12; local browser and owner review remain pending.
+
 ## Owner request
 
 The owner asked to make the full Duno navigation easier to follow and faster to use, visually separate cards, buttons, and links, add restrained animation, make Duno react when the student levels up, animate the mascot in the daily energy/workload check-in, and apply caching where useful.
@@ -20,14 +22,15 @@ XP transitions use the signed-in student's existing owner-scoped study-session r
 
 ## Verification record
 
-- PHPUnit: **Passed**, 73 tests and 677 assertions on local PHP 8.2.12 with the `intl` and SQLite extensions enabled for the run.
-- PHP syntax: **Passed**, 139 PHP files linted.
-- Composer validation: **Passed** with `--strict`; locked dependency audit: **Passed**, no advisories.
+- PHPUnit: **Passed**, 73 tests and 677 assertions on local PHP 8.2.12 with the `intl` and SQLite extensions enabled for the run (rechecked 2026-10-26).
+- PHP syntax: **Passed**, 138 PHP files under `app`, `tests`, and `scripts` linted (rechecked 2026-10-26).
+- JavaScript syntax: **Passed** for `student-navigation.js` and `level-up.js` (rechecked 2026-10-26).
+- Composer validation: **Passed** with `--strict`. Locked dependency audit with `--ignore-unreachable`: **No advisories reported**; Packagist was unreachable, so online advisory sources could not be refreshed (rechecked 2026-10-26).
 - Hosting package: **Built and inspected**; expected `htdocs` root entries and private-path deny rule are present, `.env` is absent, and the ZIP includes the hidden root `.htaccess`.
-- Local browser review: **Not run** because no browser or local Apache session was available. Direct local homepage check could not connect.
+- Local browser review: **Blocked**. The isolated MariaDB process started but the review connection was denied access to the configured database, and the local homepage returned HTTP 500. Playwright stopped before running tests because Windows denied its worker process with `spawn EPERM`. The review database, browser tests, and manual phone/desktop visual checks remain outstanding.
 - InfinityFree deployment and live smoke checks: **Pending**. Host support for optional `mod_expires` and `mod_headers` directives remains unverified.
 - Owner review: pending.
 
 ## Status
 
-Prepared on `feature/navigation-motion-polish` for owner review. No files were staged, committed, pushed, or deployed.
+Merged to `main` through PR #12. Verification was refreshed locally on 2026-10-26; browser review could not proceed for the reasons above. No files were staged, committed, pushed, or deployed during the follow-up.

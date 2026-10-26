@@ -20,7 +20,7 @@ $items = [
 ?>
 <nav class="student-bottom-nav" aria-label="Student navigation">
     <?php foreach ($items as $item): ?>
-        <a href="<?= esc($item['href']) ?>"<?= $active === $item['key'] ? ' aria-current="page"' : '' ?><?= $item['key'] === 'guide' ? ' data-guide-nav' : '' ?><?= $item['key'] === 'home' ? ' data-home-nav' : '' ?>>
+        <a href="<?= esc($item['href']) ?>"<?= $active === $item['key'] ? ' aria-current="page"' : '' ?><?= $item['key'] === 'guide' ? ' data-guide-nav' : '' ?><?= $item['key'] === 'home' ? ' data-home-nav' : '' ?> data-tour-target="<?= $item['key'] === 'home' ? 'start' : esc($item['key']) ?>">
             <span class="student-bottom-nav-mark solar-icon solar-icon-<?= esc($item['icon']) ?>" aria-hidden="true"></span>
             <span><?= esc($item['label']) ?></span>
         </a>

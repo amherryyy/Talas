@@ -10,6 +10,7 @@ $tools = [
         'path' => 'student/priority',
         'icon' => 'target',
         'tone' => 'lavender',
+        'tour' => 'focus',
     ],
     [
         'name' => 'Duno Plan',
@@ -18,6 +19,7 @@ $tools = [
         'path' => 'student/plan',
         'icon' => 'calendar',
         'tone' => 'mint',
+        'tour' => 'plan',
     ],
     [
         'name' => 'Duno Timer',
@@ -26,6 +28,7 @@ $tools = [
         'path' => 'student/sessions',
         'icon' => 'stopwatch',
         'tone' => 'gold',
+        'tour' => 'timer',
     ],
     [
         'name' => 'Aralytics',
@@ -34,6 +37,7 @@ $tools = [
         'path' => 'student/aralytics',
         'icon' => 'chart-2',
         'tone' => 'blue',
+        'tour' => 'aralytics',
     ],
 ];
 $joinUrl = site_url('register');
@@ -279,11 +283,14 @@ $joinUrl = site_url('register');
                 <span class="pill">Signed in</span>
             <?php endif ?>
             <details class="menu">
-                <summary aria-label="Toggle main menu"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span></summary>
+                <summary aria-label="Toggle main menu" data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span></summary>
                 <nav class="menu-panel" aria-label="Main menu">
                     <a href="<?= esc(site_url('')) ?>">Home</a>
                     <?php if ($isLoggedIn && $workspaceUrl !== null): ?>
                         <a href="<?= esc($workspaceUrl) ?>"><?= esc($workspaceLabel) ?></a>
+                    <?php endif ?>
+                    <?php if ($isStudent): ?>
+                        <a href="<?= esc(site_url('student#app-tour')) ?>">Show app tour</a>
                     <?php endif ?>
                     <?php if (! $isLoggedIn): ?>
                         <a href="<?= esc(site_url('register')) ?>">Create account</a>
@@ -301,7 +308,7 @@ $joinUrl = site_url('register');
 </header>
 
 <main class="shell main" id="main-content">
-    <section class="welcome" id="home" aria-labelledby="welcome-heading">
+    <section class="welcome" id="home" aria-labelledby="welcome-heading"<?= $isStudent ? ' data-tour-target="start"' : '' ?>>
         <div class="welcome-layout">
             <div class="welcome-copy">
                 <p class="overline"><?= $isStudent ? 'Your study space' : 'A little more focus, one step at a time' ?></p>
@@ -333,7 +340,7 @@ $joinUrl = site_url('register');
             <?php foreach ($tools as $tool): ?>
                 <?php $toolUrl = site_url($tool['path']); ?>
                 <?php if ($canOpenStudentTools): ?>
-                <a class="tool-card <?= esc($tool['tone']) ?>" href="<?= esc($toolUrl) ?>">
+                <a class="tool-card <?= esc($tool['tone']) ?>" href="<?= esc($toolUrl) ?>" data-tour-target="<?= esc($tool['tour']) ?>">
                 <?php else: ?>
                 <article class="tool-card <?= esc($tool['tone']) ?>">
                 <?php endif ?>
@@ -370,7 +377,7 @@ $joinUrl = site_url('register');
         <p class="public-guide-source">Adapted from <a href="<?= esc($suggestionSourceUrl) ?>" rel="noopener noreferrer"><?= esc($suggestionSourceName) ?></a>.</p>
     </section>
     <?php else: ?>
-    <aside class="guide-note" aria-label="Duno Guide">
+    <aside class="guide-note" aria-label="Duno Guide"<?= $isStudent ? ' data-tour-target="guide"' : '' ?>>
         <p><span class="solar-icon solar-icon-book-2" aria-hidden="true"></span><span><strong>Duno Guide</strong><span>Short, curated study ideas you can try when they fit your course.</span></span></p>
         <?php if ($isStudent || $isAdmin || ! $isLoggedIn): ?>
         <a class="guide-link" href="<?= esc($isStudent ? site_url('student') : ($isAdmin ? $workspaceUrl : $joinUrl)) ?>">
@@ -390,10 +397,17 @@ $joinUrl = site_url('register');
 <?php elseif (! $isLoggedIn): ?>
 <?= $this->include('partials/guest_bottom_nav') ?>
 <?php endif ?>
+<?php if ($isStudent): ?>
+<?= view('partials/app_tour', [
+    'appTourUserId' => $appTourUserId,
+    'appTourAutoStart' => true,
+]) ?>
+<?php endif ?>
 
 <footer class="shell footer">duno. &middot; Your Little Study Buddy.<small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> icon set by 480 Design, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>.</small></footer>
 <?php if (! $isLoggedIn): ?>
 <script type="module" src="<?= esc(duno_asset('assets/js/public-bottom-nav.js')) ?>"></script>
 <?php endif ?>
+<?php if ($isStudent): ?><script src="<?= esc(duno_asset('assets/js/onboarding-tour.js')) ?>" defer></script><?php endif ?>
 </body>
 </html>

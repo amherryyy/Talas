@@ -12,10 +12,13 @@ $routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection
 
 $routes->post('logout', '\\CodeIgniter\\Shield\\Controllers\\LoginController::logoutAction', ['as' => 'logout']);
 
-$routes->group('student', ['filter' => ['session', 'exclusive-role:student']], static function (RouteCollection $routes): void {
+$routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'student-streak']], static function (RouteCollection $routes): void {
     $routes->get('/', 'Student\\Dashboard::index', ['as' => 'student.dashboard']);
     $routes->get('subjects', 'Student\\Subjects::index', ['as' => 'student.subjects.index']);
     $routes->post('subjects/search', 'Student\\Subjects::search', ['as' => 'student.subjects.search']);
+    $routes->get('subjects/templates', 'Student\\Subjects::templates', ['as' => 'student.subjects.templates']);
+    $routes->post('subjects/templates/import', 'Student\\Subjects::importTemplate', ['as' => 'student.subjects.templates.import']);
+    $routes->post('subjects/shs/import', 'Student\\Subjects::importShsSubjects', ['as' => 'student.subjects.shs.import']);
     $routes->get('subjects/new', 'Student\\Subjects::newSubject', ['as' => 'student.subjects.new']);
     $routes->post('subjects', 'Student\\Subjects::create', ['as' => 'student.subjects.create']);
     $routes->get('subjects/(:num)', 'Student\\Subjects::show/$1', ['as' => 'student.subjects.show']);

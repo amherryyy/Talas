@@ -55,34 +55,35 @@ final class StudentAralyticsTest extends CIUnitTestCase
         $response->assertDontSee('Private subject');
         $response->assertSee('Print report');
         $response->assertSee('Dated sessions');
-        $response->assertSee('60 study XP');
-        $response->assertDontSee('540 study XP');
+        $response->assertSee('65 XP');
+        $response->assertSee('60 study + 5 streak');
+        $response->assertDontSee('545 XP');
     }
 
     public function testProgressionRecalculatesFromCurrentSavedSessionRecords(): void
     {
         $student = $this->createUser('aralytics-progression');
         $subjectId = $this->createSubject((int) $student->id, 'Biology');
-        $sessionId = $this->createSession((int) $student->id, $subjectId, null, 119, $this->localDate('today') . ' 09:00:00');
+        $sessionId = $this->createSession((int) $student->id, $subjectId, null, 114, $this->localDate('today') . ' 09:00:00');
         $this->authenticateAs($student);
 
         $before = $this->getAuthenticated('student/aralytics');
         $before->assertOK();
-        $before->assertSee('119 study XP');
+        $before->assertSee('119 XP');
         $before->assertSee('Level 1');
 
         $sessions = new StudySessionModel();
-        $this->assertTrue($sessions->updateForOwner($sessionId, (int) $student->id, $subjectId, null, 120));
+        $this->assertTrue($sessions->updateForOwner($sessionId, (int) $student->id, $subjectId, null, 115));
         $afterUpdate = $this->getAuthenticated('student/aralytics');
         $afterUpdate->assertOK();
-        $afterUpdate->assertSee('120 study XP');
+        $afterUpdate->assertSee('120 XP');
         $afterUpdate->assertSee('Level 2');
         $afterUpdate->assertSee('30-day study rhythm');
 
         $this->assertTrue($sessions->deleteForOwner($sessionId, (int) $student->id));
         $afterDelete = $this->getAuthenticated('student/aralytics');
         $afterDelete->assertOK();
-        $afterDelete->assertSee('0 study XP');
+        $afterDelete->assertSee('5 XP');
         $afterDelete->assertSee('Level 1');
     }
 

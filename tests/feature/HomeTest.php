@@ -39,6 +39,7 @@ final class HomeTest extends CIUnitTestCase
         $body = $response->response()->getBody();
         $this->assertStringContainsString('href="http://example.com/index.php/register"', $body);
         $this->assertStringContainsString('href="http://example.com/index.php/login"', $body);
+        $this->assertStringNotContainsString('data-app-tour', $body);
         $response->assertDontSee('Welcome to CodeIgniter');
     }
 }

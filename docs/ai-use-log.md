@@ -182,6 +182,32 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### R-14 DepEd Senior High School subject catalog
+
+```text
+Date / story: 2026-10-26 / add the current DepEd Strengthened SHS subjects as selectable Duno subjects
+Tool and model: OpenAI Codex with official DepEd website research; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested adding the most updated Philippine Senior High School subjects.
+Assistance used (explanation, planning, code draft, debugging, review): Researched DepEd's Strengthened SHS curriculum guide index, DM 012 s. 2026 implementation schedule, and the current five-core/elective structure; added a static catalog, authenticated owner-scoped additive import service, route, selection UI, tests, and documentation.
+Suggestions or code retained: The catalog separates five required core subjects from optional Academic and TechPro electives and identifies the new Grade 12 guides. It notes that Grade 12 learners at non-pilot schools continue the previous curriculum during transition; old-curriculum subjects are not included. School-specific elective availability is not inferred.
+Student changes and decisions: Selected subjects are added to the signed-in student's own editable subject list; existing subjects are preserved and case-insensitive duplicates are skipped. No database migration, external runtime call, upload, or deployment was made.
+How the student verified and can explain the result: Focused StudentSubjectsTest passed (11 tests, 139 assertions); the full PHPUnit suite passed (81 tests, 795 assertions); changed PHP files and the JavaScript module passed syntax checks; git diff --check passed. Composer validation could not run because the Composer CLI is unavailable in this shell. Browser review is deferred until the accumulated updates are uploaded, per owner direction.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 CHED curriculum template scope
+
+```text
+Date / story: 2026-10-26 / NVSU offerings directory and separately labeled CHED curriculum templates
+Tool and model: OpenAI Codex with official CHED website research; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner first selected CHED baseline templates by program, then requested all NVSU offerings as the first institution catalog.
+Assistance used (explanation, planning, code draft, debugging, review): Researched official NVSU campus degree lists and CHED Region II program recognition, inspected the Duno subject workflow, then implemented a campus-grouped NVSU program directory, kept the CHED sample preview/import flow separate, and updated tests and project documentation.
+Suggestions or code retained: NVSU undergraduate degree programs and majors are listed under their Bayombong or Bambang campus and college, with links to the university source pages. The Bayombong teacher-education page repeats Early Childhood Education; the directory flags the correction to BSEd based on the CHED Region II recognized-program list. The three CHED sample templates stay separate; no NVSU curriculum is inferred from them.
+Student changes and decisions: The owner approved selecting a program, previewing terms and source/status information, importing selected courses, and keeping existing subjects. Imports add editable subjects to the signed-in student's own list and skip case-insensitive duplicate names. The NVSU directory is campus-specific, with separate Bayombong and Bambang entries. No migration, upload, or deployment was performed.
+How the student verified and can explain the result: The full PHPUnit suite passed with `--no-coverage` (80 tests, 774 assertions); the focused `StudentSubjectsTest` passed (10 tests, 118 assertions) using the XAMPP SQLite CLI extensions. Feature checks cover all three source previews, course labels, additive import, case-insensitive duplicates, catalog ID validation, owner boundaries, admin denial, and signed-out denial. PHP/JavaScript syntax, Composer validation, and `git diff --check` passed. The locked dependency audit reported no known advisories but Packagist was unreachable, so freshness could not be confirmed. Manual browser review remains deferred until the accumulated updates are uploaded to InfinityFree.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### Staged accumulated project changes
 
 ```text
@@ -969,5 +995,57 @@ Assistance used (explanation, planning, code draft, debugging, review): Replaced
 Suggestions or code retained: Updated StudySessionModel, CheckInModel, StudyProgressionService, Dashboard and Aralytics controllers, and the R-08 follow-up story. No schema, package, or visible UI changes were made.
 Student changes and decisions: The owner requested optimization while preserving quality and the user experience. The owner later authorized staging, committing, version-control work, and upload. No stage, commit, push, merge, or deployment has happened yet.
 How the student verified and can explain the result: The complete PHPUnit suite passed (73 tests, 677 assertions); syntax lint passed for 139 PHP files; Composer validation passed; locked dependency audit reported no advisories. The production package was built and inspected for expected root files, private-path deny rules, matching changed-source hash, and `.env` exclusion. Local browser review was unavailable because neither a browser session nor local Apache was available. Runtime performance and InfinityFree behavior remain unmeasured.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 navigation and mascot verification follow-up
+
+```text
+Date / story: 2026-10-26 / verify merged R-08 navigation, motion, and mascot follow-up
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested the navigation, motion, mascot, and caching follow-up. The original R-08 redesign and R-09 progression were accepted; browser review of the merged follow-up remains pending.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the current repository instructions and R-08 story; reran PHPUnit, PHP/JavaScript syntax checks, Composer validation, and a locked dependency audit; attempted to restore the isolated local browser-review environment.
+Suggestions or code retained: Updated the story, requirements traceability, and restart board with current verification results. No application code, dependency, database content, host configuration, or product behavior changed.
+Student changes and decisions: PHPUnit passed with 73 tests and 677 assertions; PHP syntax passed for 138 files; JavaScript syntax passed for the student navigation and level-up modules; Composer validation passed. The locked audit reported no advisories but Packagist was unreachable. The browser review database denied access to the configured database, the local home page returned HTTP 500, and Playwright stopped before tests because Windows returned spawn EPERM. The story remains in Verification; owner visual review and browser checks are not claimed as passed.
+How the student verified and can explain the result: Read the command output and confirmed the database state using the documented `migrate:status` check. Confirmed no local files were staged, committed, pushed, or deployed. No browser interaction completed and no hosted changes were made.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-10 daily visit streak and XP
+
+```text
+Date / story: 2026-10-26 / implement owner-approved daily visit XP and streak
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner approved one +5 XP reward per app-local calendar day on the first authenticated student visit, a consecutive-day streak that resets after a missed date, and an animated dashboard fire icon.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the existing F-14 progression calculations, student route filters, dashboard and Aralytics views, migrations, and feature tests; implemented a unique daily-activity migration, owner-scoped streak model/service, authenticated student GET filter, XP integration, dashboard feedback/animation, focused feature tests, and requirement/deployment documentation.
+Suggestions or code retained: Study XP remains one point per saved study minute. Daily visits add five separate streak XP once per local calendar date. Study-time badges and study-day charts continue to use saved sessions only. The dashboard fire animates on an awarded visit and the existing reduced-motion stylesheet suppresses motion.
+Student changes and decisions: The owner selected the calendar-day rule, +5 XP, reset after a missed date, and the animated fire. The streak migration is applied by the in-memory SQLite test suite only; neither the isolated MariaDB review database nor the hosted database was changed.
+How the student verified and can explain the result: The full PHPUnit suite passed (76 tests, 704 assertions); PHP syntax passed for 143 files; JavaScript syntax passed for the relevant modules; Composer validation passed and the locked audit found no advisories while Packagist was unreachable; `git diff --check` passed. Tests cover once-per-day rewards, local midnight, consecutive dates, missed-day reset, owner isolation, admin exclusion, session edit/delete totals, and private check-ins not earning XP. A temporary local SQLite server successfully ran all migrations, but Shield rejected the synthetic browser-review registration with its personal-information password rule. Per the owner's direction, authenticated visual review is deferred until the accumulated updates are uploaded to InfinityFree. The temporary server and SQLite review files were stopped and removed. The hosted or MariaDB databases were not changed. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-11 glass surface, header, and footer polish
+
+```text
+Date / story: 2026-10-26 / apply owner-requested glassmorphism and compact shell
+Tool and model: OpenAI Codex with the redesign-existing-projects skill; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested glassmorphism on cards, a compact menu and header with suitable opacity, and a minimalist footer where useful.
+Assistance used (explanation, planning, code draft, debugging, review): Audited the current shared CSS, public home styles, student/admin layouts, approved brand palette, and existing responsive navigation; added restrained translucent card surfaces, backdrop blur, compact translucent headers and menus, and a branded low-profile student/admin footer.
+Suggestions or code retained: The design uses the existing Duno purple, lavender, mint, and canvas palette. Opaque fallbacks remain legible where backdrop blur is unavailable; no framework, asset, or runtime dependency was added. The public footer remains minimal and retains Solar Icons attribution.
+Student changes and decisions: Browser review is deferred until the accumulated updates are uploaded to InfinityFree, per owner direction. No upload, hosted change, Git stage, or commit was made.
+How the student verified and can explain the result: PHP syntax passed for the changed student and admin layout views, and `git diff --check` passed. Visual browser review remains queued for the post-upload batch review.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-12 first-visit student onboarding
+
+```text
+Date / story: 2026-10-26 / add a skippable guided tour of existing student tools
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested a suggestive first-visit guide for Duno features that students can skip when they already know the app, and selected browser-only persistence.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the student login landing flow, shared student layout, dashboard cards, mobile navigation, and optional daily check-in dialog; added a seven-step non-modal guide with visible-target highlighting, first-visit tracking per student/browser, replay from More, and check-in dialog sequencing.
+Suggestions or code retained: The tour explains existing features only. It adds no database field, analytics, external service, or runtime dependency. Browser storage uses a student-specific key, and the guide remains available to replay after skip or completion.
+Student changes and decisions: The owner chose current-browser persistence. The interaction is part of the local update batch and will be visually reviewed after upload to InfinityFree.
+How the student verified and can explain the result: The full PHPUnit suite passed (77 tests, 717 assertions); PHP syntax passed for the changed controllers, views, and partials; JavaScript syntax passed for the tour and check-in prompt modules; and `git diff --check` passed. No browser check was run, per the owner's batch-review direction.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

@@ -3,7 +3,10 @@
 <?= $this->section('content') ?>
 <h1>Your subjects</h1>
 <p>Manage the subjects you want to study. Only you can see this list.</p>
-<p><a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> Add a subject</a></p>
+<div class="actions">
+    <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> Add a subject</a>
+    <a class="button secondary" href="<?= esc(site_url('student/subjects/templates')) ?>">Start from a CHED template</a>
+</div>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">

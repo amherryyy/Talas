@@ -29,6 +29,7 @@ class Home extends BaseController
 
         return view('home', [
             'isLoggedIn'    => $isLoggedIn,
+            'appTourUserId' => $role === 'student' ? (string) auth()->id() : '',
             'role'          => $role,
             'workspaceUrl'  => $workspaceUrl,
             'workspaceLabel' => $workspaceLabel,

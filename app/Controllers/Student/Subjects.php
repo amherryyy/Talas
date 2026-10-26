@@ -5,6 +5,11 @@ namespace App\Controllers\Student;
 use App\Controllers\BaseController;
 use App\Models\SubjectModel;
 use App\Models\TopicModel;
+use App\Services\ChedCurriculumCatalog;
+use App\Services\ChedCurriculumImportService;
+use App\Services\DepedShsCatalog;
+use App\Services\DepedShsImportService;
+use App\Services\NvsuProgramCatalog;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 
@@ -19,6 +24,77 @@ class Subjects extends BaseController
             'query' => '',
             'errors' => [],
         ]);
+    }
+
+    public function templates(): string
+    {
+        $catalog = new ChedCurriculumCatalog();
+        $programId = $this->request->getGet('program');
+        $programId = is_string($programId) ? $programId : '';
+
+        return view('student/subjects/templates', [
+            'programs' => $catalog->all(),
+            'nvsuCampuses' => (new NvsuProgramCatalog())->all(),
+            'shsGroups' => (new DepedShsCatalog())->groups(),
+            'program' => $programId === '' ? null : $catalog->find($programId),
+            'programId' => $programId,
+            'errors' => session()->getFlashdata('errors') ?? [],
+            'shsErrors' => session()->getFlashdata('shs_errors') ?? [],
+        ]);
+    }
+
+    public function importTemplate(): RedirectResponse
+    {
+        $programId = $this->request->getPost('program_id');
+        $courseIds = $this->request->getPost('course_ids');
+
+        if (! is_string($programId) || (new ChedCurriculumCatalog())->find($programId) === null) {
+            return redirect()->to(site_url('student/subjects/templates'))
+                ->with('errors', ['Choose a curriculum template from the list.']);
+        }
+
+        if (! is_array($courseIds) || count($courseIds) > 100
+            || array_filter($courseIds, static fn ($id): bool => ! is_string($id)) !== []) {
+            return redirect()->to(site_url('student/subjects/templates?program=' . rawurlencode($programId)))
+                ->with('errors', ['Select courses from the curriculum preview.']);
+        }
+
+        $result = (new ChedCurriculumImportService())->import($programId, array_values($courseIds), $this->ownerId());
+        if (! $result['ok']) {
+            return redirect()->to(site_url('student/subjects/templates?program=' . rawurlencode($programId)))
+                ->with('errors', ['Select at least one course from this template. If you selected courses, try again.']);
+        }
+
+        $message = $result['imported'] . ' course' . ($result['imported'] === 1 ? '' : 's') . ' added to your subjects.';
+        if ($result['duplicates'] > 0) {
+            $message .= ' ' . $result['duplicates'] . ' duplicate' . ($result['duplicates'] === 1 ? ' was' : 's were') . ' skipped.';
+        }
+
+        return redirect()->to(site_url('student/subjects'))
+            ->with('success', $message);
+    }
+
+    public function importShsSubjects(): RedirectResponse
+    {
+        $subjectIds = $this->request->getPost('subject_ids');
+        if (! is_array($subjectIds) || count($subjectIds) > 150
+            || array_filter($subjectIds, static fn ($id): bool => ! is_string($id)) !== []) {
+            return redirect()->to(site_url('student/subjects/templates#deped-shs'))
+                ->with('shs_errors', ['Select subjects from the DepEd SHS list.']);
+        }
+
+        $result = (new DepedShsImportService())->import(array_values($subjectIds), $this->ownerId());
+        if (! $result['ok']) {
+            return redirect()->to(site_url('student/subjects/templates#deped-shs'))
+                ->with('shs_errors', ['Select at least one subject from the DepEd SHS list.']);
+        }
+
+        $message = $result['imported'] . ' SHS subject' . ($result['imported'] === 1 ? '' : 's') . ' added to your subjects.';
+        if ($result['duplicates'] > 0) {
+            $message .= ' ' . $result['duplicates'] . ' duplicate' . ($result['duplicates'] === 1 ? ' was' : 's were') . ' skipped.';
+        }
+
+        return redirect()->to(site_url('student/subjects'))->with('success', $message);
     }
 
     public function search(): string

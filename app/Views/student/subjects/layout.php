@@ -15,30 +15,31 @@
     $currentPath = trim(service('uri')->getPath(), '/');
     $currentPath = preg_replace('#^index\.php/?#', '', $currentPath);
     $primaryLinks = [
-        ['label' => 'Focus', 'path' => 'student/priority', 'icon' => 'target'],
-        ['label' => 'Plan', 'path' => 'student/plan', 'icon' => 'calendar'],
-        ['label' => 'Timer', 'path' => 'student/sessions', 'icon' => 'stopwatch'],
-        ['label' => 'Guide', 'path' => 'student#guide-heading', 'icon' => 'book-2'],
-        ['label' => 'Aralytics', 'path' => 'student/aralytics', 'icon' => 'chart-2'],
+        ['label' => 'Focus', 'path' => 'student/priority', 'icon' => 'target', 'tour' => 'focus'],
+        ['label' => 'Plan', 'path' => 'student/plan', 'icon' => 'calendar', 'tour' => 'plan'],
+        ['label' => 'Timer', 'path' => 'student/sessions', 'icon' => 'stopwatch', 'tour' => 'timer'],
+        ['label' => 'Guide', 'path' => 'student#guide-heading', 'icon' => 'book-2', 'tour' => 'guide'],
+        ['label' => 'Aralytics', 'path' => 'student/aralytics', 'icon' => 'chart-2', 'tour' => 'aralytics'],
     ];
     ?>
     <header class="app-header">
         <a class="brand-lockup" href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav aria-label="duno. — Your Little Study Buddy. Home">
-            <span class="brand-wordmark">duno.</span>
+            <span class="brand-wordmark" data-tour-target="start">duno.</span>
             <span class="brand-tagline">Your Little Study Buddy.</span>
         </a>
         <nav class="workspace-nav" aria-label="Primary student navigation">
             <?php foreach ($primaryLinks as $link): ?>
                 <?php $isGuide = $link['label'] === 'Guide'; $isCurrent = ! $isGuide && ($currentPath === $link['path'] || str_starts_with($currentPath, $link['path'] . '/')); ?>
-                <a href="<?= esc(site_url($link['path'])) ?>"<?= $isCurrent ? ' aria-current="page"' : '' ?><?= $isGuide ? ' data-guide-nav' : '' ?>>
+                <a href="<?= esc(site_url($link['path'])) ?>"<?= $isCurrent ? ' aria-current="page"' : '' ?><?= $isGuide ? ' data-guide-nav' : '' ?> data-tour-target="<?= esc($link['tour']) ?>">
                     <span class="solar-icon solar-icon-<?= esc($link['icon']) ?>" aria-hidden="true"></span><?= esc($link['label']) ?>
                 </a>
             <?php endforeach ?>
         </nav>
         <details class="student-menu" data-student-menu>
-            <summary aria-label="Open more student pages"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span>More</span></summary>
+            <summary aria-label="Open more student pages" data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span>More</span></summary>
             <nav aria-label="More student pages">
                 <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav>Home</a>
+                <a href="<?= esc(site_url('student#app-tour')) ?>">Show app tour</a>
                 <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') ? ' aria-current="page"' : '' ?>>Subjects</a>
                 <a href="<?= esc(site_url('student/topics')) ?>"<?= str_contains($currentPath, 'topics') ? ' aria-current="page"' : '' ?>>Topics</a>
                 <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>>Private check-ins</a>
@@ -50,6 +51,9 @@
         </details>
     </header>
     <main id="main-content">
+        <?php if ($dailyStreakReward = session()->getFlashdata('daily_streak_reward')): ?>
+            <p class="notice streak-reward-notice" role="status">Daily streak reward: +<?= esc((string) $dailyStreakReward['xp']) ?> XP. Your streak is now <?= esc((string) $dailyStreakReward['streak_days']) ?> <?= $dailyStreakReward['streak_days'] === 1 ? 'day' : 'days' ?>.</p>
+        <?php endif ?>
         <?php if ($success = session()->getFlashdata('success')): ?>
             <p class="notice" role="status"><?= esc($success) ?></p>
         <?php endif ?>
@@ -59,8 +63,17 @@
         <?= $this->renderSection('content') ?>
     </main>
 </div>
-<footer class="icon-credit"><small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small></footer>
+<script src="<?= esc(duno_asset('assets/js/onboarding-tour.js')) ?>" defer></script>
+<footer class="icon-credit app-footer">
+    <span class="app-footer-brand">duno.</span>
+    <span>Your Little Study Buddy.</span>
+    <small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small>
+</footer>
 <?= $this->include('partials/mobile_bottom_nav') ?>
+<?= view('partials/app_tour', [
+    'appTourUserId' => (string) auth()->id(),
+    'appTourAutoStart' => true,
+]) ?>
 <?php if ($levelUp = session()->getFlashdata('level_up')): ?>
     <?= $this->include('student/partials/level_up_dialog', ['levelUp' => $levelUp]) ?>
 <?php endif ?>
