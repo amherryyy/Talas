@@ -1,7 +1,7 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<p><a href="<?= esc(site_url('student/subjects')) ?>">Back to subjects</a></p>
+<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubjects')) ?></a></p>
 <h1>Program and curriculum catalog</h1>
 <p>This page has NVSU's program directory and nine source-linked reference course lists, plus importable DepEd Senior High School subjects and CHED curriculum samples. To add subjects to Duno, jump to <a href="#nvsu-curricula">NVSU course lists</a>, <a href="#deped-shs">DepEd SHS subjects</a>, or <a href="#ched-curriculum">CHED templates</a>.</p>
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<?php $htmlLocale = match (service('request')->getLocale()) { 'fil' => 'fil-PH', 'taglish' => 'en-PH', default => 'en' }; ?>
+<html lang="<?= esc($htmlLocale) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,6 +24,7 @@
 <body class="duno-role">
 <a class="skip-link" href="#main-content">Skip to main content</a>
 <main id="main-content">
+    <?= view('partials/language_switcher') ?>
     <a class="brand" href="<?= esc(site_url()) ?>" aria-label="duno. home">duno.</a>
     <p class="tagline">Your Little Study Buddy.</p>
     <h1><?= esc($heading) ?></h1>

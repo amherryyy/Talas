@@ -5,6 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 $routes->setAutoRoute(false);
 $routes->get('/', 'Home::index');
+$routes->post('language', 'LanguagePreference::update', ['as' => 'language.update']);
 
 $routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection $routes): void {
     service('auth')->routes($routes, ['only' => ['register', 'login']]);

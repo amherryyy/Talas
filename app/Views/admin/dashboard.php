@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en">
+<?php $htmlLocale = match (service('request')->getLocale()) { 'fil' => 'fil-PH', 'taglish' => 'en-PH', default => 'en' }; ?>
+<html lang="<?= esc($htmlLocale) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,6 +14,7 @@
 <div class="shell">
     <header class="admin-header">
         <a class="admin-brand" href="<?= esc(site_url()) ?>" aria-label="duno. home"><span class="wordmark">duno.</span><span class="muted">Admin</span></a>
+        <?= view('partials/language_switcher') ?>
         <form method="post" action="<?= esc(site_url('logout')) ?>">
             <?= csrf_field() ?>
             <button type="submit">Sign out</button>

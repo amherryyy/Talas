@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1>Edit study session</h1>
-<p><a href="<?= esc(site_url('student/sessions')) ?>">Back to study sessions</a></p>
+<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/sessions')) ?>"><span aria-hidden="true">←</span> Back to study sessions</a></p>
 <p class="muted">Completed <?= esc(date('M j, Y g:i a', strtotime($studySession['completed_at']))) ?>. The completion time stays unchanged when you edit this record.</p>
 
 <?php if ($errors !== []): ?>

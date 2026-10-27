@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en">
+<?php $htmlLocale = match (service('request')->getLocale()) { 'fil' => 'fil-PH', 'taglish' => 'en-PH', default => 'en' }; ?>
+<html lang="<?= esc($htmlLocale) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,17 +10,21 @@
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
 </head>
 <body class="duno-workspace has-mobile-navigation">
-<a class="skip-link" href="#main-content">Skip to main content</a>
+<a class="skip-link" href="#main-content"><?= esc(lang('App.skipMain')) ?></a>
 <div class="shell">
     <?php
     $currentPath = trim(service('uri')->getPath(), '/');
     $currentPath = preg_replace('#^index\.php/?#', '', $currentPath);
+    $isTopicPage = str_contains($currentPath, '/topics');
+    $isMorePage = str_starts_with($currentPath, 'student/subjects')
+        || str_starts_with($currentPath, 'student/topics')
+        || str_starts_with($currentPath, 'student/check-ins');
     $primaryLinks = [
-        ['label' => 'Focus', 'path' => 'student/priority', 'icon' => 'target', 'tour' => 'focus'],
-        ['label' => 'Plan', 'path' => 'student/plan', 'icon' => 'calendar', 'tour' => 'plan'],
-        ['label' => 'Timer', 'path' => 'student/sessions', 'icon' => 'stopwatch', 'tour' => 'timer'],
-        ['label' => 'Guide', 'path' => 'student#guide-heading', 'icon' => 'book-2', 'tour' => 'guide'],
-        ['label' => 'Aralytics', 'path' => 'student/aralytics', 'icon' => 'chart-2', 'tour' => 'aralytics'],
+        ['label' => lang('App.focus'), 'path' => 'student/priority', 'icon' => 'target', 'tour' => 'focus'],
+        ['label' => lang('App.plan'), 'path' => 'student/plan', 'icon' => 'calendar', 'tour' => 'plan'],
+        ['label' => lang('App.timer'), 'path' => 'student/sessions', 'icon' => 'stopwatch', 'tour' => 'timer'],
+        ['label' => lang('App.guide'), 'path' => 'student#guide-heading', 'icon' => 'book-2', 'tour' => 'guide'],
+        ['label' => lang('App.aralytics'), 'path' => 'student/aralytics', 'icon' => 'chart-2', 'tour' => 'aralytics'],
     ];
     ?>
     <header class="app-header">
@@ -27,7 +32,7 @@
             <span class="brand-wordmark" data-tour-target="start">duno.</span>
             <span class="brand-tagline">Your Little Study Buddy.</span>
         </a>
-        <nav class="workspace-nav" aria-label="Primary student navigation">
+        <nav class="workspace-nav" aria-label="<?= esc(lang('App.primaryNav')) ?>">
             <?php foreach ($primaryLinks as $link): ?>
                 <?php $isGuide = $link['label'] === 'Guide'; $isCurrent = ! $isGuide && ($currentPath === $link['path'] || str_starts_with($currentPath, $link['path'] . '/')); ?>
                 <a href="<?= esc(site_url($link['path'])) ?>"<?= $isCurrent ? ' aria-current="page"' : '' ?><?= $isGuide ? ' data-guide-nav' : '' ?> data-tour-target="<?= esc($link['tour']) ?>">
@@ -36,23 +41,24 @@
             <?php endforeach ?>
         </nav>
         <details class="student-menu" data-student-menu>
-            <summary aria-label="Open more student pages" data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span>More</span></summary>
-            <nav aria-label="More student pages">
-                <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav>Home</a>
-                <a href="<?= esc(site_url('student#app-tour')) ?>">Show app tour</a>
-                <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') ? ' aria-current="page"' : '' ?>>Subjects</a>
-                <a href="<?= esc(site_url('student/topics')) ?>"<?= str_contains($currentPath, 'topics') ? ' aria-current="page"' : '' ?>>Topics</a>
-                <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>>Private check-ins</a>
+            <summary aria-label="<?= esc(lang('App.openMore')) ?>"<?= $isMorePage ? ' aria-current="page"' : '' ?> data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span><?= esc(lang('App.more')) ?></span></summary>
+            <nav aria-label="<?= esc(lang('App.moreNav')) ?>">
+                <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav><?= esc(lang('App.home')) ?></a>
+                <a href="<?= esc(site_url('student#app-tour')) ?>"><?= esc(lang('App.showTour')) ?></a>
+                <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') && ! $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.subjects')) ?></a>
+                <a href="<?= esc(site_url('student/topics')) ?>"<?= str_starts_with($currentPath, 'student/topics') || $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.topics')) ?></a>
+                <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>><?= esc(lang('App.privateCheckins')) ?></a>
+                <?= view('partials/language_switcher') ?>
                 <form method="post" action="<?= esc(site_url('logout')) ?>">
                     <?= csrf_field() ?>
-                    <button type="submit">Sign out</button>
+                    <button type="submit"><?= esc(lang('App.signOut')) ?></button>
                 </form>
             </nav>
         </details>
     </header>
     <main id="main-content">
         <?php if ($dailyStreakReward = session()->getFlashdata('daily_streak_reward')): ?>
-            <p class="notice streak-reward-notice" role="status">Daily streak reward: +<?= esc((string) $dailyStreakReward['xp']) ?> XP. Your streak is now <?= esc((string) $dailyStreakReward['streak_days']) ?> <?= $dailyStreakReward['streak_days'] === 1 ? 'day' : 'days' ?>.</p>
+            <p class="notice streak-reward-notice" role="status"><?= esc(lang('App.dailyReward', [$dailyStreakReward['xp'], $dailyStreakReward['streak_days'], lang($dailyStreakReward['streak_days'] === 1 ? 'App.day' : 'App.days')])) ?></p>
         <?php endif ?>
         <?php if ($success = session()->getFlashdata('success')): ?>
             <p class="notice" role="status"><?= esc($success) ?></p>

@@ -2,8 +2,8 @@
 
 <?= $this->section('content') ?>
 <h1>Topics in <?= esc($subject['name']) ?></h1>
-<p><a href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>">Back to subject</a></p>
-<p><a class="button" href="<?= esc(site_url('student/subjects/' . $subject['id'] . '/topics/new')) ?>">Add a topic</a></p>
+<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubject')) ?></a></p>
+<p><a class="button" href="<?= esc(site_url('student/subjects/' . $subject['id'] . '/topics/new')) ?>"><?= esc(lang('App.addTopic')) ?></a></p>
 
 <?php if ($topics === []): ?>
     <p class="muted">No topics yet. Add one to track what you plan to study.</p>

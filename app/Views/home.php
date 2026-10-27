@@ -43,7 +43,8 @@ $tools = [
 $joinUrl = site_url('register');
 ?>
 <!doctype html>
-<html lang="en">
+<?php $htmlLocale = match (service('request')->getLocale()) { 'fil' => 'fil-PH', 'taglish' => 'en-PH', default => 'en' }; ?>
+<html lang="<?= esc($htmlLocale) ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -292,6 +293,7 @@ $joinUrl = site_url('register');
                     <?php if ($isStudent): ?>
                         <a href="<?= esc(site_url('student#app-tour')) ?>">Show app tour</a>
                     <?php endif ?>
+                    <?= view('partials/language_switcher') ?>
                     <?php if (! $isLoggedIn): ?>
                         <a href="<?= esc(site_url('register')) ?>">Create account</a>
                         <a href="<?= esc(site_url('login')) ?>">Sign in</a>

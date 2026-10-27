@@ -182,6 +182,32 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### R-08 auth layout and interactive Duno mascot
+
+```text
+Date / story: 2026-10-27 / refresh login and registration presentation and mascot interaction
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested more mascot animation/interaction and supplied a mobile login/register reference.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the shared Shield auth layout and existing auth templates; reshaped the shared auth presentation around the existing Duno mascot, responsive form layout, full-width primary submit actions, outlined alternate auth links, and an accessible click/tap/keyboard mascot interaction with short encouragement messages.
+Suggestions or code retained: Login/register routes, Shield form fields, validation, CSRF, and server auth handling remain in place. The mascot uses its existing static PNG and CSS animation; no new dependency, external service, or auth flow was added. Global reduced-motion styles shorten the animation.
+Student changes and decisions: Applied the reference's centered mascot, clear action hierarchy, and restrained white-space treatment in Duno's approved palette and naming.
+How the student verified and can explain the result: No automated or browser test was run. Browser review at phone, tablet, and desktop widths remains pending. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 button-style return links
+
+```text
+Date / story: 2026-10-27 / style student return links as buttons
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to audit and change plain-text “Back to …” links across the project into button-style controls.
+Assistance used (explanation, planning, code draft, debugging, review): Audited student navigation, responsive styles, keyboard focus, and the onboarding tour; styled all seven subject, topic, catalog, and session return anchors as secondary buttons; added a page-dimming spotlight around the active tutorial target, modal focus management, better tutorial-card placement, clearer More-section state, and larger touch targets for mobile and coarse-pointer tablet navigation.
+Suggestions or code retained: Return controls remain links because they navigate to specific destinations. Error-page recovery controls already have button styling and were left intact. The tour makes the obscured page regions inert, traps focus in the dialog, returns focus when closed, and respects reduced motion. No dependencies or routes changed.
+Student changes and decisions: The owner asked for a project-wide navigation/accessibility pass, visible onboarding emphasis, and mobile/tablet improvements; existing Home navigation is retained without adding duplicate Home controls.
+How the student verified and can explain the result: Source searches identified all student return links and navigation breakpoints. No automated tests or browser/screen-reader review were run; those reviews remain pending. `git diff --check` passed. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 
 
 ### R-14 DepEd Senior High School subject catalog
@@ -1114,5 +1140,18 @@ Assistance used (explanation, planning, code draft, debugging, review): Extracte
 Suggestions or code retained: Added BSIS Business Analytics and Service Management, BSIT Web and Mobile App Development and Network Design and Management, and BSCS Game Development and Robotics. The attached Business Analytics filename says BSIT, but the PDF cover says BSIS, so the template follows the document title. All source copies state Effective S.Y. 2019-2020; the curricula cite CMO 25 s. 2015, and the BSIT documents also cite CMO 20 s. 2013 for general education. Lists preserve course codes and titles but not semester placement. The copies are historical references and not claims of current school approval. PDFs were not copied to the repository.
 Student changes and decisions: Kept CHED samples separate from NVSU courses, retained the user's source files outside Git, and made import remain additive through the existing catalog flow. The accumulated source/docs/tests are included in the authorized release commit; there is no schema change for these catalog additions.
 How the student verified and can explain the result: The accumulated PHPUnit suite passed (85 tests, 860 assertions); Playwright passed 3/3 responsive tests, including the NVSU Web and Mobile App Development preview/source link; changed PHP and JavaScript syntax checks passed; and the staged diff passed `git diff --cached --check`. Composer validation passed. Composer audit found no known advisories in the lockfile, but Packagist was unreachable, so current advisory data could not be confirmed. InfinityFree upload and hosted migration are still pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-15 interface language preference
+
+```text
+Date / story: 2026-10-27 / browser language selector and initial localization
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested English (default), Taglish, and Tagalog/Filipino interface options, then selected browser-only preference storage.
+Assistance used (explanation, planning, code draft, debugging, review): Added a whitelisted locale filter and CSRF-protected language route, browser cookie preference, language catalogs, shared selector, and initial translations for navigation, authentication, onboarding, and subject actions; documented deployment review.
+Suggestions or code retained: Official program/course names and user-entered data remain unchanged. The localization is initial coverage and does not yet translate every help paragraph, validation error, or catalog description.
+Student changes and decisions: English remains default; preference is per browser and needs no database migration.
+How the student verified and can explain the result: PHP syntax checks passed for changed PHP files, `node --check public/assets/js/onboarding-tour.js` passed, and `git diff --check` passed. No automated tests or browser review have been run. No files were staged, committed, or deployed.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

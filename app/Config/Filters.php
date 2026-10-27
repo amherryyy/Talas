@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Filters\ExclusiveRoleFilter;
+use App\Filters\LanguagePreferenceFilter;
 use App\Filters\StudentStreakFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
@@ -38,6 +39,7 @@ class Filters extends BaseFilters
         'performance'    => PerformanceMetrics::class,
         'exclusive-role' => ExclusiveRoleFilter::class,
         'student-streak' => StudentStreakFilter::class,
+        'language-preference' => LanguagePreferenceFilter::class,
     ];
 
     /**
@@ -77,6 +79,7 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             // 'honeypot',
+            'language-preference',
             'csrf',
             // 'invalidchars',
         ],

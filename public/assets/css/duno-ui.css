@@ -94,6 +94,7 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .workspace-nav .solar-icon { width: 1.1rem; height: 1.1rem; }
 .student-menu { position: relative; flex: none; }
 .student-menu > summary { border-color: var(--duno-line); background: rgb(255 255 255 / 76%); color: var(--duno-ink); cursor: pointer; list-style: none; }
+.student-menu > summary[aria-current="page"] { border-color: #ded8ff; background: var(--duno-lavender); color: var(--duno-purple-deep); }
 .student-menu > summary::-webkit-details-marker { display: none; }
 .student-menu > summary .solar-icon { width: 1.15rem; height: 1.15rem; }
 .student-menu[open] > summary { border-color: #d7d0ff; background: var(--duno-lavender); color: var(--duno-purple-deep); }
@@ -131,6 +132,7 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .duno-admin h2 { margin: 1.9rem 0 .45rem; font-size: clamp(1.2rem, 2.4vw, 1.55rem); font-weight: 710; letter-spacing: -.04em; line-height: 1.2; }
 .duno-workspace h3 { letter-spacing: -.025em; }
 .duno-workspace p { max-width: 68ch; }
+.duno-workspace .back-navigation { max-width: none; margin: .8rem 0 1rem; }
 .duno-workspace a,
 .duno-admin a { color: var(--duno-purple-deep); text-underline-offset: .18em; }
 .duno-workspace a:focus-visible,
@@ -814,10 +816,13 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 .app-footer small { flex-basis: 100%; margin-top: .12rem; font-size: .7rem; }
 .app-footer a { color: inherit; }
 
+.app-tour-shade[hidden] { display: none !important; }
+.app-tour-shade { position: fixed; z-index: 49; inset: 0; pointer-events: none; }
+.app-tour-shade > span { position: fixed; display: block; background: rgb(31 27 54 / 66%); backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); }
 .app-tour[hidden] { display: none !important; }
 .app-tour {
     position: fixed;
-    z-index: 60;
+    z-index: 70;
     right: clamp(1rem, 3vw, 2rem);
     bottom: 1.25rem;
     width: min(26rem, calc(100vw - 2rem));
@@ -836,19 +841,37 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
 @keyframes tour-arrive { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: translateY(0); } }
 .app-tour-topline { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .app-tour-topline .workspace-kicker { margin: 0; font-size: .7rem; }
-.app-tour-skip { min-height: 2rem !important; padding: .2rem .45rem !important; border-color: transparent !important; color: var(--duno-muted) !important; background: transparent !important; box-shadow: none !important; font-size: .78rem !important; }
+.app-tour-skip { min-height: 2.75rem !important; padding: .45rem .6rem !important; border-color: transparent !important; color: var(--duno-muted) !important; background: transparent !important; box-shadow: none !important; font-size: .78rem !important; }
 .app-tour-skip:hover { color: var(--duno-purple-deep) !important; text-decoration: underline; }
 .app-tour h2 { margin: .55rem 0 .35rem; font-size: 1.35rem; }
+.app-tour h2:focus { outline: 3px solid var(--duno-purple); outline-offset: 3px; }
 .app-tour-copy { margin: 0; color: var(--duno-muted); font-size: .9rem; line-height: 1.55; }
 .app-tour-actions { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-top: 1rem; }
-.app-tour-actions button { min-height: 2.45rem; padding: .48rem .8rem; font-size: .84rem; }
+.app-tour-actions button { min-height: 2.75rem; padding: .55rem .85rem; font-size: .84rem; }
 .app-tour-actions button:disabled { opacity: 0; pointer-events: none; }
 [data-tour-target].is-tour-highlighted {
     position: relative;
-    z-index: 2;
-    outline: 3px solid var(--duno-purple);
-    outline-offset: 4px;
-    filter: drop-shadow(0 0 .45rem rgb(116 101 216 / 32%));
+    z-index: 51;
+    outline: 3px solid #fff;
+    outline-offset: 5px;
+    box-shadow: 0 0 0 9px var(--duno-purple), 0 14px 34px rgb(20 17 43 / 32%);
+}
+.duno-workspace .app-header.is-tour-target-parent,
+.duno-workspace .student-bottom-nav.is-tour-target-parent { z-index: 52; }
+
+@media (min-width: 52.01rem) and (max-width: 68rem) {
+    .duno-workspace .app-header { gap: .55rem; padding-inline: .65rem; }
+    .duno-workspace .brand-wordmark { font-size: 1.52rem; }
+    .duno-workspace .brand-tagline { font-size: .61rem; }
+    .duno-workspace .workspace-nav { gap: 0; }
+    .duno-workspace .workspace-nav a { gap: .3rem; padding-inline: .48rem; font-size: .78rem; }
+    .duno-workspace .student-menu > summary { gap: .3rem; padding-inline: .52rem; font-size: .78rem; }
+}
+@media (hover: none) and (pointer: coarse) {
+    .duno-workspace .workspace-nav a,
+    .duno-workspace .student-menu > summary,
+    .duno-workspace .student-menu nav a,
+    .duno-workspace .student-menu nav button { min-height: 2.75rem; }
 }
 
 @media (max-width: 52rem) {
@@ -878,4 +901,124 @@ body.duno-landing { background: var(--duno-canvas); color: var(--duno-ink); font
     .duno-workspace h3 { break-after: avoid; }
     .duno-workspace tr { break-inside: avoid; }
     .duno-workspace a { color: #000; text-decoration: none; }
+}
+
+/* Auth pages: centered mascot and clear form actions inspired by the supplied mobile reference. */
+body.duno-auth {
+    display: flex;
+    min-height: 100svh;
+    flex-direction: column;
+    padding: clamp(.85rem, 2.6vw, 1.65rem);
+    background: #fff;
+}
+.duno-auth .duno-brand {
+    flex: none;
+    margin: .15rem auto 0;
+    text-decoration: none;
+}
+.duno-auth main.container {
+    flex: 1;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(1.5rem, 5vw, 4.5rem);
+    padding: clamp(.9rem, 3vw, 2.25rem) 0;
+}
+.duno-auth .auth-aside {
+    min-width: 0;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+    gap: .9rem;
+    overflow: visible;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    text-align: center;
+}
+.auth-mascot-stage { position: relative; display: grid; width: min(100%, 19rem); justify-items: center; }
+.auth-mascot-orbit { position: absolute; top: 50%; left: 50%; display: block; width: 13.5rem; height: 13.5rem; border: 1px solid rgb(116 101 216 / 16%); border-radius: 50%; transform: translate(-50%, -50%); }
+.auth-mascot-orbit-two { width: 10.5rem; height: 10.5rem; border-color: rgb(255 218 146 / 56%); }
+.auth-mascot-button { position: relative; z-index: 1; display: grid; width: min(100%, 17rem); aspect-ratio: 1; place-items: center; padding: .65rem; border: 0; border-radius: 50%; background: radial-gradient(circle, rgb(237 233 254 / 72%) 0, rgb(255 255 255 / 0%) 70%); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.duno-auth .auth-mascot-button:focus-visible { outline: 3px solid var(--duno-purple); outline-offset: 4px; box-shadow: none; }
+.auth-mascot-button img { position: relative; display: block; width: min(100%, 15rem); height: auto; filter: drop-shadow(0 .8rem 1rem rgb(75 61 134 / 18%)); animation: auth-mascot-float 4.8s ease-in-out infinite; transition: filter 180ms ease; }
+.auth-mascot-button::before,
+.auth-mascot-button::after { position: absolute; z-index: 2; color: var(--duno-gold); content: "✦"; font-size: 1.45rem; opacity: 0; transform: scale(.55) rotate(-22deg); transition: opacity 180ms ease, transform 220ms ease; }
+.auth-mascot-button::before { top: 13%; right: 14%; }
+.auth-mascot-button::after { bottom: 18%; left: 12%; color: var(--duno-purple); font-size: 1.1rem; }
+.auth-mascot-button:hover img,
+.auth-mascot-button:focus-visible img { filter: drop-shadow(0 1.05rem 1.15rem rgb(75 61 134 / 23%)); }
+.auth-mascot-button:hover::before,
+.auth-mascot-button:hover::after,
+.auth-mascot-button:focus-visible::before,
+.auth-mascot-button:focus-visible::after,
+.auth-mascot-button.is-responding::before,
+.auth-mascot-button.is-responding::after { opacity: 1; transform: scale(1) rotate(0); }
+.auth-mascot-button.is-responding img { animation: auth-mascot-cheer 720ms cubic-bezier(.2, .9, .25, 1.25) both; }
+@keyframes auth-mascot-float { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-.55rem) rotate(1deg); } }
+@keyframes auth-mascot-cheer { 0%, 100% { transform: translateY(0) rotate(0) scale(1); } 30% { transform: translateY(-.85rem) rotate(-8deg) scale(1.06); } 58% { transform: translateY(.12rem) rotate(6deg) scale(.98); } 78% { transform: translateY(-.25rem) rotate(-3deg) scale(1.02); } }
+.auth-mascot-message { min-height: 1.5em; margin: -.2rem 0 0; color: var(--duno-purple-deep); font-size: .9rem; font-weight: 680; }
+.duno-auth .auth-aside-copy { max-width: 31rem; }
+.duno-auth .auth-aside-copy .workspace-kicker { margin: 0 0 .35rem; color: var(--duno-purple-deep); }
+.duno-auth .auth-aside h1 { max-width: 16ch; margin: 0 auto .55rem; font-size: clamp(2rem, 3.4vw, 3rem); }
+.duno-auth .auth-aside-copy > p:not(.workspace-kicker) { max-width: 36ch; margin: 0 auto; color: var(--duno-muted); }
+.duno-auth .auth-form-region { justify-content: center; }
+.duno-auth .card { width: 100%; border: 1px solid #efedf6; border-radius: 1.35rem; background: #fff; box-shadow: 0 18px 48px rgb(47 39 95 / 7%); }
+.duno-auth .card-body { padding: clamp(1.35rem, 3vw, 2.15rem); }
+.duno-auth .card-title { margin-bottom: 1.2rem; font-size: clamp(1.75rem, 3vw, 2.15rem); }
+.duno-auth .form-control { min-height: 3.25rem; border-color: #d9d6e4; border-radius: .9rem; }
+.duno-auth .form-control:hover { border-color: #ada5d4; }
+.duno-auth .form-check-label { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .45rem; }
+.duno-auth .d-grid { display: block; margin: 1.2rem 0 .35rem; }
+.auth-header { display: flex; width: min(100%, 76rem); align-items: center; justify-content: space-between; gap: 1rem; margin: 0 auto; }
+.language-switcher { display: grid; gap: .25rem; margin: 0; color: var(--duno-muted, #64677b); font-size: .76rem; font-weight: 700; }
+.language-switcher-controls { display: flex; align-items: center; gap: .35rem; }
+.language-switcher select { min-height: 2.35rem; max-width: 10.5rem; padding: .35rem .5rem; border: 1px solid var(--duno-line, #e3e1eb); border-radius: .65rem; color: var(--duno-ink, #2e2e3a); background: #fff; font: inherit; font-size: .78rem; }
+.language-switcher button { min-height: 2.35rem; padding: .35rem .55rem; border: 1px solid var(--duno-line, #e3e1eb); border-radius: .65rem; color: var(--duno-ink, #2e2e3a); background: #fff; font: inherit; font-size: .76rem; cursor: pointer; }
+.language-switcher button:hover { border-color: #c9c2f1; color: var(--duno-purple-deep, #5746bd); }
+.language-switcher select:focus-visible, .language-switcher button:focus-visible { outline: 3px solid var(--duno-purple, #7465d8); outline-offset: 2px; }
+.duno-auth .auth-header .duno-brand { margin: .3rem 0 0; }
+.duno-auth .auth-header .language-switcher { margin-left: auto; }
+.menu-panel .language-switcher, .student-menu nav .language-switcher { padding: .55rem .7rem; border-top: 1px solid var(--duno-line, #e3e1eb); }
+.menu-panel .language-switcher-controls, .student-menu nav .language-switcher-controls { align-items: stretch; flex-wrap: wrap; }
+.menu-panel .language-switcher select, .student-menu nav .language-switcher select { width: 100%; max-width: none; }
+.menu-panel .language-switcher button, .student-menu nav .language-switcher button { width: 100%; }
+.duno-auth .d-grid .btn { width: 100%; min-height: 3.55rem; border-radius: 999px; background: var(--duno-purple-deep); }
+.duno-auth .d-grid .btn:hover { background: #4635a4; }
+.duno-auth form > .d-grid + p.text-center { position: relative; margin: 1.15rem 0 0; padding: 1.15rem 0 0; border-top: 1px solid var(--duno-line); color: var(--duno-muted); }
+.duno-auth form > .d-grid + p.text-center::before { position: absolute; top: -.72em; left: 50%; padding: 0 .7rem; color: var(--duno-muted); background: #fff; content: "or"; font-size: .85rem; transform: translateX(-50%); }
+.duno-auth form > .d-grid + p.text-center a { display: flex; min-height: 3.4rem; align-items: center; justify-content: center; margin-top: .65rem; padding: .65rem 1rem; border: 1px solid #dfe3ed; border-radius: 999px; color: var(--duno-ink); background: #fff; font-weight: 730; text-decoration: none; transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease; }
+.duno-auth form > .d-grid + p.text-center a:hover { border-color: #d4cef5; color: var(--duno-purple-deep); background: #f8f6ff; }
+.duno-auth form > .d-grid + p.text-center a:active { transform: translateY(1px); }
+
+@media (max-width: 52rem) {
+    .auth-header { align-items: flex-start; }
+    .auth-header .language-switcher label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+    body.duno-auth { padding: .85rem clamp(.85rem, 4vw, 1.4rem); }
+    .duno-auth .duno-brand { margin-top: .2rem; }
+    .duno-auth main.container { grid-template-columns: minmax(0, 1fr); gap: .7rem; padding: .35rem 0 1.2rem; }
+    .duno-auth .auth-aside { gap: .25rem; }
+    .auth-mascot-stage { width: min(100%, 13rem); }
+    .auth-mascot-orbit { width: 10.5rem; height: 10.5rem; }
+    .auth-mascot-orbit-two { width: 8.3rem; height: 8.3rem; }
+    .auth-mascot-button { width: min(100%, 11.5rem); padding: .4rem; }
+    .auth-mascot-button img { width: min(100%, 10.5rem); }
+    .auth-mascot-message { margin-top: -.25rem; font-size: .82rem; }
+    .duno-auth .auth-aside-copy .workspace-kicker { margin-bottom: .2rem; font-size: .75rem; }
+    .duno-auth .auth-aside h1 { max-width: 20ch; margin-bottom: .35rem; font-size: clamp(1.55rem, 6vw, 2rem); }
+    .duno-auth .auth-aside-copy > p:not(.workspace-kicker) { max-width: 40ch; font-size: .9rem; }
+    .duno-auth .auth-form-region { align-items: stretch; }
+    .duno-auth .card { border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+    .duno-auth .card-body { padding: .6rem 0 0; }
+    .duno-auth .card-title { margin-bottom: 1rem; font-size: 1.65rem; }
+}
+
+@media (max-width: 24rem) {
+    .duno-auth .duno-wordmark { font-size: 1.9rem; }
+    .duno-auth .duno-tagline { padding-left: .55rem; font-size: .7rem; }
+    .auth-mascot-stage { width: min(100%, 11rem); }
+    .auth-mascot-button { width: 10rem; }
 }
