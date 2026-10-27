@@ -182,6 +182,8 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+
+
 ### R-14 DepEd Senior High School subject catalog
 
 ```text
@@ -205,6 +207,19 @@ Assistance used (explanation, planning, code draft, debugging, review): Research
 Suggestions or code retained: NVSU undergraduate degree programs and majors are listed under their Bayombong or Bambang campus and college, with links to the university source pages. The Bayombong teacher-education page repeats Early Childhood Education; the directory flags the correction to BSEd based on the CHED Region II recognized-program list. The three CHED sample templates stay separate; no NVSU curriculum is inferred from them.
 Student changes and decisions: The owner approved selecting a program, previewing terms and source/status information, importing selected courses, and keeping existing subjects. Imports add editable subjects to the signed-in student's own list and skip case-insensitive duplicate names. The NVSU directory is campus-specific, with separate Bayombong and Bambang entries. No migration, upload, or deployment was performed.
 How the student verified and can explain the result: The full PHPUnit suite passed with `--no-coverage` (80 tests, 774 assertions); the focused `StudentSubjectsTest` passed (10 tests, 118 assertions) using the XAMPP SQLite CLI extensions. Feature checks cover all three source previews, course labels, additive import, case-insensitive duplicates, catalog ID validation, owner boundaries, admin denial, and signed-out denial. PHP/JavaScript syntax, Composer validation, and `git diff --check` passed. The locked dependency audit reported no known advisories but Packagist was unreachable, so freshness could not be confirmed. Manual browser review remains deferred until the accumulated updates are uploaded to InfinityFree.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 catalog usage clarification
+
+```text
+Date / story: 2026-10-27 / clarify browse-only NVSU and importable SHS/CHED catalog flows
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked why the program and curriculum catalog entries could not be clicked or used and requested usage guidance.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the NVSU listing, DepEd SHS and CHED selection forms, import routes, and client-side selection controls; clarified browse-only NVSU entries, added page jump links and concise selection/import instructions for the two interactive sections.
+Suggestions or code retained: NVSU program titles remain non-selectable because this is a directory of offerings, not a verified course-by-course curriculum. Campus source links remain actionable. DepEd SHS core subjects begin selected; the CHED list previews only the three curated templates.
+Student changes and decisions: The catalog now distinguishes reference listings from importable subject lists. No data, imports, schema, or deployment was changed.
+How the student verified and can explain the result: Source review confirmed the existing controls and authenticated import routes. `git diff --check` passed; no browser test was run.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
@@ -1047,5 +1062,57 @@ Assistance used (explanation, planning, code draft, debugging, review): Inspecte
 Suggestions or code retained: The tour explains existing features only. It adds no database field, analytics, external service, or runtime dependency. Browser storage uses a student-specific key, and the guide remains available to replay after skip or completion.
 Student changes and decisions: The owner chose current-browser persistence. The interaction is part of the local update batch and will be visually reviewed after upload to InfinityFree.
 How the student verified and can explain the result: The full PHPUnit suite passed (77 tests, 717 assertions); PHP syntax passed for the changed controllers, views, and partials; JavaScript syntax passed for the tour and check-in prompt modules; and `git diff --check` passed. No browser check was run, per the owner's batch-review direction.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 accessible Back and Home navigation
+
+```text
+Date / story: 2026-10-27 / add accessible Back and Home controls across app pages
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked for accessible Back and Home navigation, then clarified that controls should appear only where needed and reuse existing navigation panels.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected public, student, admin, authentication, role, and HTML error views; added labeled Back controls, same-origin browser-history handling with route fallbacks, responsive focus styling, and focused view assertions; then removed duplicate shell-level student Back controls and matching form Cancel links where destination-specific Back links already existed.
+Suggestions or code retained: Student detail/form flows retain one destination-specific Back or Cancel anchor. Same-origin browser-history handling remains only on error-page recovery links. Brand links, menus, and role navigation panels provide Home on normal pages; error pages retain Back/Home recovery links.
+Student changes and decisions: Public, authentication, main student, and admin pages use their existing navigation for Home. Student details/forms retain one Back or Cancel action; the shared shell has no Back button. Error recovery controls remain. The controls are not deployed; the owner will review them with the accumulated update batch.
+How the student verified and can explain the result: The Playwright suite passed 3 tests against the local review app before this refinement. The owner identified the duplicate on the curriculum catalog. The duplicate shell control has been removed; this refinement has not been browser-tested. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 NVSU reference course lists
+
+```text
+Date / story: 2026-10-27 / add source-linked NVSU reference course lists
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to add as many course lists as possible, especially NVSU.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the catalog/import flow and official NVSU campus pages; examined an NVSU-hosted course-description and curriculum-map PDF; added source-coded reference lists and an owner-scoped selection/import flow for BS Forestry, BS Agroforestry, and BS Ecotourism; updated UI copy and catalog/deployment records.
+Suggestions or code retained: The source PDF is undated and does not confirm current approved semester sequences. The app labels its lists as references, leaves other NVSU programs browse-only, adds only selected course IDs, preserves existing subjects, and skips duplicate names. No migration or runtime network request was added.
+Student changes and decisions: The owner requested broad NVSU course coverage. Course codes are retained in the Duno subject names. The ECOTOUR Protected Area Management entry flags the conflicting source course numbers (35 in the map, 36 in the course-description section).
+How the student verified and can explain the result: Not tested or browser-reviewed in this task; the owner had asked to repair accumulated issues before another test. Manual review remains queued with the accumulated update batch. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 NVSU CAS links for BSCS, BSIT, and BSIS
+
+```text
+Date / story: 2026-10-27 / link NVSU CAS curriculum pages for computing programs
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to add IT, CS, and IS from the NVSU CAS website.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the official CAS program pages and their curriculum links; added direct per-program CAS links to the NVSU directory for BSCS, BSIT, and BSIS; updated requirement and deployment notes.
+Suggestions or code retained: CAS pages expose the curriculum/prospectus links, but the linked Google Drive PDF contents were inaccessible through the source reader and local network. No course names were inferred. Exact PDF contents are needed to build importable NVSU course lists.
+Student changes and decisions: The owner requested adding IT, CS, and IS. Existing NVSU directory offerings are now directly linked to their CAS curriculum pages.
+How the student verified and can explain the result: No tests or browser review were run. The pages and linked documents were checked using official CAS page content from web search. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 NVSU CAS curriculum transcription
+
+```text
+Date / story: 2026-10-27 / transcribe owner-supplied NVSU CAS curriculum PDFs
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied five NVSU curriculum PDFs after asking to add all courses that could be sourced, especially from NVSU.
+Assistance used (explanation, planning, code draft, debugging, review): Extracted searchable PDF text locally; identified program headers and effective year; transcribed course codes and titles into source-linked NVSU reference templates; updated catalog descriptions and project/deployment documentation.
+Suggestions or code retained: Added BSIS Business Analytics and Service Management, BSIT Web and Mobile App Development and Network Design and Management, and BSCS Game Development and Robotics. The attached Business Analytics filename says BSIT, but the PDF cover says BSIS, so the template follows the document title. All source copies state Effective S.Y. 2019-2020; the curricula cite CMO 25 s. 2015, and the BSIT documents also cite CMO 20 s. 2013 for general education. Lists preserve course codes and titles but not semester placement. The copies are historical references and not claims of current school approval. PDFs were not copied to the repository.
+Student changes and decisions: Kept CHED samples separate from NVSU courses, retained the user's source files outside Git, and made import remain additive through the existing catalog flow. The accumulated source/docs/tests are included in the authorized release commit; there is no schema change for these catalog additions.
+How the student verified and can explain the result: The accumulated PHPUnit suite passed (85 tests, 860 assertions); Playwright passed 3/3 responsive tests, including the NVSU Web and Mobile App Development preview/source link; changed PHP and JavaScript syntax checks passed; and the staged diff passed `git diff --cached --check`. Composer validation passed. Composer audit found no known advisories in the lockfile, but Packagist was unreachable, so current advisory data could not be confirmed. InfinityFree upload and hosted migration are still pending.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

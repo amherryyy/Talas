@@ -1,12 +1,16 @@
-document.querySelector('[data-template-select-all]')?.addEventListener('click', () => {
-    document.querySelectorAll('[data-template-course]').forEach((course) => {
-        course.checked = true;
+document.querySelectorAll('[data-template-select-all]').forEach((button) => {
+    button.addEventListener('click', (event) => {
+        event.currentTarget.closest('form')?.querySelectorAll('[data-template-course]').forEach((course) => {
+            course.checked = true;
+        });
     });
 });
 
-document.querySelector('[data-template-select-none]')?.addEventListener('click', () => {
-    document.querySelectorAll('[data-template-course]').forEach((course) => {
-        course.checked = false;
+document.querySelectorAll('[data-template-select-none]').forEach((button) => {
+    button.addEventListener('click', (event) => {
+        event.currentTarget.closest('form')?.querySelectorAll('[data-template-course]').forEach((course) => {
+            course.checked = false;
+        });
     });
 });
 

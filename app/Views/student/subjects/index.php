@@ -5,7 +5,7 @@
 <p>Manage the subjects you want to study. Only you can see this list.</p>
 <div class="actions">
     <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> Add a subject</a>
-    <a class="button secondary" href="<?= esc(site_url('student/subjects/templates')) ?>">Start from a CHED template</a>
+    <a class="button secondary" href="<?= esc(site_url('student/subjects/templates')) ?>">Program and curriculum catalog</a>
 </div>
 
 <?php if ($errors !== []): ?>

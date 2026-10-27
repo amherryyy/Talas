@@ -42,4 +42,18 @@ final class HomeTest extends CIUnitTestCase
         $this->assertStringNotContainsString('data-app-tour', $body);
         $response->assertDontSee('Welcome to CodeIgniter');
     }
+
+    public function testPublicAndAuthenticationPagesUseExistingHomeNavigationWithoutDuplicateControls(): void
+    {
+        foreach (['/', 'login', 'register'] as $path) {
+            $response = $this->get($path);
+            $response->assertOK();
+
+            $body = $response->response()->getBody();
+            $this->assertStringNotContainsString('aria-label="Page navigation"', $body);
+            $this->assertStringNotContainsString('aria-label="Go back to the previous page"', $body);
+            $this->assertStringNotContainsString('aria-label="Go to home"', $body);
+            $this->assertStringContainsString('aria-label="duno.', $body);
+        }
+    }
 }

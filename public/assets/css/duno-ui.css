@@ -300,7 +300,7 @@ body.duno-auth { display: grid; grid-template-rows: auto 1fr; padding: 1.5rem; }
 .duno-auth .duno-wordmark { display: block; color: var(--duno-purple); font-size: 2.2rem; font-weight: 850; letter-spacing: -.075em; line-height: .95; }
 .duno-auth .duno-tagline { display: block; width: auto; margin: 0; padding: 0 0 0 .75rem; border-bottom: 0; border-left: 2px solid var(--duno-gold); color: var(--duno-muted); font-size: .85rem; }
 .duno-auth main.container { display: grid; width: min(100%, 72rem); grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .9fr); align-items: stretch; gap: clamp(1.2rem, 4vw, 3rem); margin: 0 auto; padding: clamp(1rem, 4vw, 2.5rem) 0; }
-.duno-auth .auth-form-region { display: flex; min-width: 0; align-items: center; justify-content: center; }
+.duno-auth .auth-form-region { display: flex; min-width: 0; flex-direction: column; align-items: center; justify-content: center; }
 .duno-auth .container.d-flex { width: 100%; padding: 0; }
 .duno-auth .card { width: min(100%, 34rem); border: 1px solid var(--duno-line); border-radius: 1.35rem; background: var(--duno-paper); box-shadow: var(--duno-shadow); }
 .duno-auth .card-body { padding: clamp(1.4rem, 5vw, 2.4rem); }

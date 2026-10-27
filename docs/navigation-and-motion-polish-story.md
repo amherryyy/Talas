@@ -34,3 +34,9 @@ XP transitions use the signed-in student's existing owner-scoped study-session r
 ## Status
 
 Merged to `main` through PR #12. Verification was refreshed locally on 2026-10-26; browser review could not proceed for the reasons above. No files were staged, committed, pushed, or deployed during the follow-up.
+
+## Accessible Back and Home controls
+
+The owner clarified that Back and Home should not be repeated on every page. Public, authentication, student, and admin pages already have a brand link, menu, or role navigation panel for Home, so no extra Home button is rendered there. Student detail and form pages keep one destination-specific Back or Cancel link; the shared student shell adds no Back button, and redundant form Cancel links were removed where a matching Back link already exists. Error pages retain Back and Home recovery links because normal navigation may be unavailable.
+
+Focused view assertions now distinguish existing Home navigation from in-content Back links and guard against duplicate shell buttons. The owner identified duplicate controls in the curriculum catalog; the shell-level Back button and matching form Cancel links were removed where a destination-specific Back link already exists. This refinement has not yet received a new browser review.

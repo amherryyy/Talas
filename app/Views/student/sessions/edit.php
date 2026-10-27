@@ -34,7 +34,6 @@
     <p class="muted">Choose 1 to 480 minutes. The server checks that the subject and optional topic belong to you.</p>
     <div class="actions">
         <button type="submit">Save changes</button>
-        <a class="button secondary" href="<?= esc(site_url('student/sessions')) ?>">Cancel</a>
     </div>
 </form>
 <script src="<?= esc(duno_asset('assets/js/study-sessions.js')) ?>" defer></script>

@@ -5,7 +5,7 @@ namespace App\Services;
 /** NVSU undergraduate offerings transcribed from the university's campus pages. */
 class NvsuProgramCatalog
 {
-    /** @return list<array{campus: string, source: string, colleges: list<array{name: string, programs: list<array{title: string, majors?: list<string>, note?: string}>}>}> */
+    /** @return list<array{campus: string, source: string, colleges: list<array{name: string, programs: list<array{title: string, majors?: list<string>, note?: string, course_source?: string}>}>}> */
     public function all(): array
     {
         return [
@@ -20,9 +20,9 @@ class NvsuProgramCatalog
                     ]],
                     ['name' => 'College of Arts and Sciences', 'programs' => [
                         ['title' => 'Bachelor of Science in Mathematics'],
-                        ['title' => 'Bachelor of Science in Computer Science', 'majors' => ['Game Development', 'Robotics']],
-                        ['title' => 'Bachelor of Science in Information Technology', 'majors' => ['Web & Mobile App Development', 'Network Design & Management']],
-                        ['title' => 'Bachelor of Science in Information Systems', 'majors' => ['Business Analytics', 'Service Management']],
+                        ['title' => 'Bachelor of Science in Computer Science', 'majors' => ['Game Development', 'Robotics'], 'course_source' => 'https://cas.nvsu.edu.ph/courses/bscomsci'],
+                        ['title' => 'Bachelor of Science in Information Technology', 'majors' => ['Web & Mobile App Development', 'Network Design & Management'], 'course_source' => 'https://cas.nvsu.edu.ph/courses/bsinfotech'],
+                        ['title' => 'Bachelor of Science in Information Systems', 'majors' => ['Business Analytics', 'Service Management'], 'course_source' => 'https://cas.nvsu.edu.ph/courses/infosys'],
                     ]],
                     ['name' => 'College of Business Education', 'programs' => [
                         ['title' => 'Bachelor of Science in Agribusiness'],

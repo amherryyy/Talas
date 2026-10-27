@@ -63,6 +63,11 @@ final class AdminDashboardTest extends CIUnitTestCase
         $page = $this->getAuthenticated('admin');
         $page->assertOK();
         $page->assertSee('duno.');
+        $page->assertDontSee('aria-label="Page navigation"');
+        $page->assertDontSee('aria-label="Go back to the previous page"');
+        $page->assertDontSee('aria-label="Go to home"');
+        $page->assertSee('aria-label="Admin navigation"');
+        $page->assertSee('aria-label="duno. home"');
         $page->assertSee('Student accounts');
         $page->assertSee('Subjects');
         $page->assertSee('Topics');

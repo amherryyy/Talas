@@ -43,7 +43,6 @@
 
     <div class="actions">
         <button type="submit"><?= $isEditing ? 'Save changes' : 'Create topic' ?></button>
-        <a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>">Cancel</a>
     </div>
 </form>
 <?= $this->endSection() ?>

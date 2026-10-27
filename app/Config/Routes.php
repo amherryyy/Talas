@@ -18,6 +18,7 @@ $routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'st
     $routes->post('subjects/search', 'Student\\Subjects::search', ['as' => 'student.subjects.search']);
     $routes->get('subjects/templates', 'Student\\Subjects::templates', ['as' => 'student.subjects.templates']);
     $routes->post('subjects/templates/import', 'Student\\Subjects::importTemplate', ['as' => 'student.subjects.templates.import']);
+    $routes->post('subjects/nvsu/import', 'Student\\Subjects::importNvsuCurriculum', ['as' => 'student.subjects.nvsu.import']);
     $routes->post('subjects/shs/import', 'Student\\Subjects::importShsSubjects', ['as' => 'student.subjects.shs.import']);
     $routes->get('subjects/new', 'Student\\Subjects::newSubject', ['as' => 'student.subjects.new']);
     $routes->post('subjects', 'Student\\Subjects::create', ['as' => 'student.subjects.create']);

@@ -20,7 +20,6 @@
     <p id="name-help" class="muted">Use a name up to 120 characters.</p>
     <div class="actions">
         <button type="submit"><?= $isEditing ? 'Save changes' : 'Create subject' ?></button>
-        <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>">Cancel</a>
     </div>
 </form>
 <?= $this->endSection() ?>
