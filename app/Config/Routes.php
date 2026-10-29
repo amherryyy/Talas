@@ -13,7 +13,7 @@ $routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection
     $routes->post('auth/a/cancel-registration', 'RegistrationRecovery::cancel', ['as' => 'auth-registration-cancel']);
 });
 
-$routes->post('logout', '\\CodeIgniter\\Shield\\Controllers\\LoginController::logoutAction', ['as' => 'logout']);
+$routes->post('logout', 'Auth\\LogoutController::logoutAction', ['as' => 'logout']);
 
 $routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'student-streak']], static function (RouteCollection $routes): void {
     $routes->get('/', 'Student\\Dashboard::index', ['as' => 'student.dashboard']);

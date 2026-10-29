@@ -2,7 +2,7 @@
 
 return [
     'language' => 'Language', 'english' => 'English', 'taglish' => 'Taglish', 'filipino' => 'Filipino (Tagalog)', 'apply' => 'I-apply',
-    'notificationRegion' => 'Notifications', 'notificationDismiss' => 'I-close ang notification', 'notificationSuccess' => 'Nice work!', 'notificationInfo' => 'Quick note', 'notificationWarning' => 'Quick heads-up', 'notificationError' => 'Ayusin natin ito',
+    'notificationRegion' => 'Notifications', 'notificationDismiss' => 'I-close ang notification', 'notificationSuccess' => 'Nice work!', 'notificationInfo' => 'Quick note', 'notificationWarning' => 'Quick heads-up', 'notificationError' => 'Ayusin natin ito', 'loggedOutShort' => 'Nakapag-log out ka na.',
     'notificationDialogueSuccess' => 'Ikaw ang gumawa niyan. Tuloy lang sa next small win mo.', 'notificationDialogueInfo' => 'Quick note ito para makatulong sa next step mo.', 'notificationDialogueWarning' => 'Pause muna at i-check ito bago magpatuloy.', 'notificationDialogueError' => 'Hindi ito nag-work as planned. I-check ang details sa baba, tapos try ulit kapag ready ka na.',
     'languageInvalid' => 'Pumili ng available na language.', 'skipMain' => 'Diretso sa main content',
     'home' => 'Home', 'focus' => 'Focus', 'plan' => 'Plan', 'timer' => 'Timer', 'guide' => 'Guide', 'aralytics' => 'Aralytics', 'more' => 'More',

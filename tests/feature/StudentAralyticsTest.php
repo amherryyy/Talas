@@ -56,6 +56,9 @@ final class StudentAralyticsTest extends CIUnitTestCase
         $response->assertSee('No topic');
         $response->assertDontSee('Private subject');
         $response->assertSee('Print report');
+        $response->assertSee('Where your study time went');
+        $response->assertSee('Time by topic');
+        $response->assertSee('Study minutes by subject');
         $response->assertSee('Dated sessions');
         $response->assertSee('6500 XP');
         $response->assertSee('6000 study + 500 streak');

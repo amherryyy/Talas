@@ -2,22 +2,114 @@
 
 <?= $this->section('content') ?>
 <h1>Aralytics</h1>
-<p class="muted">Study-session totals for the selected period.</p>
+<p class="muted">See where your saved study time went, spot your routines, and print a clear report.</p>
 
-<?= $this->include('student/partials/progression_card', ['progression' => $progression]) ?>
-
-<div class="actions no-print report-controls" aria-label="Report controls">
-    <span>Period:</span>
+<nav class="no-print report-controls" aria-label="Report period and actions">
+    <span class="report-controls-label">Choose a period</span>
+    <div class="report-period-options">
     <?php foreach ($periods as $key => $label): ?>
         <a class="button<?= $summary['period'] === $key ? '' : ' secondary' ?>" href="<?= esc(site_url('student/aralytics?period=' . rawurlencode($key))) ?>"<?= $summary['period'] === $key ? ' aria-current="page"' : '' ?>><?= esc($label) ?></a>
     <?php endforeach ?>
+    </div>
     <button type="button" data-print-report>Print report</button>
-</div>
+</nav>
 
-<article aria-labelledby="report-title">
+<article class="aralytics-report" aria-labelledby="report-title">
     <h2 id="report-title">Study activity: <?= esc($summary['period_label']) ?></h2>
     <p class="muted"><?= $summary['start_date'] === null ? 'All recorded dates' : esc(date('M j, Y', strtotime($summary['start_date']))) . ' – ' . esc(date('M j, Y', strtotime($summary['end_date']))) ?></p>
 
+    <section class="summary-grid aralytics-summary-grid" aria-label="Summary totals">
+        <div class="summary-card summary-card-primary"><h3>Total study time</h3><p><?= esc((string) $summary['total_minutes']) ?><span>min</span></p><small>Saved in this period</small></div>
+        <div class="summary-card"><h3>Sessions</h3><p><?= esc((string) $summary['session_count']) ?></p><small>Completed and saved</small></div>
+        <div class="summary-card"><h3>Average session</h3><p><?= $summary['average_minutes'] === null ? '—' : esc(number_format($summary['average_minutes'], 1)) . ' min' ?></p></div>
+    </section>
+
+    <?php if ($summary['sessions'] === []): ?>
+        <p class="notice" role="status">No sessions in this period.</p>
+    <?php endif ?>
+
+    <?php if ($summary['activity_series'] !== []): ?>
+        <?php $activityMax = max(1, ...array_column($summary['activity_series'], 'minutes')); ?>
+        <section class="report-section activity-trend-section" aria-labelledby="activity-trend-heading">
+            <div class="report-section-heading"><div><p class="workspace-kicker">Study activity over time</p><h3 id="activity-trend-heading"><?= $summary['activity_granularity'] === 'month' ? 'Monthly study minutes' : 'Daily study minutes' ?></h3></div><p class="muted">Scaled to <?= esc((string) $activityMax) ?> min. Empty days and months are included<?= $summary['activity_granularity'] === 'month' ? '; scroll to see older months' : '.' ?></p></div>
+            <div class="activity-chart-scroll no-print">
+                <ol class="activity-chart" role="img" aria-label="Saved study minutes <?= esc(strtolower($summary['period_label'])) ?>. Exact minutes and session counts are listed in the table below.">
+                    <?php foreach ($summary['activity_series'] as $bucket): ?>
+                        <?php $barHeight = $bucket['minutes'] === 0 ? 0 : max(2, (int) round(($bucket['minutes'] / $activityMax) * 100)); ?>
+                        <li title="<?= esc($bucket['label'] . ': ' . $bucket['minutes'] . ' minutes, ' . $bucket['session_count'] . ' sessions') ?>" aria-hidden="true"><span class="activity-chart-bar" style="height: <?= esc((string) $barHeight) ?>%"></span><span class="activity-chart-label"><?= esc($bucket['label']) ?></span></li>
+                    <?php endforeach ?>
+                </ol>
+            </div>
+            <details class="insight-values activity-values">
+                <summary>Exact activity values</summary>
+                <table class="report-table"><thead><tr><th scope="col"><?= $summary['activity_granularity'] === 'month' ? 'Month' : 'Date' ?></th><th scope="col">Sessions</th><th scope="col">Minutes</th></tr></thead><tbody>
+                    <?php foreach ($summary['activity_series'] as $bucket): ?>
+                        <?php $bucketDate = new DateTimeImmutable($bucket['key'] . ($summary['activity_granularity'] === 'month' ? '-01' : ''), new DateTimeZone($appTimezone)); ?>
+                        <tr><th scope="row"><?= esc($summary['activity_granularity'] === 'month' ? $bucketDate->format('F Y') : $bucketDate->format('M j, Y')) ?></th><td><?= esc((string) $bucket['session_count']) ?></td><td><?= esc((string) $bucket['minutes']) ?></td></tr>
+                    <?php endforeach ?>
+                </tbody></table>
+            </details>
+        </section>
+    <?php endif ?>
+
+    <section class="report-section" aria-labelledby="subject-totals-heading">
+            <div class="report-section-heading"><div><p class="workspace-kicker">Time by subject</p><h3 id="subject-totals-heading">Where your study time went</h3></div><p class="muted">Bars show each subject’s share of this period’s study time.</p></div>
+        <?php if ($summary['subject_totals'] === []): ?>
+            <p class="muted">No subject activity in this period.</p>
+        <?php else: ?>
+            <?php $subjectMinutesMax = max(1, $summary['total_minutes']); ?>
+            <div class="analytics-bar-list no-print" role="group" aria-label="Study minutes by subject">
+                <?php foreach ($summary['subject_totals'] as $row): ?>
+                    <?php $subjectShare = round(($row['total_minutes'] / $subjectMinutesMax) * 100); ?>
+                    <div class="analytics-bar-row"><span><?= esc($row['subject_name']) ?></span><progress value="<?= esc((string) $row['total_minutes']) ?>" max="<?= esc((string) $subjectMinutesMax) ?>" aria-label="<?= esc($row['subject_name'] . ': ' . $row['total_minutes'] . ' minutes, ' . $subjectShare . '% of study time') ?>"></progress><strong><?= esc((string) $row['total_minutes']) ?> min <small><?= esc((string) $subjectShare) ?>%</small></strong></div>
+                <?php endforeach ?>
+            </div>
+            <table class="report-table"><thead><tr><th>Subject</th><th>Sessions</th><th>Minutes</th></tr></thead><tbody>
+                <?php foreach ($summary['subject_totals'] as $row): ?>
+                    <tr><th scope="row"><?= esc($row['subject_name']) ?></th><td><?= esc((string) $row['session_count']) ?></td><td><?= esc((string) $row['total_minutes']) ?></td></tr>
+                <?php endforeach ?>
+            </tbody></table>
+        <?php endif ?>
+    </section>
+
+    <section class="report-section" aria-labelledby="topic-breakdown-heading">
+        <div class="report-section-heading"><div><p class="workspace-kicker">More detail</p><h3 id="topic-breakdown-heading">Time by topic</h3></div><p class="muted">Includes sessions without a selected topic.</p></div>
+        <?php if ($summary['topic_totals'] === []): ?>
+            <p class="muted">No topic activity in this period.</p>
+        <?php else: ?>
+            <?php $topicMinutesMax = max(1, $summary['total_minutes']); ?>
+            <div class="analytics-bar-list topic-analytics-bars no-print" role="group" aria-label="Study minutes by topic">
+                <?php foreach ($summary['topic_totals'] as $row): ?>
+                    <?php $topicLabel = $row['subject_name'] . ' / ' . $row['topic_title']; ?>
+                    <?php $topicShare = round(($row['total_minutes'] / $topicMinutesMax) * 100); ?>
+                    <div class="analytics-bar-row"><span><?= esc($topicLabel) ?></span><progress value="<?= esc((string) $row['total_minutes']) ?>" max="<?= esc((string) $topicMinutesMax) ?>" aria-label="<?= esc($topicLabel . ': ' . $row['total_minutes'] . ' minutes, ' . $topicShare . '% of study time') ?>"></progress><strong><?= esc((string) $row['total_minutes']) ?> min <small><?= esc((string) $topicShare) ?>%</small></strong></div>
+                <?php endforeach ?>
+            </div>
+            <table class="report-table"><thead><tr><th>Subject and topic</th><th>Sessions</th><th>Minutes</th></tr></thead><tbody>
+                <?php foreach ($summary['topic_totals'] as $row): ?>
+                    <tr><th scope="row"><?= esc($row['subject_name']) ?> · <?= esc($row['topic_title']) ?></th><td><?= esc((string) $row['session_count']) ?></td><td><?= esc((string) $row['total_minutes']) ?></td></tr>
+                <?php endforeach ?>
+            </tbody></table>
+        <?php endif ?>
+    </section>
+
+    <section class="report-section" aria-labelledby="sessions-heading">
+        <h3 id="sessions-heading">Dated sessions</h3>
+        <?php if ($summary['sessions'] === []): ?>
+            <p class="muted">No dated sessions to list.</p>
+        <?php else: ?>
+            <table class="report-table"><thead><tr><th>Date</th><th>Subject and topic</th><th>Minutes</th></tr></thead><tbody>
+                <?php foreach ($summary['sessions'] as $session): ?>
+                    <?php $completedAt = new DateTimeImmutable((string) $session['completed_at'], new DateTimeZone($appTimezone)); ?>
+                    <tr>
+                        <td><?= esc($completedAt->format('M j, Y g:i a')) ?></td>
+                        <td><?= esc($session['subject_name']) ?> · <?= esc($session['topic_title'] ?? 'No topic') ?></td>
+                        <td><?= esc((string) $session['duration_minutes']) ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody></table>
+        <?php endif ?>
+    </section>
     <section class="report-section no-print" aria-labelledby="check-in-pattern-heading">
         <h3 id="check-in-pattern-heading">Your private check-in pattern</h3>
         <p class="muted">Private to you; descriptive, not an assessment or prediction. Excluded from print.</p>
@@ -139,59 +231,7 @@
         </div>
     </section>
 
-    <section class="summary-grid" aria-label="Summary totals">
-        <div class="summary-card"><h3>Total minutes</h3><p><?= esc((string) $summary['total_minutes']) ?></p></div>
-        <div class="summary-card"><h3>Sessions</h3><p><?= esc((string) $summary['session_count']) ?></p></div>
-        <div class="summary-card"><h3>Average session</h3><p><?= $summary['average_minutes'] === null ? '—' : esc(number_format($summary['average_minutes'], 1)) . ' min' ?></p></div>
-    </section>
-
-    <?php if ($summary['sessions'] === []): ?>
-        <p class="notice" role="status">No sessions in this period.</p>
-    <?php endif ?>
-
-    <section class="report-section" aria-labelledby="subject-totals-heading">
-        <h3 id="subject-totals-heading">Subject totals</h3>
-        <?php if ($summary['subject_totals'] === []): ?>
-            <p class="muted">No subject activity in this period.</p>
-        <?php else: ?>
-            <table class="report-table"><thead><tr><th>Subject</th><th>Sessions</th><th>Minutes</th></tr></thead><tbody>
-                <?php foreach ($summary['subject_totals'] as $row): ?>
-                    <tr><th scope="row"><?= esc($row['subject_name']) ?></th><td><?= esc((string) $row['session_count']) ?></td><td><?= esc((string) $row['total_minutes']) ?></td></tr>
-                <?php endforeach ?>
-            </tbody></table>
-        <?php endif ?>
-    </section>
-
-    <section class="report-section" aria-labelledby="topic-breakdown-heading">
-        <h3 id="topic-breakdown-heading">Topic breakdown</h3>
-        <?php if ($summary['topic_totals'] === []): ?>
-            <p class="muted">No topic activity in this period.</p>
-        <?php else: ?>
-            <table class="report-table"><thead><tr><th>Subject and topic</th><th>Sessions</th><th>Minutes</th></tr></thead><tbody>
-                <?php foreach ($summary['topic_totals'] as $row): ?>
-                    <tr><th scope="row"><?= esc($row['subject_name']) ?> · <?= esc($row['topic_title']) ?></th><td><?= esc((string) $row['session_count']) ?></td><td><?= esc((string) $row['total_minutes']) ?></td></tr>
-                <?php endforeach ?>
-            </tbody></table>
-        <?php endif ?>
-    </section>
-
-    <section class="report-section" aria-labelledby="sessions-heading">
-        <h3 id="sessions-heading">Dated sessions</h3>
-        <?php if ($summary['sessions'] === []): ?>
-            <p class="muted">No dated sessions to list.</p>
-        <?php else: ?>
-            <table class="report-table"><thead><tr><th>Date</th><th>Subject and topic</th><th>Minutes</th></tr></thead><tbody>
-                <?php foreach ($summary['sessions'] as $session): ?>
-                    <?php $completedAt = new DateTimeImmutable((string) $session['completed_at'], new DateTimeZone($appTimezone)); ?>
-                    <tr>
-                        <td><?= esc($completedAt->format('M j, Y g:i a')) ?></td>
-                        <td><?= esc($session['subject_name']) ?> · <?= esc($session['topic_title'] ?? 'No topic') ?></td>
-                        <td><?= esc((string) $session['duration_minutes']) ?></td>
-                    </tr>
-                <?php endforeach ?>
-            </tbody></table>
-        <?php endif ?>
-    </section>
 </article>
+<?= $this->include('student/partials/progression_card', ['progression' => $progression]) ?>
 <script src="<?= esc(duno_asset('assets/js/aralytics-print.js')) ?>" defer></script>
 <?= $this->endSection() ?>

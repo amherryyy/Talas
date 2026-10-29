@@ -41,7 +41,7 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response->assertSee('Your study space');
         $response->assertSee('duno.');
         $response->assertSee('Your Little Study Buddy.');
-        $response->assertSee('assets/images/duno-mascot.png');
+        $response->assertSee('assets/images/duno-mascot-welcome.webp');
         $response->assertSee('Duno Focus');
         $response->assertSee('Duno Plan');
         $response->assertSee('Duno Guide');

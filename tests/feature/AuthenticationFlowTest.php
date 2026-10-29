@@ -64,6 +64,9 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         $this->get('student')->assertOK();
 
         $this->postWithCsrf('logout')->assertRedirect();
+        $login = $this->get('login');
+        $login->assertOK();
+        $login->assertSee('You’ve logged out.');
 
         $response = $this->get('student');
         $this->assertContains($response->response()->getStatusCode(), [302, 403]);

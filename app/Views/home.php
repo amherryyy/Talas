@@ -330,7 +330,7 @@ $joinUrl = site_url('register');
                     <?php endif ?>
                 </div>
             </div>
-            <img class="welcome-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="Duno, a cheerful lightbulb study buddy wearing a Filipino salakot" width="1228" height="1285" fetchpriority="high">
+            <img class="welcome-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="Duno, a cheerful lightbulb study buddy wearing a Filipino salakot" width="512" height="536" fetchpriority="high">
         </div>
     </section>
 

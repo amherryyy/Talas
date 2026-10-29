@@ -126,6 +126,21 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $this->getAuthenticated('student/subjects/new')->assertSee('Choose a course from the selected NVSU program.');
     }
 
+    public function testSubjectListExplainsProgramFilterAndSubjectCreationMeaning(): void
+    {
+        $student = $this->createUser('nvsu-picker-explanation', 'student');
+        $this->authenticateAs($student);
+
+        $list = $this->getAuthenticated('student/subjects');
+        $list->assertOK();
+        $list->assertSee('Filters subjects you have already added.');
+        $list->assertSee('Show my subjects');
+
+        $form = $this->getAuthenticated('student/subjects/new');
+        $form->assertOK();
+        $form->assertSee('Your selection filters the course choices below; the chosen course becomes this subject.');
+    }
+
     public function testStudentCatalogUsesItsInlineBackLinkWithoutADuplicateButton(): void
     {
         $student = $this->createUser('student-page-navigation', 'student');

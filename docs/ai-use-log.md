@@ -20,6 +20,17 @@ How the student verified and can explain the result: Inspected the current branc
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
+### Aralytics activity trend and comparisons
+
+Date / story: 2026-10-29 / complete selected-period study activity analytics
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested more aesthetically pleasing and complete Aralytics graphs/models.
+Assistance used (explanation, planning, code draft, debugging, review): Added a descriptive day/month saved-minutes trend with zero-activity buckets and an exact table; ranked subject/topic comparisons by minutes and displayed each share of the selected period; updated the Aralytics story and UI styling.
+Suggestions or code retained: Existing PHP/CSS and owner-scoped data are used; no chart dependency, schema change, grades, or predictive claims were added. The existing private check-in rating distribution and progression insights remain separate.
+Student changes and decisions: Study periods follow the existing Today, 7-day, 30-day, and all-time filters. The all-time chart starts with the earliest recorded month. No staging, commit, push, merge, or deployment was performed.
+How the student verified and can explain the result: Source review only. Tests and browser review were not run for this follow-up.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### R-06 authenticated plan review closeout
 
 Date / story: 2026-10-25 / close the current authenticated Plan journey review
@@ -1246,3 +1257,57 @@ Student changes and decisions: The owner asked for more generous XP with four-di
 How the student verified and can explain the result: Full PHPUnit passed (93 tests, 917 assertions) with the XAMPP `intl` and `sqlite3` extensions enabled; PHP syntax passed for 177 app/test files; JavaScript syntax passed for all three changed modules; `git diff --check` passed. The InfinityFree package contains 1,200 files, uses forward-slash ZIP paths, includes the changed routes/assets/migration, and excludes `.env`. Live host behavior remains unverified until the owner uploads the package and applies the migration.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### NVSU course picker, notification semantics, and Aralytics presentation
+
+```text
+Date / story: 2026-10-29 / NVSU subject selection, concise auth notices, and Aralytics visual hierarchy
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to repair the NVSU course selection, align subject detail actions, refine notification behavior, and improve Aralytics graphs and details.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the course picker, subject filter and detail templates, Shield logout flow, notification renderer, Aralytics view/CSS, tests, and project contracts; prepared a concise notification policy; implemented curriculum-specific option filtering, clearer filter help, deliberate subject action alignment, compact/localized logout feedback, success mood detection, and visual subject/topic time comparisons with numeric tables retained.
+Suggestions or code retained: Existing server-side course/program validation, owner-scoped subject filters, analytics formulas, check-in privacy, and report tables remain authoritative. No schema or dependency change is included.
+Student changes and decisions: A selected NVSU course is the subject record. "Show my subjects" filters subjects already added and does not import an entire curriculum. Logout feedback is one short sentence; warning/error feedback remains specific and is not auto-dismissed.
+How the student verified and can explain the result: Focused PHPUnit passed (26 tests, 309 assertions); changed PHP files passed syntax checks; both changed JavaScript files passed `node --check`; and `git diff --check` passed. Responsive browser review was blocked because the local review database on port 3308 refused connection, and an isolated browser interaction check also failed at Chromium launch with spawn EPERM. The owner subsequently authorized preparing the upload. Final package review corrected compact-toast CSS specificity, moved Aralytics sections into their actual reading order, and cleared cached selected course options when switching curricula. The additional Aralytics check passed (4 tests, 47 assertions). Package contents and portable ZIP paths were verified; deployment evidence is recorded in docs/deployment.md. Hosted upload remains the owner's action and has not been confirmed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Duno mascot notification and encouragement assets
+
+Date / story: 2026-10-29 / create Duno expression assets for welcome, encouragement, and notifications
+Tool and model: OpenAI Codex with built-in image generation; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested mascot artwork/animation suitable for Duno's welcome, motivational, and notification moments.
+Assistance used (explanation, planning, code draft, debugging, review): Used the supplied Duno mascot PNG as the character reference to create curious, attentive, supportive, and celebratory expression poses. Preserved the original PNG and exported transparent 512 × 536 WebP derivatives for the web app. Connected those variants to existing welcome, auth encouragement, check-in, level-up, and notification components. Existing CSS motion, reduced-motion behavior, copy, notification semantics, and runtime stack were retained.
+Suggestions or code retained: Added `public/assets/images/duno-mascot-{welcome,curious,alert,support,celebrating}.webp`; updated the welcome, onboarding, check-in, level-up, notification, and auth components; documented approved usage in the brand, onboarding, and notification story notes.
+Student changes and decisions: The owner requested the asset work. No new dependencies, animation framework, database changes, or new user data were added. Existing unrelated working-tree changes were preserved; nothing was staged, committed, pushed, merged, or deployed.
+How the student verified and can explain the result: Reviewed all five WebP images visually, confirmed alpha transparency and 512 × 536 dimensions, and confirmed each image is substantially smaller than the 1.1 MB source PNG. Automated tests and browser review were not run in this task.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Complete and verify mascot asset integration
+
+Date / story: 2026-10-29 / integrate the approved five-pose mascot guide into Duno
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to integrate the artwork according to docs/mascot-assets-integration.md.
+Assistance used: Reviewed existing uncommitted asset work, retained the approved pose references, added the missing JavaScript reward-art mapping and low-priority auth reaction preload, updated existing PNG expectations in feature tests, checked image dimensions/transparency, reviewed rendered-view snapshots in the in-app browser, and prepared an incremental upload archive.
+Student changes and decisions: The supplied assets remain presentation-only. No schema, dependencies, saved study behavior, or authentication behavior changed. Earlier uncommitted UI fixes were preserved. No files were staged, committed, pushed, or uploaded by the agent.
+Verification: 28 affected application tests passed. An ignored preview fixture passed with one test and five assertions after correcting its explicit flash-rendering option. Seven view PHP lints, both JavaScript syntax checks, and diff whitespace checks passed. Browser previews confirmed server/client pose mappings, image loading, desktop/phone/tablet fit, auth click/Enter activation and pose restoration, and isolated card dismissal. Composer audit was attempted but Packagist was unreachable. Live authenticated navigation and hosted delivery were not checked. The 16-entry incremental ZIP was verified against the current source; details are in docs/mascot-assets-integration.md.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Larger notification mascot presentation
+
+Date / story: 2026-10-29 / allow the mascot to extend beyond notification cards
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner said the mascot was too small and approved artwork overflowing the notification bar.
+Assistance used: Enlarged standard and compact mascot artwork, removed the small background tile, reserved space for overflow in the stack, and positioned the mascot above the full-width message on phones. Preserved unrelated Aralytics and other working-tree changes.
+Verification: Browser previews at 320, 400, 768, and 1280 pixels showed no page overflow. Read-only layout measurements confirmed the illustration stays inside the viewport and clear of text and dismissal controls for narrow-phone and desktop standard/compact cards. Screenshots were saved under build/mascot-large-*.png. The 16-entry r5 upload archive was verified against its source files, and git diff --check passed. No PHP/JavaScript behavior or dependencies changed, so earlier application test results were retained without repeating them. No commit, push, or hosted upload was performed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Hand-coded dashboard mascot welcome animation
+
+Date / story: 2026-10-29 / add a comprehensive Duno dashboard entrance animation
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to replace the proposed generated video with a comprehensive hard-coded animation.
+Assistance used: Added a staged dashboard entrance using CSS keyframes and inline decorative SVG: copy and action entrance, mascot bounce and settling, glow, orbit tracks, orbiting sparks, twinkling stars, and idle motion. Preserved the existing welcome artwork and added an explicit final-pose treatment for reduced-motion preferences.
+Suggestions or code retained: The animation is local to the app and uses no video, external service, animation package, canvas, or new runtime dependency. The existing dashboard greeting content and navigation remain intact.
+Student changes and decisions: The owner requested a more elaborate hard-coded welcome sequence. No student data, schema, or saved preferences were added. No staging, commit, push, merge, package, or upload was performed.
+How the student verified and can explain the result: Source review only. Automated tests and browser preview were not run for this change.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.

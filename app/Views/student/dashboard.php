@@ -12,16 +12,27 @@
         </div>
     </div>
     <div class="workspace-hero-art" aria-hidden="true">
+        <span class="hero-art-glow"></span>
         <span class="hero-orbit hero-orbit-one"></span>
         <span class="hero-orbit hero-orbit-two"></span>
-        <img class="dashboard-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" fetchpriority="high">
+        <svg class="hero-art-constellation" viewBox="0 0 360 300" focusable="false">
+            <ellipse class="constellation-track constellation-track-one" cx="180" cy="150" rx="132" ry="100"></ellipse>
+            <ellipse class="constellation-track constellation-track-two" cx="180" cy="150" rx="112" ry="83" transform="rotate(-34 180 150)"></ellipse>
+            <g class="constellation-orbit constellation-orbit-one"><circle cx="312" cy="150" r="6"></circle><path d="M312 138v24M300 150h24"></path></g>
+            <g class="constellation-orbit constellation-orbit-two"><circle cx="180" cy="67" r="4"></circle><path d="M180 58v18M171 67h18"></path></g>
+            <path class="constellation-star constellation-star-one" d="M65 91c2 11 6 15 17 17-11 2-15 6-17 17-2-11-6-15-17-17 11-2 15-6 17-17Z"></path>
+            <path class="constellation-star constellation-star-two" d="M292 224c1.5 8 4 10.5 12 12-8 1.5-10.5 4-12 12-1.5-8-4-10.5-12-12 8-1.5 10.5-4 12-12Z"></path>
+        </svg>
+        <span class="dashboard-mascot-stage">
+            <img class="dashboard-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="" width="512" height="536" fetchpriority="high">
+        </span>
         <span class="hero-art-label">one step at a time</span>
     </div>
 </section>
 
 <dialog class="check-in-dialog" data-check-in-prompt data-prompt-date="<?= esc($checkInPromptDate) ?>" data-prompt-user="<?= esc($checkInPromptUserKey) ?>" data-prompt-satisfied="<?= $checkInPromptSatisfied ? 'true' : 'false' ?>" aria-labelledby="check-in-prompt-title" aria-describedby="check-in-prompt-description">
     <div class="check-in-dialog-head">
-        <span class="mascot-stage" aria-hidden="true"><img class="check-in-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285"></span>
+        <span class="mascot-stage" aria-hidden="true"><img class="check-in-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-support.webp')) ?>" alt="" width="512" height="536"></span>
         <button type="button" class="check-in-dialog-close" data-check-in-dismiss aria-label="Close check-in prompt">×</button>
     </div>
     <p class="workspace-kicker">A small pause before you begin</p>

@@ -16,6 +16,7 @@ return [
     'notificationDialogueInfo' => 'Here is a quick note to help with your next step.',
     'notificationDialogueWarning' => 'Pause for a moment and check this before continuing.',
     'notificationDialogueError' => 'That did not go as planned. Check the details below, then try again when you are ready.',
+    'loggedOutShort' => 'You’ve logged out.',
     'languageInvalid' => 'Please choose one of the available languages.',
     'skipMain' => 'Skip to main content',
     'home' => 'Home',

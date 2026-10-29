@@ -16,12 +16,15 @@ As a student, I can review descriptive summaries of my saved study sessions for 
 - Study activity totals and the printable report exclude optional private check-ins.
 - On screen, show a separate student-only, deterministic summary of the student's check-ins for the selected period: count entries with high workload (4–5), low energy (1–2), and both together. This is descriptive counting, not model training, an assessment, a prediction, or a plan adjustment.
 - Show workload and energy rating distributions (ratings 1–5) as paired bars for the selected period. Include an accessible numeric table with the same counts; use native SVG/CSS without a chart library.
+- Show the selected period's saved study minutes over time: daily buckets for today/7-day/30-day periods and monthly buckets for all time. Include zero-activity buckets, and provide an exact table of minutes and session counts.
+- Rank subject and topic comparisons by saved minutes and show each row's share of the selected period total. Keep exact totals in the report tables.
 - Do not include the private pattern summary in print output, admin views, search, or exports.
 
 ## Implementation decisions
 
 - Period boundaries use the configured application timezone. “Today” is the local calendar day; 7 days includes today and the preceding 6 days; 30 days includes today and the preceding 29 days.
 - Average length is total minutes divided by session count and displayed to one decimal place. With no sessions, show “No sessions in this period” and an em dash for the average.
+- Daily activity buckets use the selected local calendar dates. The all-time chart starts at the first recorded month and ends at the current month. The trend is a descriptive view of saved minutes; it does not forecast future activity.
 - A session without a topic contributes to its subject total and appears as “No topic” in the topic breakdown.
 - The selected period is a non-sensitive filter. Every session query remains scoped to the signed-in student; rendered subject and topic names are escaped.
 - The print action uses a readable print stylesheet that hides navigation and interactive controls while retaining all report content.
@@ -36,6 +39,7 @@ As a student, I can review descriptive summaries of my saved study sessions for 
 - Rendered values are escaped, period selection is validated, and the page requires the student role.
 - The printable report contains the selected period, totals, subject/topic breakdown, and dated session list; print output omits navigation, period controls, the print button, and the private check-in pattern summary.
 - The on-screen rating chart is responsive, labels both series and all rating values, and has a numeric table equivalent. An empty period shows a clear no-check-ins message instead of an empty chart.
+- The activity trend uses the selected period's day/month granularity, includes zero-activity buckets, and has an exact table equivalent. Subject/topic comparisons are sorted by minutes and use the period total as their common scale.
 - Keyboard and responsive browser review covers period selection and report navigation; print layout is checked in print media.
 
 ## Verification status
@@ -46,3 +50,4 @@ As a student, I can review descriptive summaries of my saved study sessions for 
 - Composer audit initially could not reach Packagist because injected proxy variables pointed to `127.0.0.1:9`; rerunning with those variables cleared for the Composer process succeeded with no advisories. No PHP style tool is configured in the repository.
 - The report and print screenshots were visually reviewed; keyboard focus traversed the navigation and report controls. The owner accepted F-09; PR #4 merged as `32898e5`.
 - F-11 follow-up: focused check-in/Aralytics feature tests passed (11 tests, 107 assertions), including exact rating-distribution counts and owner/date filtering. Playwright passed 2/2 tests; the private chart and numeric table were visible without overflow at 400px and 1280px and hidden in print while dated session content remained visible.
+- 2026-10-29 presentation follow-up: added day/month activity series with zero buckets, an exact values table, and ranked subject/topic bars scaled against the selected period total. Implementation complete; tests and browser review were not run for this follow-up.

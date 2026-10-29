@@ -19,16 +19,16 @@ $selectedCourseId = old('course_id', $selectedCourseId ?? '');
 
 <form method="post" action="<?= esc($isEditing ? site_url('student/subjects/' . $subject['id']) : site_url('student/subjects')) ?>">
     <?= csrf_field() ?>
-    <label for="program-id">NVSU program <span class="muted">(optional)</span></label>
+    <label for="program-id">NVSU course list <span class="muted">(optional)</span></label>
     <select id="program-id" name="program_id" aria-describedby="program-help">
         <option value="">No program selected</option>
         <?php foreach ($nvsuCurricula as $program): ?>
             <option value="<?= esc($program['id']) ?>"<?= $selectedProgramId === $program['id'] ? ' selected' : '' ?>><?= esc($program['title']) ?></option>
         <?php endforeach ?>
     </select>
-    <p id="program-help" class="muted">Choose one of the NVSU course lists to organize this subject. Existing subjects stay in your list if you leave this blank.</p>
+    <p id="program-help" class="muted">Choose a specific NVSU curriculum reference. Your selection filters the course choices below; the chosen course becomes this subject. Leave it blank to enter a subject manually.</p>
 
-    <label for="course-id">Choose a course from that program <span class="muted">(optional)</span></label>
+    <label for="course-id">Choose a course from that list <span class="muted">(optional)</span></label>
     <select id="course-id" name="course_id" aria-describedby="course-help">
         <option value="">Type a subject name below</option>
         <?php foreach ($nvsuCurricula as $program): ?>

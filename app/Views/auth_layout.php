@@ -24,8 +24,8 @@
             <div class="auth-mascot-stage">
                 <span class="auth-mascot-orbit auth-mascot-orbit-one" aria-hidden="true"></span>
                 <span class="auth-mascot-orbit auth-mascot-orbit-two" aria-hidden="true"></span>
-                <button class="auth-mascot-button" type="button" data-auth-mascot aria-label="Tap Duno for a little encouragement">
-                    <img src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true" fetchpriority="high">
+                <button class="auth-mascot-button" type="button" data-auth-mascot data-cheer-src="<?= esc(duno_asset('assets/images/duno-mascot-celebrating.webp')) ?>" aria-label="Tap Duno for a little encouragement">
+                    <img src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="" width="512" height="536" aria-hidden="true" fetchpriority="high">
                 </button>
                 <p class="auth-mascot-message" data-auth-mascot-message aria-live="polite">One small step at a time.</p>
             </div>

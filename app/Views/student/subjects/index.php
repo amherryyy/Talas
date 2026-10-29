@@ -12,14 +12,15 @@
 <form method="post" action="<?= esc(site_url('student/subjects/search')) ?>" class="subject-program-filter">
     <?= csrf_field() ?>
     <input type="hidden" name="query" value="">
-    <label for="subject-program-filter">Show subjects for an NVSU program</label>
+    <label for="subject-program-filter">NVSU course list</label>
     <select id="subject-program-filter" name="program_id">
         <option value="">All my subjects</option>
         <?php foreach ($nvsuCurricula as $program): ?>
             <option value="<?= esc($program['id']) ?>"<?= $programId === $program['id'] ? ' selected' : '' ?>><?= esc($program['title']) ?></option>
         <?php endforeach ?>
     </select>
-    <div class="actions"><button type="submit">Show subjects</button></div>
+    <p class="muted">Filters subjects you have already added. Choosing a course in the add form creates that course as a subject; this filter does not import a whole curriculum.</p>
+    <div class="actions"><button type="submit">Show my subjects</button></div>
 </form>
 
 <?php if ($errors !== []): ?>
@@ -45,8 +46,8 @@
 <?php if ($subjects === []): ?>
     <section class="empty-state" aria-labelledby="subjects-empty-heading">
         <span class="empty-state-mark" aria-hidden="true"><span class="solar-icon solar-icon-book-2"></span></span>
-        <h2 id="subjects-empty-heading"><?= $query === '' ? 'Start with a subject.' : 'No subjects match that search.' ?></h2>
-        <p><?= $query === '' ? 'Add a course or class to keep its topics and study sessions together.' : 'Try another search, or clear the filter to see your full subject list.' ?></p>
+        <h2 id="subjects-empty-heading"><?= $query === '' && $programId !== '' ? 'No saved subjects for this course list yet.' : ($query === '' ? 'Start with a subject.' : 'No subjects match that search.') ?></h2>
+        <p><?= $query === '' && $programId !== '' ? 'Add a subject and choose a course from this NVSU list. The course you choose will appear here.' : ($query === '' ? 'Add a course or class to keep its topics and study sessions together.' : 'Try another search, or clear the filter to see your full subject list.') ?></p>
         <div class="actions">
             <?php if ($query !== ''): ?>
                 <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><?= esc(lang('App.clearSearch')) ?></a>

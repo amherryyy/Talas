@@ -4,6 +4,13 @@
 
     const dismissLabel = stack.dataset.dismissLabel || 'Dismiss notification';
     const mascotSource = stack.dataset.mascotSrc;
+    const mascotSources = {
+        success: mascotSource,
+        info: stack.dataset.mascotInfoSrc || mascotSource,
+        warning: stack.dataset.mascotWarningSrc || mascotSource,
+        error: stack.dataset.mascotErrorSrc || mascotSource,
+    };
+    const rewardMascotSource = stack.dataset.mascotRewardSrc || mascotSource;
     const titles = {
         success: stack.dataset.titleSuccess || 'Nice work!',
         info: stack.dataset.titleInfo || 'A little note',
@@ -47,6 +54,8 @@
 
     function addNotification(source) {
         const isList = source.matches('ul.errors, ol.errors');
+        const authAlert = Boolean(source.closest('.duno-auth'));
+        const compact = authAlert && source.classList.contains('alert-success');
         const requestedType = source.dataset.notificationType;
         const mood = ['success', 'info', 'warning', 'error'].includes(requestedType)
             ? requestedType
@@ -54,13 +63,16 @@
                 ? 'error'
                 : source.classList.contains('alert-warning')
                     ? 'warning'
-                    : source.classList.contains('alert-info')
+                : source.classList.contains('alert-info')
                         ? 'info'
+                    : source.classList.contains('alert-success')
+                        ? 'success'
                         : source.getAttribute('role') === 'alert'
                             ? 'error'
                             : 'success';
+        const isReward = mood === 'success' && (source.dataset.notificationReward === 'true' || source.classList.contains('streak-reward-notice'));
         const card = document.createElement('article');
-        card.className = 'duno-toast';
+        card.className = `duno-toast${compact ? ' duno-toast-compact' : ''}${isReward ? ' streak-reward-notice' : ''}`;
         card.dataset.mood = mood;
         card.setAttribute('role', mood === 'error' || mood === 'warning' ? 'alert' : 'status');
         card.setAttribute('aria-live', mood === 'error' || mood === 'warning' ? 'assertive' : 'polite');
@@ -69,8 +81,11 @@
         mascot.className = 'duno-toast-mascot';
         mascot.setAttribute('aria-hidden', 'true');
         const image = document.createElement('img');
-        image.src = mascotSource;
+        image.src = isReward ? rewardMascotSource : (mascotSources[mood] || mascotSource);
         image.alt = '';
+        image.width = 512;
+        image.height = 536;
+        image.decoding = 'async';
         mascot.append(image);
         const emotion = document.createElement('span');
         emotion.className = 'duno-toast-emotion';
@@ -81,13 +96,17 @@
         copy.className = 'duno-toast-copy';
         const title = document.createElement('strong');
         title.className = 'duno-toast-title';
-        title.textContent = titles[mood];
-        copy.append(title);
+        if (!compact) {
+            title.textContent = titles[mood];
+            copy.append(title);
+        }
 
         const dialogueLine = document.createElement('p');
         dialogueLine.className = 'duno-toast-dialogue';
-        dialogueLine.textContent = dialogue[mood];
-        copy.append(dialogueLine);
+        if (!compact) {
+            dialogueLine.textContent = dialogue[mood];
+            copy.append(dialogueLine);
+        }
 
         if (isList && source.children.length > 0) {
             const list = document.createElement('ul');
@@ -101,7 +120,10 @@
         } else {
             const message = document.createElement('p');
             message.className = 'duno-toast-message';
-            message.textContent = source.textContent.trim();
+            const sourceMessage = source.textContent.trim();
+            message.textContent = /successfully logged out/i.test(sourceMessage)
+                ? (stack.dataset.loggedOutShort || "You've logged out.")
+                : sourceMessage;
             copy.append(message);
         }
 
