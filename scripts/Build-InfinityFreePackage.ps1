@@ -67,6 +67,12 @@ try {
         throw 'The public front controller no longer has the expected Paths.php include; review the packaging change before continuing.'
     }
     $entryPoint = $entryPoint.Replace($oldPathsInclude, $rootPathsInclude)
+    $localMarkerInclude = "require_once __DIR__ . '/../app/Services/InfinityFreeRouteMarker.php';"
+    $rootMarkerInclude = "require_once __DIR__ . '/app/Services/InfinityFreeRouteMarker.php';"
+    if (-not $entryPoint.Contains($localMarkerInclude)) {
+        throw 'The public front controller no longer has the expected InfinityFree marker include; review the packaging change before continuing.'
+    }
+    $entryPoint = $entryPoint.Replace($localMarkerInclude, $rootMarkerInclude)
     [System.IO.File]::WriteAllText((Join-Path $packageRoot 'index.php'), $entryPoint, $utf8NoBom)
 
     $rootHtaccess = @'
@@ -129,7 +135,7 @@ ServerSignature Off
 
     Push-Location $packageRoot
     try {
-        & $php -d extension=intl -d extension=zip $composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+        & $php -d extension=php_intl.dll -d extension=php_zip.dll $composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
         if ($LASTEXITCODE -ne 0) {
             throw "Composer production dependency install failed with exit code $LASTEXITCODE."
         }

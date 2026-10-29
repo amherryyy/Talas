@@ -18,6 +18,12 @@
     const storageKey = `duno-app-tour-v1-${userKey}`;
     const tourCopy = document.documentElement.lang.startsWith('fil') ? {
         progress: 'Pagsisimula · Hakbang {step} sa {total}', skip: 'Laktawan ang gabay', next: 'Susunod', finish: 'Tapos na',
+        welcomeProgress: 'Maligayang pagdating · {step} sa 3', welcomeKicker: 'MALIGAYANG PAGDATING SA DUNO', startTour: 'Tingnan ang gabay',
+        welcomeSlides: [
+            ['Simulan sa isang hakbang.', 'Pinagsasama ng Duno ang mga asignatura, plano, at oras ng pag-aaral para malaman mo kung saan magsisimula.'],
+            ['Gawing malinaw ang araw mo.', 'Gamitin ang Duno Pokus at Plano para pumili ng paksa at maglaan ng oras para rito.'],
+            ['Pansinin ang bawat progreso.', 'I-save ang mga sesyon at balikan ang mga nakasanayan mong pag-aaral sa Aralytics.'],
+        ],
         steps: [
             ['Lugar mo sa pag-aaral', 'Dito ka magsisimula. Gamitin ang mga card at menu para piliin ang tool na kailangan mo sa susunod na pag-aaral.'],
             ['Duno Pokus', 'Makikita rito ang mga paksang hindi pa tapos, nakaayos batay sa takdang petsa, halaga, at progreso.'],
@@ -29,6 +35,12 @@
         ],
     } : document.documentElement.lang.startsWith('en-PH') ? {
         progress: 'Getting started · Step {step} of {total}', skip: 'I-skip ang tour', next: 'Next', finish: 'Tapos na',
+        welcomeProgress: 'Welcome sa Duno · {step} of 3', welcomeKicker: 'WELCOME SA DUNO', startTour: 'Simulan ang tour',
+        welcomeSlides: [
+            ['Simulan sa isang study step.', 'Nasa Duno na ang subjects, plans, at study time mo para mas madaling malaman kung ano ang uunahin.'],
+            ['Ayusin ang busy mong araw.', 'Gamitin ang Duno Focus at Plan para pumili ng topic at maglaan ng time na swak sa schedule mo.'],
+            ['Bawat progress, mahalaga.', 'I-save ang study sessions mo at balikan ang routines mo sa Aralytics, step by step.'],
+        ],
         steps: [
             ['Study space mo', 'Dito ka magsisimula. Gamitin ang cards at navigation para mahanap ang tool na bagay sa next study step mo.'],
             ['Duno Focus', 'Hanapin ang unfinished topics mo sa clear na order gamit ang due dates, importance, at progress.'],
@@ -40,6 +52,12 @@
         ],
     } : {
         progress: 'Getting started · Step {step} of {total}', skip: 'Skip tour', next: 'Next', finish: 'Finish',
+        welcomeProgress: 'Welcome · {step} of 3', welcomeKicker: 'WELCOME TO DUNO', startTour: 'Take the tour',
+        welcomeSlides: [
+            ['Make room for your next study step.', 'Duno keeps your subjects, plans, and study time together so it’s easier to know where to begin.'],
+            ['Turn a busy day into a clear plan.', 'Use Duno Focus and Plan to choose a topic and fit it into the time you have.'],
+            ['Notice the progress you make.', 'Save study sessions and look back at your routines in Aralytics, one step at a time.'],
+        ],
         steps: [
             ['Your study space', 'This is your starting point. Use the cards and navigation to find the tool that fits your next study step.'],
             ['Duno Focus', 'Find unfinished topics in a clear order using due dates, importance, and progress.'],
@@ -57,12 +75,42 @@
     const back = tour.querySelector('[data-tour-back]');
     const next = tour.querySelector('[data-tour-next]');
     const skip = tour.querySelector('[data-tour-skip]');
+    const carousel = tour.querySelector('[data-tour-carousel]');
+    const welcomeTrack = tour.querySelector('[data-welcome-track]');
+    const welcomeKicker = tour.querySelector('[data-welcome-kicker]');
+    const welcomeTitle = tour.querySelector('[data-welcome-title]');
+    const welcomeCopy = tour.querySelector('[data-welcome-copy]');
+    const welcomeIndicator = tour.querySelector('[data-welcome-indicator]');
+    const welcomeDotsGroup = tour.querySelector('[data-welcome-dots]');
+    const welcomeDots = [...tour.querySelectorAll('[data-welcome-slide]')];
+    const welcomeArt = tour.querySelector('.welcome-carousel-art');
     if (!(progress instanceof HTMLElement)
         || !(title instanceof HTMLElement)
         || !(copy instanceof HTMLElement)
         || !(back instanceof HTMLButtonElement)
         || !(next instanceof HTMLButtonElement)
-        || !(skip instanceof HTMLButtonElement)) return;
+        || !(skip instanceof HTMLButtonElement)
+        || !(carousel instanceof HTMLElement)
+        || !(welcomeTrack instanceof HTMLElement)
+        || !(welcomeKicker instanceof HTMLElement)
+        || !(welcomeTitle instanceof HTMLElement)
+        || !(welcomeCopy instanceof HTMLElement)
+        || !(welcomeIndicator instanceof HTMLElement)
+        || !(welcomeDotsGroup instanceof HTMLElement)
+        || !(welcomeArt instanceof HTMLElement)
+        || welcomeDots.length !== tourCopy.welcomeSlides.length
+        || welcomeDots.some((dot) => !(dot instanceof HTMLButtonElement))) return;
+
+    const welcomeSlideGroupLabel = document.documentElement.lang.startsWith('fil')
+        ? 'Pumili ng welcome slide'
+        : document.documentElement.lang.startsWith('en-PH')
+            ? 'Pumili ng welcome slide'
+            : 'Choose a welcome slide';
+    const welcomeSlideLabel = document.documentElement.lang.startsWith('fil')
+        ? 'Ipakita ang slide {step}'
+        : document.documentElement.lang.startsWith('en-PH')
+            ? 'Ipakita ang welcome slide {step}'
+            : 'Show welcome slide {step}';
 
     skip.textContent = tourCopy.skip;
 
@@ -71,6 +119,9 @@
     let activeTargetParent = null;
     let startRequested = false;
     let started = false;
+    let welcomeIndex = 0;
+    let welcomeOnStart = false;
+    let returnFocusTarget = null;
 
     const setBackgroundUnavailable = (unavailable) => {
         pageRegions.forEach((element) => {
@@ -142,7 +193,7 @@
     };
 
     const placeTourPanel = () => {
-        if (tour.hidden || !(activeTarget instanceof HTMLElement)) return;
+        if (tour.hidden || tour.classList.contains('is-welcome') || !(activeTarget instanceof HTMLElement)) return;
 
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
@@ -200,17 +251,53 @@
         if (completed) rememberCompletion();
         const targetToFocus = activeTarget;
         removeHighlight();
+        tour.classList.remove('is-welcome');
+        if (shade instanceof HTMLElement) shade.classList.remove('is-welcome');
+        document.body.classList.remove('app-tour-welcome-open');
+        carousel.hidden = true;
+        tour.querySelector('.app-tour-intro')?.removeAttribute('hidden');
         tour.hidden = true;
         if (shade instanceof HTMLElement) shade.hidden = true;
         setBackgroundUnavailable(false);
         started = false;
 
-        if (targetToFocus instanceof HTMLElement) {
-            if (!targetToFocus.matches('a, button, summary, input, select, textarea, [tabindex]')) {
-                targetToFocus.tabIndex = -1;
+        const focusTarget = targetToFocus instanceof HTMLElement ? targetToFocus : returnFocusTarget instanceof HTMLElement ? returnFocusTarget : findStepTarget(steps[0]);
+        if (focusTarget instanceof HTMLElement) {
+            if (!focusTarget.matches('a, button, summary, input, select, textarea, [tabindex]')) {
+                focusTarget.tabIndex = -1;
             }
-            targetToFocus.focus({ preventScroll: true });
+            focusTarget.focus({ preventScroll: true });
         }
+    };
+
+    const showWelcomeSlide = (index, { moveFocus = true } = {}) => {
+        welcomeIndex = Math.max(0, Math.min(index, tourCopy.welcomeSlides.length - 1));
+        removeHighlight();
+        if (shade instanceof HTMLElement) shade.hidden = true;
+        tour.classList.add('is-welcome');
+        if (shade instanceof HTMLElement) shade.classList.add('is-welcome');
+        document.body.classList.add('app-tour-welcome-open');
+        carousel.hidden = false;
+        const intro = tour.querySelector('.app-tour-intro');
+        if (intro instanceof HTMLElement) intro.hidden = true;
+        tour.setAttribute('aria-labelledby', 'welcome-carousel-title');
+        tour.setAttribute('aria-describedby', 'welcome-carousel-copy');
+        const [headline, sentence] = tourCopy.welcomeSlides[welcomeIndex];
+        progress.textContent = tourCopy.welcomeProgress.replace('{step}', String(welcomeIndex + 1));
+        welcomeKicker.textContent = tourCopy.welcomeKicker;
+        welcomeTitle.textContent = headline;
+        welcomeCopy.textContent = sentence;
+        welcomeTrack.style.transform = `translateX(-${welcomeIndex * (100 / tourCopy.welcomeSlides.length)}%)`;
+        welcomeIndicator.style.transform = `translateX(${welcomeIndex * 2.75}rem) translateY(-50%)`;
+        welcomeDotsGroup.setAttribute('aria-label', welcomeSlideGroupLabel);
+        welcomeDots.forEach((dot, dotIndex) => {
+            dot.setAttribute('aria-label', welcomeSlideLabel.replace('{step}', String(dotIndex + 1)));
+            if (dotIndex === welcomeIndex) dot.setAttribute('aria-current', 'step');
+            else dot.removeAttribute('aria-current');
+        });
+        back.disabled = welcomeIndex === 0;
+        next.textContent = welcomeIndex === tourCopy.welcomeSlides.length - 1 ? tourCopy.startTour : tourCopy.next;
+        if (moveFocus) welcomeTitle.focus({ preventScroll: true });
     };
 
     const showStep = (index) => {
@@ -220,6 +307,14 @@
         if (!(target instanceof HTMLElement)) return;
 
         removeHighlight();
+        tour.classList.remove('is-welcome');
+        if (shade instanceof HTMLElement) shade.classList.remove('is-welcome');
+        document.body.classList.remove('app-tour-welcome-open');
+        carousel.hidden = true;
+        const intro = tour.querySelector('.app-tour-intro');
+        if (intro instanceof HTMLElement) intro.hidden = false;
+        tour.setAttribute('aria-labelledby', 'app-tour-title');
+        tour.setAttribute('aria-describedby', 'app-tour-copy');
         activeTarget = target;
         activeTarget.classList.add('is-tour-highlighted');
         activeTargetParent = activeTarget.closest('.app-header, .student-bottom-nav');
@@ -247,14 +342,18 @@
         started = true;
         tour.hidden = false;
         setBackgroundUnavailable(true);
-        showStep(0);
+        if (welcomeOnStart) showWelcomeSlide(0);
+        else showStep(0);
 
         if (window.location.hash === '#app-tour') {
             window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
         }
     };
 
-    const requestStart = () => {
+    const requestStart = (withWelcome = false) => {
+        welcomeOnStart = withWelcome;
+        const activeElement = document.activeElement;
+        returnFocusTarget = activeElement instanceof HTMLElement && activeElement !== document.body ? activeElement : null;
         startRequested = true;
         const forcedByLink = window.location.hash === '#app-tour';
         if (forcedByLink) {
@@ -272,8 +371,47 @@
         window.addEventListener('duno:check-in-ready', () => window.setTimeout(beginTour, 250), { once: true });
     };
 
-    back.addEventListener('click', () => showStep(stepIndex - 1));
+    back.addEventListener('click', () => {
+        if (tour.classList.contains('is-welcome')) {
+            showWelcomeSlide(welcomeIndex - 1);
+        } else if (stepIndex === 0 && welcomeOnStart) {
+            showWelcomeSlide(tourCopy.welcomeSlides.length - 1);
+        } else {
+            showStep(stepIndex - 1);
+        }
+    });
+    welcomeDots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+            const index = Number(dot.dataset.welcomeSlide);
+            if (Number.isInteger(index) && index >= 0 && index < tourCopy.welcomeSlides.length) {
+                showWelcomeSlide(index, { moveFocus: false });
+            }
+        });
+    });
+
+    let swipeStart = null;
+    welcomeArt.addEventListener('pointerdown', (event) => {
+        if (!tour.classList.contains('is-welcome') || !event.isPrimary || event.pointerType === 'mouse') return;
+        swipeStart = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+        try {
+            welcomeArt.setPointerCapture(event.pointerId);
+        } catch {}
+    });
+    welcomeArt.addEventListener('pointerup', (event) => {
+        if (swipeStart === null || event.pointerId !== swipeStart.pointerId) return;
+        const deltaX = event.clientX - swipeStart.x;
+        const deltaY = event.clientY - swipeStart.y;
+        swipeStart = null;
+        if (Math.abs(deltaX) < 52 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+        showWelcomeSlide(welcomeIndex + (deltaX < 0 ? 1 : -1), { moveFocus: false });
+    });
+    welcomeArt.addEventListener('pointercancel', () => { swipeStart = null; });
     next.addEventListener('click', () => {
+        if (tour.classList.contains('is-welcome')) {
+            if (welcomeIndex < tourCopy.welcomeSlides.length - 1) showWelcomeSlide(welcomeIndex + 1);
+            else showStep(0);
+            return;
+        }
         if (stepIndex === steps.length - 1) {
             closeTour(true);
             return;
@@ -289,6 +427,11 @@
             closeTour(true);
             return;
         }
+        if (tour.classList.contains('is-welcome') && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
+            event.preventDefault();
+            showWelcomeSlide(welcomeIndex + (event.key === 'ArrowRight' ? 1 : -1));
+            return;
+        }
         if (event.key !== 'Tab') return;
 
         const focusable = [...tour.querySelectorAll('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])')]
@@ -297,10 +440,11 @@
         const last = focusable[focusable.length - 1];
         if (!(first instanceof HTMLElement) || !(last instanceof HTMLElement)) return;
 
-        if (event.shiftKey && (document.activeElement === first || document.activeElement === title)) {
+        const currentTitle = tour.classList.contains('is-welcome') ? welcomeTitle : title;
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === currentTitle)) {
             event.preventDefault();
             last.focus();
-        } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === title)) {
+        } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === currentTitle)) {
             event.preventDefault();
             first.focus();
         }
@@ -313,8 +457,8 @@
     }, { passive: true });
 
     if (window.location.hash === '#app-tour') {
-        requestStart();
+        requestStart(false);
     } else if (tour.dataset.autoStart === 'true' && !hasCompleted()) {
-        requestStart();
+        requestStart(true);
     }
 })();

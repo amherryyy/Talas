@@ -145,12 +145,22 @@ $joinUrl = site_url('register');
         .welcome {
             position: relative;
             overflow: hidden;
+            isolation: isolate;
             padding: clamp(1.4rem, 4vw, 2.8rem);
             border: 1px solid var(--line);
             border-radius: 2rem;
             background: var(--surface);
             box-shadow: var(--shadow);
         }
+        .welcome-gradient-drift { position: absolute; z-index: 0; display: block; width: clamp(11rem, 29vw, 23rem); aspect-ratio: 1; border-radius: 50%; pointer-events: none; opacity: .44; will-change: transform; }
+        .welcome-gradient-drift-one { top: -48%; left: 4%; background: radial-gradient(circle, rgb(139 123 232 / 31%) 0%, rgb(196 188 255 / 18%) 43%, transparent 72%); animation: duno-gradient-drift-one 9s ease-in-out -2s infinite alternate; }
+        .welcome-gradient-drift-two { top: 18%; left: 37%; background: radial-gradient(circle, rgb(255 211 126 / 28%) 0%, rgb(255 232 181 / 16%) 43%, transparent 72%); animation: duno-gradient-drift-two 11s ease-in-out -5s infinite alternate; }
+        .welcome-gradient-drift-three { right: 9%; bottom: -57%; background: radial-gradient(circle, rgb(126 191 166 / 25%) 0%, rgb(186 224 206 / 15%) 43%, transparent 72%); animation: duno-gradient-drift-three 8s ease-in-out -3s infinite alternate; }
+        .welcome-gradient-drift-four { top: -55%; right: -13%; background: radial-gradient(circle, rgb(160 147 238 / 23%) 0%, rgb(213 208 255 / 14%) 43%, transparent 72%); animation: duno-gradient-drift-four 12s ease-in-out -7s infinite alternate; }
+        @keyframes duno-gradient-drift-one { to { transform: translate(16%, 12%) scale(1.08); } }
+        @keyframes duno-gradient-drift-two { to { transform: translate(-12%, 13%) scale(.94); } }
+        @keyframes duno-gradient-drift-three { to { transform: translate(-15%, -12%) scale(1.06); } }
+        @keyframes duno-gradient-drift-four { to { transform: translate(-12%, 18%) scale(.96); } }
         .welcome-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(9rem, 14rem); align-items: center; gap: 1rem; }
         .welcome-copy { min-width: 0; }
         .welcome-mascot { display: block; width: 100%; max-width: 14rem; height: auto; justify-self: center; filter: drop-shadow(0 .8rem 1rem rgb(75 61 134 / 14%)); }
@@ -261,6 +271,7 @@ $joinUrl = site_url('register');
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+            .welcome-gradient-drift { animation: none !important; }
         }
     </style>
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
@@ -312,6 +323,10 @@ $joinUrl = site_url('register');
 
 <main class="shell main" id="main-content">
     <section class="welcome" id="home" aria-labelledby="welcome-heading"<?= $isStudent ? ' data-tour-target="start"' : '' ?>>
+        <span class="welcome-gradient-drift welcome-gradient-drift-one" aria-hidden="true"></span>
+        <span class="welcome-gradient-drift welcome-gradient-drift-two" aria-hidden="true"></span>
+        <span class="welcome-gradient-drift welcome-gradient-drift-three" aria-hidden="true"></span>
+        <span class="welcome-gradient-drift welcome-gradient-drift-four" aria-hidden="true"></span>
         <div class="welcome-layout">
             <div class="welcome-copy">
                 <p class="overline"><?= $isStudent ? 'Your study space' : 'A little more focus, one step at a time' ?></p>
@@ -407,7 +422,45 @@ $joinUrl = site_url('register');
 ]) ?>
 <?php endif ?>
 
-<footer class="shell footer">duno. &middot; Your Little Study Buddy.<small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> icon set by 480 Design, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a>.</small></footer>
+<?php
+$footerGroups = $isStudent ? [
+    ['id' => 'footer-study', 'title' => lang('App.footerStudy'), 'links' => [
+        ['label' => lang('App.home'), 'href' => site_url('student')],
+        ['label' => lang('App.subjects'), 'href' => site_url('student/subjects')],
+        ['label' => lang('App.topics'), 'href' => site_url('student/topics')],
+    ]],
+    ['id' => 'footer-tools', 'title' => lang('App.footerTools'), 'links' => [
+        ['label' => lang('App.focus'), 'href' => site_url('student/priority')],
+        ['label' => lang('App.plan'), 'href' => site_url('student/plan')],
+        ['label' => lang('App.timer'), 'href' => site_url('student/sessions')],
+        ['label' => lang('App.aralytics'), 'href' => site_url('student/aralytics')],
+    ]],
+    ['id' => 'footer-guide', 'title' => lang('App.footerExplore'), 'links' => [
+        ['label' => lang('App.guide'), 'href' => site_url('student#guide-heading')],
+        ['label' => lang('App.showTour'), 'href' => site_url('student#app-tour')],
+    ]],
+] : ($isAdmin ? [
+    ['id' => 'footer-workspace', 'title' => lang('App.footerWorkspace'), 'links' => [
+        ['label' => 'Admin dashboard', 'href' => site_url('admin')],
+        ['label' => lang('App.home'), 'href' => site_url('/')],
+    ]],
+    ['id' => 'footer-explore', 'title' => lang('App.footerExplore'), 'links' => [
+        ['label' => 'Duno tools', 'href' => site_url('/#tools')],
+        ['label' => lang('App.guide'), 'href' => site_url('/#guide')],
+    ]],
+] : [
+    ['id' => 'footer-explore', 'title' => lang('App.footerExplore'), 'links' => [
+        ['label' => 'Home', 'href' => site_url('/#home')],
+        ['label' => 'Duno tools', 'href' => site_url('/#tools')],
+        ['label' => lang('App.guide'), 'href' => site_url('/#guide')],
+    ]],
+    ['id' => 'footer-account', 'title' => lang('App.footerAccount'), 'links' => [
+        ['label' => 'Create account', 'href' => site_url('register')],
+        ['label' => 'Sign in', 'href' => site_url('login')],
+    ]],
+]);
+?>
+<?= view('partials/app_footer', ['footerGroups' => $footerGroups]) ?>
 <?php if (! $isLoggedIn): ?>
 <script type="module" src="<?= esc(duno_asset('assets/js/public-bottom-nav.js')) ?>"></script>
 <?php endif ?>

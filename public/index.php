@@ -3,6 +3,8 @@
 use CodeIgniter\Boot;
 use Config\Paths;
 
+require_once __DIR__ . '/../app/Services/InfinityFreeRouteMarker.php';
+
 /*
  *---------------------------------------------------------------
  * CHECK PHP VERSION
@@ -31,22 +33,7 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
 $requestUri = $_SERVER['REQUEST_URI'] ?? null;
 $scriptName = $_SERVER['SCRIPT_NAME'] ?? null;
 if (is_string($requestUri) && is_string($scriptName)) {
-    $queryOffset = strpos($requestUri, '?');
-    if ($queryOffset !== false) {
-        $requestPath = substr($requestUri, 0, $queryOffset);
-        $scriptPath = parse_url($scriptName, PHP_URL_PATH);
-        $routeQuery = substr($requestUri, $queryOffset + 1);
-
-        if (
-            is_string($scriptPath)
-            && $requestPath === $scriptPath
-            && str_starts_with($routeQuery, '/')
-            && ! str_contains($routeQuery, '?')
-            && preg_match('/&i=\d+$/D', $routeQuery, $hostMarker) === 1
-        ) {
-            $_SERVER['REQUEST_URI'] = $requestPath . '?' . substr($routeQuery, 0, -strlen($hostMarker[0]));
-        }
-    }
+    $_SERVER['REQUEST_URI'] = InfinityFreeRouteMarker::stripTerminalMarker($requestUri, $scriptName);
 }
 
 /*

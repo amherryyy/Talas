@@ -9,7 +9,7 @@ class StudyPlanItemModel extends Model
     protected $table = 'study_plan_items';
     protected $primaryKey = 'id';
     protected $returnType = 'array';
-    protected $allowedFields = ['plan_id', 'topic_id', 'topic_title', 'subject_name', 'duration_minutes', 'position'];
+    protected $allowedFields = ['plan_id', 'topic_id', 'topic_title', 'subject_name', 'duration_minutes', 'start_time', 'position'];
     protected $useTimestamps = true;
 
     /** @return list<array<string, mixed>> */

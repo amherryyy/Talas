@@ -84,8 +84,10 @@ final class StudentPlansTest extends CIUnitTestCase
 
         $this->postAuthenticated('student/plan/generate', ['available_minutes' => '30'])->assertRedirect();
         $confirmation = $this->postAuthenticated('student/plan/generate', ['available_minutes' => '50']);
-        $confirmation->assertOK();
-        $confirmation->assertSee('Replace today’s plan?');
+        $confirmation->assertRedirect();
+        $confirmationPage = $this->getAuthenticated('student/plan');
+        $confirmationPage->assertOK();
+        $confirmationPage->assertSee('Replace today’s plan?');
         $this->assertSame(30, (int) $this->planFor((int) $student->id)['available_minutes']);
 
         $this->postAuthenticated('student/plan/generate', [
@@ -150,6 +152,92 @@ final class StudentPlansTest extends CIUnitTestCase
         $plan = $this->planFor((int) $student->id);
         $this->assertSame(25, (int) $plan['available_minutes']);
         $this->assertSame([], $plan['items']);
+    }
+
+    public function testStudentCanAddAnOwnedTopicAsAScheduledAgendaBlock(): void
+    {
+        $student = $this->createUser('agenda-owner', 'student');
+        $subjectId = $this->createSubject((int) $student->id, 'Biology');
+        $topicId = $this->insertTopic($subjectId, 'Cell structure', 'high', 'not_started');
+        $this->authenticateAs($student);
+
+        $this->getAuthenticated('student/plan')->assertOK();
+        $response = $this->postAuthenticated('student/plan/items', [
+            'plan_date' => $this->today(),
+            'agenda_item' => 'topic-' . $topicId,
+            'duration_minutes' => '25',
+            'start_time' => '09:00',
+            'available_minutes' => '60',
+        ]);
+        $response->assertRedirect();
+
+        $plan = $this->planFor((int) $student->id);
+        $this->assertCount(1, $plan['items']);
+        $this->assertSame('09:00:00', $plan['items'][0]['start_time']);
+        $this->assertSame($topicId, (int) $plan['items'][0]['topic_id']);
+    }
+
+    public function testAgendaRejectsOverlappingBlocksAndForeignTopics(): void
+    {
+        $student = $this->createUser('agenda-owner-two', 'student');
+        $subjectId = $this->createSubject((int) $student->id, 'Biology');
+        $firstTopic = $this->insertTopic($subjectId, 'Cell structure', 'high', 'not_started');
+        $secondTopic = $this->insertTopic($subjectId, 'Genetics', 'medium', 'not_started');
+        $other = $this->createUser('agenda-other', 'student');
+        $otherSubjectId = $this->createSubject((int) $other->id, 'Chemistry');
+        $foreignTopic = $this->insertTopic($otherSubjectId, 'Atoms', 'medium', 'not_started');
+        $this->authenticateAs($student);
+
+        $this->postAuthenticated('student/plan/items', [
+            'plan_date' => $this->today(), 'agenda_item' => 'topic-' . $firstTopic,
+            'duration_minutes' => '25', 'start_time' => '09:00', 'available_minutes' => '60',
+        ])->assertRedirect();
+        $this->postAuthenticated('student/plan/items', [
+            'plan_date' => $this->today(), 'agenda_item' => 'topic-' . $secondTopic,
+            'duration_minutes' => '25', 'start_time' => '09:15', 'available_minutes' => '60',
+        ])->assertRedirect();
+        $this->postAuthenticated('student/plan/items', [
+            'plan_date' => $this->today(), 'agenda_item' => 'topic-' . $foreignTopic,
+            'duration_minutes' => '25', 'start_time' => '10:00', 'available_minutes' => '60',
+        ])->assertRedirect();
+
+        $plan = $this->planFor((int) $student->id);
+        $this->assertCount(1, $plan['items']);
+        $this->assertSame($firstTopic, (int) $plan['items'][0]['topic_id']);
+    }
+
+    public function testAgendaDefaultsToTheSelectedDaysFirstScheduledTime(): void
+    {
+        $student = $this->createUser('agenda-date-owner', 'student');
+        $subjectId = $this->createSubject((int) $student->id, 'Biology');
+        $firstTopicId = $this->insertTopic($subjectId, 'Cell structure', 'high', 'not_started');
+        $secondTopicId = $this->insertTopic($subjectId, 'Genetics', 'medium', 'not_started');
+        $selectedDate = (new DateTimeImmutable($this->today()))->modify('+1 day')->format('Y-m-d');
+
+        $plans = new StudyPlanModel();
+        foreach ([[$this->today(), ['08:15:00', '08:45:00']], [$selectedDate, ['11:00:00', '10:30:00']]] as [$date, $times]) {
+            $planId = (int) $plans->insert([
+                'user_id' => (int) $student->id,
+                'plan_date' => $date,
+                'available_minutes' => 50,
+            ], true);
+            foreach ([[$firstTopicId, 'Cell structure'], [$secondTopicId, 'Genetics']] as $index => [$topicId, $title]) {
+                (new StudyPlanItemModel())->insert([
+                    'plan_id' => $planId,
+                    'topic_id' => $topicId,
+                    'topic_title' => $title,
+                    'subject_name' => 'Biology',
+                    'duration_minutes' => 25,
+                    'start_time' => $times[$index],
+                    'position' => $index + 1,
+                ]);
+            }
+        }
+        $this->authenticateAs($student);
+
+        $page = $this->getAuthenticated('student/plan?date=' . $selectedDate);
+        $page->assertOK();
+        $this->assertStringContainsString('value="10:30"', $page->getBody());
     }
 
     private function planFor(int $ownerId): array

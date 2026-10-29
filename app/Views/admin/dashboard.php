@@ -37,11 +37,16 @@
         <p class="privacy-note">This dashboard shows totals only. It does not display account names, individual study records, or private check-in information.</p>
     </main>
 </div>
-<footer class="icon-credit app-footer">
-    <span class="app-footer-brand">duno.</span>
-    <span>Your Little Study Buddy.</span>
-    <small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small>
-</footer>
+<?= view('partials/app_footer', ['footerGroups' => [
+    ['id' => 'footer-workspace', 'title' => lang('App.footerWorkspace'), 'links' => [
+        ['label' => 'Admin dashboard', 'href' => site_url('admin')],
+        ['label' => lang('App.home'), 'href' => site_url('/')],
+    ]],
+    ['id' => 'footer-explore', 'title' => lang('App.footerExplore'), 'links' => [
+        ['label' => 'Duno tools', 'href' => site_url('/#tools')],
+        ['label' => lang('App.guide'), 'href' => site_url('/#guide')],
+    ]],
+]]) ?>
 <?= $this->include('partials/admin_bottom_nav') ?>
 <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>
