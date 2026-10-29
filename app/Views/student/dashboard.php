@@ -2,6 +2,10 @@
 
 <?= $this->section('content') ?>
 <section class="workspace-hero" aria-labelledby="dashboard-heading" data-tour-target="start">
+    <span class="workspace-gradient-drift workspace-gradient-drift-one" aria-hidden="true"></span>
+    <span class="workspace-gradient-drift workspace-gradient-drift-two" aria-hidden="true"></span>
+    <span class="workspace-gradient-drift workspace-gradient-drift-three" aria-hidden="true"></span>
+    <span class="workspace-gradient-drift workspace-gradient-drift-four" aria-hidden="true"></span>
     <div class="workspace-hero-copy">
         <p class="workspace-kicker">Your study space</p>
         <h1 id="dashboard-heading">Make a little progress today.</h1>

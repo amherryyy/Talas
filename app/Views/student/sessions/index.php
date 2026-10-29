@@ -60,14 +60,15 @@
                     <span class="timer-rhythm-mark" aria-hidden="true">◷</span>
                     <p class="timer-focus-kicker">A rhythm to try</p>
                     <h3 id="timer-rhythm-title">Give focus a little shape</h3>
-                    <div class="timer-rhythm-option">
-                        <strong>Pomodoro</strong>
+                    <p class="timer-rhythm-instruction">Choose a focus block to load it into the timer.</p>
+                    <button class="timer-rhythm-option" type="button" data-timer-preset="25" aria-pressed="false" aria-label="Choose Pomodoro: 25 minutes focus, 5 minutes break">
+                        <strong>Pomodoro <span class="timer-preset-action">Use this block</span></strong>
                         <span>25 min focus · 5 min break</span>
-                    </div>
-                    <div class="timer-rhythm-option">
-                        <strong>Longer block</strong>
+                    </button>
+                    <button class="timer-rhythm-option" type="button" data-timer-preset="50" aria-pressed="false" aria-label="Choose longer block: 50 minutes focus, 10 minutes break">
+                        <strong>Longer block <span class="timer-preset-action">Use this block</span></strong>
                         <span>50 min focus · 10 min break</span>
-                    </div>
+                    </button>
                     <p class="muted">Pick what feels manageable. Pause the timer for breaks; only running time is counted.</p>
                 </aside>
             </div>

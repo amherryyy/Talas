@@ -20,6 +20,72 @@ How the student verified and can explain the result: Inspected the current branc
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
+### Adapt the mobile agenda for Duno Plan
+
+Date / story: 2026-10-29 / F-07 mobile Plan agenda with week strip, scheduled study blocks, current-time marker, and add sheet
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the BrewedOps agenda sample, asked where it fit, then approved integration after the data-model tradeoffs were explained.
+Assistance used: Added a responsive agenda to Duno Plan using the student's saved plans and topics, date navigation, optional block start times, overlap/capacity checks, an add/reschedule sheet, and an animated inserted block. The desktop planner and its progress/reorder/edit flows remain available.
+Suggestions or code retained: Used Duno topic blocks instead of arbitrary meetings, location, attendees, and sample events. Existing rows remain unscheduled until a student gives them a time. Added a nullable start-time migration and documented the one-time hosted schema upgrade; no hosted database or files were changed.
+Student changes and decisions: The mobile agenda uses existing owner-scoped plan records, allows date selection and topic-based additions, and shows the now marker only on the app-local current date. New blocks must fit the daily limit and not overlap scheduled blocks.
+How the student verified and can explain the result: Source review only; tests and mobile/desktop browser checks were not run. The migration and app changes have not been deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add accessible swipe and page-dot controls to the welcome carousel
+
+Date / story: 2026-10-29 / first-run onboarding carousel controls
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner approved proceeding with the existing Duno welcome carousel after reviewing the mobile gesture references.
+Assistance used: Replaced decorative progress dots with three labeled buttons that report the selected slide and added horizontal pointer swiping to the illustration panel. Kept Back/Next and keyboard arrow controls, maintained focus on a selected dot, allowed vertical browser gestures, and retained reduced-motion support.
+Suggestions or code retained: Adapted interaction ideas from the supplied carousel example without its demo markup or event framework. No dependency, route, schema, or persistence change was added.
+Student changes and decisions: Applied the controls to Duno's current onboarding carousel, not to other carousels or navigation. No files were staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: JavaScript syntax and `git diff --check` were checked. Browser, touch-device, and assistive-technology review were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add slow drifting gradients to the landing and home heroes
+
+Date / story: 2026-10-29 / ambient hero gradient motion
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied a gradient-drift code reference and asked for three or four soft radial gradients behind the landing and home hero headlines, drifting out of sync over 8–12 seconds without blur filters.
+Assistance used: Added four decorative radial-gradient layers to the public landing hero and signed-in dashboard hero. Each has its own 8, 9, 11, or 12 second animation with an offset phase; the blobs use the Duno palette, sit behind hero content, and do not accept pointer input. Added reduced-motion rules that leave the gradients static.
+Suggestions or code retained: Adapted the timing and independent drift idea from the reference while keeping Duno colors, markup, and CSS. No blur filter, dependency, schema, or navigation change was added.
+Student changes and decisions: The owner requested this treatment for the landing page and home page. Existing unrelated work in the shared tree was preserved. No files were staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: PHP syntax checks for both changed views and `git diff --check` passed. Browser review and tests were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Adapt the footer link arrow nudge for Duno
+
+Date / story: 2026-10-29 / Duno footer columns and link hover motion
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the BrewedOps arrow-nudge example and asked to use it for footer column links.
+Assistance used: Added responsive, role-aware footer columns to the student workspace, admin dashboard, and home page, then adapted the arrow-up-right reveal and small label nudge for hover and keyboard focus.
+Suggestions or code retained: Used existing Duno destinations and localized column headings. The arrow is decorative, reduced-motion preferences show it without movement, and no font or animation dependency was added.
+Student changes and decisions: Kept the existing icon attribution and site destinations, and reused one shared footer view. No account, route, or data behavior was changed.
+How the student verified and can explain the result: Source review only; tests and browser visual review were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Adapt the three-pane workspace pattern to Duno Focus
+
+Date / story: 2026-10-29 / owner-requested Focus topic browser (F-06, R-08)
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the BrewedOps three-pane sample and asked to adopt it for Duno Focus, with folders, a selectable list, a sliding detail pane, and selected-row emphasis.
+Assistance used: Adapted the pattern to existing Duno data: the student's owned subjects are folder filters, ranked unfinished topics are the list, and the detail pane explains the current priority score and links to the existing topic page. Added topic search, per-subject unfinished counts, selected-row state, a responsive tablet/phone slide-in with a Back to topics control, and reduced-motion support.
+Suggestions or code retained: Changed the owner-scoped Focus controller data, Focus view, dedicated Focus browser JavaScript, shared CSS, requirements traceability, and this log. The supplied mock's sample notes, fake team, tags, comments, and external-font dependency were not carried over. No notes model, table, database migration, or priority formula change was added.
+Student changes and decisions: The owner asked to apply the pattern to Duno Focus; the Focus page remains a priority-topic tool. Existing uncommitted Timer, auth-language, compact-menu, and onboarding changes were preserved without modification as appropriate to this task. No files were staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: PHP syntax checks passed for the changed controller and view; `node --check` passed for the Focus browser and Timer scripts; `git diff --check` passed. Automated tests and browser/viewport review were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Make Timer rhythms selectable and refine auth/menu layout
+
+Date / story: 2026-10-29 / owner-requested Timer preset and navigation polish (F-08, R-08, R-15)
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to make the Pomodoro and longer-block cards load the timer, move and compact the login language option, and group the compact menu.
+Assistance used: Changed the static Timer rhythm cards into accessible preset buttons. A selected preset loads a 25- or 50-minute countdown; the student starts it, pauses manually for breaks, then reviews and explicitly saves or discards the counted session. Kept the no-preset stopwatch mode. Reworked the auth header at mobile widths so the language selector stays on the logo row, and grouped More links into localized Workspace, Study tools, and Account sections.
+Suggestions or code retained: Updated the Timer view and JavaScript, shared UI stylesheet, three App language dictionaries, student header layout, requirement traceability, and deployment note. No database, dependency, or migration changes.
+Student changes and decisions: The owner requested all three changes. Work is on the existing merged-fix checkout because local Git metadata is read-only in this workspace; no files were staged, committed, pushed, merged, or uploaded.
+How the student verified and can explain the result: `node --check public/assets/js/study-sessions.js`, PHP syntax checks for changed views and language files, and `git diff --check` passed. Automated tests and live browser review were not run in this task.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### Aralytics activity trend and comparisons
 
 Date / story: 2026-10-29 / complete selected-period study activity analytics
@@ -1398,9 +1464,9 @@ Date / story: 2026-10-29 / repair hosted 400 responses on Focus and Plan
 Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
 Allowed use confirmed by: The owner requested another architecture audit and reported HTTP 400 when opening Focus and Plan.
 Assistance used: Inspected the owner's open browser tab and captured the failing request URL `index.php?/student/priority&i=1`. Traced it to CI4's URI character validation: the host's terminal `&i=1` security marker was interpreted as part of the query-style route segment.
-Suggestions or code retained: Added front-controller normalization for a terminal `&i=<digits>` marker only when it appears in the query-style route immediately after the front controller and before any app query string. Normal path-style routes and normal query parameters are unchanged.
+Suggestions or code retained: Added front-controller normalization for a terminal `&i=<digits>` marker on query-style routes, including routes that also carry app query parameters such as Plan's `?date=YYYY-MM-DD`. Normal path-style URLs and unrelated front controllers are unchanged.
 Student changes and decisions: The fix is on `fix/infinityfree-query-route`; no schema change is involved. The owner remains responsible for uploading the next package after review and merge.
-How the student verified and can explain the result: Confirmed the live failing URL from the browser accessibility state/DevTools and read the installed CI4 URI factory/router logic. A PHP syntax check and diff review are pending; no test suite was run.
+How the student verified and can explain the result: The initial change was later found to skip URLs with nested app query parameters; a focused unit test now covers that case, and full PHPUnit results are recorded in the follow-up audit entry below.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
 ### Prepare a versioned InfinityFree follow-up package
@@ -1412,4 +1478,37 @@ Assistance used: Bumped the public release marker to r2 and updated the deployme
 Suggestions or code retained: The follow-up contains the front-controller route-marker fix and no schema changes. The existing host `.env` and writable data must be preserved during replacement.
 Student changes and decisions: The owner will perform the upload. No database migration is required.
 How the student verified and can explain the result: The fix branch's PHP 8.2 and 8.4 CI checks passed before this marker-only commit. The package is not yet assembled.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Adapt the supplied welcome carousel for Duno
+
+Date / story: 2026-10-29 / first-run welcome carousel for the student app
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the BrewedOps welcome carousel and asked to adapt it into a three-slide first-run experience.
+Assistance used: Added a Duno-themed full-screen carousel ahead of the existing student feature tour, with illustrated study-space, planning, and progress slides; localized copy; sliding progress dots; keyboard navigation; responsive layout; and reduced-motion support.
+Suggestions or code retained: Reused Duno's mascot and existing PHP/CSS/JavaScript stack. Excluded the source's Halden/invoice/project content, remote fonts, and unrelated styling. The standard More-menu tour replay still opens directly to the feature walkthrough.
+Student changes and decisions: Automatic first entry shows the three slides before the seven-step feature tour. The student may skip the combined flow; Back from the first feature step returns to the last welcome slide. No dependencies, schema changes, or server state were added.
+How the student verified and can explain the result: Source review only; no browser preview or tests were run. Per the owner’s release workflow, visual review remains pending until the accumulated update batch is uploaded.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add password visibility controls to authentication forms
+
+Date / story: 2026-10-29 / accessible login and registration password reveal control
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked for an eye icon control to view typed passwords.
+Assistance used: Added a progressive enhancement that inserts an eye/eye-off button beside password fields on Shield login and registration forms. Each button toggles only its own field, preserves form values and autocomplete settings, exposes localized show/hide labels and pressed state to assistive technology, and supports keyboard focus.
+Suggestions or code retained: Updated the shared auth layout, English/Taglish/Filipino App labels, shared auth styles, a small JavaScript module, requirement traceability, and this log. No Shield vendor files, authentication rules, credentials, database schema, or dependencies were changed.
+Student changes and decisions: The owner asked for password visibility icons. Existing uncommitted Focus, Timer, navigation, and onboarding changes were preserved. No files were staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: PHP syntax checks for the auth layout and all three language files, `node --check public/assets/js/auth-password-visibility.js`, and `git diff --check` passed. Automated tests and browser review were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Repair release-blocking Plan and route issues
+
+Date / story: 2026-10-29 / resolve issues found in the accumulated release audit
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to address the issues identified in the audit.
+Assistance used: Extended InfinityFree marker normalization to cover query-style routes with app query parameters; corrected an owner-scoped weekly Plan count query to respect the configured database table prefix; fixed the agenda's selected-day default time; added route normalization and Plan agenda feature tests; and corrected Windows extension flags and front-controller path rewriting in the package builder.
+Suggestions or code retained: Added the small `InfinityFreeRouteMarker` helper, tests for terminal-marker stripping and path isolation, and feature coverage for scheduled blocks, overlap rejection, foreign topics, replacement confirmation, and selected-day time defaults. Updated release and AI-use notes to record the actual migration and verification state.
+Student changes and decisions: The owner asked for the blockers to be resolved, then applied the hosted agenda migration in phpMyAdmin. No staging, commit, push, merge, or package upload has been performed.
+How the student verified and can explain the result: Full PHPUnit suite passed (99 tests, 956 assertions) using XAMPP PHP 8.2 with `php_intl.dll` and `php_sqlite3.dll` enabled. PHP syntax passed for changed/new PHP files; `node --check` passed for five changed/new JavaScript modules; the package script parsed and its root include rewrite matched; `git diff --check` passed (Git printed line-ending conversion notices). phpMyAdmin confirmed migration row 16/version `2026-10-29-000005`/batch 11 and nullable `study_plan_items.start_time`. Composer's locked advisory audit could not reach Packagist because outbound network access is unavailable. The local web server was unavailable for a browser check; hosted app code has not been uploaded or smoke-tested.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.

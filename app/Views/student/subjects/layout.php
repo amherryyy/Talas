@@ -44,17 +44,26 @@
         <details class="student-menu" data-student-menu>
             <summary aria-label="<?= esc(lang('App.openMore')) ?>"<?= $isMorePage ? ' aria-current="page"' : '' ?> data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span><?= esc(lang('App.more')) ?></span></summary>
             <nav aria-label="<?= esc(lang('App.moreNav')) ?>">
-                <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav><?= esc(lang('App.home')) ?></a>
-                <a href="<?= esc(site_url('student')) ?>#app-tour"><?= esc(lang('App.showTour')) ?></a>
-                <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') && ! $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.subjects')) ?></a>
-                <a href="<?= esc(site_url('student/topics')) ?>"<?= str_starts_with($currentPath, 'student/topics') || $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.topics')) ?></a>
-                <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>><?= esc(lang('App.privateCheckins')) ?></a>
-                <a href="<?= esc(site_url('student/profile')) ?>"<?= $currentPath === 'student/profile' ? ' aria-current="page"' : '' ?>><?= esc(lang('App.profile')) ?></a>
-                <?= view('partials/language_switcher') ?>
-                <form method="post" action="<?= esc(site_url('logout')) ?>">
-                    <?= csrf_field() ?>
-                    <button type="submit"><?= esc(lang('App.signOut')) ?></button>
-                </form>
+                <div class="student-menu-group" role="group" aria-labelledby="student-menu-workspace">
+                    <p id="student-menu-workspace" class="student-menu-group-title"><?= esc(lang('App.menuWorkspace')) ?></p>
+                    <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav><?= esc(lang('App.home')) ?></a>
+                    <a href="<?= esc(site_url('student')) ?>#app-tour"><?= esc(lang('App.showTour')) ?></a>
+                </div>
+                <div class="student-menu-group" role="group" aria-labelledby="student-menu-study">
+                    <p id="student-menu-study" class="student-menu-group-title"><?= esc(lang('App.menuStudy')) ?></p>
+                    <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') && ! $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.subjects')) ?></a>
+                    <a href="<?= esc(site_url('student/topics')) ?>"<?= str_starts_with($currentPath, 'student/topics') || $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.topics')) ?></a>
+                    <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>><?= esc(lang('App.privateCheckins')) ?></a>
+                </div>
+                <div class="student-menu-group" role="group" aria-labelledby="student-menu-account">
+                    <p id="student-menu-account" class="student-menu-group-title"><?= esc(lang('App.menuAccount')) ?></p>
+                    <a href="<?= esc(site_url('student/profile')) ?>"<?= $currentPath === 'student/profile' ? ' aria-current="page"' : '' ?>><?= esc(lang('App.profile')) ?></a>
+                    <?= view('partials/language_switcher') ?>
+                    <form method="post" action="<?= esc(site_url('logout')) ?>">
+                        <?= csrf_field() ?>
+                        <button type="submit"><?= esc(lang('App.signOut')) ?></button>
+                    </form>
+                </div>
             </nav>
         </details>
     </header>
@@ -64,11 +73,23 @@
     </main>
 </div>
 <script src="<?= esc(duno_asset('assets/js/onboarding-tour.js')) ?>" defer></script>
-<footer class="icon-credit app-footer">
-    <span class="app-footer-brand">duno.</span>
-    <span>Your Little Study Buddy.</span>
-    <small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small>
-</footer>
+<?= view('partials/app_footer', ['footerGroups' => [
+    ['id' => 'footer-study', 'title' => lang('App.footerStudy'), 'links' => [
+        ['label' => lang('App.home'), 'href' => site_url('student')],
+        ['label' => lang('App.subjects'), 'href' => site_url('student/subjects')],
+        ['label' => lang('App.topics'), 'href' => site_url('student/topics')],
+    ]],
+    ['id' => 'footer-tools', 'title' => lang('App.footerTools'), 'links' => [
+        ['label' => lang('App.focus'), 'href' => site_url('student/priority')],
+        ['label' => lang('App.plan'), 'href' => site_url('student/plan')],
+        ['label' => lang('App.timer'), 'href' => site_url('student/sessions')],
+        ['label' => lang('App.aralytics'), 'href' => site_url('student/aralytics')],
+    ]],
+    ['id' => 'footer-guide', 'title' => lang('App.footerExplore'), 'links' => [
+        ['label' => lang('App.guide'), 'href' => site_url('student#guide-heading')],
+        ['label' => lang('App.showTour'), 'href' => site_url('student#app-tour')],
+    ]],
+]]) ?>
 <?= $this->include('partials/mobile_bottom_nav') ?>
 <?= view('partials/app_tour', [
     'appTourUserId' => (string) auth()->id(),

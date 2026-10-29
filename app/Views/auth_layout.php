@@ -9,7 +9,11 @@
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
     <?= $this->renderSection('pageStyles') ?>
 </head>
-<body class="duno-auth">
+<body class="duno-auth"
+    data-password-show="<?= esc(lang('App.showPassword')) ?>"
+    data-password-hide="<?= esc(lang('App.hidePassword')) ?>"
+    data-password-confirm-show="<?= esc(lang('App.showPasswordConfirm')) ?>"
+    data-password-confirm-hide="<?= esc(lang('App.hidePasswordConfirm')) ?>">
     <a class="skip-link" href="#main-content"><?= esc(lang('App.skipMain')) ?></a>
     <?= view('partials/app_notifications', ['includeFlashNotifications' => false]) ?>
     <header class="auth-header">
@@ -38,6 +42,7 @@
         <div class="auth-form-region"><?= $this->renderSection('main') ?></div>
     </main>
     <script src="<?= esc(duno_asset('assets/js/auth-mascot.js')) ?>" defer></script>
+    <script src="<?= esc(duno_asset('assets/js/auth-password-visibility.js')) ?>" defer></script>
     <?= $this->renderSection('pageScripts') ?>
     <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>

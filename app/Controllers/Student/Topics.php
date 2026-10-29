@@ -13,10 +13,12 @@ class Topics extends BaseController
 {
     public function priority(): string
     {
-        $topics = (new TopicModel())->findAllForOwner($this->ownerId());
+        $ownerId = $this->ownerId();
+        $topics = (new TopicModel())->findAllForOwner($ownerId);
 
         return view('student/topics/priority', [
             'topics' => (new TopicPriorityService())->rank($topics),
+            'subjects' => (new SubjectModel())->findAllForOwner($ownerId),
             'pageTitle' => 'Duno Focus',
         ]);
     }

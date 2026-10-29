@@ -41,11 +41,13 @@
     const saveButton = timer.querySelector('[data-save]');
     const subject = timer.querySelector('[data-subject-select]');
     const topic = timer.querySelector('[data-topic-select]');
+    const presetButtons = timer.querySelectorAll('[data-timer-preset]');
     const maxDurationMs = 480 * 60 * 1000;
 
     let accumulatedMs = 0;
     let startedAt = null;
     let intervalId = null;
+    let presetDurationMs = null;
     let state = timer.dataset.reviewing === 'true' ? 'stopped' : 'idle';
     let unsaved = state === 'stopped';
 
@@ -65,6 +67,7 @@
     if (state === 'stopped') {
         review.hidden = false;
         saveButton.disabled = false;
+        for (const button of presetButtons) button.disabled = true;
         for (const button of discardButtons) button.disabled = false;
         status.textContent = 'Review the duration and save the session, or discard this result.';
     }
@@ -80,11 +83,35 @@
     };
 
     const renderTime = () => {
-        elapsedOutput.textContent = formatTime(elapsedMilliseconds());
-        if (state === 'running' && elapsedMilliseconds() >= maxDurationMs) {
+        const elapsed = elapsedMilliseconds();
+        const displayedTime = presetDurationMs === null ? elapsed : Math.max(0, presetDurationMs - elapsed);
+        elapsedOutput.textContent = formatTime(displayedTime);
+        if (state === 'running' && presetDurationMs !== null && elapsed >= presetDurationMs) {
+            stopTimer(false, true);
+        } else if (state === 'running' && elapsed >= maxDurationMs) {
             stopTimer(true);
         }
     };
+
+    const clearPresetSelection = () => {
+        presetDurationMs = null;
+        for (const button of presetButtons) button.setAttribute('aria-pressed', 'false');
+        renderTime();
+    };
+
+    for (const button of presetButtons) {
+        button.addEventListener('click', () => {
+            if (state !== 'idle') return;
+            presetDurationMs = Number(button.dataset.timerPreset) * 60 * 1000;
+            accumulatedMs = 0;
+            for (const presetButton of presetButtons) {
+                presetButton.setAttribute('aria-pressed', presetButton === button ? 'true' : 'false');
+            }
+            timerLabel.textContent = `${button.dataset.timerPreset}-minute focus block selected`;
+            status.textContent = `Your ${button.dataset.timerPreset}-minute focus block is ready. Start the timer when you are ready; pause it for breaks.`;
+            renderTime();
+        });
+    }
 
     const lockReferences = (locked) => {
         subject.disabled = locked;
@@ -96,12 +123,15 @@
         setState('running');
         unsaved = true;
         lockReferences(true);
+        for (const button of presetButtons) button.disabled = true;
         startButton.disabled = true;
         pauseButton.disabled = false;
         resumeButton.disabled = true;
         stopButton.disabled = false;
         for (const button of discardButtons) button.disabled = false;
-        status.textContent = 'Timer running. Stopping it will show a review; it will not save automatically.';
+        status.textContent = presetDurationMs === null
+            ? 'Timer running. Stopping it will show a review; it will not save automatically.'
+            : 'Focus block running. Pause for breaks; reaching zero opens a review. Nothing is saved automatically.';
         intervalId = window.setInterval(renderTime, 250);
     };
 
@@ -118,9 +148,9 @@
         status.textContent = 'Timer paused. Resume or stop and review the session.';
     };
 
-    function stopTimer(reachedMaximum = false) {
+    function stopTimer(reachedMaximum = false, reachedPreset = false) {
         if (state === 'running') {
-            accumulatedMs = elapsedMilliseconds();
+            accumulatedMs = reachedPreset ? presetDurationMs : elapsedMilliseconds();
         }
         startedAt = null;
         setState('stopped');
@@ -138,9 +168,11 @@
         stopButton.disabled = true;
         saveButton.disabled = false;
         for (const button of discardButtons) button.disabled = false;
-        status.textContent = reachedMaximum
-            ? 'The timer reached the 480-minute limit. Review the duration before saving.'
-            : 'Timer stopped. Review the duration and explicitly save or discard this session.';
+        status.textContent = reachedPreset
+            ? 'Your focus block is complete. Review the duration and choose whether to save it.'
+            : reachedMaximum
+                ? 'The timer reached the 480-minute limit. Review the duration before saving.'
+                : 'Timer stopped. Review the duration and explicitly save or discard this session.';
         durationInput.focus();
     }
 
@@ -149,6 +181,7 @@
         intervalId = null;
         accumulatedMs = 0;
         startedAt = null;
+        clearPresetSelection();
         setState('idle');
         unsaved = false;
         review.hidden = true;
@@ -164,6 +197,7 @@
         stopButton.disabled = true;
         saveButton.disabled = true;
         for (const button of discardButtons) button.disabled = true;
+        for (const button of presetButtons) button.disabled = false;
         renderTime();
         status.textContent = 'Timer discarded. No session was saved.';
         subject.focus();
@@ -177,11 +211,9 @@
         }
         if (state === 'paused') {
             startTimer();
-            status.textContent = 'Timer resumed.';
             resumeButton.disabled = true;
         } else if (state === 'idle') {
             startTimer();
-            status.textContent = 'Timer running. Stopping it will show a review; it will not save automatically.';
         }
     });
     pauseButton.addEventListener('click', pauseTimer);

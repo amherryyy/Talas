@@ -37,6 +37,7 @@ $routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'st
     $routes->get('priority', 'Student\\Topics::priority', ['as' => 'student.priority']);
     $routes->get('plan', 'Student\\Plans::show', ['as' => 'student.plan']);
     $routes->post('plan/generate', 'Student\\Plans::generate', ['as' => 'student.plan.generate']);
+    $routes->post('plan/items', 'Student\\Plans::addBlock', ['as' => 'student.plan.items.add']);
     $routes->post('plan/items/(:num)/progress', 'Student\\Plans::updateProgress/$1', ['as' => 'student.plan.items.progress']);
     $routes->post('plan/items/(:num)/duration', 'Student\\Plans::updateDuration/$1', ['as' => 'student.plan.items.duration']);
     $routes->post('plan/items/(:num)/remove', 'Student\\Plans::removeItem/$1', ['as' => 'student.plan.items.remove']);
