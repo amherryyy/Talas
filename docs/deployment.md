@@ -188,4 +188,8 @@ The original hosted schema-only SQL had cascading delete actions on saved study 
 
 ### Mobile Plan agenda start-time column
 
-The mobile agenda uses a nullable `study_plan_items.start_time` column. Existing plans remain unchanged and their old blocks continue to show as unscheduled; the migration does not invent schedule times. The owner applied [`2026-10-29-plan-agenda-upgrade.sql`](2026-10-29-plan-agenda-upgrade.sql) through phpMyAdmin on 2026-10-29. Results confirmed migration row 16, version `2026-10-29-000005`, batch 11, and the nullable `start_time` column. Do not apply the upgrade again. Local installations use the CodeIgniter migration normally. App upload remains pending.
+The mobile agenda uses a nullable `study_plan_items.start_time` column. Existing plans remain unchanged and their old blocks continue to show as unscheduled; the migration does not invent schedule times. The owner applied [`2026-10-29-plan-agenda-upgrade.sql`](2026-10-29-plan-agenda-upgrade.sql) through phpMyAdmin on 2026-10-29. Results confirmed migration row 16, version `2026-10-29-000005`, batch 11, and the nullable `start_time` column. Do not apply the upgrade again. Local installations use the CodeIgniter migration normally.
+
+### InfinityFree root 500 after r3 upload
+
+After uploading `duno-full-release-20261029-r3.zip`, the owner reported HTTP 500 at the site root. The generated root `.htaccess` used `Options -Indexes` and `Options +FollowSymLinks`. Current InfinityFree support reports identify unsupported `Options` directives as a cause of 500 responses. Both directives have been removed from the project root rules and package generator; route rewrites, access-denial, authorization-header, and static-cache rules remain. No database change is needed. For immediate recovery, replace the live `htdocs/.htaccess` with the corrected root `.htaccess`, then reload the home page before replacing other files.

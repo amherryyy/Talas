@@ -76,8 +76,6 @@ try {
     [System.IO.File]::WriteAllText((Join-Path $packageRoot 'index.php'), $entryPoint, $utf8NoBom)
 
     $rootHtaccess = @'
-Options -Indexes
-Options +FollowSymLinks
 ServerSignature Off
 
 <IfModule mod_rewrite.c>
