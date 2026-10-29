@@ -9,9 +9,11 @@
     <a class="button secondary" href="<?= esc(site_url('student/subjects/templates')) ?>"><?= esc(lang('App.programCatalog')) ?></a>
 </div>
 
-<form method="get" action="<?= esc(site_url('student/subjects')) ?>" class="subject-program-filter">
+<form method="post" action="<?= esc(site_url('student/subjects/search')) ?>" class="subject-program-filter">
+    <?= csrf_field() ?>
+    <input type="hidden" name="query" value="">
     <label for="subject-program-filter">Show subjects for an NVSU program</label>
-    <select id="subject-program-filter" name="program">
+    <select id="subject-program-filter" name="program_id">
         <option value="">All my subjects</option>
         <?php foreach ($nvsuCurricula as $program): ?>
             <option value="<?= esc($program['id']) ?>"<?= $programId === $program['id'] ? ' selected' : '' ?>><?= esc($program['title']) ?></option>
@@ -35,7 +37,7 @@
     <input id="subject-query" name="query" type="search" maxlength="120" value="<?= esc($query) ?>" autocomplete="off">
     <div class="actions">
         <button type="submit"><span class="solar-icon solar-icon-magnifier" aria-hidden="true"></span> <?= esc(lang('App.search')) ?></button>
-        <a class="button secondary" href="<?= esc(site_url('student/subjects' . ($programId !== '' ? '?program=' . rawurlencode($programId) : ''))) ?>"><?= esc(lang('App.clear')) ?></a>
+        <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><?= esc(lang('App.clear')) ?></a>
     </div>
 </form>
 

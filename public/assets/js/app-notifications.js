@@ -10,6 +10,12 @@
         warning: stack.dataset.titleWarning || 'Quick heads-up',
         error: stack.dataset.titleError || "Let's sort this out",
     };
+    const dialogue = {
+        success: stack.dataset.dialogueSuccess || 'You made it happen. Keep that little win moving.',
+        info: stack.dataset.dialogueInfo || 'Here is a quick note to help with your next step.',
+        warning: stack.dataset.dialogueWarning || 'Pause for a moment and check this before continuing.',
+        error: stack.dataset.dialogueError || 'That did not go as planned. Check the details below, then try again when you are ready.',
+    };
     const emotions = {
         success: String.fromCodePoint(0x1f973),
         info: String.fromCodePoint(0x1f914),
@@ -50,7 +56,9 @@
                     ? 'warning'
                     : source.classList.contains('alert-info')
                         ? 'info'
-                        : 'success';
+                        : source.getAttribute('role') === 'alert'
+                            ? 'error'
+                            : 'success';
         const card = document.createElement('article');
         card.className = 'duno-toast';
         card.dataset.mood = mood;
@@ -75,6 +83,11 @@
         title.className = 'duno-toast-title';
         title.textContent = titles[mood];
         copy.append(title);
+
+        const dialogueLine = document.createElement('p');
+        dialogueLine.className = 'duno-toast-dialogue';
+        dialogueLine.textContent = dialogue[mood];
+        copy.append(dialogueLine);
 
         if (isList && source.children.length > 0) {
             const list = document.createElement('ul');

@@ -3,6 +3,7 @@
 return [
     'language' => 'Wika', 'english' => 'Ingles', 'taglish' => 'Taglish', 'filipino' => 'Filipino (Tagalog)', 'apply' => 'Ilapat',
     'notificationRegion' => 'Mga abiso', 'notificationDismiss' => 'Isara ang abiso', 'notificationSuccess' => 'Ayos!', 'notificationInfo' => 'Paalala', 'notificationWarning' => 'Munting paalala', 'notificationError' => 'Aayusin natin ito',
+    'notificationDialogueSuccess' => 'Ikaw ang gumawa nito. Ipagpatuloy ang maliliit mong tagumpay.', 'notificationDialogueInfo' => 'Narito ang maikling paalala para sa susunod mong hakbang.', 'notificationDialogueWarning' => 'Huminto sandali at suriin ito bago magpatuloy.', 'notificationDialogueError' => 'Hindi ito naging ayon sa plano. Suriin ang detalye sa ibaba at subukan muli kapag handa ka na.',
     'languageInvalid' => 'Pumili ng isa sa mga magagamit na wika.', 'skipMain' => 'Lumaktaw sa pangunahing nilalaman',
     'home' => 'Tahanan', 'focus' => 'Pokus', 'plan' => 'Plano', 'timer' => 'Orasan', 'guide' => 'Gabay', 'aralytics' => 'Aralytics', 'more' => 'Iba pa',
     'subjects' => 'Mga Asignatura', 'topics' => 'Mga Paksa', 'privateCheckins' => 'Pribadong tala', 'showTour' => 'Ipakita ang gabay sa app', 'signOut' => 'Mag-sign out',

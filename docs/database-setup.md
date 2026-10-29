@@ -47,4 +47,6 @@ The PHPUnit connection remains separate and uses in-memory SQLite. Do not point 
 
 ## InfinityFree database
 
+The owner confirmed the hosted NVSU program migration completed with 12 rows in the migration ledger and latest batch 7. The next XP scale update is migration 13 / batch 8; use [`2026-10-29-progression-xp-scale-upgrade.sql`](2026-10-29-progression-xp-scale-upgrade.sql) only when its 12-row / batch-7 preconditions still match. It scales existing streak awards and does not alter student or session rows.
+
 The owner reports creating the hosted database and successfully importing the schema through phpMyAdmin on 2026-10-18. The reviewed schema-only file is [`duno-hosted-initial-schema.sql`](deployment.md#initial-hosted-database-import); it contains the current CodeIgniter, Shield, Settings, and Duno schema plus migration tracking rows, but no user or study data. Import it only once into that new, empty database. The owner confirms the 15-table count and nine-row migration ledger in phpMyAdmin. Hosted app connectivity was later demonstrated by student registration/login/session persistence. Configure host credentials in a separate root `.env` as described in `docs/deployment.md`; never reuse the local `.env`. Never reuse or upload the local `.env`, local database user, or local password.

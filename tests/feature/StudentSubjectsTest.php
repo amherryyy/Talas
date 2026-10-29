@@ -241,6 +241,30 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $this->assertSame('', $response->response()->getHeaderLine('Location'));
     }
 
+    public function testNvsuProgramFilterSubmitsAsPostAndShowsOnlyMatchingSubjects(): void
+    {
+        $student = $this->createUser('nvsu-program-filter', 'student');
+        $subjects = new App\Models\SubjectModel();
+        $subjects->insert(['user_id' => $student->id, 'name' => 'Systems Analysis', 'program_id' => 'bsis-service-management']);
+        $subjects->insert(['user_id' => $student->id, 'name' => 'Cell Biology', 'program_id' => null]);
+        $this->authenticateAs($student);
+
+        $page = $this->getAuthenticated('student/subjects');
+        $page->assertOK();
+        $pageHtml = $page->response()->getBody();
+        $this->assertStringContainsString('method="post" action="http://example.com/index.php/student/subjects/search"', $pageHtml);
+        $this->assertStringContainsString('name="program_id"', $pageHtml);
+
+        $filtered = $this->postAuthenticated('student/subjects/search', [
+            'query' => '',
+            'program_id' => 'bsis-service-management',
+        ]);
+        $filtered->assertOK();
+        $filtered->assertSee('Systems Analysis');
+        $filtered->assertDontSee('Cell Biology');
+        $this->assertSame('', $filtered->response()->getHeaderLine('Location'));
+    }
+
     public function testStudentCanPreviewSourcedChedTemplate(): void
     {
         $student = $this->createUser('ched-preview-student', 'student');

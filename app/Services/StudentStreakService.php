@@ -8,7 +8,7 @@ use DateTimeZone;
 
 class StudentStreakService
 {
-    public const DAILY_XP = 5;
+    public const DAILY_XP = 500;
 
     /** @return array{awarded: bool, activity_date: string, streak_days: int, xp_awarded: int} */
     public function recordVisit(int $ownerId, DateTimeImmutable $now, DateTimeZone $timezone): array

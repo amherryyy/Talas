@@ -1233,3 +1233,16 @@ Student changes and decisions: Reuse Duno's existing mascot asset and add no new
 How the student verified and can explain the result: PHP syntax checks passed for changed PHP views and language files, `node --check public/assets/js/app-notifications.js` passed, and `git diff --check` passed (line-ending warnings only). Automated tests and browser checks are pending. The uploaded UI has not been changed, and no files were staged, committed, or deployed.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### Current navigation, notifications, tour, and progression repair
+
+```text
+Date / story: 2026-10-29 / repair query-style navigation, tour replay, notification feedback, and XP scale
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested repairs after observing subject-filter redirects, duplicated language-switch URLs, an unresponsive tour link, small notifications with generic positive tone, and low XP amounts.
+Assistance used (explanation, planning, code draft, debugging, review): Reworked the NVSU filter to use the existing POST search route; normalized InfinityFree query-style language return paths; made tour replay bypass the optional check-in prompt; increased and centered mascot notification cards with mood-specific dialogue and corrected role=alert mood detection; scaled XP awards and thresholds and prepared the corresponding migration and phpMyAdmin script.
+Suggestions or code retained: Assumed a 100x display/reward scale: 100 XP per saved study minute, 500 daily visit XP, and levels/unlocks at 12,000 through 120,000 XP. Existing level-up pacing is preserved. Migration 2026-10-29-000002 scales historical streak awards.
+Student changes and decisions: The owner asked for more generous XP with four-digit rewards; this implementation uses the scale above. The owner uploads to InfinityFree. Apply the provided migration script once after confirming its database preconditions.
+How the student verified and can explain the result: Full PHPUnit passed (93 tests, 917 assertions) with the XAMPP `intl` and `sqlite3` extensions enabled; PHP syntax passed for 177 app/test files; JavaScript syntax passed for all three changed modules; `git diff --check` passed. The InfinityFree package contains 1,200 files, uses forward-slash ZIP paths, includes the changed routes/assets/migration, and excludes `.env`. Live host behavior remains unverified until the owner uploads the package and applies the migration.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```

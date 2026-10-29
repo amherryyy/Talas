@@ -292,7 +292,7 @@ $joinUrl = site_url('register');
                         <a href="<?= esc($workspaceUrl) ?>"><?= esc($workspaceLabel) ?></a>
                     <?php endif ?>
                     <?php if ($isStudent): ?>
-                        <a href="<?= esc(site_url('student#app-tour')) ?>">Show app tour</a>
+                        <a href="<?= esc(site_url('student')) ?>#app-tour">Show app tour</a>
                     <?php endif ?>
                     <?= view('partials/language_switcher') ?>
                     <?php if (! $isLoggedIn): ?>

@@ -44,7 +44,7 @@
             <summary aria-label="<?= esc(lang('App.openMore')) ?>"<?= $isMorePage ? ' aria-current="page"' : '' ?> data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span><?= esc(lang('App.more')) ?></span></summary>
             <nav aria-label="<?= esc(lang('App.moreNav')) ?>">
                 <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav><?= esc(lang('App.home')) ?></a>
-                <a href="<?= esc(site_url('student#app-tour')) ?>"><?= esc(lang('App.showTour')) ?></a>
+                <a href="<?= esc(site_url('student')) ?>#app-tour"><?= esc(lang('App.showTour')) ?></a>
                 <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') && ! $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.subjects')) ?></a>
                 <a href="<?= esc(site_url('student/topics')) ?>"<?= str_starts_with($currentPath, 'student/topics') || $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.topics')) ?></a>
                 <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>><?= esc(lang('App.privateCheckins')) ?></a>

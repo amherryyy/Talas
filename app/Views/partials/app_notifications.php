@@ -32,6 +32,12 @@ $notificationTitles = [
     'warning' => lang('App.notificationWarning'),
     'error' => lang('App.notificationError'),
 ];
+$notificationDialogue = [
+    'success' => lang('App.notificationDialogueSuccess'),
+    'info' => lang('App.notificationDialogueInfo'),
+    'warning' => lang('App.notificationDialogueWarning'),
+    'error' => lang('App.notificationDialogueError'),
+];
 $notificationEmotions = [
     'success' => '🥳',
     'info' => '🧐',
@@ -49,6 +55,10 @@ $notificationEmotions = [
     data-title-info="<?= esc($notificationTitles['info']) ?>"
     data-title-warning="<?= esc($notificationTitles['warning']) ?>"
     data-title-error="<?= esc($notificationTitles['error']) ?>"
+    data-dialogue-success="<?= esc($notificationDialogue['success']) ?>"
+    data-dialogue-info="<?= esc($notificationDialogue['info']) ?>"
+    data-dialogue-warning="<?= esc($notificationDialogue['warning']) ?>"
+    data-dialogue-error="<?= esc($notificationDialogue['error']) ?>"
     role="region"
     aria-label="<?= esc(lang('App.notificationRegion')) ?>"
 >
@@ -61,6 +71,7 @@ $notificationEmotions = [
             </span>
             <div class="duno-toast-copy">
                 <strong class="duno-toast-title"><?= esc($notificationTitles[$type]) ?></strong>
+                <p class="duno-toast-dialogue"><?= esc($notificationDialogue[$type]) ?></p>
                 <p class="duno-toast-message"><?= esc($notification['message']) ?></p>
             </div>
             <a class="duno-toast-dismiss" href="<?= esc(current_url()) ?>" aria-label="<?= esc(lang('App.notificationDismiss')) ?>">×</a>
