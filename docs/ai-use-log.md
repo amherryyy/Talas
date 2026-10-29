@@ -193,6 +193,32 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### Prepare a verifiable full InfinityFree package
+
+```text
+Date / story: 2026-10-29 / prepare current accumulated work for owner upload
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue fixing remaining project risks and retains responsibility for uploading the package.
+Assistance used: Added a public non-secret release marker to the assets and assembled a full htdocs-root package from the current worktree using the existing InfinityFree builder. Created a ZIP with hidden files preserved and checked its contents/hash.
+Suggestions or code retained: Package at `build/duno-full-release-20261029-r1.zip`, marker `duno-full-release-20261029-r1`, SHA-256 `9fc0abae06baf54f11f26a25fbb769c853cb220d6b6764da702438cf94367567`. It contains current uncommitted worktree changes and must not be described as a clean Git revision. Root/app `.htaccess` and migration 15 are included; `.env`, Composer manifests, and project tests are excluded.
+Student changes and decisions: The owner will perform any upload. No files were staged, committed, pushed, or deployed.
+How the student verified and can explain the result: The build completed from the locked local vendor tree because Packagist was unreachable. The ZIP contains 1,215 entries/5,125,596 bytes; syntax passed for 158 application PHP files and the front controller; the archive includes the release marker and deny files and has no `.env`. Tests, browser checks, and live host behavior were not verified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Continue the schema-integrity audit
+
+```text
+Date / story: 2026-10-29 / enforce consistent student, subject, and topic references for saved sessions
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue the audit, and prior project instructions authorized repair of conflicts and potential issues.
+Assistance used: Added a MySQL migration and one-time upgrade SQL with preflight checks and composite foreign keys from sessions to the matching user/subject and topic/subject pair. Updated deployment/database instructions with the existing host ledger precondition and operator verification steps. Reconciled stale package notes: r3 was previously reported uploaded; mascot-only r5 was prepared but its upload is unconfirmed and it predates later local work. Also reconciled stale migration-state notes and made the XP scale migration rollback preserve saved values because converted and newer 500-XP rows are indistinguishable.
+Suggestions or code retained: The migration refuses to alter tables if historical session references do not match. The owner ran both hosted preflight queries and confirmed zero rows in each, then applied the DDL; phpMyAdmin reported both composite constraints created, old single-column constraints dropped, and migration 15/batch 10 inserted as ID 15. The owner verified the exact column pairs and `RESTRICT/CASCADE` and `RESTRICT/RESTRICT` delete/update rules. No hosted data rows were modified.
+Student changes and decisions: No stage, commit, push, package, or app deployment was performed.
+How the student verified and can explain the result: PHP syntax and `git diff --check` passed; owner-provided phpMyAdmin output confirms both read-only preflight queries returned zero rows, the upgrade DDL/ledger insert succeeded, and the final constraint metadata matches. Tests and browser checks were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### R-08 notification fallback and NVSU program-linked subjects
 
 ```text
@@ -1310,4 +1336,47 @@ Assistance used: Added a staged dashboard entrance using CSS keyframes and inlin
 Suggestions or code retained: The animation is local to the app and uses no video, external service, animation package, canvas, or new runtime dependency. The existing dashboard greeting content and navigation remain intact.
 Student changes and decisions: The owner requested a more elaborate hard-coded welcome sequence. No student data, schema, or saved preferences were added. No staging, commit, push, merge, package, or upload was performed.
 How the student verified and can explain the result: Source review only. Automated tests and browser preview were not run for this change.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Repair InfinityFree language redirects and improve rating controls
+
+Date / story: 2026-10-29 / repair repeated query-style route prefixes and improve ordinal form controls
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner reported repeated 404s and requested that menus/forms be made more visually appealing using the supplied rating-scale reference.
+Assistance used: Traced the `/index.php?/index.php?/student?...` failure to a query-style route that arrived without a leading slash and was not normalized before the framework URL helper added its own front-controller prefix. Refactored rating markup into reusable radio-group partials, applied it to workload/energy check-ins and topic importance/progress choices and filters, and updated the shared form/select and focus styles.
+Student changes and decisions: Kept native form submission, server validation, field names and database values. Subject and due-date selectors remain ordinary selects because they are search/navigation choices rather than ratings. No schema or dependency changes were made.
+How the student verified and can explain the result: PHP syntax checks passed for the changed PHP views/service. Manual route-normalization cases returned `student?s` for leading-slash, no-leading-slash, and repeated-prefix InfinityFree variants; ordinary `student/subjects?program=bsis` remained intact. `spark routes --except=auto` listed the language and student routes. `git diff --check` passed. PHPUnit and live authenticated browser checks were not run; hosted behavior remains pending upload.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Integrate owner-provided progress card and animated analytics bars
+
+Date / story: 2026-10-29 / adapt BrewedOps Motion Library card and bar-chart references to Duno
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the snippets and requested integration into Duno Plan and Aralytics.
+Assistance used: Adapted the progress card to the signed-in student's saved plan topics, with CSRF-protected progress updates, owner-scoped status changes, accessible progress feedback, and a no-JavaScript submit fallback. Applied a staggered one-time entrance to the existing Aralytics activity bars using the selected period's real values and retained its exact data table.
+Suggestions or code retained: Adapted the supplied visual ideas to Duno's colors, real topic/session data, existing PHP/CSS/JS stack, and reduced-motion settings. Did not use the sample lesson/signup data, growth badge, Google fonts, or external animation library. No database migration was added.
+Student changes and decisions: Checking a plan topic sets its saved progress to done; unchecking sets it to in progress. No files were staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: Source review only. Tests, browser preview, and diff whitespace checks were not run for this integration.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Integrate a persistent account profile and unsaved-changes bar
+
+Date / story: 2026-10-29 / adapt the supplied profile card to the current Shield account model
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the BrewedOps profile/save-bar example and chose an editable username with verified email read-only.
+Assistance used: Added a student profile route and view backed by CodeIgniter Shield, server-side username validation and uniqueness checking, save/discard behavior, and a compact More-menu link. Adapted layout and language labels to Duno and accounted for the fixed mobile navigation.
+Suggestions or code retained: Only the username and existing email identity are shown. Mock job, bio, timezone, avatar-upload, notification preferences, and sample team settings were excluded. No profile schema or migration was added.
+Student changes and decisions: Username is editable; the sign-in email is read-only. The save bar appears only after an actual username change. Nothing was staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: PHP syntax checks passed for changed PHP files, `node --check` passed for the save-bar script, and `git diff --check` passed. A route CLI listing could not run because this PHP installation lacks the `intl` `Locale` class; automated application tests and authenticated browser checks were not run. Host behavior awaits owner upload.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Align hosted history foreign keys with application migrations
+
+Date / story: 2026-10-29 / correct saved-session and plan-item deletion constraints (F-08, S-02)
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to address the audit recommendations one at a time.
+Assistance used: Compared the fresh-host schema export and existing CI migrations, then added a schema correction migration and a one-time SQL upgrade for the existing hosted database.
+Suggestions or code retained: Fresh imports now retain study sessions with restrictive subject/topic references and preserve plan-item snapshots by setting only the deleted topic reference to null. Owner-provided phpMyAdmin results confirmed migration 13/batch 8, 13 total ledger rows, no migration 14, and matching FK names with mismatched delete/update actions. The hosted upgrade records migration 14/batch 9; a backup is required before execution.
+Student changes and decisions: The owner applied the corrected SQL upgrade through phpMyAdmin. No app package deployment, staging, commit, or push was performed. Existing unrelated working-tree changes were preserved.
+How the student verified and can explain the result: PHP syntax check and `git diff --check` passed. The owner-provided phpMyAdmin results confirmed migration 14/batch 9 and the intended rules: `SET NULL/CASCADE` for plan-item topic, `RESTRICT/CASCADE` for session subject, and `RESTRICT/CASCADE` for session topic (delete/update). The initial combined DROP/ADD failed with errno 121; the corrected separate ALTER statements then succeeded. No behavior test against actual saved records was reported.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.

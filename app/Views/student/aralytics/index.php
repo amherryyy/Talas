@@ -34,9 +34,9 @@
             <div class="report-section-heading"><div><p class="workspace-kicker">Study activity over time</p><h3 id="activity-trend-heading"><?= $summary['activity_granularity'] === 'month' ? 'Monthly study minutes' : 'Daily study minutes' ?></h3></div><p class="muted">Scaled to <?= esc((string) $activityMax) ?> min. Empty days and months are included<?= $summary['activity_granularity'] === 'month' ? '; scroll to see older months' : '.' ?></p></div>
             <div class="activity-chart-scroll no-print">
                 <ol class="activity-chart" role="img" aria-label="Saved study minutes <?= esc(strtolower($summary['period_label'])) ?>. Exact minutes and session counts are listed in the table below.">
-                    <?php foreach ($summary['activity_series'] as $bucket): ?>
+                    <?php foreach ($summary['activity_series'] as $index => $bucket): ?>
                         <?php $barHeight = $bucket['minutes'] === 0 ? 0 : max(2, (int) round(($bucket['minutes'] / $activityMax) * 100)); ?>
-                        <li title="<?= esc($bucket['label'] . ': ' . $bucket['minutes'] . ' minutes, ' . $bucket['session_count'] . ' sessions') ?>" aria-hidden="true"><span class="activity-chart-bar" style="height: <?= esc((string) $barHeight) ?>%"></span><span class="activity-chart-label"><?= esc($bucket['label']) ?></span></li>
+                        <li title="<?= esc($bucket['label'] . ': ' . $bucket['minutes'] . ' minutes, ' . $bucket['session_count'] . ' sessions') ?>" aria-hidden="true"><span class="activity-chart-bar" style="height: <?= esc((string) $barHeight) ?>%; --activity-delay: <?= esc((string) (min($index, 12) * 50)) ?>ms"></span><span class="activity-chart-label"><?= esc($bucket['label']) ?></span></li>
                     <?php endforeach ?>
                 </ol>
             </div>

@@ -12,21 +12,24 @@
 
 <?php $workloadRating = old('workload_rating', (string) $checkIn['workload_rating']); ?>
 <?php $energyRating = old('energy_rating', (string) $checkIn['energy_rating']); ?>
-<form method="post" action="<?= esc(site_url('student/check-ins/' . $checkIn['id'])) ?>">
+<form class="check-in-entry-form" method="post" action="<?= esc(site_url('student/check-ins/' . $checkIn['id'])) ?>">
     <?= csrf_field() ?>
-    <label for="workload-rating">Workload</label>
-    <select id="workload-rating" name="workload_rating" required>
-        <?php foreach ([1 => '1 — Very light', 2 => '2', 3 => '3', 4 => '4', 5 => '5 — Very heavy'] as $rating => $label): ?>
-            <option value="<?= esc((string) $rating) ?>"<?= (string) $workloadRating === (string) $rating ? ' selected' : '' ?>><?= esc($label) ?></option>
-        <?php endforeach ?>
-    </select>
-
-    <label for="energy-rating">Energy</label>
-    <select id="energy-rating" name="energy_rating" required>
-        <?php foreach ([1 => '1 — Very low', 2 => '2', 3 => '3', 4 => '4', 5 => '5 — Very high'] as $rating => $label): ?>
-            <option value="<?= esc((string) $rating) ?>"<?= (string) $energyRating === (string) $rating ? ' selected' : '' ?>><?= esc($label) ?></option>
-        <?php endforeach ?>
-    </select>
+    <?= view('student/partials/rating_scale', [
+        'scaleName' => 'workload_rating',
+        'scaleId' => 'workload-rating',
+        'scaleLabel' => 'Workload',
+        'scaleValue' => (string) $workloadRating,
+        'scaleLowLabel' => 'Very light',
+        'scaleHighLabel' => 'Very heavy',
+    ]) ?>
+    <?= view('student/partials/rating_scale', [
+        'scaleName' => 'energy_rating',
+        'scaleId' => 'energy-rating',
+        'scaleLabel' => 'Energy',
+        'scaleValue' => (string) $energyRating,
+        'scaleLowLabel' => 'Very low',
+        'scaleHighLabel' => 'Very high',
+    ]) ?>
     <p class="muted">Choose one rating from 1 to 5 for each.</p>
     <div class="actions">
         <button type="submit">Save changes</button>

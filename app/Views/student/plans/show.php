@@ -40,16 +40,51 @@
 <?php else: ?>
     <?php $plannedMinutes = array_sum(array_map(static fn (array $item): int => (int) $item['duration_minutes'], $plan['items'])); ?>
     <section aria-labelledby="plan-blocks-heading">
-        <h2 id="plan-blocks-heading">Your blocks</h2>
-        <p role="status">Planned <?= esc((string) $plannedMinutes) ?> of <?= esc((string) $plan['available_minutes']) ?> minutes; <?= esc((string) ((int) $plan['available_minutes'] - $plannedMinutes)) ?> unplanned.</p>
+        <div class="plan-time-summary"><h2 id="plan-blocks-heading">Your blocks</h2><p role="status">Planned <?= esc((string) $plannedMinutes) ?> of <?= esc((string) $plan['available_minutes']) ?> minutes; <?= esc((string) ((int) $plan['available_minutes'] - $plannedMinutes)) ?> unplanned.</p></div>
         <?php if ($plan['items'] === []): ?>
             <p class="muted">No unfinished topics are available to plan today.</p>
         <?php else: ?>
-            <ol class="subject-list">
+            <?php
+            $trackableItems = array_values(array_filter(
+                $plan['items'],
+                static fn (array $item): bool => $item['topic_id'] !== null && in_array($item['topic_progress'] ?? null, ['not_started', 'in_progress', 'done'], true),
+            ));
+            $doneItems = count(array_filter($trackableItems, static fn (array $item): bool => $item['topic_progress'] === 'done'));
+            $trackableCount = count($trackableItems);
+            $progressPercent = $trackableCount === 0 ? 0 : (int) round(($doneItems / $trackableCount) * 100);
+            ?>
+            <section class="plan-progress-card" data-plan-progress-card aria-labelledby="plan-progress-heading">
+                <header class="plan-progress-header">
+                    <span class="plan-progress-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16M8 7h8M8 11h6"/></svg></span>
+                    <div class="plan-progress-heading"><p class="workspace-kicker">TODAY’S STUDY PLAN</p><h3 id="plan-progress-heading">Track your progress</h3><p>Mark a topic done when you finish it. Unchecking moves it back to in progress.</p></div>
+                    <em class="plan-progress-done" data-plan-progress-done<?= $trackableCount > 0 && $doneItems === $trackableCount ? '' : ' hidden' ?>>Done</em>
+                </header>
+                <div class="plan-progress-meter">
+                    <div class="plan-progress-track" data-plan-progress-bar role="progressbar" aria-label="Completed study plan topics" aria-valuemin="0" aria-valuemax="<?= esc((string) max(1, $trackableCount)) ?>" aria-valuenow="<?= esc((string) $doneItems) ?>" aria-valuetext="<?= esc($trackableCount === 0 ? 'No linked topics available to track' : $doneItems . ' of ' . $trackableCount . ' topics done') ?>">
+                        <span class="plan-progress-fill" data-plan-progress-fill style="transform: scaleX(<?= esc((string) ($progressPercent / 100)) ?>)"></span>
+                    </div>
+                    <strong class="plan-progress-percent" data-plan-progress-percent><?= esc((string) $progressPercent) ?>%</strong>
+                </div>
+                <p class="plan-progress-summary" data-plan-progress-summary><?= esc($trackableCount === 0 ? 'No linked topics available to track.' : $doneItems . ' of ' . $trackableCount . ' topics done') ?></p>
+                <p class="plan-progress-status" data-plan-progress-status role="status" aria-live="polite"></p>
+                <ol class="plan-progress-list">
                 <?php foreach ($plan['items'] as $index => $item): ?>
-                    <li>
-                        <h3><?= esc($item['topic_title']) ?></h3>
-                        <p class="muted"><?= esc($item['subject_name']) ?></p>
+                    <?php $itemTrackable = $item['topic_id'] !== null && in_array($item['topic_progress'] ?? null, ['not_started', 'in_progress', 'done'], true); ?>
+                    <li data-plan-progress-item class="<?= $itemTrackable && $item['topic_progress'] === 'done' ? 'is-done' : '' ?><?= $itemTrackable ? '' : ' is-unavailable' ?>">
+                        <?php if ($itemTrackable): ?>
+                            <form method="post" action="<?= esc(site_url('student/plan/items/' . $item['id'] . '/progress')) ?>" class="plan-progress-form" data-plan-progress-form data-progress="<?= esc($item['topic_progress']) ?>">
+                                <?= csrf_field() ?>
+                                <label class="plan-progress-task">
+                                    <input class="plan-progress-input" type="checkbox" name="done" value="1" data-plan-progress-toggle<?= $item['topic_progress'] === 'done' ? ' checked' : '' ?>>
+                                    <span class="plan-progress-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+                                    <span class="plan-progress-copy"><strong><?= esc($item['topic_title']) ?></strong><small><?= esc($item['subject_name']) ?> · <?= esc((string) $item['duration_minutes']) ?> min</small></span>
+                                </label>
+                                <button class="plan-progress-submit button secondary" type="submit">Save status</button>
+                            </form>
+                        <?php else: ?>
+                            <div class="plan-progress-task plan-progress-task-unavailable"><span class="plan-progress-check" aria-hidden="true">—</span><span class="plan-progress-copy"><strong><?= esc($item['topic_title']) ?></strong><small><?= esc($item['subject_name']) ?> · Topic no longer available</small></span></div>
+                        <?php endif ?>
+                        <div class="plan-block-editor">
                         <form method="post" action="<?= esc(site_url('student/plan/items/' . $item['id'] . '/duration')) ?>">
                             <?= csrf_field() ?>
                             <label for="duration-<?= esc((string) $item['id']) ?>">Block duration (minutes)</label>
@@ -67,9 +102,12 @@
                                 <?= csrf_field() ?><button class="danger" type="submit">Remove block</button>
                             </form>
                         </div>
+                        </div>
                     </li>
                 <?php endforeach ?>
-            </ol>
+                </ol>
+            </section>
+            <script src="<?= esc(duno_asset('assets/js/plan-progress-card.js')) ?>" defer></script>
         <?php endif ?>
     </section>
 <?php endif ?>

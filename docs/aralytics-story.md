@@ -17,12 +17,14 @@ As a student, I can review descriptive summaries of my saved study sessions for 
 - On screen, show a separate student-only, deterministic summary of the student's check-ins for the selected period: count entries with high workload (4–5), low energy (1–2), and both together. This is descriptive counting, not model training, an assessment, a prediction, or a plan adjustment.
 - Show workload and energy rating distributions (ratings 1–5) as paired bars for the selected period. Include an accessible numeric table with the same counts; use native SVG/CSS without a chart library.
 - Show the selected period's saved study minutes over time: daily buckets for today/7-day/30-day periods and monthly buckets for all time. Include zero-activity buckets, and provide an exact table of minutes and session counts.
+- Animate the activity bars into view once using the selected-period values; never show sample signup metrics or an unsupported growth percentage.
 - Rank subject and topic comparisons by saved minutes and show each row's share of the selected period total. Keep exact totals in the report tables.
 - Do not include the private pattern summary in print output, admin views, search, or exports.
 
 ## Implementation decisions
 
 - Period boundaries use the configured application timezone. “Today” is the local calendar day; 7 days includes today and the preceding 6 days; 30 days includes today and the preceding 29 days.
+- The animated bar presentation adapts the chart snippet supplied by the owner from BrewedOps Motion Library. It uses only the existing selected-period activity values and Duno styling; no sample signup series or change percentage is shown.
 - Average length is total minutes divided by session count and displayed to one decimal place. With no sessions, show “No sessions in this period” and an em dash for the average.
 - Daily activity buckets use the selected local calendar dates. The all-time chart starts at the first recorded month and ends at the current month. The trend is a descriptive view of saved minutes; it does not forecast future activity.
 - A session without a topic contributes to its subject total and appears as “No topic” in the topic breakdown.
@@ -40,6 +42,7 @@ As a student, I can review descriptive summaries of my saved study sessions for 
 - The printable report contains the selected period, totals, subject/topic breakdown, and dated session list; print output omits navigation, period controls, the print button, and the private check-in pattern summary.
 - The on-screen rating chart is responsive, labels both series and all rating values, and has a numeric table equivalent. An empty period shows a clear no-check-ins message instead of an empty chart.
 - The activity trend uses the selected period's day/month granularity, includes zero-activity buckets, and has an exact table equivalent. Subject/topic comparisons are sorted by minutes and use the period total as their common scale.
+- The activity bars animate once from their baseline with staggered entry, then retain the exact selected-period heights. Reduced-motion preferences render the values without movement.
 - Keyboard and responsive browser review covers period selection and report navigation; print layout is checked in print media.
 
 ## Verification status

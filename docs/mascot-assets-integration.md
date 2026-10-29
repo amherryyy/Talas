@@ -50,6 +50,10 @@ The owner requested larger notification mascots that may extend outside the bar.
 - `app/Views/student/sessions/index.php` uses the welcome pose in the Timer rhythm card.
 - `public/assets/css/duno-ui.css` supplies the existing float, bounce, entrance, and notification motion. Reduced-motion preferences remain respected.
 
+## BrewedOps motion-reference adaptations
+
+The owner supplied two BrewedOps Motion Library snippets as visual references. Duno adapts the progress-card pattern on the Plan page: its checklist is connected to the saved topic progress for the signed-in student's current plan, and its completion bar uses those same values. Checking marks a topic done; unchecking returns it to in progress. The bar-chart reference is adapted to the real selected-period study-minute series on Aralytics, with a one-time staggered bar entrance and the existing exact values table. Sample signup data and growth percentages are not used. Both integrations use Duno's existing colors, local assets, and reduced-motion support; no external fonts or animation packages were added.
+
 ## Notification mood mapping
 
 Keep the server-rendered and JavaScript-created toast mappings aligned:

@@ -25,21 +25,25 @@
     <label for="due_date">Due date <span class="muted">(optional)</span></label>
     <input id="due_date" name="due_date" type="date" value="<?= esc(old('due_date', $topic['due_date'] ?? '')) ?>">
 
-    <label for="importance">Importance</label>
     <?php $importance = old('importance', $topic['importance'] ?? 'medium'); ?>
-    <select id="importance" name="importance" required>
-        <option value="low" <?= $importance === 'low' ? 'selected' : '' ?>>Low</option>
-        <option value="medium" <?= $importance === 'medium' ? 'selected' : '' ?>>Medium</option>
-        <option value="high" <?= $importance === 'high' ? 'selected' : '' ?>>High</option>
-    </select>
+    <?= view('student/partials/segmented_choice', [
+        'choiceId' => 'importance',
+        'choiceName' => 'importance',
+        'choiceLabel' => 'Importance',
+        'choiceValue' => (string) $importance,
+        'choiceClass' => 'topic-importance-choice',
+        'choiceOptions' => ['low' => 'Low', 'medium' => 'Medium', 'high' => 'High'],
+    ]) ?>
 
-    <label for="progress">Progress</label>
     <?php $progress = old('progress', $topic['progress'] ?? 'not_started'); ?>
-    <select id="progress" name="progress" required>
-        <option value="not_started" <?= $progress === 'not_started' ? 'selected' : '' ?>>Not started</option>
-        <option value="in_progress" <?= $progress === 'in_progress' ? 'selected' : '' ?>>In progress</option>
-        <option value="done" <?= $progress === 'done' ? 'selected' : '' ?>>Done</option>
-    </select>
+    <?= view('student/partials/segmented_choice', [
+        'choiceId' => 'progress',
+        'choiceName' => 'progress',
+        'choiceLabel' => 'Progress',
+        'choiceValue' => (string) $progress,
+        'choiceClass' => 'topic-progress-choice',
+        'choiceOptions' => ['not_started' => 'Not started', 'in_progress' => 'In progress', 'done' => 'Done'],
+    ]) ?>
 
     <div class="actions">
         <button type="submit"><?= $isEditing ? 'Save changes' : 'Create topic' ?></button>

@@ -17,6 +17,8 @@ $routes->post('logout', 'Auth\\LogoutController::logoutAction', ['as' => 'logout
 
 $routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'student-streak']], static function (RouteCollection $routes): void {
     $routes->get('/', 'Student\\Dashboard::index', ['as' => 'student.dashboard']);
+    $routes->get('profile', 'Student\\Profile::show', ['as' => 'student.profile']);
+    $routes->post('profile', 'Student\\Profile::update', ['as' => 'student.profile.update']);
     $routes->get('subjects', 'Student\\Subjects::index', ['as' => 'student.subjects.index']);
     $routes->post('subjects/search', 'Student\\Subjects::search', ['as' => 'student.subjects.search']);
     $routes->get('subjects/templates', 'Student\\Subjects::templates', ['as' => 'student.subjects.templates']);
@@ -35,6 +37,7 @@ $routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'st
     $routes->get('priority', 'Student\\Topics::priority', ['as' => 'student.priority']);
     $routes->get('plan', 'Student\\Plans::show', ['as' => 'student.plan']);
     $routes->post('plan/generate', 'Student\\Plans::generate', ['as' => 'student.plan.generate']);
+    $routes->post('plan/items/(:num)/progress', 'Student\\Plans::updateProgress/$1', ['as' => 'student.plan.items.progress']);
     $routes->post('plan/items/(:num)/duration', 'Student\\Plans::updateDuration/$1', ['as' => 'student.plan.items.duration']);
     $routes->post('plan/items/(:num)/remove', 'Student\\Plans::removeItem/$1', ['as' => 'student.plan.items.remove']);
     $routes->post('plan/items/(:num)/move/(:alpha)', 'Student\\Plans::moveItem/$1/$2', ['as' => 'student.plan.items.move']);

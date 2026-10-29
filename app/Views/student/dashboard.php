@@ -48,30 +48,22 @@
     <form method="post" action="<?= esc(site_url('student/check-ins')) ?>" class="check-in-prompt-form">
         <?= csrf_field() ?>
         <input type="hidden" name="return_to" value="student">
-        <fieldset class="check-in-scale">
-            <legend>How heavy or stressful does studying feel right now?</legend>
-            <div class="check-in-scale-options">
-                <?php foreach ([1, 2, 3, 4, 5] as $rating): ?>
-                    <label class="check-in-scale-choice">
-                        <input type="radio" name="workload_rating" value="<?= $rating ?>" aria-label="<?= $rating ?> out of 5" required<?= (string) old('workload_rating', '') === (string) $rating ? ' checked' : '' ?>>
-                        <span><?= $rating ?></span>
-                    </label>
-                <?php endforeach ?>
-            </div>
-            <div class="check-in-scale-endpoints"><span>Very light</span><span>Very heavy</span></div>
-        </fieldset>
-        <fieldset class="check-in-scale">
-            <legend>How is your energy for studying?</legend>
-            <div class="check-in-scale-options">
-                <?php foreach ([1, 2, 3, 4, 5] as $rating): ?>
-                    <label class="check-in-scale-choice">
-                        <input type="radio" name="energy_rating" value="<?= $rating ?>" aria-label="<?= $rating ?> out of 5" required<?= (string) old('energy_rating', '') === (string) $rating ? ' checked' : '' ?>>
-                        <span><?= $rating ?></span>
-                    </label>
-                <?php endforeach ?>
-            </div>
-            <div class="check-in-scale-endpoints"><span>Very low</span><span>Very high</span></div>
-        </fieldset>
+        <?= view('student/partials/rating_scale', [
+            'scaleName' => 'workload_rating',
+            'scaleId' => 'prompt-workload-rating',
+            'scaleLabel' => 'How heavy or stressful does studying feel right now?',
+            'scaleValue' => (string) old('workload_rating', ''),
+            'scaleLowLabel' => 'Very light',
+            'scaleHighLabel' => 'Very heavy',
+        ]) ?>
+        <?= view('student/partials/rating_scale', [
+            'scaleName' => 'energy_rating',
+            'scaleId' => 'prompt-energy-rating',
+            'scaleLabel' => 'How is your energy for studying?',
+            'scaleValue' => (string) old('energy_rating', ''),
+            'scaleLowLabel' => 'Very low',
+            'scaleHighLabel' => 'Very high',
+        ]) ?>
         <p class="check-in-private-note">Your check-in is private to you, optional, and not an assessment.</p>
         <div class="actions check-in-prompt-actions">
             <button type="submit">Save private check-in</button>

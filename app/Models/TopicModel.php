@@ -165,6 +165,33 @@ class TopicModel extends Model
             ->update($topic);
     }
 
+    public function updateProgressForOwner(int $topicId, int $ownerId, string $progress): bool
+    {
+        if (! in_array($progress, ['not_started', 'in_progress', 'done'], true)) {
+            return false;
+        }
+
+        $ownedTopic = $this->db->table('topics')
+            ->select('topics.id')
+            ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.id', $topicId)
+            ->where('subjects.user_id', $ownerId)
+            ->get()
+            ->getRowArray();
+        if (! is_array($ownedTopic)) {
+            return false;
+        }
+
+        $ownedSubjects = $this->db->table('subjects')
+            ->select('id')
+            ->where('user_id', $ownerId);
+
+        return $this->builder()
+            ->where('id', $topicId)
+            ->whereIn('subject_id', $ownedSubjects)
+            ->update(['progress' => $progress, 'updated_at' => date('Y-m-d H:i:s')]);
+    }
+
     public function deleteForSubjectOwner(int $subjectId, int $topicId, int $ownerId): bool
     {
         $ownedSubjects = $this->db->table('subjects')

@@ -6,7 +6,7 @@ Replace example repository URLs, branch names, and file paths with the actual va
 
 ## Current repository state
 
-As checked on 2026-10-17, F-10 was merged to `main` through [PR #5](https://github.com/amherryyy/Talas/pull/5) (merge commit `ce44d12`). Local `main` was fast-forwarded to `ce44d12`; F-11, F-12, and F-13 are integrated locally on `feature/F-13-responsive-accessibility`. The latest F-11 verification follow-up is committed as `84ab7f5`. The `origin` remote is configured. A pre-existing untracked `.github/` path remains outside the committed work and must remain untouched. Never merge or deploy without separate owner authorization. Recheck actual branch and worktree state before each Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+Local Git snapshot, checked 2026-10-29: `origin/main` is `77034e4`; the current branch `release/accumulated-2026-10-26` is `023caa6` and contains `origin/main` plus seven commits. The matching remote branch is `6a4857a`, so the local branch is one commit ahead of that remote. The working tree has accumulated unstaged and untracked changes, with no staged paths. Do not stage, commit, push, merge, or deploy as part of an audit. First review each change and split unrelated stories into focused commits. Recheck actual branch and worktree state before every Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 
 ## One-time GitHub setup
 

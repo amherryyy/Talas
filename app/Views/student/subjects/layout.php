@@ -18,7 +18,8 @@
     $isTopicPage = str_contains($currentPath, '/topics');
     $isMorePage = str_starts_with($currentPath, 'student/subjects')
         || str_starts_with($currentPath, 'student/topics')
-        || str_starts_with($currentPath, 'student/check-ins');
+        || str_starts_with($currentPath, 'student/check-ins')
+        || $currentPath === 'student/profile';
     $primaryLinks = [
         ['label' => lang('App.focus'), 'path' => 'student/priority', 'icon' => 'target', 'tour' => 'focus'],
         ['label' => lang('App.plan'), 'path' => 'student/plan', 'icon' => 'calendar', 'tour' => 'plan'],
@@ -48,6 +49,7 @@
                 <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') && ! $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.subjects')) ?></a>
                 <a href="<?= esc(site_url('student/topics')) ?>"<?= str_starts_with($currentPath, 'student/topics') || $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.topics')) ?></a>
                 <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>><?= esc(lang('App.privateCheckins')) ?></a>
+                <a href="<?= esc(site_url('student/profile')) ?>"<?= $currentPath === 'student/profile' ? ' aria-current="page"' : '' ?>><?= esc(lang('App.profile')) ?></a>
                 <?= view('partials/language_switcher') ?>
                 <form method="post" action="<?= esc(site_url('logout')) ?>">
                     <?= csrf_field() ?>

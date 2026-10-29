@@ -17,7 +17,7 @@ $selectedCourseId = old('course_id', $selectedCourseId ?? '');
     </ul>
 <?php endif ?>
 
-<form method="post" action="<?= esc($isEditing ? site_url('student/subjects/' . $subject['id']) : site_url('student/subjects')) ?>">
+<form class="subject-form" method="post" action="<?= esc($isEditing ? site_url('student/subjects/' . $subject['id']) : site_url('student/subjects')) ?>">
     <?= csrf_field() ?>
     <label for="program-id">NVSU course list <span class="muted">(optional)</span></label>
     <select id="program-id" name="program_id" aria-describedby="program-help">

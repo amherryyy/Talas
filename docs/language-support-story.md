@@ -19,3 +19,9 @@ This is an initial interface localization, not a translation of all long-form he
 ## Verification
 
 Implementation checks are recorded in the task handoff. Browser and hosted-cookie behavior require review after upload.
+
+## InfinityFree query-style route correction (2026-10-29)
+
+InfinityFree may provide a rewritten route as `QUERY_STRING=index.php?/student?...` without a leading slash. The return-path parser now collapses repeated front-controller prefixes in either leading-slash form before `site_url()` builds the redirect. This prevents a second `index.php?/` from being embedded in the destination after changing language. Route generation remains framework-based, and the posted return path is still constrained to a local relative path by the controller. No schema or cookie change is involved.
+
+Review language switching from the home page, a student detail page, and a page with a query string after uploading the next package. Confirm each destination has at most one `index.php?/` prefix and remains on the same route.
