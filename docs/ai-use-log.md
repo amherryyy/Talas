@@ -1518,8 +1518,8 @@ Disclosure location or requirement: This entry; the owner handles any course-spe
 Date / story: 2026-10-29 / fix unsupported root `.htaccess` Options directives
 Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
 Allowed use confirmed by: The owner reported a 500 response after uploading the prepared package and asked for help resolving it.
-Assistance used: Inspected the generated hosting root `.htaccess` and current InfinityFree support guidance. Removed `Options -Indexes` and `Options +FollowSymLinks` from the project root and package generator because current InfinityFree hosts may reject `Options` overrides with HTTP 500. Preserved the path-denial and route rewrite rules.
+Assistance used: Inspected the generated hosting root `.htaccess` and current InfinityFree support guidance. Removed the `Options`, `mod_expires`, and `Header` cache directives from the project root/package output because recent reports identify these directive groups as possible host-side 500 triggers. Preserved the path-denial and route rewrite rules.
 Suggestions or code retained: Updated `.htaccess`, `scripts/Build-InfinityFreePackage.ps1`, and deployment notes. The hosted database migration is unrelated and must not be rerun.
 Student changes and decisions: The owner reported the r3 ZIP was uploaded. A replacement root `.htaccess` is the minimal recovery action; upload remains the owner's action.
-How the student verified and can explain the result: Confirmed both unsupported directives were present in the generated package. Source and package-generator review confirms they are now absent; reload the site after replacing the live root `.htaccess` to confirm recovery.
+How the student verified and can explain the result: Confirmed the host-sensitive directives were present in the generated package. Source and package-generator review confirms these directive groups are no longer emitted; reload the site after replacing the live root `.htaccess` to confirm recovery.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
