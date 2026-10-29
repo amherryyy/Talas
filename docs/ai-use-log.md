@@ -1380,3 +1380,14 @@ Suggestions or code retained: Fresh imports now retain study sessions with restr
 Student changes and decisions: The owner applied the corrected SQL upgrade through phpMyAdmin. No app package deployment, staging, commit, or push was performed. Existing unrelated working-tree changes were preserved.
 How the student verified and can explain the result: PHP syntax check and `git diff --check` passed. The owner-provided phpMyAdmin results confirmed migration 14/batch 9 and the intended rules: `SET NULL/CASCADE` for plan-item topic, `RESTRICT/CASCADE` for session subject, and `RESTRICT/CASCADE` for session topic (delete/update). The initial combined DROP/ADD failed with errno 121; the corrected separate ALTER statements then succeeded. No behavior test against actual saved records was reported.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Correct Aralytics summary ordering assertion
+
+Date / story: 2026-10-29 / fix CI failure in the accumulated release PR
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue with the next release issue after CI reported a failing check.
+Assistance used: Reviewed the failing CI assertion against `AralyticsService`, which sorts topic totals by descending study minutes. Corrected the test to expect the 35-minute “No topic” total before the 25-minute “Algebra” total.
+Suggestions or code retained: Updated only the test expectations; application summary behavior remains unchanged.
+Student changes and decisions: The PHP 8.2 and 8.4 GitHub Actions runs both reported this same single test failure. Local tests were not run; the PR update will trigger CI again.
+How the student verified and can explain the result: Confirmed from the service comparator and the test fixture values why the order is “No topic”, then “Algebra”. Awaiting the next GitHub Actions result.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
