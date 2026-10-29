@@ -6,7 +6,7 @@ Replace example repository URLs, branch names, and file paths with the actual va
 
 ## Current repository state
 
-Local Git snapshot, checked 2026-10-29: `origin/main` is `77034e4`; the current branch `release/accumulated-2026-10-26` is `023caa6` and contains `origin/main` plus seven commits. The matching remote branch is `6a4857a`, so the local branch is one commit ahead of that remote. The working tree has accumulated unstaged and untracked changes, with no staged paths. Do not stage, commit, push, merge, or deploy as part of an audit. First review each change and split unrelated stories into focused commits. Recheck actual branch and worktree state before every Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+Local Git snapshot, checked 2026-10-29 after PR #14: GitHub `main` merged PR #14 as `a3cf7107070d0705efc23b20b27c60885dc67116`. The local `main` and `origin/main` refs remain stale at `77034e4`; the active fix branch is based on PR #14 head, an ancestor of the merged commit. PR #15 contains the InfinityFree route normalization and has passing PHP 8.2/8.4 checks; its current review state is on GitHub. The follow-up release marker is `duno-full-release-20261029-r2`. Fetch `origin/main` before starting the next story branch. Do not stage, commit, push, merge, or deploy as part of an audit. First review each change and split unrelated stories into focused commits. Recheck actual branch and worktree state before every Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 
 ## One-time GitHub setup
 

@@ -1391,3 +1391,25 @@ Suggestions or code retained: Updated only the test expectations; application su
 Student changes and decisions: The PHP 8.2 and 8.4 GitHub Actions runs both reported this same single test failure. Local tests were not run; the PR update will trigger CI again.
 How the student verified and can explain the result: Confirmed from the service comparator and the test fixture values why the order is “No topic”, then “Algebra”. Awaiting the next GitHub Actions result.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Normalize InfinityFree's query-route security marker
+
+Date / story: 2026-10-29 / repair hosted 400 responses on Focus and Plan
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested another architecture audit and reported HTTP 400 when opening Focus and Plan.
+Assistance used: Inspected the owner's open browser tab and captured the failing request URL `index.php?/student/priority&i=1`. Traced it to CI4's URI character validation: the host's terminal `&i=1` security marker was interpreted as part of the query-style route segment.
+Suggestions or code retained: Added front-controller normalization for a terminal `&i=<digits>` marker only when it appears in the query-style route immediately after the front controller and before any app query string. Normal path-style routes and normal query parameters are unchanged.
+Student changes and decisions: The fix is on `fix/infinityfree-query-route`; no schema change is involved. The owner remains responsible for uploading the next package after review and merge.
+How the student verified and can explain the result: Confirmed the live failing URL from the browser accessibility state/DevTools and read the installed CI4 URI factory/router logic. A PHP syntax check and diff review are pending; no test suite was run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Prepare a versioned InfinityFree follow-up package
+
+Date / story: 2026-10-29 / release the hosted route normalization after review
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner said PR #15 was merged and that they would upload the package; GitHub currently reports it open, so the package is being prepared from the tested branch for upload after merge.
+Assistance used: Bumped the public release marker to r2 and updated the deployment notes so the owner can distinguish this package from the currently live r1 package.
+Suggestions or code retained: The follow-up contains the front-controller route-marker fix and no schema changes. The existing host `.env` and writable data must be preserved during replacement.
+Student changes and decisions: The owner will perform the upload. No database migration is required.
+How the student verified and can explain the result: The fix branch's PHP 8.2 and 8.4 CI checks passed before this marker-only commit. The package is not yet assembled.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
