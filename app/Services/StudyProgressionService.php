@@ -28,7 +28,7 @@ class StudyProgressionService
      * Summarize progression and deterministic activity insights from owner-scoped saved sessions.
      *
      * @param list<array<string, mixed>> $sessions Sessions in the six-month display window.
-     * @param array{total_minutes: int, session_count: int, study_days: int}|null $lifetimeTotals
+     * @param array{total_minutes: int, session_count: int, study_days: int, streak_xp?: int, current_streak?: int}|null $lifetimeTotals
      * @return array<string, mixed>
      */
     public function summarize(array $sessions, DateTimeImmutable $now, DateTimeZone $timezone, ?array $lifetimeTotals = null): array
@@ -37,7 +37,9 @@ class StudyProgressionService
         $currentStart = $today->modify('-29 days');
         $previousStart = $today->modify('-59 days');
         $tomorrow = $today->modify('+1 day');
-        $xp = $lifetimeTotals['total_minutes'] ?? 0;
+        $streakXp = $lifetimeTotals['streak_xp'] ?? 0;
+        $totalStudyMinutes = $lifetimeTotals['total_minutes'] ?? 0;
+        $xp = $totalStudyMinutes + $streakXp;
         $studyDates = [];
         $dailyMinutes = [];
         $weekdayMinutes = array_fill(1, 7, 0);
@@ -64,6 +66,7 @@ class StudyProgressionService
             $month = $localCompletedAt->format('Y-m');
             if ($lifetimeTotals === null) {
                 $xp += $minutes;
+                $totalStudyMinutes += $minutes;
             }
             $studyDates[$date] = true;
 
@@ -97,10 +100,10 @@ class StudyProgressionService
 
         $badges = [
             ['key' => 'first-session', 'name' => 'First Session', 'description' => 'Saved your first study session.', 'unlocked' => ($lifetimeTotals['session_count'] ?? count($sessions)) >= 1],
-            ['key' => 'two-hours', 'name' => 'Two Hours', 'description' => 'Saved 120 minutes of study time.', 'unlocked' => $xp >= 120],
+            ['key' => 'two-hours', 'name' => 'Two Hours', 'description' => 'Saved 120 minutes of study time.', 'unlocked' => $totalStudyMinutes >= 120],
             ['key' => 'five-study-days', 'name' => 'Five Study Days', 'description' => 'Studied on five different days.', 'unlocked' => ($lifetimeTotals['study_days'] ?? count($studyDates)) >= 5],
-            ['key' => 'ten-hours', 'name' => 'Ten Hours', 'description' => 'Saved 600 minutes of study time.', 'unlocked' => $xp >= 600],
-            ['key' => 'long-haul', 'name' => 'Long Haul', 'description' => 'Saved 1,200 minutes of study time.', 'unlocked' => $xp >= 1200],
+            ['key' => 'ten-hours', 'name' => 'Ten Hours', 'description' => 'Saved 600 minutes of study time.', 'unlocked' => $totalStudyMinutes >= 600],
+            ['key' => 'long-haul', 'name' => 'Long Haul', 'description' => 'Saved 1,200 minutes of study time.', 'unlocked' => $totalStudyMinutes >= 1200],
         ];
 
         $weekdayNames = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday'];
@@ -120,6 +123,9 @@ class StudyProgressionService
 
         return [
             'xp' => $xp,
+            'study_xp' => $totalStudyMinutes,
+            'streak_xp' => $streakXp,
+            'current_streak' => $lifetimeTotals['current_streak'] ?? 0,
             'level' => $currentLevel['level'],
             'level_name' => $currentLevel['name'],
             'level_start_xp' => $levelStartXp,

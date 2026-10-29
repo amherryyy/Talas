@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <?php $isEditing = $subject !== null; ?>
 <h1><?= $isEditing ? 'Edit subject' : 'Add a subject' ?></h1>
-<p><a href="<?= esc(site_url('student/subjects')) ?>">Back to subjects</a></p>
+<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubjects')) ?></a></p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -20,7 +20,6 @@
     <p id="name-help" class="muted">Use a name up to 120 characters.</p>
     <div class="actions">
         <button type="submit"><?= $isEditing ? 'Save changes' : 'Create subject' ?></button>
-        <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>">Cancel</a>
     </div>
 </form>
 <?= $this->endSection() ?>

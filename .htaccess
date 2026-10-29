@@ -8,4 +8,6 @@ Options -Indexes
     RewriteRule ^(?:app|builds|docs|tests|vendor|writable|\.git|\.tools)(?:/|$) - [F,L,NC]
     RewriteRule ^(?:composer\.(?:json|lock)|env|spark|preload\.php|phpunit\.dist\.xml|AGENTS\.md|README\.md|LICENSE)$ - [F,L,NC]
     RewriteRule (^|/)\. - [F,L]
+RewriteRule ^(?:error_log|php_errorlog|php_error\.log)$ - [F,L,NC]
+RewriteRule \.(?:bak|backup|db|dist|dump|gz|ini|log|old|orig|phar|save|sql|sqlite|swp|tar|tgz|tmp|zip)$ - [F,L,NC]
 </IfModule>

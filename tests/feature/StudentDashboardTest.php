@@ -9,6 +9,7 @@ use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use CodeIgniter\Test\TestResponse;
 use Config\Database;
+use Tests\Support\IsolatedFeatureSession;
 
 /**
  * @internal
@@ -17,6 +18,7 @@ final class StudentDashboardTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
+    use IsolatedFeatureSession;
     use AuthenticationTesting;
 
     protected $namespace = null;
@@ -52,9 +54,28 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response->assertSee('https://ies.ed.gov/ncee/wwc/practiceguide/1');
         $response->assertSee('rel="noopener noreferrer"');
         $studentHtml = $response->response()->getBody();
-        $this->assertStringContainsString('aria-label="Student navigation"', $studentHtml);
+        $this->assertStringContainsString('aria-label="Primary student navigation"', $studentHtml);
         $this->assertStringContainsString('aria-current="page"', $studentHtml);
         $this->assertStringContainsString('index.php/student/aralytics', $studentHtml);
+        $this->assertStringContainsString('data-app-tour', $studentHtml);
+        $this->assertStringContainsString('data-tour-user="' . $student->id . '"', $studentHtml);
+        $this->assertStringContainsString('assets/js/onboarding-tour.js', $studentHtml);
+        $this->assertStringContainsString('Show app tour', $studentHtml);
+    }
+
+    public function testStudentLandingOffersTheAccountScopedOnboardingTour(): void
+    {
+        $student = $this->createUser('onboarding-home-student', 'student');
+        $this->authenticateAs($student);
+
+        $response = $this->getAuthenticated('/');
+        $response->assertOK();
+        $studentHtml = $response->response()->getBody();
+
+        $this->assertStringContainsString('data-auto-start="true"', $studentHtml);
+        $this->assertStringContainsString('data-tour-user="' . $student->id . '"', $studentHtml);
+        $this->assertStringContainsString('data-tour-target="focus"', $studentHtml);
+        $this->assertStringContainsString('href="http://example.com/index.php/student#app-tour"', $studentHtml);
     }
 
     public function testPrivateCheckInsDoNotEarnStudyXp(): void
@@ -66,7 +87,8 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response = $this->getAuthenticated('student');
         $response->assertOK();
         $response->assertSee('Level 1');
-        $response->assertSee('0 study XP');
+        $response->assertSee('5 XP');
+        $response->assertSee('0 study + 5 streak');
     }
 
     public function testSuggestionsDoNotAppearOnAdminWorkspaceAndStudentRouteDeniesAdmin(): void
@@ -80,6 +102,7 @@ final class StudentDashboardTest extends CIUnitTestCase
         $adminResponse->assertDontSee('Study ideas');
         $adminResponse->assertDontSee('Revisit a topic later');
         $adminHtml = $adminResponse->response()->getBody();
+        $this->assertStringNotContainsString('data-app-tour', $adminHtml);
         $this->assertStringContainsString('aria-label="Admin navigation"', $adminHtml);
         $this->assertStringContainsString('index.php/admin', $adminHtml);
 
@@ -99,6 +122,8 @@ final class StudentDashboardTest extends CIUnitTestCase
         $userId = $model->insert($user);
         $created = $model->findById((int) $userId);
         $created->addGroup($group);
+        $created->activate();
+        $created = $model->findById((int) $userId);
 
         return $created;
     }

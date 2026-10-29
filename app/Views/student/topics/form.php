@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <?php $isEditing = $topic !== null; ?>
 <h1><?= $isEditing ? 'Edit topic' : 'Add a topic' ?> in <?= esc($subject['name']) ?></h1>
-<p><a href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>">Back to <?= esc($subject['name']) ?></a></p>
+<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubject')) ?></a></p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -43,7 +43,6 @@
 
     <div class="actions">
         <button type="submit"><?= $isEditing ? 'Save changes' : 'Create topic' ?></button>
-        <a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>">Cancel</a>
     </div>
 </form>
 <?= $this->endSection() ?>

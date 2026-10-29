@@ -4,6 +4,7 @@ namespace App\Controllers\Student;
 
 use App\Controllers\BaseController;
 use App\Models\StudySessionModel;
+use App\Models\StudentStreakModel;
 use App\Models\SubjectModel;
 use App\Models\TopicModel;
 use App\Services\StudyProgressionService;
@@ -38,7 +39,7 @@ class StudySessions extends BaseController
 
         $ownerId = $this->ownerId();
         $sessionModel = new StudySessionModel();
-        $xpBefore = $sessionModel->totalMinutesForOwner($ownerId);
+        $xpBefore = $sessionModel->totalMinutesForOwner($ownerId) + (new StudentStreakModel())->totalXpForOwner($ownerId);
         $completedAt = $this->now();
         $sessionId = $sessionModel->createForOwner(
             $ownerId,
@@ -85,7 +86,8 @@ class StudySessions extends BaseController
             return $input;
         }
 
-        $xpBefore = (new StudySessionModel())->totalMinutesForOwner($ownerId);
+        $xpBefore = (new StudySessionModel())->totalMinutesForOwner($ownerId)
+            + (new StudentStreakModel())->totalXpForOwner($ownerId);
         if (! (new StudySessionModel())->updateForOwner(
             $sessionId,
             $ownerId,

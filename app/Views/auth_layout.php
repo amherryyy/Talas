@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en">
+<?php $htmlLocale = match (service('request')->getLocale()) { 'fil' => 'fil-PH', 'taglish' => 'en-PH', default => 'en' }; ?>
+<html lang="<?= esc($htmlLocale) ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,27 +10,35 @@
     <?= $this->renderSection('pageStyles') ?>
 </head>
 <body class="duno-auth">
-    <a class="skip-link" href="#main-content">Skip to main content</a>
-    <a class="duno-brand" href="<?= esc(site_url()) ?>" aria-label="duno. — Your Little Study Buddy. Home">
+    <a class="skip-link" href="#main-content"><?= esc(lang('App.skipMain')) ?></a>
+    <?= view('partials/app_notifications', ['includeFlashNotifications' => false]) ?>
+    <header class="auth-header">
+    <a class="duno-brand" href="<?= esc(site_url()) ?>" aria-label="duno. — <?= esc(lang('App.brandTagline')) ?> Home">
         <span class="duno-wordmark">duno.</span>
         <span class="duno-tagline">Your Little Study Buddy.</span>
     </a>
+    <?= view('partials/language_switcher') ?>
+    </header>
     <main id="main-content" role="main" class="container">
-        <div class="auth-form-region"><?= $this->renderSection('main') ?></div>
         <aside class="auth-aside" aria-label="About Duno">
-            <div class="auth-aside-copy">
-                <p class="workspace-kicker">One step at a time</p>
-                <h1>Make room for a focused study session.</h1>
-                <p>Keep your topics, study plan, and saved sessions together in one calm space.</p>
-                <ul>
-                    <li>Choose a topic to work on</li>
-                    <li>Plan with the time you have</li>
-                    <li>Look back at your study activity</li>
-                </ul>
+            <div class="auth-mascot-stage">
+                <span class="auth-mascot-orbit auth-mascot-orbit-one" aria-hidden="true"></span>
+                <span class="auth-mascot-orbit auth-mascot-orbit-two" aria-hidden="true"></span>
+                <button class="auth-mascot-button" type="button" data-auth-mascot aria-label="Tap Duno for a little encouragement">
+                    <img src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true" fetchpriority="high">
+                </button>
+                <p class="auth-mascot-message" data-auth-mascot-message aria-live="polite">One small step at a time.</p>
             </div>
-            <img src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285" aria-hidden="true">
+            <div class="auth-aside-copy">
+                <p class="workspace-kicker"><?= esc(lang('App.authKicker')) ?></p>
+                <h1><?= esc(lang('App.authHeadline')) ?></h1>
+                <p><?= esc(lang('App.authDescription')) ?></p>
+            </div>
         </aside>
+        <div class="auth-form-region"><?= $this->renderSection('main') ?></div>
     </main>
+    <script src="<?= esc(duno_asset('assets/js/auth-mascot.js')) ?>" defer></script>
     <?= $this->renderSection('pageScripts') ?>
+    <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>
 </html>

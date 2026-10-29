@@ -9,6 +9,7 @@ use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use CodeIgniter\Test\TestResponse;
 use Config\Database;
+use Tests\Support\IsolatedFeatureSession;
 
 /**
  * @internal
@@ -17,6 +18,7 @@ final class AdminDashboardTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
+    use IsolatedFeatureSession;
     use AuthenticationTesting;
 
     protected $namespace = null;
@@ -63,6 +65,11 @@ final class AdminDashboardTest extends CIUnitTestCase
         $page = $this->getAuthenticated('admin');
         $page->assertOK();
         $page->assertSee('duno.');
+        $page->assertDontSee('aria-label="Page navigation"');
+        $page->assertDontSee('aria-label="Go back to the previous page"');
+        $page->assertDontSee('aria-label="Go to home"');
+        $page->assertSee('aria-label="Admin navigation"');
+        $page->assertSee('aria-label="duno. home"');
         $page->assertSee('Student accounts');
         $page->assertSee('Subjects');
         $page->assertSee('Topics');
@@ -119,6 +126,8 @@ final class AdminDashboardTest extends CIUnitTestCase
         $userId = $model->insert($user);
         $created = $model->findById((int) $userId);
         $created->addGroup(...$groups);
+        $created->activate();
+        $created = $model->findById((int) $userId);
 
         return $created;
     }

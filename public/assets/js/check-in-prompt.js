@@ -7,6 +7,10 @@
     const date = prompt.dataset.promptDate;
     const storageKey = `duno-check-in-dismissed-${prompt.dataset.promptUser}-${date}`;
     const dismissButtons = prompt.querySelectorAll('[data-check-in-dismiss]');
+    const notifyTourReady = () => {
+        window.dunoCheckInPromptReady = true;
+        window.dispatchEvent(new Event('duno:check-in-ready'));
+    };
 
     const rememberToday = () => {
         try {
@@ -18,6 +22,7 @@
 
     if (prompt.dataset.promptSatisfied === 'true') {
         rememberToday();
+        notifyTourReady();
         return;
     }
 
@@ -40,6 +45,7 @@
     }
 
     prompt.addEventListener('cancel', rememberToday);
+    prompt.addEventListener('close', notifyTourReady, { once: true });
     prompt.addEventListener('click', (event) => {
         if (event.target === prompt) {
             closePrompt();
@@ -52,5 +58,7 @@
                 prompt.showModal();
             }
         }, 900);
+    } else {
+        notifyTourReady();
     }
 })();

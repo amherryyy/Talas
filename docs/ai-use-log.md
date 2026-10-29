@@ -182,6 +182,112 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### S-10 architecture and schema audit
+
+```text
+Date / story: 2026-10-29 / audit accumulated changes, schema, and architecture
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked for an audit with special attention to schema and overall architecture.
+Assistance used (explanation, planning, code draft, debugging, review): Compared migrations, hosted schema snapshots and upgrade instructions; reviewed registration activation, rate-limit storage, owner-scoped models, route filters, deployment packaging, and changed interaction flows. Found that the inherited Shield activation generator could emit letters although the custom verifier requires six digits, and that the deployment guide linked to a missing existing-database upgrade script. Replaced the generator with a cryptographically secure numeric generator, supplied the documented upgrade SQL, allowed that SQL file through the existing broad ignore rule, and checked the documented initial-schema table count.
+Suggestions or code retained: The registration control table remains keyed one-to-one to `users.id` with a cascading foreign key. The existing-database SQL is fixed to the owner-reported 10-row, batch-5 ledger and warns operators to reconcile a different ledger. MySQL/MariaDB has no native row-level security; owner checks remain application-level.
+Student changes and decisions: No release, staging, commit, or deployment was authorized as part of this audit. Existing unrelated worktree changes were preserved.
+How the student verified and can explain the result: The full PHPUnit suite passed with XAMPP's SQLite3 and Intl extensions explicitly loaded and coverage disabled to match CI: 86 tests, 874 assertions. The previous four notice failures came from the shared CodeIgniter view renderer retaining data between simulated requests; the test-only `IsolatedFeatureSession` trait now resets the renderer, Shield auth service, and PHP session before each feature test. The streak filter also removes its flash key with the correct session API. PHP syntax passed for 172 app/test files, `composer validate --no-check-publish` passed, JavaScript syntax and `git diff --check` passed. Manual browser behavior, the database upgrade SQL against the hosted ledger, and dependency advisories remain unverified. `composer audit --locked` could not reach Packagist because the configured local proxy refused its connection.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-16 registration email verification
+
+```text
+Date / story: 2026-10-27 / require email verification for new registrations
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested a verification code for new registrations and selected numeric code entry.
+Assistance used (explanation, planning, code draft, debugging, review): Enabled Shield's six-digit email activator with 15-minute expiry, five failed attempts, a 60-second resend cooldown and five sends/day per account; rate-limited registration, auth-action, resend, and cancellation routes; added a CSRF-protected restart flow for mistyped addresses; added 48-hour cleanup of inactive registrations on registration visits; created Duno verification/email views and localized strings; and documented SMTP configuration and host migration steps.
+Suggestions or code retained: Added migration `2026-10-27-000001_CreateRegistrationVerificationLimits` and a phpMyAdmin upgrade SQL for the known host ledger. SMTP secrets stay in the host `.env` and must not be committed.
+Student changes and decisions: Student accounts remain inactive until the email code is verified; new registrations are assigned to the student group by existing Shield configuration. Users can request a code again within account limits or discard a pending signup and restart with another email.
+How the student verified and can explain the result: The full PHPUnit suite passed (86 tests, 874 assertions), including the registration code format and activation flow. PHP syntax passed for 172 app/test files; `composer validate --no-check-publish` passed; and the fresh schema contains 17 tables and 11 migration rows. Email delivery, browser checks, expiry/resend/cancellation/cleanup flows against a live database, and InfinityFree SMTP behavior remain unverified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### S-02 row-level access clarification
+
+```text
+Date / story: 2026-10-27 / clarify row-level access enforcement for MySQL/MariaDB
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to apply row-level security as the next security task.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed student-owned model queries and nested plan-item access. Documented the existing owner-scoped application enforcement and clarified that InfinityFree MySQL/MariaDB does not provide PostgreSQL-style native RLS policies.
+Suggestions or code retained: Updated S-02 traceability and deployment/security notes. No database policy, schema migration, or runtime behavior change was added because the production database cannot enforce native RLS policies.
+Student changes and decisions: Keep every new student-owned read, write, count, and nested relation owner-scoped through the authenticated owner ID; treat current enforcement as application-layer RLS, not database-enforced RLS.
+How the student verified and can explain the result: Reviewed owner-scoped methods for subjects, topics, study plans and items, sessions, check-ins, streaks, and NVSU/CHED/DepEd imports. Existing feature tests cover cross-student access for several areas. `git diff --check` passed. Automated tests and browser/database host checks were not run for this clarification.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 auth layout and interactive Duno mascot
+
+```text
+Date / story: 2026-10-27 / refresh login and registration presentation and mascot interaction
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested more mascot animation/interaction and supplied a mobile login/register reference.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the shared Shield auth layout and existing auth templates; reshaped the shared auth presentation around the existing Duno mascot, responsive form layout, full-width primary submit actions, outlined alternate auth links, and an accessible click/tap/keyboard mascot interaction with short encouragement messages.
+Suggestions or code retained: Login/register routes, Shield form fields, validation, CSRF, and server auth handling remain in place. The mascot uses its existing static PNG and CSS animation; no new dependency, external service, or auth flow was added. Global reduced-motion styles shorten the animation.
+Student changes and decisions: Applied the reference's centered mascot, clear action hierarchy, and restrained white-space treatment in Duno's approved palette and naming.
+How the student verified and can explain the result: No automated or browser test was run. Browser review at phone, tablet, and desktop widths remains pending. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 button-style return links
+
+```text
+Date / story: 2026-10-27 / style student return links as buttons
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to audit and change plain-text “Back to …” links across the project into button-style controls.
+Assistance used (explanation, planning, code draft, debugging, review): Audited student navigation, responsive styles, keyboard focus, and the onboarding tour; styled all seven subject, topic, catalog, and session return anchors as secondary buttons; added a page-dimming spotlight around the active tutorial target, modal focus management, better tutorial-card placement, clearer More-section state, and larger touch targets for mobile and coarse-pointer tablet navigation.
+Suggestions or code retained: Return controls remain links because they navigate to specific destinations. Error-page recovery controls already have button styling and were left intact. The tour makes the obscured page regions inert, traps focus in the dialog, returns focus when closed, and respects reduced motion. No dependencies or routes changed.
+Student changes and decisions: The owner asked for a project-wide navigation/accessibility pass, visible onboarding emphasis, and mobile/tablet improvements; existing Home navigation is retained without adding duplicate Home controls.
+How the student verified and can explain the result: Source searches identified all student return links and navigation breakpoints. No automated tests or browser/screen-reader review were run; those reviews remain pending. `git diff --check` passed. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+
+
+### R-14 DepEd Senior High School subject catalog
+
+```text
+Date / story: 2026-10-26 / add the current DepEd Strengthened SHS subjects as selectable Duno subjects
+Tool and model: OpenAI Codex with official DepEd website research; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested adding the most updated Philippine Senior High School subjects.
+Assistance used (explanation, planning, code draft, debugging, review): Researched DepEd's Strengthened SHS curriculum guide index, DM 012 s. 2026 implementation schedule, and the current five-core/elective structure; added a static catalog, authenticated owner-scoped additive import service, route, selection UI, tests, and documentation.
+Suggestions or code retained: The catalog separates five required core subjects from optional Academic and TechPro electives and identifies the new Grade 12 guides. It notes that Grade 12 learners at non-pilot schools continue the previous curriculum during transition; old-curriculum subjects are not included. School-specific elective availability is not inferred.
+Student changes and decisions: Selected subjects are added to the signed-in student's own editable subject list; existing subjects are preserved and case-insensitive duplicates are skipped. No database migration, external runtime call, upload, or deployment was made.
+How the student verified and can explain the result: Focused StudentSubjectsTest passed (11 tests, 139 assertions); the full PHPUnit suite passed (81 tests, 795 assertions); changed PHP files and the JavaScript module passed syntax checks; git diff --check passed. Composer validation could not run because the Composer CLI is unavailable in this shell. Browser review is deferred until the accumulated updates are uploaded, per owner direction.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 CHED curriculum template scope
+
+```text
+Date / story: 2026-10-26 / NVSU offerings directory and separately labeled CHED curriculum templates
+Tool and model: OpenAI Codex with official CHED website research; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner first selected CHED baseline templates by program, then requested all NVSU offerings as the first institution catalog.
+Assistance used (explanation, planning, code draft, debugging, review): Researched official NVSU campus degree lists and CHED Region II program recognition, inspected the Duno subject workflow, then implemented a campus-grouped NVSU program directory, kept the CHED sample preview/import flow separate, and updated tests and project documentation.
+Suggestions or code retained: NVSU undergraduate degree programs and majors are listed under their Bayombong or Bambang campus and college, with links to the university source pages. The Bayombong teacher-education page repeats Early Childhood Education; the directory flags the correction to BSEd based on the CHED Region II recognized-program list. The three CHED sample templates stay separate; no NVSU curriculum is inferred from them.
+Student changes and decisions: The owner approved selecting a program, previewing terms and source/status information, importing selected courses, and keeping existing subjects. Imports add editable subjects to the signed-in student's own list and skip case-insensitive duplicate names. The NVSU directory is campus-specific, with separate Bayombong and Bambang entries. No migration, upload, or deployment was performed.
+How the student verified and can explain the result: The full PHPUnit suite passed with `--no-coverage` (80 tests, 774 assertions); the focused `StudentSubjectsTest` passed (10 tests, 118 assertions) using the XAMPP SQLite CLI extensions. Feature checks cover all three source previews, course labels, additive import, case-insensitive duplicates, catalog ID validation, owner boundaries, admin denial, and signed-out denial. PHP/JavaScript syntax, Composer validation, and `git diff --check` passed. The locked dependency audit reported no known advisories but Packagist was unreachable, so freshness could not be confirmed. Manual browser review remains deferred until the accumulated updates are uploaded to InfinityFree.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 catalog usage clarification
+
+```text
+Date / story: 2026-10-27 / clarify browse-only NVSU and importable SHS/CHED catalog flows
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked why the program and curriculum catalog entries could not be clicked or used and requested usage guidance.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the NVSU listing, DepEd SHS and CHED selection forms, import routes, and client-side selection controls; clarified browse-only NVSU entries, added page jump links and concise selection/import instructions for the two interactive sections.
+Suggestions or code retained: NVSU program titles remain non-selectable because this is a directory of offerings, not a verified course-by-course curriculum. Campus source links remain actionable. DepEd SHS core subjects begin selected; the CHED list previews only the three curated templates.
+Student changes and decisions: The catalog now distinguishes reference listings from importable subject lists. No data, imports, schema, or deployment was changed.
+How the student verified and can explain the result: Source review confirmed the existing controls and authenticated import routes. `git diff --check` passed; no browser test was run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### Staged accumulated project changes
 
 ```text
@@ -969,5 +1075,148 @@ Assistance used (explanation, planning, code draft, debugging, review): Replaced
 Suggestions or code retained: Updated StudySessionModel, CheckInModel, StudyProgressionService, Dashboard and Aralytics controllers, and the R-08 follow-up story. No schema, package, or visible UI changes were made.
 Student changes and decisions: The owner requested optimization while preserving quality and the user experience. The owner later authorized staging, committing, version-control work, and upload. No stage, commit, push, merge, or deployment has happened yet.
 How the student verified and can explain the result: The complete PHPUnit suite passed (73 tests, 677 assertions); syntax lint passed for 139 PHP files; Composer validation passed; locked dependency audit reported no advisories. The production package was built and inspected for expected root files, private-path deny rules, matching changed-source hash, and `.env` exclusion. Local browser review was unavailable because neither a browser session nor local Apache was available. Runtime performance and InfinityFree behavior remain unmeasured.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 navigation and mascot verification follow-up
+
+```text
+Date / story: 2026-10-26 / verify merged R-08 navigation, motion, and mascot follow-up
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested the navigation, motion, mascot, and caching follow-up. The original R-08 redesign and R-09 progression were accepted; browser review of the merged follow-up remains pending.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the current repository instructions and R-08 story; reran PHPUnit, PHP/JavaScript syntax checks, Composer validation, and a locked dependency audit; attempted to restore the isolated local browser-review environment.
+Suggestions or code retained: Updated the story, requirements traceability, and restart board with current verification results. No application code, dependency, database content, host configuration, or product behavior changed.
+Student changes and decisions: PHPUnit passed with 73 tests and 677 assertions; PHP syntax passed for 138 files; JavaScript syntax passed for the student navigation and level-up modules; Composer validation passed. The locked audit reported no advisories but Packagist was unreachable. The browser review database denied access to the configured database, the local home page returned HTTP 500, and Playwright stopped before tests because Windows returned spawn EPERM. The story remains in Verification; owner visual review and browser checks are not claimed as passed.
+How the student verified and can explain the result: Read the command output and confirmed the database state using the documented `migrate:status` check. Confirmed no local files were staged, committed, pushed, or deployed. No browser interaction completed and no hosted changes were made.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-10 daily visit streak and XP
+
+```text
+Date / story: 2026-10-26 / implement owner-approved daily visit XP and streak
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner approved one +5 XP reward per app-local calendar day on the first authenticated student visit, a consecutive-day streak that resets after a missed date, and an animated dashboard fire icon.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the existing F-14 progression calculations, student route filters, dashboard and Aralytics views, migrations, and feature tests; implemented a unique daily-activity migration, owner-scoped streak model/service, authenticated student GET filter, XP integration, dashboard feedback/animation, focused feature tests, and requirement/deployment documentation.
+Suggestions or code retained: Study XP remains one point per saved study minute. Daily visits add five separate streak XP once per local calendar date. Study-time badges and study-day charts continue to use saved sessions only. The dashboard fire animates on an awarded visit and the existing reduced-motion stylesheet suppresses motion.
+Student changes and decisions: The owner selected the calendar-day rule, +5 XP, reset after a missed date, and the animated fire. The streak migration is applied by the in-memory SQLite test suite only; neither the isolated MariaDB review database nor the hosted database was changed.
+How the student verified and can explain the result: The full PHPUnit suite passed (76 tests, 704 assertions); PHP syntax passed for 143 files; JavaScript syntax passed for the relevant modules; Composer validation passed and the locked audit found no advisories while Packagist was unreachable; `git diff --check` passed. Tests cover once-per-day rewards, local midnight, consecutive dates, missed-day reset, owner isolation, admin exclusion, session edit/delete totals, and private check-ins not earning XP. A temporary local SQLite server successfully ran all migrations, but Shield rejected the synthetic browser-review registration with its personal-information password rule. Per the owner's direction, authenticated visual review is deferred until the accumulated updates are uploaded to InfinityFree. The temporary server and SQLite review files were stopped and removed. The hosted or MariaDB databases were not changed. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-11 glass surface, header, and footer polish
+
+```text
+Date / story: 2026-10-26 / apply owner-requested glassmorphism and compact shell
+Tool and model: OpenAI Codex with the redesign-existing-projects skill; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested glassmorphism on cards, a compact menu and header with suitable opacity, and a minimalist footer where useful.
+Assistance used (explanation, planning, code draft, debugging, review): Audited the current shared CSS, public home styles, student/admin layouts, approved brand palette, and existing responsive navigation; added restrained translucent card surfaces, backdrop blur, compact translucent headers and menus, and a branded low-profile student/admin footer.
+Suggestions or code retained: The design uses the existing Duno purple, lavender, mint, and canvas palette. Opaque fallbacks remain legible where backdrop blur is unavailable; no framework, asset, or runtime dependency was added. The public footer remains minimal and retains Solar Icons attribution.
+Student changes and decisions: Browser review is deferred until the accumulated updates are uploaded to InfinityFree, per owner direction. No upload, hosted change, Git stage, or commit was made.
+How the student verified and can explain the result: PHP syntax passed for the changed student and admin layout views, and `git diff --check` passed. Visual browser review remains queued for the post-upload batch review.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-12 first-visit student onboarding
+
+```text
+Date / story: 2026-10-26 / add a skippable guided tour of existing student tools
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested a suggestive first-visit guide for Duno features that students can skip when they already know the app, and selected browser-only persistence.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected the student login landing flow, shared student layout, dashboard cards, mobile navigation, and optional daily check-in dialog; added a seven-step non-modal guide with visible-target highlighting, first-visit tracking per student/browser, replay from More, and check-in dialog sequencing.
+Suggestions or code retained: The tour explains existing features only. It adds no database field, analytics, external service, or runtime dependency. Browser storage uses a student-specific key, and the guide remains available to replay after skip or completion.
+Student changes and decisions: The owner chose current-browser persistence. The interaction is part of the local update batch and will be visually reviewed after upload to InfinityFree.
+How the student verified and can explain the result: The full PHPUnit suite passed (77 tests, 717 assertions); PHP syntax passed for the changed controllers, views, and partials; JavaScript syntax passed for the tour and check-in prompt modules; and `git diff --check` passed. No browser check was run, per the owner's batch-review direction.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 accessible Back and Home navigation
+
+```text
+Date / story: 2026-10-27 / add accessible Back and Home controls across app pages
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked for accessible Back and Home navigation, then clarified that controls should appear only where needed and reuse existing navigation panels.
+Assistance used (explanation, planning, code draft, debugging, review): Inspected public, student, admin, authentication, role, and HTML error views; added labeled Back controls, same-origin browser-history handling with route fallbacks, responsive focus styling, and focused view assertions; then removed duplicate shell-level student Back controls and matching form Cancel links where destination-specific Back links already existed.
+Suggestions or code retained: Student detail/form flows retain one destination-specific Back or Cancel anchor. Same-origin browser-history handling remains only on error-page recovery links. Brand links, menus, and role navigation panels provide Home on normal pages; error pages retain Back/Home recovery links.
+Student changes and decisions: Public, authentication, main student, and admin pages use their existing navigation for Home. Student details/forms retain one Back or Cancel action; the shared shell has no Back button. Error recovery controls remain. The controls are not deployed; the owner will review them with the accumulated update batch.
+How the student verified and can explain the result: The Playwright suite passed 3 tests against the local review app before this refinement. The owner identified the duplicate on the curriculum catalog. The duplicate shell control has been removed; this refinement has not been browser-tested. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 NVSU reference course lists
+
+```text
+Date / story: 2026-10-27 / add source-linked NVSU reference course lists
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to add as many course lists as possible, especially NVSU.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the catalog/import flow and official NVSU campus pages; examined an NVSU-hosted course-description and curriculum-map PDF; added source-coded reference lists and an owner-scoped selection/import flow for BS Forestry, BS Agroforestry, and BS Ecotourism; updated UI copy and catalog/deployment records.
+Suggestions or code retained: The source PDF is undated and does not confirm current approved semester sequences. The app labels its lists as references, leaves other NVSU programs browse-only, adds only selected course IDs, preserves existing subjects, and skips duplicate names. No migration or runtime network request was added.
+Student changes and decisions: The owner requested broad NVSU course coverage. Course codes are retained in the Duno subject names. The ECOTOUR Protected Area Management entry flags the conflicting source course numbers (35 in the map, 36 in the course-description section).
+How the student verified and can explain the result: Not tested or browser-reviewed in this task; the owner had asked to repair accumulated issues before another test. Manual review remains queued with the accumulated update batch. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 NVSU CAS links for BSCS, BSIT, and BSIS
+
+```text
+Date / story: 2026-10-27 / link NVSU CAS curriculum pages for computing programs
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to add IT, CS, and IS from the NVSU CAS website.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the official CAS program pages and their curriculum links; added direct per-program CAS links to the NVSU directory for BSCS, BSIT, and BSIS; updated requirement and deployment notes.
+Suggestions or code retained: CAS pages expose the curriculum/prospectus links, but the linked Google Drive PDF contents were inaccessible through the source reader and local network. No course names were inferred. Exact PDF contents are needed to build importable NVSU course lists.
+Student changes and decisions: The owner requested adding IT, CS, and IS. Existing NVSU directory offerings are now directly linked to their CAS curriculum pages.
+How the student verified and can explain the result: No tests or browser review were run. The pages and linked documents were checked using official CAS page content from web search. No files were staged, committed, pushed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-13 NVSU CAS curriculum transcription
+
+```text
+Date / story: 2026-10-27 / transcribe owner-supplied NVSU CAS curriculum PDFs
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied five NVSU curriculum PDFs after asking to add all courses that could be sourced, especially from NVSU.
+Assistance used (explanation, planning, code draft, debugging, review): Extracted searchable PDF text locally; identified program headers and effective year; transcribed course codes and titles into source-linked NVSU reference templates; updated catalog descriptions and project/deployment documentation.
+Suggestions or code retained: Added BSIS Business Analytics and Service Management, BSIT Web and Mobile App Development and Network Design and Management, and BSCS Game Development and Robotics. The attached Business Analytics filename says BSIT, but the PDF cover says BSIS, so the template follows the document title. All source copies state Effective S.Y. 2019-2020; the curricula cite CMO 25 s. 2015, and the BSIT documents also cite CMO 20 s. 2013 for general education. Lists preserve course codes and titles but not semester placement. The copies are historical references and not claims of current school approval. PDFs were not copied to the repository.
+Student changes and decisions: Kept CHED samples separate from NVSU courses, retained the user's source files outside Git, and made import remain additive through the existing catalog flow. The accumulated source/docs/tests are included in the authorized release commit; there is no schema change for these catalog additions.
+How the student verified and can explain the result: The accumulated PHPUnit suite passed (85 tests, 860 assertions); Playwright passed 3/3 responsive tests, including the NVSU Web and Mobile App Development preview/source link; changed PHP and JavaScript syntax checks passed; and the staged diff passed `git diff --cached --check`. Composer validation passed. Composer audit found no known advisories in the lockfile, but Packagist was unreachable, so current advisory data could not be confirmed. InfinityFree upload and hosted migration are still pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-15 interface language preference
+
+```text
+Date / story: 2026-10-27 / browser language selector and initial localization
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested English (default), Taglish, and Tagalog/Filipino interface options, then selected browser-only preference storage.
+Assistance used (explanation, planning, code draft, debugging, review): Added a whitelisted locale filter and CSRF-protected language route, browser cookie preference, language catalogs, shared selector, and initial translations for navigation, authentication, onboarding, and subject actions; documented deployment review.
+Suggestions or code retained: Official program/course names and user-entered data remain unchanged. The localization is initial coverage and does not yet translate every help paragraph, validation error, or catalog description.
+Student changes and decisions: English remains default; preference is per browser and needs no database migration.
+How the student verified and can explain the result: PHP syntax checks passed for changed PHP files, `node --check public/assets/js/onboarding-tour.js` passed, and `git diff --check` passed. No automated tests or browser review have been run. No files were staged, committed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### S-09 security baseline hardening
+
+```text
+Date / story: 2026-10-27 / security configuration review and hardening
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to focus on application security.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed authentication, role filters, CSRF/session settings, ownership paths, output escaping, production error/database settings, response headers, and deployment deny rules. Enabled built-in secure headers, added no-store headers to dynamic pages, made production DB debug default off, and added trace redaction keys and backup-file denial patterns; recorded security traceability and deployment checks.
+Suggestions or code retained: No authorization, data-retention, or product behavior was changed. No new dependency or schema change was introduced.
+Student changes and decisions: Keep the security changes small and continue with an owner-reviewed security pass. The owner remains responsible for host configuration and release authorization.
+How the student verified and can explain the result: PHP lint for changed configuration/filter/route files, `node --check` for the onboarding script, `git diff --check`, PowerShell package-script parsing, and `spark routes` passed. The route listing shows CSRF/language globally and no-store/security headers after every dynamic route. Automated tests, browser/HTTP-header review, and host probes were not run. `composer audit --locked` could not connect to Packagist through the configured local proxy and returned exit 100, so current dependency advisories could not be checked.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 mascot notification cards
+
+```text
+Date / story: 2026-10-29 / mascot notification cards
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested that notifications appear as cards with the Duno mascot in different emotions, including errors.
+Assistance used (explanation, planning, code draft, debugging, review): Audited shared flash messages, validation error lists, and Shield auth alerts; added a shared notification stack, plain JavaScript card renderer, responsive/reduced-motion styling, localized labels, and traceability notes.
+Suggestions or code retained: Existing accessible alert/status content is moved into dismissible cards when JavaScript runs; inline messages remain as a no-JavaScript fallback. The same mascot image is paired with decorative, mood-specific emotion markers. Success/info notices auto-dismiss; warning/error notices stay until dismissed.
+Student changes and decisions: Reuse Duno's existing mascot asset and add no new package or database change. Keep instructional timer status and static catalog notes in place.
+How the student verified and can explain the result: PHP syntax checks passed for changed PHP views and language files, `node --check public/assets/js/app-notifications.js` passed, and `git diff --check` passed (line-ending warnings only). Automated tests and browser checks are pending. The uploaded UI has not been changed, and no files were staged, committed, or deployed.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

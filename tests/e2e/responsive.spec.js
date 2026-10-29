@@ -38,6 +38,18 @@ async function tabUntilFocused(page, locator, maxTabs = 20) {
   throw new Error('The target control was not reachable by keyboard tab navigation.');
 }
 
+async function loginAsReviewStudent(page) {
+  await page.goto('login');
+  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.waitForURL(
+    url => !url.pathname.endsWith('/login'),
+    { timeout: 10_000, waitUntil: 'domcontentloaded' },
+  );
+  await page.getByRole('button', { name: 'Skip tour' }).click();
+}
+
 test('login page fits common mobile, tablet, and desktop widths', async ({ page }) => {
   for (const width of viewportWidths) {
     await page.setViewportSize({ width, height: 850 });
@@ -54,14 +66,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   test.skip(!email || !password, 'Provide a synthetic student account in .tools/review-account.txt or set TALAS_E2E_EMAIL and TALAS_E2E_PASSWORD to run authenticated page checks.');
 
   await page.setViewportSize({ width: 400, height: 850 });
-  await page.goto('login');
-  await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Password').fill(password);
-  await page.getByRole('button', { name: 'Login' }).click();
-  await page.waitForURL(
-    url => !url.pathname.endsWith('/login'),
-    { timeout: 10_000, waitUntil: 'domcontentloaded' },
-  );
+  await loginAsReviewStudent(page);
 
   const adminResponse = await page.goto('admin');
   expect(adminResponse?.status()).toBe(403);
@@ -78,6 +83,15 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.goto('student/subjects');
     await expect(page.getByRole('heading', { name: 'Your subjects' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/subjects');
+
+    await page.goto('student/subjects/templates');
+    await expect(page.getByRole('heading', { name: 'Program and curriculum catalog' })).toBeVisible();
+    await page.getByLabel('NVSU degree program').selectOption('bsit-web-mobile');
+    await page.getByRole('button', { name: 'Preview NVSU course list' }).click();
+    await expect(page.getByRole('heading', { name: /Web and Mobile App Development/ })).toBeVisible();
+    await expect(page.getByText(/Mobile Web Development/)).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Read the NVSU curriculum source (opens in a new tab)' })).toBeVisible();
+    await expectNoHorizontalOverflow(page, '/student/subjects/templates');
 
     await page.goto('student/topics');
     await expect(page.getByRole('heading', { name: 'Find a topic' })).toBeVisible();
@@ -219,11 +233,7 @@ test('topic detail and add/edit forms are usable at phone and desktop widths', a
   test.skip(!email || !password, 'Provide a synthetic student account in .tools/review-account.txt or set TALAS_E2E_EMAIL and TALAS_E2E_PASSWORD to run authenticated page checks.');
 
   await page.setViewportSize({ width: 400, height: 850 });
-  await page.goto('login');
-  await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Password').fill(password);
-  await page.getByRole('button', { name: 'Login' }).click();
-  await page.waitForURL(url => !url.pathname.endsWith('/login'), { timeout: 10_000, waitUntil: 'domcontentloaded' });
+  await loginAsReviewStudent(page);
   await page.goto('student/subjects');
 
   const subjects = await page.locator('.subject-list a').evaluateAll(links => links.map(link => ({

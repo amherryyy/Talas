@@ -1,9 +1,12 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
-<h1>Your subjects</h1>
-<p>Manage the subjects you want to study. Only you can see this list.</p>
-<p><a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> Add a subject</a></p>
+<h1><?= esc(lang('App.yourSubjects')) ?></h1>
+<p><?= esc(lang('App.subjectsIntro')) ?></p>
+<div class="actions">
+    <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> <?= esc(lang('App.addSubject')) ?></a>
+    <a class="button secondary" href="<?= esc(site_url('student/subjects/templates')) ?>"><?= esc(lang('App.programCatalog')) ?></a>
+</div>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -15,11 +18,11 @@
 
 <form method="post" action="<?= esc(site_url('student/subjects/search')) ?>">
     <?= csrf_field() ?>
-    <label for="subject-query">Search subjects</label>
+    <label for="subject-query"><?= esc(lang('App.searchSubjects')) ?></label>
     <input id="subject-query" name="query" type="search" maxlength="120" value="<?= esc($query) ?>" autocomplete="off">
     <div class="actions">
-        <button type="submit"><span class="solar-icon solar-icon-magnifier" aria-hidden="true"></span> Search</button>
-        <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>">Clear</a>
+        <button type="submit"><span class="solar-icon solar-icon-magnifier" aria-hidden="true"></span> <?= esc(lang('App.search')) ?></button>
+        <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><?= esc(lang('App.clear')) ?></a>
     </div>
 </form>
 
@@ -31,9 +34,9 @@
         <p><?= $query === '' ? 'Add a course or class to keep its topics and study sessions together.' : 'Try another search, or clear the filter to see your full subject list.' ?></p>
         <div class="actions">
             <?php if ($query !== ''): ?>
-                <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>">Clear search</a>
+                <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><?= esc(lang('App.clearSearch')) ?></a>
             <?php else: ?>
-                <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span>Add your first subject</a>
+                <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span><?= esc(lang('App.addFirstSubject')) ?></a>
             <?php endif ?>
         </div>
     </section>

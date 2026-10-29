@@ -70,7 +70,7 @@
 
     <section class="progression-insights no-print" aria-labelledby="progression-insights-heading">
         <div class="dashboard-section-heading">
-            <div><p class="workspace-kicker">Earned with your saved study time</p><h3 id="progression-insights-heading">Your unlocked insights</h3></div>
+            <div><p class="workspace-kicker">Earned with study time and daily visits</p><h3 id="progression-insights-heading">Your unlocked insights</h3></div>
             <p class="muted">Core Aralytics stays open at every level.</p>
         </div>
         <div class="progression-insight-grid">

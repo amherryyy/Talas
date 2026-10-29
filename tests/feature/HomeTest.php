@@ -4,6 +4,7 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use Config\Database;
+use Tests\Support\IsolatedFeatureSession;
 
 /**
  * @internal
@@ -12,6 +13,7 @@ final class HomeTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
+    use IsolatedFeatureSession;
 
     protected $namespace = null;
 
@@ -39,6 +41,21 @@ final class HomeTest extends CIUnitTestCase
         $body = $response->response()->getBody();
         $this->assertStringContainsString('href="http://example.com/index.php/register"', $body);
         $this->assertStringContainsString('href="http://example.com/index.php/login"', $body);
+        $this->assertStringNotContainsString('data-app-tour', $body);
         $response->assertDontSee('Welcome to CodeIgniter');
+    }
+
+    public function testPublicAndAuthenticationPagesUseExistingHomeNavigationWithoutDuplicateControls(): void
+    {
+        foreach (['/', 'login', 'register'] as $path) {
+            $response = $this->get($path);
+            $response->assertOK();
+
+            $body = $response->response()->getBody();
+            $this->assertStringNotContainsString('aria-label="Page navigation"', $body);
+            $this->assertStringNotContainsString('aria-label="Go back to the previous page"', $body);
+            $this->assertStringNotContainsString('aria-label="Go to home"', $body);
+            $this->assertStringContainsString('aria-label="duno.', $body);
+        }
     }
 }

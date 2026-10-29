@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en">
+<?php $htmlLocale = match (service('request')->getLocale()) { 'fil' => 'fil-PH', 'taglish' => 'en-PH', default => 'en' }; ?>
+<html lang="<?= esc($htmlLocale) ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,9 +11,11 @@
 </head>
 <body class="duno-admin has-mobile-navigation">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/app_notifications') ?>
 <div class="shell">
     <header class="admin-header">
         <a class="admin-brand" href="<?= esc(site_url()) ?>" aria-label="duno. home"><span class="wordmark">duno.</span><span class="muted">Admin</span></a>
+        <?= view('partials/language_switcher') ?>
         <form method="post" action="<?= esc(site_url('logout')) ?>">
             <?= csrf_field() ?>
             <button type="submit">Sign out</button>
@@ -34,7 +37,12 @@
         <p class="privacy-note">This dashboard shows totals only. It does not display account names, individual study records, or private check-in information.</p>
     </main>
 </div>
-<footer class="icon-credit"><small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small></footer>
+<footer class="icon-credit app-footer">
+    <span class="app-footer-brand">duno.</span>
+    <span>Your Little Study Buddy.</span>
+    <small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small>
+</footer>
 <?= $this->include('partials/admin_bottom_nav') ?>
+<script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ namespace App\Controllers\Student;
 use App\Controllers\BaseController;
 use App\Models\CheckInModel;
 use App\Models\StudySessionModel;
+use App\Models\StudentStreakModel;
 use App\Services\AralyticsService;
 use App\Services\CheckInSummaryService;
 use App\Services\StudyProgressionService;
@@ -38,6 +39,11 @@ class Aralytics extends BaseController
         $sessionModel = new StudySessionModel();
         $ownerId = (int) $owner->id;
         $lifetimeTotals = $sessionModel->progressionTotalsForOwner($ownerId);
+        $streakTotals = (new StudentStreakModel())->progressionTotalsForOwner(
+            $ownerId,
+            $now->format('Y-m-d'),
+            $now->modify('-1 day')->format('Y-m-d'),
+        );
         $progressionStart = $today->modify('first day of this month')->modify('-5 months');
         $sessions = $period === 'all_time'
             ? $sessionModel->findAllForOwner($ownerId)
@@ -72,7 +78,7 @@ class Aralytics extends BaseController
                 $sessions,
                 $now,
                 $timezone,
-                $lifetimeTotals,
+                array_merge($lifetimeTotals, $streakTotals),
             ),
             'appTimezone' => $timezone->getName(),
             'pageTitle' => 'Aralytics',

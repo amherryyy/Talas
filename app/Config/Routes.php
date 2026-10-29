@@ -5,17 +5,24 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 $routes->setAutoRoute(false);
 $routes->get('/', 'Home::index');
+$routes->post('language', 'LanguagePreference::update', ['as' => 'language.update']);
 
 $routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection $routes): void {
-    service('auth')->routes($routes, ['only' => ['register', 'login']]);
+    service('auth')->routes($routes, ['only' => ['register', 'login', 'auth-actions']]);
+    $routes->post('auth/a/resend-registration-code', 'RegistrationRecovery::resend', ['as' => 'auth-registration-resend']);
+    $routes->post('auth/a/cancel-registration', 'RegistrationRecovery::cancel', ['as' => 'auth-registration-cancel']);
 });
 
 $routes->post('logout', '\\CodeIgniter\\Shield\\Controllers\\LoginController::logoutAction', ['as' => 'logout']);
 
-$routes->group('student', ['filter' => ['session', 'exclusive-role:student']], static function (RouteCollection $routes): void {
+$routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'student-streak']], static function (RouteCollection $routes): void {
     $routes->get('/', 'Student\\Dashboard::index', ['as' => 'student.dashboard']);
     $routes->get('subjects', 'Student\\Subjects::index', ['as' => 'student.subjects.index']);
     $routes->post('subjects/search', 'Student\\Subjects::search', ['as' => 'student.subjects.search']);
+    $routes->get('subjects/templates', 'Student\\Subjects::templates', ['as' => 'student.subjects.templates']);
+    $routes->post('subjects/templates/import', 'Student\\Subjects::importTemplate', ['as' => 'student.subjects.templates.import']);
+    $routes->post('subjects/nvsu/import', 'Student\\Subjects::importNvsuCurriculum', ['as' => 'student.subjects.nvsu.import']);
+    $routes->post('subjects/shs/import', 'Student\\Subjects::importShsSubjects', ['as' => 'student.subjects.shs.import']);
     $routes->get('subjects/new', 'Student\\Subjects::newSubject', ['as' => 'student.subjects.new']);
     $routes->post('subjects', 'Student\\Subjects::create', ['as' => 'student.subjects.create']);
     $routes->get('subjects/(:num)', 'Student\\Subjects::show/$1', ['as' => 'student.subjects.show']);

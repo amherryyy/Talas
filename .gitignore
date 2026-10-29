@@ -18,4 +18,5 @@
 /docs/host-probe/upload/
 *.sql
 !docs/duno-hosted-initial-schema.sql
+!docs/2026-10-27-registration-verification-upgrade.sql
 *.zip

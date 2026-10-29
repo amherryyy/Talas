@@ -43,3 +43,7 @@ Make the product feel like one coherent study companion. Help students find a us
 - The existing artwork has a gentle float animation; the Timer mascot animates a little more while a session is actively running.
 - The mascot remains decorative and has empty alt text. `prefers-reduced-motion` disables motion through the shared accessibility rule.
 - No new artwork states or assets were created.
+
+## Follow-up verification status (2026-10-26)
+
+The mascot and navigation/motion implementation is merged through PR #12. The full PHPUnit suite passed (73 tests, 677 assertions), PHP syntax passed for 138 files under `app`, `tests`, and `scripts`, and JavaScript syntax passed for the navigation and level-up modules. Composer validation passed; the locked audit reported no advisories while Packagist was unreachable. Local browser verification remains pending: the review database connection was denied access to the configured database, the homepage returned HTTP 500, and Playwright could not spawn its worker (`spawn EPERM`). Owner visual review of the Timer and check-in prompt at phone and desktop widths remains outstanding.

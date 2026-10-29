@@ -24,6 +24,8 @@ Start-Process -FilePath C:\xampp\mysql\bin\mysqld.exe -ArgumentList '--defaults-
 
 **Current local review status (2026-10-25):** The isolated review DB on port 3308 is reachable; `migrate:status --all` using `.tools/talas-review-env.php` confirmed all nine expected migrations. An unauthenticated `mysqladmin ping` returned access denied because it used the default Windows account without a password; this was not a connectivity failure. The running MariaDB process owns the review data files, so do not launch a duplicate. Several older PHP servers also occupy the usual 8080 port. The current local visual review used port 18080, `app.baseURL=http://localhost:18080/`, `php_intl.dll`, and a temporary review router with the development toolbar disabled. The corrupt shared XAMPP data directory remains untouched.
 
+**Streak migration follow-up (2026-10-26):** `2026-10-26-000001_CreateStudentStreakDays` adds one unique owner/date row for streak XP. Feature tests apply it to isolated in-memory SQLite. The existing `.tools` browser-review DB was not migrated: its configured database access was denied during the R-08 browser-review attempt. The shared XAMPP database and the hosted database were not changed.
+
 ## Run the local web app
 
 For the first local admin account, apply all migrations and run `C:\xampp\php\php.exe -d extension=php_intl.dll spark admin:create-local` from the repository root. This command is limited to development mode and a loopback database and refuses to create another admin. It prints a generated password once; keep it private and do not paste it into chat or commit it. Hosted admin provisioning is separate; the owner reports creating a synthetic admin account through phpMyAdmin and confirming its dashboard access.

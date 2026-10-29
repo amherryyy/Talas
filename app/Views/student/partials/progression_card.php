@@ -4,7 +4,8 @@
         <div class="progression-copy">
             <p class="workspace-kicker">Your Duno journey</p>
             <h2 id="progression-heading">Level <?= esc((string) $progression['level']) ?> · <?= esc($progression['level_name']) ?></h2>
-            <p><?= esc((string) $progression['xp']) ?> study XP <span class="muted">· 1 XP for each saved study minute</span></p>
+            <p><strong><?= esc((string) $progression['xp']) ?> XP</strong> <span class="muted">(<?= esc((string) $progression['study_xp']) ?> study + <?= esc((string) $progression['streak_xp']) ?> streak)</span></p>
+            <p class="progression-xp-rule">1 XP per saved study minute; +5 XP once for your first app visit each day.</p>
         </div>
     </div>
     <div class="progression-track">
@@ -33,3 +34,7 @@
         </ul>
     </div>
 </section>
+<div class="streak-chip no-print" aria-label="Current login streak: <?= esc((string) $progression['current_streak']) ?> <?= $progression['current_streak'] === 1 ? 'day' : 'days' ?>">
+    <span class="streak-flame<?= session()->getFlashdata('daily_streak_reward') ? ' is-new' : '' ?>" aria-hidden="true">🔥</span>
+    <span><strong><?= esc((string) $progression['current_streak']) ?>-day streak</strong><span class="streak-caption">Visit daily to keep it going</span></span>
+</div>
