@@ -6,7 +6,7 @@ Replace example repository URLs, branch names, and file paths with the actual va
 
 ## Current repository state
 
-Local Git snapshot, checked 2026-10-29: `origin/main` is `77034e4`; the current branch `release/accumulated-2026-10-26` is `023caa6` and contains `origin/main` plus seven commits. The matching remote branch is `6a4857a`, so the local branch is one commit ahead of that remote. The working tree has accumulated unstaged and untracked changes, with no staged paths. Do not stage, commit, push, merge, or deploy as part of an audit. First review each change and split unrelated stories into focused commits. Recheck actual branch and worktree state before every Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+Local Git snapshot, checked 2026-10-29 after PR #14: GitHub `main` merged PR #14 as `a3cf7107070d0705efc23b20b27c60885dc67116`. The local `main` and `origin/main` refs remain stale at `77034e4`; the current fix branch was created from PR #14 head `323bd72cf4550dd2b2644c5de01e8f7eb1636064`, which is an ancestor of the merged commit. The active branch is `fix/infinityfree-query-route`. A front-controller edit and release documentation updates are currently unstaged. Do not stage, commit, push, merge, or deploy as part of an audit. First review each change and split unrelated stories into focused commits. Recheck actual branch and worktree state before every Git action. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 
 ## One-time GitHub setup
 

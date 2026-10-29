@@ -23,6 +23,32 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
     exit(1);
 }
 
+// InfinityFree's browser check can append its `&i=1` marker to the query-style
+// route form used by this host (`index.php?/student/...`). In that URL shape,
+// the marker is otherwise parsed as part of the route and CI4 rejects `&` as a
+// disallowed URI character. Remove only the terminal host marker from a route
+// query; leave normal app query parameters and path-style URLs untouched.
+$requestUri = $_SERVER['REQUEST_URI'] ?? null;
+$scriptName = $_SERVER['SCRIPT_NAME'] ?? null;
+if (is_string($requestUri) && is_string($scriptName)) {
+    $queryOffset = strpos($requestUri, '?');
+    if ($queryOffset !== false) {
+        $requestPath = substr($requestUri, 0, $queryOffset);
+        $scriptPath = parse_url($scriptName, PHP_URL_PATH);
+        $routeQuery = substr($requestUri, $queryOffset + 1);
+
+        if (
+            is_string($scriptPath)
+            && $requestPath === $scriptPath
+            && str_starts_with($routeQuery, '/')
+            && ! str_contains($routeQuery, '?')
+            && preg_match('/&i=\d+$/D', $routeQuery, $hostMarker) === 1
+        ) {
+            $_SERVER['REQUEST_URI'] = $requestPath . '?' . substr($routeQuery, 0, -strlen($hostMarker[0]));
+        }
+    }
+}
+
 /*
  *---------------------------------------------------------------
  * SET THE CURRENT DIRECTORY
