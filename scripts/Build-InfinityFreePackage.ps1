@@ -81,7 +81,8 @@ ServerSignature Off
     RewriteRule ^(?:app|build|builds|docs|node_modules|public|system|tests|vendor|writable)(?:/|$) - [F,L,NC]
     RewriteRule ^(?:composer(?:\.(?:json|lock))?|env(?:\..*)?|spark|preload\.php|phpunit(?:\..*)?|AGENTS\.md|README\.md|LICENSE(?:\..*)?)(?:/|$) - [F,L,NC]
     RewriteRule (^|/)\. - [F,L]
-    RewriteRule \.(?:bak|dist|ini|log|old|sql|swp)$ - [F,L,NC]
+    RewriteRule ^(?:error_log|php_errorlog|php_error\.log)$ - [F,L,NC]
+    RewriteRule \.(?:bak|backup|db|dist|dump|gz|ini|log|old|orig|phar|save|sql|sqlite|swp|tar|tgz|tmp|zip)$ - [F,L,NC]
 
     # Pass authorization headers through to CodeIgniter and route non-files to its front controller.
     RewriteCond %{HTTP:Authorization} .

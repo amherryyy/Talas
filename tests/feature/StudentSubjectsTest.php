@@ -10,6 +10,7 @@ use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use CodeIgniter\Test\TestResponse;
 use Config\Database;
+use Tests\Support\IsolatedFeatureSession;
 
 /**
  * @internal
@@ -18,6 +19,7 @@ final class StudentSubjectsTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
+    use IsolatedFeatureSession;
     use AuthenticationTesting;
 
     protected $namespace = null;
@@ -403,6 +405,8 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $createdUser = $userModel->findById((int) $userId);
         $this->assertInstanceOf(User::class, $createdUser);
         $createdUser->addGroup($group);
+        $createdUser->activate();
+        $createdUser = $userModel->findById((int) $userId);
 
         return $createdUser;
     }

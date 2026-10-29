@@ -8,7 +8,9 @@ $routes->get('/', 'Home::index');
 $routes->post('language', 'LanguagePreference::update', ['as' => 'language.update']);
 
 $routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection $routes): void {
-    service('auth')->routes($routes, ['only' => ['register', 'login']]);
+    service('auth')->routes($routes, ['only' => ['register', 'login', 'auth-actions']]);
+    $routes->post('auth/a/resend-registration-code', 'RegistrationRecovery::resend', ['as' => 'auth-registration-resend']);
+    $routes->post('auth/a/cancel-registration', 'RegistrationRecovery::cancel', ['as' => 'auth-registration-cancel']);
 });
 
 $routes->post('logout', '\\CodeIgniter\\Shield\\Controllers\\LoginController::logoutAction', ['as' => 'logout']);

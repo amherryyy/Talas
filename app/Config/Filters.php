@@ -3,7 +3,9 @@
 namespace Config;
 
 use App\Filters\ExclusiveRoleFilter;
+use App\Filters\ExpiredRegistrationCleanupFilter;
 use App\Filters\LanguagePreferenceFilter;
+use App\Filters\NoStorePagesFilter;
 use App\Filters\StudentStreakFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
@@ -40,6 +42,8 @@ class Filters extends BaseFilters
         'exclusive-role' => ExclusiveRoleFilter::class,
         'student-streak' => StudentStreakFilter::class,
         'language-preference' => LanguagePreferenceFilter::class,
+        'no-store-pages' => NoStorePagesFilter::class,
+        'expired-registration-cleanup' => ExpiredRegistrationCleanupFilter::class,
     ];
 
     /**
@@ -84,8 +88,8 @@ class Filters extends BaseFilters
             // 'invalidchars',
         ],
         'after' => [
-            // 'honeypot',
-            // 'secureheaders',
+            'no-store-pages',
+            'secureheaders',
         ],
     ];
 
@@ -113,5 +117,7 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'expired-registration-cleanup' => ['before' => ['register']],
+    ];
 }

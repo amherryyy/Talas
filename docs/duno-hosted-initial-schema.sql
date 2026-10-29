@@ -1,4 +1,4 @@
--- Duno initial hosted schema. Schema only; no users, subjects, topics, sessions, plans, check-ins, or streak records are included.
+-- Duno initial hosted schema. Schema only; no users, subjects, topics, sessions, plans, check-ins, streaks, or verification-limit records are included.
 -- Import into the selected empty database. This file does not create or select a database.
 -- Migration ledger rows record the reviewed CodeIgniter, Shield, and Settings migrations.
 
@@ -256,6 +256,19 @@ CREATE TABLE `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `registration_verification_limits` (
+  `user_id` int(11) unsigned NOT NULL,
+  `failed_attempts` tinyint(3) unsigned NOT NULL DEFAULT 0,
+  `last_sent_at` datetime DEFAULT NULL,
+  `sends_today` tinyint(3) unsigned NOT NULL DEFAULT 0,
+  `send_day` date DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `registration_verification_limits_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -273,4 +286,5 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 (7, '2026-10-16-000003', 'App\\Database\\Migrations\\CreateDailyPlans', 'default', 'App', 1792105438, 2),
 (8, '2026-10-16-000004', 'App\\Database\\Migrations\\CreateStudySessions', 'default', 'App', 1792109212, 3),
 (9, '2026-10-17-000005', 'App\\Database\\Migrations\\CreateCheckIns', 'default', 'App', 1792204362, 4),
-(10, '2026-10-26-000001', 'App\\Database\\Migrations\\CreateStudentStreakDays', 'default', 'App', 1793015000, 5);
+(10, '2026-10-26-000001', 'App\\Database\\Migrations\\CreateStudentStreakDays', 'default', 'App', 1793015000, 5),
+(11, '2026-10-27-000001', 'App\\Database\\Migrations\\CreateRegistrationVerificationLimits', 'default', 'App', 1793059200, 6);

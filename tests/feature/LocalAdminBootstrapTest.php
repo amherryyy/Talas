@@ -7,6 +7,7 @@ use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use Config\Auth;
 use Config\Database;
+use Tests\Support\IsolatedFeatureSession;
 
 /**
  * @internal
@@ -14,6 +15,7 @@ use Config\Database;
 final class LocalAdminBootstrapTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
+    use IsolatedFeatureSession;
 
     protected $namespace = null;
 

@@ -314,6 +314,9 @@ body.duno-auth { display: grid; grid-template-rows: auto 1fr; padding: 1.5rem; }
 .duno-auth .form-check-input { margin-right: .4rem; accent-color: var(--duno-purple); }
 .duno-auth .d-grid { display: flex; justify-content: center; margin: 1.35rem 0; }
 .duno-auth .btn { min-width: 11rem; }
+.duno-auth .btn.btn-secondary { border-color: var(--duno-line); color: var(--duno-ink); background: var(--duno-paper); box-shadow: none; }
+.duno-auth .btn.btn-secondary:hover { border-color: #d4cef5; color: var(--duno-purple-deep); background: #f1efff; }
+.duno-auth .registration-recovery { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--duno-line); }
 .duno-auth .alert { margin: 1rem 0; padding: .85rem 1rem; border: 1px solid var(--duno-line); border-radius: .8rem; }
 .duno-auth .alert-danger { border-color: #efd0cd; color: #76231e; background: #fff0ee; }
 .duno-auth .alert-success { border-color: #cbe8d7; color: #28513b; background: var(--duno-mint-soft); }
@@ -994,8 +997,84 @@ body.duno-auth {
 .duno-auth form > .d-grid + p.text-center a:hover { border-color: #d4cef5; color: var(--duno-purple-deep); background: #f8f6ff; }
 .duno-auth form > .d-grid + p.text-center a:active { transform: translateY(1px); }
 
+.duno-notification-stack {
+    position: fixed;
+    z-index: 1000;
+    top: calc(5rem + env(safe-area-inset-top));
+    right: clamp(.75rem, 2vw, 1.5rem);
+    display: grid;
+    width: min(25rem, calc(100vw - 1.5rem));
+    max-height: calc(100vh - 6rem - env(safe-area-inset-top));
+    gap: .7rem;
+    overflow-y: auto;
+    padding: .15rem;
+    pointer-events: none;
+    scrollbar-width: thin;
+}
+.duno-notification-stack:empty { display: none; }
+.duno-notification-stack > .duno-toast-source { margin: 0; padding: .85rem 1rem; pointer-events: auto; }
+.duno-toast {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.65rem minmax(0, 1fr) 2.75rem;
+    align-items: center;
+    gap: .75rem;
+    min-width: 0;
+    padding: .7rem .75rem;
+    border: 1px solid rgb(255 255 255 / 92%);
+    border-left: 4px solid var(--toast-accent, var(--duno-purple));
+    border-radius: 1rem;
+    color: var(--duno-ink);
+    background: rgb(255 255 255 / 96%);
+    box-shadow: 0 16px 40px rgb(39 32 78 / 17%), inset 0 1px 0 rgb(255 255 255 / 95%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    pointer-events: auto;
+    animation: notification-arrive 240ms cubic-bezier(.2, .8, .25, 1) both;
+}
+.duno-toast[data-mood="success"] { --toast-accent: #438664; }
+.duno-toast[data-mood="info"] { --toast-accent: var(--duno-purple); }
+.duno-toast[data-mood="warning"] { --toast-accent: #b77918; }
+.duno-toast[data-mood="error"] { --toast-accent: #a63832; }
+.duno-toast-mascot { position: relative; display: grid; width: 3.65rem; height: 3.65rem; place-items: center; border-radius: .9rem; background: linear-gradient(145deg, #f2efff, #fff8e7); }
+.duno-toast-mascot img { display: block; width: 3.45rem; height: 3.45rem; object-fit: contain; filter: drop-shadow(0 .2rem .25rem rgb(47 39 95 / 15%)); }
+.duno-toast[data-mood="success"] .duno-toast-mascot img { animation: notification-cheer 700ms cubic-bezier(.2, .85, .25, 1.2) both; }
+.duno-toast[data-mood="error"] .duno-toast-mascot img { transform: rotate(-5deg); }
+.duno-toast-emotion { position: absolute; right: -.35rem; bottom: -.3rem; display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border: 2px solid #fff; border-radius: 50%; background: #fff; font-size: .82rem; line-height: 1; }
+.duno-toast-copy { min-width: 0; }
+.duno-toast-title { display: block; margin-bottom: .12rem; color: var(--toast-accent, var(--duno-purple-deep)); font-size: .9rem; font-weight: 780; line-height: 1.25; }
+.duno-toast-message { margin: 0; color: var(--duno-ink); font-size: .88rem; line-height: 1.4; overflow-wrap: anywhere; }
+.duno-toast-message-list { display: grid; gap: .18rem; margin: .2rem 0 0; padding-left: 1rem; color: var(--duno-ink); font-size: .84rem; line-height: 1.35; }
+.duno-workspace .duno-toast-dismiss,
+.duno-admin .duno-toast-dismiss,
+.duno-toast-dismiss { display: grid; width: 2.75rem; min-height: 2.75rem; place-items: center; padding: 0; border: 1px solid var(--duno-line); border-radius: .7rem; color: var(--duno-muted); background: rgb(255 255 255 / 88%); box-shadow: none; font: inherit; font-size: 1.2rem; line-height: 1; cursor: pointer; }
+.duno-workspace .duno-toast-dismiss:hover,
+.duno-admin .duno-toast-dismiss:hover,
+.duno-toast-dismiss:hover { border-color: #c9c2f1; color: var(--duno-purple-deep); background: #f5f2ff; box-shadow: none; }
+.duno-toast-dismiss:focus-visible { outline: 3px solid #315cbd; outline-offset: 2px; }
+.duno-toast.is-leaving { animation: notification-leave 180ms ease-in both; }
+@keyframes notification-arrive { from { opacity: 0; transform: translateY(-.5rem) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes notification-leave { to { opacity: 0; transform: translateY(-.3rem) scale(.98); } }
+@keyframes notification-cheer { 0%, 100% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-.25rem) rotate(-5deg); } 70% { transform: translateY(.05rem) rotate(3deg); } }
+
 @media (max-width: 52rem) {
-    .auth-header { align-items: flex-start; }
+    .duno-notification-stack { top: calc(4.8rem + env(safe-area-inset-top)); right: .65rem; left: .65rem; width: auto; max-height: min(42vh, 22rem); }
+    .duno-toast { grid-template-columns: 3.15rem minmax(0, 1fr) 2.75rem; gap: .6rem; padding: .65rem; border-radius: .9rem; }
+    .duno-toast-mascot { width: 3.15rem; height: 3.15rem; }
+    .duno-toast-mascot img { width: 3rem; height: 3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .duno-toast,
+    .duno-toast[data-mood="success"] .duno-toast-mascot img { animation: none; }
+    .duno-toast.is-leaving { animation: none; opacity: 0; }
+}
+
+@media (max-width: 52rem) {
+    .auth-header { align-items: flex-start; flex-direction: column; gap: .65rem; }
+    .duno-auth .auth-header .duno-brand { max-width: 100%; }
+    .duno-auth .auth-header .language-switcher { width: 100%; margin-left: 0; }
+    .auth-header .language-switcher-controls { flex-wrap: wrap; }
+    .auth-header .language-switcher select { width: min(100%, 10.5rem); min-width: 0; }
     .auth-header .language-switcher label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
     body.duno-auth { padding: .85rem clamp(.85rem, 4vw, 1.4rem); }
     .duno-auth .duno-brand { margin-top: .2rem; }

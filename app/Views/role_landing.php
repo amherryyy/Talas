@@ -23,6 +23,7 @@
 </head>
 <body class="duno-role">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/app_notifications') ?>
 <main id="main-content">
     <?= view('partials/language_switcher') ?>
     <a class="brand" href="<?= esc(site_url()) ?>" aria-label="duno. home">duno.</a>
@@ -37,5 +38,6 @@
         <button type="submit">Sign out</button>
     </form>
 </main>
+<script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>
 </html>

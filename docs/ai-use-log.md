@@ -182,6 +182,45 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### S-10 architecture and schema audit
+
+```text
+Date / story: 2026-10-29 / audit accumulated changes, schema, and architecture
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked for an audit with special attention to schema and overall architecture.
+Assistance used (explanation, planning, code draft, debugging, review): Compared migrations, hosted schema snapshots and upgrade instructions; reviewed registration activation, rate-limit storage, owner-scoped models, route filters, deployment packaging, and changed interaction flows. Found that the inherited Shield activation generator could emit letters although the custom verifier requires six digits, and that the deployment guide linked to a missing existing-database upgrade script. Replaced the generator with a cryptographically secure numeric generator, supplied the documented upgrade SQL, allowed that SQL file through the existing broad ignore rule, and checked the documented initial-schema table count.
+Suggestions or code retained: The registration control table remains keyed one-to-one to `users.id` with a cascading foreign key. The existing-database SQL is fixed to the owner-reported 10-row, batch-5 ledger and warns operators to reconcile a different ledger. MySQL/MariaDB has no native row-level security; owner checks remain application-level.
+Student changes and decisions: No release, staging, commit, or deployment was authorized as part of this audit. Existing unrelated worktree changes were preserved.
+How the student verified and can explain the result: The full PHPUnit suite passed with XAMPP's SQLite3 and Intl extensions explicitly loaded and coverage disabled to match CI: 86 tests, 874 assertions. The previous four notice failures came from the shared CodeIgniter view renderer retaining data between simulated requests; the test-only `IsolatedFeatureSession` trait now resets the renderer, Shield auth service, and PHP session before each feature test. The streak filter also removes its flash key with the correct session API. PHP syntax passed for 172 app/test files, `composer validate --no-check-publish` passed, JavaScript syntax and `git diff --check` passed. Manual browser behavior, the database upgrade SQL against the hosted ledger, and dependency advisories remain unverified. `composer audit --locked` could not reach Packagist because the configured local proxy refused its connection.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-16 registration email verification
+
+```text
+Date / story: 2026-10-27 / require email verification for new registrations
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested a verification code for new registrations and selected numeric code entry.
+Assistance used (explanation, planning, code draft, debugging, review): Enabled Shield's six-digit email activator with 15-minute expiry, five failed attempts, a 60-second resend cooldown and five sends/day per account; rate-limited registration, auth-action, resend, and cancellation routes; added a CSRF-protected restart flow for mistyped addresses; added 48-hour cleanup of inactive registrations on registration visits; created Duno verification/email views and localized strings; and documented SMTP configuration and host migration steps.
+Suggestions or code retained: Added migration `2026-10-27-000001_CreateRegistrationVerificationLimits` and a phpMyAdmin upgrade SQL for the known host ledger. SMTP secrets stay in the host `.env` and must not be committed.
+Student changes and decisions: Student accounts remain inactive until the email code is verified; new registrations are assigned to the student group by existing Shield configuration. Users can request a code again within account limits or discard a pending signup and restart with another email.
+How the student verified and can explain the result: The full PHPUnit suite passed (86 tests, 874 assertions), including the registration code format and activation flow. PHP syntax passed for 172 app/test files; `composer validate --no-check-publish` passed; and the fresh schema contains 17 tables and 11 migration rows. Email delivery, browser checks, expiry/resend/cancellation/cleanup flows against a live database, and InfinityFree SMTP behavior remain unverified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### S-02 row-level access clarification
+
+```text
+Date / story: 2026-10-27 / clarify row-level access enforcement for MySQL/MariaDB
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to apply row-level security as the next security task.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed student-owned model queries and nested plan-item access. Documented the existing owner-scoped application enforcement and clarified that InfinityFree MySQL/MariaDB does not provide PostgreSQL-style native RLS policies.
+Suggestions or code retained: Updated S-02 traceability and deployment/security notes. No database policy, schema migration, or runtime behavior change was added because the production database cannot enforce native RLS policies.
+Student changes and decisions: Keep every new student-owned read, write, count, and nested relation owner-scoped through the authenticated owner ID; treat current enforcement as application-layer RLS, not database-enforced RLS.
+How the student verified and can explain the result: Reviewed owner-scoped methods for subjects, topics, study plans and items, sessions, check-ins, streaks, and NVSU/CHED/DepEd imports. Existing feature tests cover cross-student access for several areas. `git diff --check` passed. Automated tests and browser/database host checks were not run for this clarification.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### R-08 auth layout and interactive Duno mascot
 
 ```text
@@ -1153,5 +1192,31 @@ Assistance used (explanation, planning, code draft, debugging, review): Added a 
 Suggestions or code retained: Official program/course names and user-entered data remain unchanged. The localization is initial coverage and does not yet translate every help paragraph, validation error, or catalog description.
 Student changes and decisions: English remains default; preference is per browser and needs no database migration.
 How the student verified and can explain the result: PHP syntax checks passed for changed PHP files, `node --check public/assets/js/onboarding-tour.js` passed, and `git diff --check` passed. No automated tests or browser review have been run. No files were staged, committed, or deployed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### S-09 security baseline hardening
+
+```text
+Date / story: 2026-10-27 / security configuration review and hardening
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to focus on application security.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed authentication, role filters, CSRF/session settings, ownership paths, output escaping, production error/database settings, response headers, and deployment deny rules. Enabled built-in secure headers, added no-store headers to dynamic pages, made production DB debug default off, and added trace redaction keys and backup-file denial patterns; recorded security traceability and deployment checks.
+Suggestions or code retained: No authorization, data-retention, or product behavior was changed. No new dependency or schema change was introduced.
+Student changes and decisions: Keep the security changes small and continue with an owner-reviewed security pass. The owner remains responsible for host configuration and release authorization.
+How the student verified and can explain the result: PHP lint for changed configuration/filter/route files, `node --check` for the onboarding script, `git diff --check`, PowerShell package-script parsing, and `spark routes` passed. The route listing shows CSRF/language globally and no-store/security headers after every dynamic route. Automated tests, browser/HTTP-header review, and host probes were not run. `composer audit --locked` could not connect to Packagist through the configured local proxy and returned exit 100, so current dependency advisories could not be checked.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 mascot notification cards
+
+```text
+Date / story: 2026-10-29 / mascot notification cards
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested that notifications appear as cards with the Duno mascot in different emotions, including errors.
+Assistance used (explanation, planning, code draft, debugging, review): Audited shared flash messages, validation error lists, and Shield auth alerts; added a shared notification stack, plain JavaScript card renderer, responsive/reduced-motion styling, localized labels, and traceability notes.
+Suggestions or code retained: Existing accessible alert/status content is moved into dismissible cards when JavaScript runs; inline messages remain as a no-JavaScript fallback. The same mascot image is paired with decorative, mood-specific emotion markers. Success/info notices auto-dismiss; warning/error notices stay until dismissed.
+Student changes and decisions: Reuse Duno's existing mascot asset and add no new package or database change. Keep instructional timer status and static catalog notes in place.
+How the student verified and can explain the result: PHP syntax checks passed for changed PHP views and language files, `node --check public/assets/js/app-notifications.js` passed, and `git diff --check` passed (line-ending warnings only). Automated tests and browser checks are pending. The uploaded UI has not been changed, and no files were staged, committed, or deployed.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```

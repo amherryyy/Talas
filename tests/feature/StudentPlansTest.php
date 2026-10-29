@@ -12,6 +12,7 @@ use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use CodeIgniter\Test\TestResponse;
 use Config\Database;
+use Tests\Support\IsolatedFeatureSession;
 
 /**
  * @internal
@@ -20,6 +21,7 @@ final class StudentPlansTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
+    use IsolatedFeatureSession;
     use AuthenticationTesting;
 
     protected $namespace = null;
@@ -190,6 +192,8 @@ final class StudentPlansTest extends CIUnitTestCase
         $userId = $model->insert($user);
         $created = $model->findById((int) $userId);
         $created->addGroup($group);
+        $created->activate();
+        $created = $model->findById((int) $userId);
 
         return $created;
     }

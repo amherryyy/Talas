@@ -268,6 +268,7 @@ $joinUrl = site_url('register');
 </head>
 <body class="duno-landing <?= ! $isLoggedIn || $isStudent || $isAdmin ? 'has-mobile-navigation' : '' ?>">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/app_notifications') ?>
 <header class="topbar">
     <div class="shell topbar-inner">
         <a class="brand" href="<?= esc(site_url('/')) ?>" aria-label="duno. home">
@@ -411,5 +412,6 @@ $joinUrl = site_url('register');
 <script type="module" src="<?= esc(duno_asset('assets/js/public-bottom-nav.js')) ?>"></script>
 <?php endif ?>
 <?php if ($isStudent): ?><script src="<?= esc(duno_asset('assets/js/onboarding-tour.js')) ?>" defer></script><?php endif ?>
+<script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 # Deployment and security gate
 
+The 2026-10-29 mascot notification-card update is implemented locally but not yet uploaded. It changes shared student, authentication, admin, public, and role page layouts; review those flows and phone/tablet widths after the next authorized upload. No migration or new runtime dependency is required.
+
 **Target:** InfinityFree free hosting. The owner reports R-04 is all good as of 2026-10-25. This document preserves the earlier live checks and notes where the precise deployed revision was not independently confirmed. The owner confirms the domain `talas-dev.page.gd` maps to `htdocs`; other account details remain subject to the verification record below.
 
 ## Current deployment status (updated 2026-10-25)
@@ -98,9 +100,11 @@ Treat any readable private path as a release blocker. A rewrite to a public fron
 
 ### Initial hosted database import
 
-For a newly created, empty hosted database, select that database in phpMyAdmin and import [`duno-hosted-initial-schema.sql`](duno-hosted-initial-schema.sql). The file creates 16 CodeIgniter, Shield, Settings, and Duno tables and records 10 reviewed migrations, including the daily streak table. It contains no account or study records and does not create or select a database. Do not import it into a database with existing tables, import it twice, upload a local database backup, or include this SQL file in the public FTP deployment. After import, verify that the `migrations` table contains 10 rows before configuring the hosted app. The owner's 2026-10-25 hosted import used the earlier schema with 15 tables and nine rows; the new streak migration has not been applied to the host.
+For a newly created, empty hosted database, select that database in phpMyAdmin and import [`duno-hosted-initial-schema.sql`](duno-hosted-initial-schema.sql). The file creates 17 CodeIgniter, Shield, Settings, and Duno tables and records 11 reviewed migrations, including daily streak and registration-verification controls. It contains no account or study records and does not create or select a database. Do not import it into a database with existing tables, import it twice, upload a local database backup, or include this SQL file in the public FTP deployment. After import, verify that the `migrations` table contains 11 rows before configuring the hosted app. The owner's hosted database was later confirmed at 10 migration rows, batch 5, which includes the daily streak migration; apply only the registration-verification migration to that existing database.
 
-The streak feature adds migration `2026-10-26-000001_CreateStudentStreakDays`. For an existing database, apply this migration once using the reviewed deployment process after a release is separately authorized. Do not reimport the initial schema into an existing hosted database. No hosted database or application configuration was changed for this story.
+The streak feature adds migration `2026-10-26-000001_CreateStudentStreakDays`. The email verification controls add `2026-10-27-000001_CreateRegistrationVerificationLimits`. For an existing database, apply any missing migrations once using the reviewed deployment process after a release is separately authorized. Before uploading code that enables the verification controls, back up the hosted database and import the phpMyAdmin upgrade script [`2026-10-27-registration-verification-upgrade.sql`](2026-10-27-registration-verification-upgrade.sql) into the selected Duno database. It creates the per-account attempt/resend table and records migration 11 for the currently reported 10-row, batch-5 ledger. Confirm `registration_verification_limits` exists and `migrations` has 11 rows. If the hosted migration ledger differs, do not run its fixed ledger insert unchanged; review and adjust the migration row to the actual next ID and batch. Do not reimport the initial schema into an existing hosted database, and do not place either SQL file in the public FTP package.
+
+Registration email verification uses Shield's auth identity table plus `registration_verification_limits` to enforce five failed code attempts, a 60-second resend cooldown, and five code sends per account per day. Codes expire after 15 minutes. Resends use a CSRF-protected POST; opening or refreshing the verification page does not send another email. The verification action and resend endpoints are covered by Shield's auth-rates filter. Old inactive signups that still have an email-activation identity are deleted after 48 hours when `/register` is opened; no cron job is assumed. Pending users can discard their signup and restart with a corrected email. Configure sender and SMTP settings in the private host `.env` before enabling registrations. Verify delivery, expiry, resend, cancellation, cleanup, and activation using a synthetic account; do not use real student data.
 
 The R-12 onboarding tour adds the static asset `public/assets/js/onboarding-tour.js` and a coordination update to `public/assets/js/check-in-prompt.js`; include both with the updated student views and CSS in the next reviewed package. It uses origin-scoped browser storage per student and does not require a schema migration. After upload, review first-run, skip, replay from More, mobile navigation highlighting, and behavior when the optional check-in prompt is due at phone and desktop widths.
 
@@ -111,6 +115,12 @@ The R-14 DepEd SHS catalog adds `app/Services/DepedShsCatalog.php`, its owner-sc
 The contextual navigation refinement uses the existing brand links, menus, and role navigation panels for Home. Include the updated student views in the next reviewed package so each detail/form flow has one destination-specific Back or Cancel action. The student shell adds no duplicate Back or Home controls. HTML error pages retain recovery links. After upload, check the in-page Back/Cancel destinations and existing navigation at phone and desktop widths.
 
 The browser language preference adds `app/Filters/LanguagePreferenceFilter.php`, `app/Controllers/LanguagePreference.php`, the language catalogs, `app/Views/partials/language_switcher.php`, and the updated route/configuration/layout files plus onboarding JavaScript. It requires no database migration. After upload, switch among English, Taglish, and Filipino on public, auth, student, and admin pages; confirm the choice survives navigation/reload in that browser, English is used with no cookie, the current page is retained after switching, invalid cookie values fall back to English, and the preference cookie is HttpOnly/SameSite with Secure on HTTPS. Review remaining untranslated long-form copy as a later localization pass.
+
+### Security hardening review
+
+The application now enables CodeIgniter's baseline `SecureHeaders` filter, marks all dynamic responses `Cache-Control: no-store`, disables database debug output by default in production, and marks passwords, CSRF values, authorization, and private check-in ratings as sensitive in exception traces. Production `CI_ENVIRONMENT=production` remains required; the front controller defaults to production when it is missing. After upload, inspect public, auth, student, and admin responses over HTTPS for `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, HSTS, and no-store. Versioned static assets keep their seven-day policy. Cause a safe database failure in a disposable environment and confirm no SQL or stack details reach the browser. Repeat direct URL denial checks for `.env`, `app`, `vendor`, `writable`, and backup files. Do not trigger failures against real student records.
+
+Row-level access is enforced by owner-scoped CodeIgniter model methods. The InfinityFree MySQL/MariaDB target has no native row-level security policy feature; do not describe this as database-enforced RLS. Any future query added for student-owned data must include the authenticated owner scope directly or verify ownership through its parent record, including counts and nested relations. No SQL policy migration is part of this deployment.
 
 ### Hosted application database configuration
 
@@ -126,6 +136,20 @@ database.default.password = 'HOST-DATABASE-PASSWORD'
 database.default.DBDriver = MySQLi
 database.default.port = HOST-MYSQL-PORT
 database.default.DBDebug = false
+email.protocol = smtp
+email.fromEmail = 'YOUR-GMAIL-ADDRESS@gmail.com'
+email.fromName = 'Duno'
+email.SMTPHost = 'smtp.gmail.com'
+email.SMTPAuthMethod = login
+email.SMTPUser = 'YOUR-GMAIL-ADDRESS@gmail.com'
+email.SMTPPass = 'YOUR-16-CHARACTER-GOOGLE-APP-PASSWORD'
+email.SMTPPort = 587
+email.SMTPCrypto = tls
+email.SMTPTimeout = 20
 ```
+
+For Gmail SMTP, enable Google 2-Step Verification and create an app password for Duno; Google requires 2-Step Verification for app passwords. Enter that generated password in `email.SMTPPass` in the local `.env` for local sending and in the private host `.env` for production. Do not use or share your normal Gmail password, and never commit either value. The sender and SMTP username should be the same Gmail address. InfinityFree requires external SMTP on port 587 with STARTTLS; Google documents `smtp.gmail.com` and port 587 for TLS/STARTTLS. Sources: [Google Gmail SMTP settings](https://support.google.com/mail/answer/7104828), [Google app passwords](https://support.google.com/mail/answer/185833), [InfinityFree outbound connection limits](https://forum.infinityfree.com/t/can-i-connect-to-other-servers-from-my-website-sockets-curl-and-apis/49348).
+
+Registration email verification uses CodeIgniter Shield's six-digit email activation flow. Per account, codes expire after 15 minutes, allow five failed attempts, and can be sent once per minute up to five times per day. Shield also limits auth endpoints to 10 requests per minute per IP. Confirm delivery, resend and attempt limits, expiry, cancellation, and cleanup with synthetic accounts before opening registration to users.
 
 Upload the prepared application package first, without `.env`, and confirm `https://YOUR-DOMAIN/.env` returns 403 or 404. Then upload the host-specific `.env` into `htdocs` and repeat that request; it must still return 403 or 404 before signing in or adding records. Do not put the environment file in a publicly served assets directory. If the deployed folder layout changes, adjust the configuration path and access-denial check before uploading secrets.

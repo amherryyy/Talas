@@ -9,6 +9,7 @@ use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
 use CodeIgniter\Test\TestResponse;
 use Config\Database;
+use Tests\Support\IsolatedFeatureSession;
 
 /**
  * @internal
@@ -17,6 +18,7 @@ final class StudentDashboardTest extends CIUnitTestCase
 {
     use DatabaseTestTrait;
     use FeatureTestTrait;
+    use IsolatedFeatureSession;
     use AuthenticationTesting;
 
     protected $namespace = null;
@@ -52,7 +54,7 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response->assertSee('https://ies.ed.gov/ncee/wwc/practiceguide/1');
         $response->assertSee('rel="noopener noreferrer"');
         $studentHtml = $response->response()->getBody();
-        $this->assertStringContainsString('aria-label="Student navigation"', $studentHtml);
+        $this->assertStringContainsString('aria-label="Primary student navigation"', $studentHtml);
         $this->assertStringContainsString('aria-current="page"', $studentHtml);
         $this->assertStringContainsString('index.php/student/aralytics', $studentHtml);
         $this->assertStringContainsString('data-app-tour', $studentHtml);
@@ -120,6 +122,8 @@ final class StudentDashboardTest extends CIUnitTestCase
         $userId = $model->insert($user);
         $created = $model->findById((int) $userId);
         $created->addGroup($group);
+        $created->activate();
+        $created = $model->findById((int) $userId);
 
         return $created;
     }

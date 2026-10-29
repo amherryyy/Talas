@@ -57,15 +57,7 @@
         </details>
     </header>
     <main id="main-content">
-        <?php if ($dailyStreakReward = session()->getFlashdata('daily_streak_reward')): ?>
-            <p class="notice streak-reward-notice" role="status"><?= esc(lang('App.dailyReward', [$dailyStreakReward['xp'], $dailyStreakReward['streak_days'], lang($dailyStreakReward['streak_days'] === 1 ? 'App.day' : 'App.days')])) ?></p>
-        <?php endif ?>
-        <?php if ($success = session()->getFlashdata('success')): ?>
-            <p class="notice" role="status"><?= esc($success) ?></p>
-        <?php endif ?>
-        <?php if ($error = session()->getFlashdata('error')): ?>
-            <p class="notice error" role="alert"><?= esc($error) ?></p>
-        <?php endif ?>
+        <?= view('partials/app_notifications') ?>
         <?= $this->renderSection('content') ?>
     </main>
 </div>
@@ -83,6 +75,7 @@
 <?php if ($levelUp = session()->getFlashdata('level_up')): ?>
     <?= $this->include('student/partials/level_up_dialog', ['levelUp' => $levelUp]) ?>
 <?php endif ?>
+<script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 <script src="<?= esc(duno_asset('assets/js/student-navigation.js')) ?>" defer></script>
 <?php if ($levelUp): ?><script src="<?= esc(duno_asset('assets/js/level-up.js')) ?>" defer></script><?php endif ?>
 </body>

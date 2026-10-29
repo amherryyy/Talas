@@ -2,6 +2,7 @@
 
 return [
     'language' => 'Language', 'english' => 'English', 'taglish' => 'Taglish', 'filipino' => 'Filipino (Tagalog)', 'apply' => 'I-apply',
+    'notificationRegion' => 'Notifications', 'notificationDismiss' => 'I-close ang notification', 'notificationSuccess' => 'Nice work!', 'notificationInfo' => 'Quick note', 'notificationWarning' => 'Quick heads-up', 'notificationError' => 'Ayusin natin ito',
     'languageInvalid' => 'Pumili ng available na language.', 'skipMain' => 'Diretso sa main content',
     'home' => 'Home', 'focus' => 'Focus', 'plan' => 'Plan', 'timer' => 'Timer', 'guide' => 'Guide', 'aralytics' => 'Aralytics', 'more' => 'More',
     'subjects' => 'Subjects', 'topics' => 'Topics', 'privateCheckins' => 'Private check-ins', 'showTour' => 'Ipakita ang app tour', 'signOut' => 'Mag-sign out',

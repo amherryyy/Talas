@@ -11,6 +11,7 @@
 </head>
 <body class="duno-admin has-mobile-navigation">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/app_notifications') ?>
 <div class="shell">
     <header class="admin-header">
         <a class="admin-brand" href="<?= esc(site_url()) ?>" aria-label="duno. home"><span class="wordmark">duno.</span><span class="muted">Admin</span></a>
@@ -42,5 +43,6 @@
     <small>Icons: <a href="https://solar-icons.vercel.app/" rel="noopener noreferrer">Solar Icons</a> by 480 Design, CC BY 4.0.</small>
 </footer>
 <?= $this->include('partials/admin_bottom_nav') ?>
+<script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>
 </html>

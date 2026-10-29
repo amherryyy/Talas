@@ -11,6 +11,7 @@
 </head>
 <body class="duno-auth">
     <a class="skip-link" href="#main-content"><?= esc(lang('App.skipMain')) ?></a>
+    <?= view('partials/app_notifications', ['includeFlashNotifications' => false]) ?>
     <header class="auth-header">
     <a class="duno-brand" href="<?= esc(site_url()) ?>" aria-label="duno. — <?= esc(lang('App.brandTagline')) ?> Home">
         <span class="duno-wordmark">duno.</span>
@@ -38,5 +39,6 @@
     </main>
     <script src="<?= esc(duno_asset('assets/js/auth-mascot.js')) ?>" defer></script>
     <?= $this->renderSection('pageScripts') ?>
+    <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 </body>
 </html>

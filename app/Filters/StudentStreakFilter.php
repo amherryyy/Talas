@@ -24,7 +24,7 @@ class StudentStreakFilter implements FilterInterface
         $now = new DateTimeImmutable('now', $timezone);
         $result = (new StudentStreakService())->recordVisit((int) $user->id, $now, $timezone);
         if (! $result['awarded']) {
-            session()->removeTempdata('daily_streak_reward');
+            session()->remove('daily_streak_reward');
 
             return null;
         }
