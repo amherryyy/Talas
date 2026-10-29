@@ -2,7 +2,8 @@
 
 <?= $this->section('content') ?>
 <h1><?= esc($subject['name']) ?></h1>
-<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubjects')) ?></a></p>
+<p class="back-navigation"><a class="button secondary back-link-button" href="<?= esc(site_url('student/subjects')) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubjects')) ?></a></p>
+<?php if ($programTitle !== null): ?><p class="subject-program-label"><?= esc($programTitle) ?> <span class="muted">· NVSU course reference</span></p><?php endif ?>
 <p class="muted">Deleting a subject cannot be undone. Deletion is blocked while it has topics or saved study sessions.</p>
 <section aria-labelledby="topics-heading">
     <div class="actions">

@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 <?php $isEditing = $topic !== null; ?>
 <h1><?= $isEditing ? 'Edit topic' : 'Add a topic' ?> in <?= esc($subject['name']) ?></h1>
-<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubject')) ?></a></p>
+<p class="back-navigation"><a class="button secondary back-link-button" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubject')) ?></a></p>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">

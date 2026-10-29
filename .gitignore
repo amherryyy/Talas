@@ -19,4 +19,5 @@
 *.sql
 !docs/duno-hosted-initial-schema.sql
 !docs/2026-10-27-registration-verification-upgrade.sql
+!docs/2026-10-29-nvsu-subject-program-upgrade.sql
 *.zip

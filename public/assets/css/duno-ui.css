@@ -133,6 +133,10 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .duno-workspace h3 { letter-spacing: -.025em; }
 .duno-workspace p { max-width: 68ch; }
 .duno-workspace .back-navigation { max-width: none; margin: .8rem 0 1rem; }
+.duno-workspace main .back-navigation > .back-link-button { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .45rem; padding: .62rem 1rem; border: 1px solid #dcd7f3; border-radius: 999px; color: var(--duno-purple-deep); background: rgb(255 255 255 / 92%); box-shadow: 0 4px 12px rgb(47 39 95 / 8%); font-weight: 680; text-decoration: none; }
+.duno-workspace main .back-navigation > .back-link-button:hover { border-color: #c9c2f1; color: #4635a4; background: #f5f2ff; box-shadow: 0 7px 16px rgb(47 39 95 / 12%); }
+.duno-workspace main .subject-program-label { display: inline-block; margin: .3rem 0 .7rem; padding: .2rem .55rem; border-radius: .45rem; color: var(--duno-purple-deep); background: #efedff; font-size: .85rem; font-weight: 650; }
+.duno-workspace main .subject-program-filter { margin: 1rem 0; padding: .9rem 1rem; border: 1px solid rgb(255 255 255 / 92%); border-radius: 1rem; background: rgb(255 255 255 / 58%); }
 .duno-workspace a,
 .duno-admin a { color: var(--duno-purple-deep); text-underline-offset: .18em; }
 .duno-workspace a:focus-visible,
@@ -1047,7 +1051,7 @@ body.duno-auth {
 .duno-toast-message-list { display: grid; gap: .18rem; margin: .2rem 0 0; padding-left: 1rem; color: var(--duno-ink); font-size: .84rem; line-height: 1.35; }
 .duno-workspace .duno-toast-dismiss,
 .duno-admin .duno-toast-dismiss,
-.duno-toast-dismiss { display: grid; width: 2.75rem; min-height: 2.75rem; place-items: center; padding: 0; border: 1px solid var(--duno-line); border-radius: .7rem; color: var(--duno-muted); background: rgb(255 255 255 / 88%); box-shadow: none; font: inherit; font-size: 1.2rem; line-height: 1; cursor: pointer; }
+.duno-toast-dismiss { display: grid; width: 2.75rem; min-height: 2.75rem; place-items: center; padding: 0; border: 1px solid var(--duno-line); border-radius: .7rem; color: var(--duno-muted); background: rgb(255 255 255 / 88%); box-shadow: none; font: inherit; font-size: 1.2rem; line-height: 1; text-decoration: none; cursor: pointer; }
 .duno-workspace .duno-toast-dismiss:hover,
 .duno-admin .duno-toast-dismiss:hover,
 .duno-toast-dismiss:hover { border-color: #c9c2f1; color: var(--duno-purple-deep); background: #f5f2ff; box-shadow: none; }

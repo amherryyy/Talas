@@ -32,6 +32,12 @@ $notificationTitles = [
     'warning' => lang('App.notificationWarning'),
     'error' => lang('App.notificationError'),
 ];
+$notificationEmotions = [
+    'success' => '🥳',
+    'info' => '🧐',
+    'warning' => '😮',
+    'error' => '😟',
+];
 ?>
 <div
     class="duno-notification-stack"
@@ -48,8 +54,16 @@ $notificationTitles = [
 >
     <?php foreach ($flashNotifications as $notification): ?>
         <?php $type = in_array($notification['type'], ['success', 'info', 'warning', 'error'], true) ? $notification['type'] : 'info'; ?>
-        <p class="duno-toast-source notice<?= $type === 'error' ? ' error' : '' ?><?= ! empty($notification['reward']) ? ' streak-reward-notice' : '' ?>" role="<?= $type === 'error' ? 'alert' : 'status' ?>" data-notification-type="<?= esc($type) ?>">
-            <?= esc($notification['message']) ?>
-        </p>
+        <article class="duno-toast<?= ! empty($notification['reward']) ? ' streak-reward-notice' : '' ?>" data-mood="<?= esc($type) ?>" role="<?= $type === 'error' || $type === 'warning' ? 'alert' : 'status' ?>" aria-live="<?= $type === 'error' || $type === 'warning' ? 'assertive' : 'polite' ?>">
+            <span class="duno-toast-mascot" aria-hidden="true">
+                <img src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1228" height="1285">
+                <span class="duno-toast-emotion"><?= esc($notificationEmotions[$type]) ?></span>
+            </span>
+            <div class="duno-toast-copy">
+                <strong class="duno-toast-title"><?= esc($notificationTitles[$type]) ?></strong>
+                <p class="duno-toast-message"><?= esc($notification['message']) ?></p>
+            </div>
+            <a class="duno-toast-dismiss" href="<?= esc(current_url()) ?>" aria-label="<?= esc(lang('App.notificationDismiss')) ?>">×</a>
+        </article>
     <?php endforeach ?>
 </div>

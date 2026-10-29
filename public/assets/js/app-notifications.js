@@ -28,6 +28,17 @@
         card.addEventListener('focusin', () => window.clearTimeout(timeout), { once: true });
     }
 
+    function wireCard(card) {
+        const mood = card.dataset.mood || 'info';
+        card.querySelector('.duno-toast-dismiss')?.addEventListener('click', event => {
+            event.preventDefault();
+            dismiss(card);
+        });
+        if (mood === 'success' || mood === 'info') {
+            dismiss(card, mood === 'success' ? 7000 : 9000);
+        }
+    }
+
     function addNotification(source) {
         const isList = source.matches('ul.errors, ol.errors');
         const requestedType = source.dataset.notificationType;
@@ -86,14 +97,14 @@
         close.type = 'button';
         close.setAttribute('aria-label', dismissLabel);
         close.textContent = '\u00d7';
-        close.addEventListener('click', () => dismiss(card));
 
         card.append(mascot, copy, close);
         stack.append(card);
         source.remove();
-
-        if (mood === 'success' || mood === 'info') dismiss(card, mood === 'success' ? 7000 : 9000);
+        wireCard(card);
     }
+
+    stack.querySelectorAll('.duno-toast').forEach(wireCard);
 
     document.querySelectorAll(selector).forEach(source => {
         if (!source.closest('[data-notification-stack]') || !source.matches('.duno-toast')) {

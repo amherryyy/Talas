@@ -182,6 +182,19 @@ How the student verified and can explain the result: Composer completed starter 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
+### R-08 notification fallback and NVSU program-linked subjects
+
+```text
+Date / story: 2026-10-29 / server-rendered mascot notification cards and NVSU program subject picker
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner reported back links and notifications still did not appear as approved, and asked to associate subjects with selected NVSU programs and course lists.
+Assistance used (explanation, planning, code draft, debugging, review): Audited subject creation, owner-scoped subject queries, NVSU reference catalog imports, flash notification rendering, and back-link CSS. Added an optional program association to subject records, catalog course selection with server-side validation, per-program subject filtering, visible back-link styling, server-rendered mascot notification cards, and a schema upgrade script; updated requirements and deployment notes.
+Suggestions or code retained: Program IDs come from the nine sourced NVSU course lists. Existing subjects remain valid with a null program association; custom subject names remain supported. NVSU sources remain historical references, not claims about current approved curricula. Existing host data stays intact; the owner must back up and apply migration 12/batch 7 before uploading code that queries the new column.
+Student changes and decisions: Keep the deployment under the owner's control. No staging, commit, push, or upload was performed.
+How the student verified and can explain the result: Full PHPUnit passed with 88 tests and 902 assertions; PHP syntax checks passed for 174 files, both JavaScript assets passed `node --check`, `composer validate --no-check-publish` passed, and `git diff --check` passed. Hosted browser review and the subject-program schema migration are pending.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
 ### S-10 architecture and schema audit
 
 ```text

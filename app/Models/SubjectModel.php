@@ -11,7 +11,7 @@ class SubjectModel extends Model
     protected $returnType       = 'array';
     protected $useAutoIncrement = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['user_id', 'name'];
+    protected $allowedFields    = ['user_id', 'name', 'program_id'];
     protected $useTimestamps    = true;
     protected $createdField     = 'created_at';
     protected $updatedField     = 'updated_at';
@@ -28,17 +28,24 @@ class SubjectModel extends Model
     ];
 
     /** @return list<array<string, mixed>> */
-    public function findAllForOwner(int $ownerId): array
+    public function findAllForOwner(int $ownerId, ?string $programId = null): array
     {
-        return $this->where('user_id', $ownerId)
-            ->orderBy('name', 'ASC')
-            ->findAll();
+        $builder = $this->where('user_id', $ownerId);
+        if ($programId !== null && $programId !== '') {
+            $builder->where('program_id', $programId);
+        }
+
+        return $builder->orderBy('name', 'ASC')->findAll();
     }
 
     /** @return list<array<string, mixed>> */
-    public function searchForOwner(int $ownerId, string $query): array
+    public function searchForOwner(int $ownerId, string $query, ?string $programId = null): array
     {
         $builder = $this->builder()->where('user_id', $ownerId);
+
+        if ($programId !== null && $programId !== '') {
+            $builder->where('program_id', $programId);
+        }
 
         if ($query !== '') {
             $builder->like('name', $query);
@@ -57,11 +64,11 @@ class SubjectModel extends Model
         return is_array($subject) ? $subject : null;
     }
 
-    public function updateForOwner(int $subjectId, int $ownerId, string $name): bool
+    public function updateForOwner(int $subjectId, int $ownerId, string $name, ?string $programId): bool
     {
         return $this->where('id', $subjectId)
             ->where('user_id', $ownerId)
-            ->update(null, ['name' => $name]);
+            ->update(null, ['name' => $name, 'program_id' => $programId]);
     }
 
     public function deleteForOwner(int $subjectId, int $ownerId): bool
