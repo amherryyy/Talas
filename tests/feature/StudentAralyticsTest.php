@@ -56,10 +56,13 @@ final class StudentAralyticsTest extends CIUnitTestCase
         $response->assertSee('No topic');
         $response->assertDontSee('Private subject');
         $response->assertSee('Print report');
+        $response->assertSee('Where your study time went');
+        $response->assertSee('Time by topic');
+        $response->assertSee('Study minutes by subject');
         $response->assertSee('Dated sessions');
-        $response->assertSee('65 XP');
-        $response->assertSee('60 study + 5 streak');
-        $response->assertDontSee('545 XP');
+        $response->assertSee('6500 XP');
+        $response->assertSee('6000 study + 500 streak');
+        $response->assertDontSee('54500 XP');
     }
 
     public function testProgressionRecalculatesFromCurrentSavedSessionRecords(): void
@@ -71,21 +74,21 @@ final class StudentAralyticsTest extends CIUnitTestCase
 
         $before = $this->getAuthenticated('student/aralytics');
         $before->assertOK();
-        $before->assertSee('119 XP');
+        $before->assertSee('11900 XP');
         $before->assertSee('Level 1');
 
         $sessions = new StudySessionModel();
         $this->assertTrue($sessions->updateForOwner($sessionId, (int) $student->id, $subjectId, null, 115));
         $afterUpdate = $this->getAuthenticated('student/aralytics');
         $afterUpdate->assertOK();
-        $afterUpdate->assertSee('120 XP');
+        $afterUpdate->assertSee('12000 XP');
         $afterUpdate->assertSee('Level 2');
         $afterUpdate->assertSee('30-day study rhythm');
 
         $this->assertTrue($sessions->deleteForOwner($sessionId, (int) $student->id));
         $afterDelete = $this->getAuthenticated('student/aralytics');
         $afterDelete->assertOK();
-        $afterDelete->assertSee('5 XP');
+        $afterDelete->assertSee('500 XP');
         $afterDelete->assertSee('Level 1');
     }
 

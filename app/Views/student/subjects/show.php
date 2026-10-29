@@ -2,13 +2,16 @@
 
 <?= $this->section('content') ?>
 <h1><?= esc($subject['name']) ?></h1>
-<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubjects')) ?></a></p>
-<p class="muted">Deleting a subject cannot be undone. Deletion is blocked while it has topics or saved study sessions.</p>
+<p class="back-navigation"><a class="button secondary back-link-button" href="<?= esc(site_url('student/subjects')) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubjects')) ?></a></p>
+<?php if ($programTitle !== null): ?><p class="subject-program-label"><?= esc($programTitle) ?> <span class="muted">· NVSU course reference</span></p><?php endif ?>
+<p class="muted">Subjects with topics or saved study sessions can’t be deleted.</p>
 <section aria-labelledby="topics-heading">
-    <div class="actions">
+    <div class="subject-topics-heading">
         <h2 id="topics-heading"><?= esc(lang('App.topics')) ?></h2>
-        <a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'] . '/topics')) ?>"><?= esc(lang('App.viewAll')) ?></a>
-        <a class="button" href="<?= esc(site_url('student/subjects/' . $subject['id'] . '/topics/new')) ?>"><?= esc(lang('App.addTopic')) ?></a>
+        <div class="subject-topics-actions">
+            <a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'] . '/topics')) ?>"><?= esc(lang('App.viewAll')) ?></a>
+            <a class="button" href="<?= esc(site_url('student/subjects/' . $subject['id'] . '/topics/new')) ?>"><?= esc(lang('App.addTopic')) ?></a>
+        </div>
     </div>
     <?php if ($topics === []): ?>
         <p class="muted">No topics yet. Add one to track what you plan to study.</p>

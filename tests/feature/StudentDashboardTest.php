@@ -41,7 +41,7 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response->assertSee('Your study space');
         $response->assertSee('duno.');
         $response->assertSee('Your Little Study Buddy.');
-        $response->assertSee('assets/images/duno-mascot.png');
+        $response->assertSee('assets/images/duno-mascot-welcome.webp');
         $response->assertSee('Duno Focus');
         $response->assertSee('Duno Plan');
         $response->assertSee('Duno Guide');
@@ -87,8 +87,8 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response = $this->getAuthenticated('student');
         $response->assertOK();
         $response->assertSee('Level 1');
-        $response->assertSee('5 XP');
-        $response->assertSee('0 study + 5 streak');
+        $response->assertSee('500 XP');
+        $response->assertSee('0 study + 500 streak');
     }
 
     public function testSuggestionsDoNotAppearOnAdminWorkspaceAndStudentRouteDeniesAdmin(): void

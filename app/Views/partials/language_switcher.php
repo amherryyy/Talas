@@ -1,9 +1,10 @@
 <?php
-$languageReturnPath = trim(service('uri')->getPath(), '/');
-$languageQuery = (string) service('request')->getServer('QUERY_STRING');
-if ($languageQuery !== '') {
-    $languageReturnPath .= '?' . $languageQuery;
-}
+$request = service('request');
+$languageReturnPath = \App\Services\LanguageReturnPath::fromServerUri(
+    service('uri')->getPath(),
+    (string) $request->getServer('QUERY_STRING'),
+    (string) config('App')->indexPage,
+);
 ?>
 <form class="language-switcher" method="post" action="<?= esc(site_url('language')) ?>">
     <?= csrf_field() ?>

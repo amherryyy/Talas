@@ -20,6 +20,17 @@ How the student verified and can explain the result: Inspected the current branc
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
+### Aralytics activity trend and comparisons
+
+Date / story: 2026-10-29 / complete selected-period study activity analytics
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested more aesthetically pleasing and complete Aralytics graphs/models.
+Assistance used (explanation, planning, code draft, debugging, review): Added a descriptive day/month saved-minutes trend with zero-activity buckets and an exact table; ranked subject/topic comparisons by minutes and displayed each share of the selected period; updated the Aralytics story and UI styling.
+Suggestions or code retained: Existing PHP/CSS and owner-scoped data are used; no chart dependency, schema change, grades, or predictive claims were added. The existing private check-in rating distribution and progression insights remain separate.
+Student changes and decisions: Study periods follow the existing Today, 7-day, 30-day, and all-time filters. The all-time chart starts with the earliest recorded month. No staging, commit, push, merge, or deployment was performed.
+How the student verified and can explain the result: Source review only. Tests and browser review were not run for this follow-up.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### R-06 authenticated plan review closeout
 
 Date / story: 2026-10-25 / close the current authenticated Plan journey review
@@ -179,6 +190,45 @@ Assistance used (explanation, planning, code draft, debugging, review): Dependen
 Suggestions or code retained: Official CodeIgniter app starter 4.7.5 and Shield 1.4.1 installed through Composer; lockfile and starter files integrated; Shield auth routes, CSRF, role defaults, login throttling, secure-cookie/HTTPS production defaults, and root deny rules configured.
 Student changes and decisions: The owner previously approved CodeIgniter 4, Shield, the auth story, and its route split. The owner continues to defer database creation; admin bootstrap remains unresolved.
 How the student verified and can explain the result: Composer completed starter creation and Shield installation, resolved package versions in composer.lock, and `composer audit` reported no security advisories. The CI4 CLI loaded version 4.7.5, and `spark routes` showed CSRF and Shield auth-rates on the register/login routes plus POST-only logout. Tests, browser interaction, cookie behavior, and database-backed checks were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Prepare a verifiable full InfinityFree package
+
+```text
+Date / story: 2026-10-29 / prepare current accumulated work for owner upload
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue fixing remaining project risks and retains responsibility for uploading the package.
+Assistance used: Added a public non-secret release marker to the assets and assembled a full htdocs-root package from the current worktree using the existing InfinityFree builder. Created a ZIP with hidden files preserved and checked its contents/hash.
+Suggestions or code retained: Package at `build/duno-full-release-20261029-r1.zip`, marker `duno-full-release-20261029-r1`, SHA-256 `9fc0abae06baf54f11f26a25fbb769c853cb220d6b6764da702438cf94367567`. It contains current uncommitted worktree changes and must not be described as a clean Git revision. Root/app `.htaccess` and migration 15 are included; `.env`, Composer manifests, and project tests are excluded.
+Student changes and decisions: The owner will perform any upload. No files were staged, committed, pushed, or deployed.
+How the student verified and can explain the result: The build completed from the locked local vendor tree because Packagist was unreachable. The ZIP contains 1,215 entries/5,125,596 bytes; syntax passed for 158 application PHP files and the front controller; the archive includes the release marker and deny files and has no `.env`. Tests, browser checks, and live host behavior were not verified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Continue the schema-integrity audit
+
+```text
+Date / story: 2026-10-29 / enforce consistent student, subject, and topic references for saved sessions
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue the audit, and prior project instructions authorized repair of conflicts and potential issues.
+Assistance used: Added a MySQL migration and one-time upgrade SQL with preflight checks and composite foreign keys from sessions to the matching user/subject and topic/subject pair. Updated deployment/database instructions with the existing host ledger precondition and operator verification steps. Reconciled stale package notes: r3 was previously reported uploaded; mascot-only r5 was prepared but its upload is unconfirmed and it predates later local work. Also reconciled stale migration-state notes and made the XP scale migration rollback preserve saved values because converted and newer 500-XP rows are indistinguishable.
+Suggestions or code retained: The migration refuses to alter tables if historical session references do not match. The owner ran both hosted preflight queries and confirmed zero rows in each, then applied the DDL; phpMyAdmin reported both composite constraints created, old single-column constraints dropped, and migration 15/batch 10 inserted as ID 15. The owner verified the exact column pairs and `RESTRICT/CASCADE` and `RESTRICT/RESTRICT` delete/update rules. No hosted data rows were modified.
+Student changes and decisions: No stage, commit, push, package, or app deployment was performed.
+How the student verified and can explain the result: PHP syntax and `git diff --check` passed; owner-provided phpMyAdmin output confirms both read-only preflight queries returned zero rows, the upgrade DDL/ledger insert succeeded, and the final constraint metadata matches. Tests and browser checks were not run.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### R-08 notification fallback and NVSU program-linked subjects
+
+```text
+Date / story: 2026-10-29 / server-rendered mascot notification cards and NVSU program subject picker
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner reported back links and notifications still did not appear as approved, and asked to associate subjects with selected NVSU programs and course lists.
+Assistance used (explanation, planning, code draft, debugging, review): Audited subject creation, owner-scoped subject queries, NVSU reference catalog imports, flash notification rendering, and back-link CSS. Added an optional program association to subject records, catalog course selection with server-side validation, per-program subject filtering, visible back-link styling, server-rendered mascot notification cards, and a schema upgrade script; updated requirements and deployment notes.
+Suggestions or code retained: Program IDs come from the nine sourced NVSU course lists. Existing subjects remain valid with a null program association; custom subject names remain supported. NVSU sources remain historical references, not claims about current approved curricula. Existing host data stays intact; the owner must back up and apply migration 12/batch 7 before uploading code that queries the new column.
+Student changes and decisions: Keep the deployment under the owner's control. No staging, commit, push, or upload was performed.
+How the student verified and can explain the result: Full PHPUnit passed with 88 tests and 902 assertions; PHP syntax checks passed for 174 files, both JavaScript assets passed `node --check`, `composer validate --no-check-publish` passed, and `git diff --check` passed. Hosted browser review and the subject-program schema migration are pending.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
 
@@ -1220,3 +1270,124 @@ Student changes and decisions: Reuse Duno's existing mascot asset and add no new
 How the student verified and can explain the result: PHP syntax checks passed for changed PHP views and language files, `node --check public/assets/js/app-notifications.js` passed, and `git diff --check` passed (line-ending warnings only). Automated tests and browser checks are pending. The uploaded UI has not been changed, and no files were staged, committed, or deployed.
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 ```
+
+### Current navigation, notifications, tour, and progression repair
+
+```text
+Date / story: 2026-10-29 / repair query-style navigation, tour replay, notification feedback, and XP scale
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested repairs after observing subject-filter redirects, duplicated language-switch URLs, an unresponsive tour link, small notifications with generic positive tone, and low XP amounts.
+Assistance used (explanation, planning, code draft, debugging, review): Reworked the NVSU filter to use the existing POST search route; normalized InfinityFree query-style language return paths; made tour replay bypass the optional check-in prompt; increased and centered mascot notification cards with mood-specific dialogue and corrected role=alert mood detection; scaled XP awards and thresholds and prepared the corresponding migration and phpMyAdmin script.
+Suggestions or code retained: Assumed a 100x display/reward scale: 100 XP per saved study minute, 500 daily visit XP, and levels/unlocks at 12,000 through 120,000 XP. Existing level-up pacing is preserved. Migration 2026-10-29-000002 scales historical streak awards.
+Student changes and decisions: The owner asked for more generous XP with four-digit rewards; this implementation uses the scale above. The owner uploads to InfinityFree. Apply the provided migration script once after confirming its database preconditions.
+How the student verified and can explain the result: Full PHPUnit passed (93 tests, 917 assertions) with the XAMPP `intl` and `sqlite3` extensions enabled; PHP syntax passed for 177 app/test files; JavaScript syntax passed for all three changed modules; `git diff --check` passed. The InfinityFree package contains 1,200 files, uses forward-slash ZIP paths, includes the changed routes/assets/migration, and excludes `.env`. Live host behavior remains unverified until the owner uploads the package and applies the migration.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### NVSU course picker, notification semantics, and Aralytics presentation
+
+```text
+Date / story: 2026-10-29 / NVSU subject selection, concise auth notices, and Aralytics visual hierarchy
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to repair the NVSU course selection, align subject detail actions, refine notification behavior, and improve Aralytics graphs and details.
+Assistance used (explanation, planning, code draft, debugging, review): Reviewed the course picker, subject filter and detail templates, Shield logout flow, notification renderer, Aralytics view/CSS, tests, and project contracts; prepared a concise notification policy; implemented curriculum-specific option filtering, clearer filter help, deliberate subject action alignment, compact/localized logout feedback, success mood detection, and visual subject/topic time comparisons with numeric tables retained.
+Suggestions or code retained: Existing server-side course/program validation, owner-scoped subject filters, analytics formulas, check-in privacy, and report tables remain authoritative. No schema or dependency change is included.
+Student changes and decisions: A selected NVSU course is the subject record. "Show my subjects" filters subjects already added and does not import an entire curriculum. Logout feedback is one short sentence; warning/error feedback remains specific and is not auto-dismissed.
+How the student verified and can explain the result: Focused PHPUnit passed (26 tests, 309 assertions); changed PHP files passed syntax checks; both changed JavaScript files passed `node --check`; and `git diff --check` passed. Responsive browser review was blocked because the local review database on port 3308 refused connection, and an isolated browser interaction check also failed at Chromium launch with spawn EPERM. The owner subsequently authorized preparing the upload. Final package review corrected compact-toast CSS specificity, moved Aralytics sections into their actual reading order, and cleared cached selected course options when switching curricula. The additional Aralytics check passed (4 tests, 47 assertions). Package contents and portable ZIP paths were verified; deployment evidence is recorded in docs/deployment.md. Hosted upload remains the owner's action and has not been confirmed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+```
+
+### Duno mascot notification and encouragement assets
+
+Date / story: 2026-10-29 / create Duno expression assets for welcome, encouragement, and notifications
+Tool and model: OpenAI Codex with built-in image generation; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner requested mascot artwork/animation suitable for Duno's welcome, motivational, and notification moments.
+Assistance used (explanation, planning, code draft, debugging, review): Used the supplied Duno mascot PNG as the character reference to create curious, attentive, supportive, and celebratory expression poses. Preserved the original PNG and exported transparent 512 × 536 WebP derivatives for the web app. Connected those variants to existing welcome, auth encouragement, check-in, level-up, and notification components. Existing CSS motion, reduced-motion behavior, copy, notification semantics, and runtime stack were retained.
+Suggestions or code retained: Added `public/assets/images/duno-mascot-{welcome,curious,alert,support,celebrating}.webp`; updated the welcome, onboarding, check-in, level-up, notification, and auth components; documented approved usage in the brand, onboarding, and notification story notes.
+Student changes and decisions: The owner requested the asset work. No new dependencies, animation framework, database changes, or new user data were added. Existing unrelated working-tree changes were preserved; nothing was staged, committed, pushed, merged, or deployed.
+How the student verified and can explain the result: Reviewed all five WebP images visually, confirmed alpha transparency and 512 × 536 dimensions, and confirmed each image is substantially smaller than the 1.1 MB source PNG. Automated tests and browser review were not run in this task.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Complete and verify mascot asset integration
+
+Date / story: 2026-10-29 / integrate the approved five-pose mascot guide into Duno
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to integrate the artwork according to docs/mascot-assets-integration.md.
+Assistance used: Reviewed existing uncommitted asset work, retained the approved pose references, added the missing JavaScript reward-art mapping and low-priority auth reaction preload, updated existing PNG expectations in feature tests, checked image dimensions/transparency, reviewed rendered-view snapshots in the in-app browser, and prepared an incremental upload archive.
+Student changes and decisions: The supplied assets remain presentation-only. No schema, dependencies, saved study behavior, or authentication behavior changed. Earlier uncommitted UI fixes were preserved. No files were staged, committed, pushed, or uploaded by the agent.
+Verification: 28 affected application tests passed. An ignored preview fixture passed with one test and five assertions after correcting its explicit flash-rendering option. Seven view PHP lints, both JavaScript syntax checks, and diff whitespace checks passed. Browser previews confirmed server/client pose mappings, image loading, desktop/phone/tablet fit, auth click/Enter activation and pose restoration, and isolated card dismissal. Composer audit was attempted but Packagist was unreachable. Live authenticated navigation and hosted delivery were not checked. The 16-entry incremental ZIP was verified against the current source; details are in docs/mascot-assets-integration.md.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Larger notification mascot presentation
+
+Date / story: 2026-10-29 / allow the mascot to extend beyond notification cards
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner said the mascot was too small and approved artwork overflowing the notification bar.
+Assistance used: Enlarged standard and compact mascot artwork, removed the small background tile, reserved space for overflow in the stack, and positioned the mascot above the full-width message on phones. Preserved unrelated Aralytics and other working-tree changes.
+Verification: Browser previews at 320, 400, 768, and 1280 pixels showed no page overflow. Read-only layout measurements confirmed the illustration stays inside the viewport and clear of text and dismissal controls for narrow-phone and desktop standard/compact cards. Screenshots were saved under build/mascot-large-*.png. The 16-entry r5 upload archive was verified against its source files, and git diff --check passed. No PHP/JavaScript behavior or dependencies changed, so earlier application test results were retained without repeating them. No commit, push, or hosted upload was performed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Hand-coded dashboard mascot welcome animation
+
+Date / story: 2026-10-29 / add a comprehensive Duno dashboard entrance animation
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to replace the proposed generated video with a comprehensive hard-coded animation.
+Assistance used: Added a staged dashboard entrance using CSS keyframes and inline decorative SVG: copy and action entrance, mascot bounce and settling, glow, orbit tracks, orbiting sparks, twinkling stars, and idle motion. Preserved the existing welcome artwork and added an explicit final-pose treatment for reduced-motion preferences.
+Suggestions or code retained: The animation is local to the app and uses no video, external service, animation package, canvas, or new runtime dependency. The existing dashboard greeting content and navigation remain intact.
+Student changes and decisions: The owner requested a more elaborate hard-coded welcome sequence. No student data, schema, or saved preferences were added. No staging, commit, push, merge, package, or upload was performed.
+How the student verified and can explain the result: Source review only. Automated tests and browser preview were not run for this change.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Repair InfinityFree language redirects and improve rating controls
+
+Date / story: 2026-10-29 / repair repeated query-style route prefixes and improve ordinal form controls
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner reported repeated 404s and requested that menus/forms be made more visually appealing using the supplied rating-scale reference.
+Assistance used: Traced the `/index.php?/index.php?/student?...` failure to a query-style route that arrived without a leading slash and was not normalized before the framework URL helper added its own front-controller prefix. Refactored rating markup into reusable radio-group partials, applied it to workload/energy check-ins and topic importance/progress choices and filters, and updated the shared form/select and focus styles.
+Student changes and decisions: Kept native form submission, server validation, field names and database values. Subject and due-date selectors remain ordinary selects because they are search/navigation choices rather than ratings. No schema or dependency changes were made.
+How the student verified and can explain the result: PHP syntax checks passed for the changed PHP views/service. Manual route-normalization cases returned `student?s` for leading-slash, no-leading-slash, and repeated-prefix InfinityFree variants; ordinary `student/subjects?program=bsis` remained intact. `spark routes --except=auto` listed the language and student routes. `git diff --check` passed. PHPUnit and live authenticated browser checks were not run; hosted behavior remains pending upload.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Integrate owner-provided progress card and animated analytics bars
+
+Date / story: 2026-10-29 / adapt BrewedOps Motion Library card and bar-chart references to Duno
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the snippets and requested integration into Duno Plan and Aralytics.
+Assistance used: Adapted the progress card to the signed-in student's saved plan topics, with CSRF-protected progress updates, owner-scoped status changes, accessible progress feedback, and a no-JavaScript submit fallback. Applied a staggered one-time entrance to the existing Aralytics activity bars using the selected period's real values and retained its exact data table.
+Suggestions or code retained: Adapted the supplied visual ideas to Duno's colors, real topic/session data, existing PHP/CSS/JS stack, and reduced-motion settings. Did not use the sample lesson/signup data, growth badge, Google fonts, or external animation library. No database migration was added.
+Student changes and decisions: Checking a plan topic sets its saved progress to done; unchecking sets it to in progress. No files were staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: Source review only. Tests, browser preview, and diff whitespace checks were not run for this integration.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Integrate a persistent account profile and unsaved-changes bar
+
+Date / story: 2026-10-29 / adapt the supplied profile card to the current Shield account model
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the BrewedOps profile/save-bar example and chose an editable username with verified email read-only.
+Assistance used: Added a student profile route and view backed by CodeIgniter Shield, server-side username validation and uniqueness checking, save/discard behavior, and a compact More-menu link. Adapted layout and language labels to Duno and accounted for the fixed mobile navigation.
+Suggestions or code retained: Only the username and existing email identity are shown. Mock job, bio, timezone, avatar-upload, notification preferences, and sample team settings were excluded. No profile schema or migration was added.
+Student changes and decisions: Username is editable; the sign-in email is read-only. The save bar appears only after an actual username change. Nothing was staged, committed, pushed, packaged, or uploaded.
+How the student verified and can explain the result: PHP syntax checks passed for changed PHP files, `node --check` passed for the save-bar script, and `git diff --check` passed. A route CLI listing could not run because this PHP installation lacks the `intl` `Locale` class; automated application tests and authenticated browser checks were not run. Host behavior awaits owner upload.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Align hosted history foreign keys with application migrations
+
+Date / story: 2026-10-29 / correct saved-session and plan-item deletion constraints (F-08, S-02)
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to address the audit recommendations one at a time.
+Assistance used: Compared the fresh-host schema export and existing CI migrations, then added a schema correction migration and a one-time SQL upgrade for the existing hosted database.
+Suggestions or code retained: Fresh imports now retain study sessions with restrictive subject/topic references and preserve plan-item snapshots by setting only the deleted topic reference to null. Owner-provided phpMyAdmin results confirmed migration 13/batch 8, 13 total ledger rows, no migration 14, and matching FK names with mismatched delete/update actions. The hosted upgrade records migration 14/batch 9; a backup is required before execution.
+Student changes and decisions: The owner applied the corrected SQL upgrade through phpMyAdmin. No app package deployment, staging, commit, or push was performed. Existing unrelated working-tree changes were preserved.
+How the student verified and can explain the result: PHP syntax check and `git diff --check` passed. The owner-provided phpMyAdmin results confirmed migration 14/batch 9 and the intended rules: `SET NULL/CASCADE` for plan-item topic, `RESTRICT/CASCADE` for session subject, and `RESTRICT/CASCADE` for session topic (delete/update). The initial combined DROP/ADD failed with errno 121; the corrected separate ALTER statements then succeeded. No behavior test against actual saved records was reported.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Correct Aralytics summary ordering assertion
+
+Date / story: 2026-10-29 / fix CI failure in the accumulated release PR
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to continue with the next release issue after CI reported a failing check.
+Assistance used: Reviewed the failing CI assertion against `AralyticsService`, which sorts topic totals by descending study minutes. Corrected the test to expect the 35-minute “No topic” total before the 25-minute “Algebra” total.
+Suggestions or code retained: Updated only the test expectations; application summary behavior remains unchanged.
+Student changes and decisions: The PHP 8.2 and 8.4 GitHub Actions runs both reported this same single test failure. Local tests were not run; the PR update will trigger CI again.
+How the student verified and can explain the result: Confirmed from the service comparator and the test fixture values why the order is “No topic”, then “Algebra”. Awaiting the next GitHub Actions result.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.

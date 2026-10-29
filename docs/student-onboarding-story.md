@@ -37,3 +37,7 @@ As a new student, I can get a quick introduction to Duno's existing tools, skip 
 ## 2026-10-27 spotlight and accessibility refinement
 
 The tour now uses a four-panel dimming layer that leaves a clear cutout around the active target, a contrasting outline/shadow, and viewport-aware placement for the tutorial card. It is exposed as a modal dialog, makes the page regions inert, traps Tab/Shift+Tab in its controls, and returns focus when skipped or finished. Mobile/tablet card placement and browser/screen-reader behavior have not yet been reviewed.
+
+## 2026-10-29 welcome mascot
+
+Added the transparent welcome pose beside the opening tour text. It is decorative and uses the existing reduced-motion behavior. Browser review of the updated tour card remains pending.

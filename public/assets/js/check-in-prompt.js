@@ -26,6 +26,11 @@
         return;
     }
 
+    if (window.location.hash === '#app-tour') {
+        notifyTourReady();
+        return;
+    }
+
     let dismissedToday = false;
     try {
         dismissedToday = window.localStorage.getItem(storageKey) === '1';

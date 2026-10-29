@@ -105,6 +105,33 @@ class StudyPlanModel extends Model
         }
     }
 
+    public function updateItemTopicProgressForOwnerDate(int $ownerId, string $date, int $itemId, string $progress): string
+    {
+        if (! in_array($progress, ['in_progress', 'done'], true)) {
+            return 'invalid';
+        }
+
+        $plan = $this->where('user_id', $ownerId)->where('plan_date', $date)->first();
+        if (! is_array($plan)) {
+            return 'missing';
+        }
+
+        foreach ((new StudyPlanItemModel())->findForOwnerPlan((int) $plan['id'], $ownerId) as $item) {
+            if ((int) $item['id'] !== $itemId) {
+                continue;
+            }
+            if ($item['topic_id'] === null) {
+                return 'missing';
+            }
+
+            return (new TopicModel())->updateProgressForOwner((int) $item['topic_id'], $ownerId, $progress)
+                ? 'updated'
+                : 'missing';
+        }
+
+        return 'missing';
+    }
+
     public function changeItemDurationForOwnerToday(int $ownerId, string $date, int $itemId, int $duration): string
     {
         if ($duration < 1 || $duration > DailyPlanService::MAX_AVAILABLE_MINUTES) {

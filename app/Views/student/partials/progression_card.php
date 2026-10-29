@@ -5,7 +5,7 @@
             <p class="workspace-kicker">Your Duno journey</p>
             <h2 id="progression-heading">Level <?= esc((string) $progression['level']) ?> · <?= esc($progression['level_name']) ?></h2>
             <p><strong><?= esc((string) $progression['xp']) ?> XP</strong> <span class="muted">(<?= esc((string) $progression['study_xp']) ?> study + <?= esc((string) $progression['streak_xp']) ?> streak)</span></p>
-            <p class="progression-xp-rule">1 XP per saved study minute; +5 XP once for your first app visit each day.</p>
+            <p class="progression-xp-rule">100 XP per saved study minute; +500 XP for your first app visit each day.</p>
         </div>
     </div>
     <div class="progression-track">

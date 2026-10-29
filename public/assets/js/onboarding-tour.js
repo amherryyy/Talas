@@ -256,6 +256,15 @@
 
     const requestStart = () => {
         startRequested = true;
+        const forcedByLink = window.location.hash === '#app-tour';
+        if (forcedByLink) {
+            const checkInPrompt = document.querySelector('[data-check-in-prompt]');
+            if (checkInPrompt instanceof HTMLDialogElement && checkInPrompt.open) {
+                checkInPrompt.close();
+            }
+            window.setTimeout(beginTour, 250);
+            return;
+        }
         if (!document.querySelector('[data-check-in-prompt]') || window.dunoCheckInPromptReady === true) {
             window.setTimeout(beginTour, 250);
             return;

@@ -37,7 +37,7 @@ final class HomeTest extends CIUnitTestCase
         $response->assertSee('Duno Timer');
         $response->assertSee('Aralytics');
         $response->assertSee('Duno Guide');
-        $response->assertSee('assets/images/duno-mascot.png');
+        $response->assertSee('assets/images/duno-mascot-welcome.webp');
         $body = $response->response()->getBody();
         $this->assertStringContainsString('href="http://example.com/index.php/register"', $body);
         $this->assertStringContainsString('href="http://example.com/index.php/login"', $body);

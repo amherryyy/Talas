@@ -7,21 +7,23 @@ use DateTimeZone;
 
 class StudyProgressionService
 {
+    public const XP_PER_STUDY_MINUTE = 100;
+
     /** @var list<array{level: int, name: string, xp: int}> */
     public const LEVELS = [
         ['level' => 1, 'name' => 'Fresh Start', 'xp' => 0],
-        ['level' => 2, 'name' => 'Finding Your Rhythm', 'xp' => 120],
-        ['level' => 3, 'name' => 'Building Momentum', 'xp' => 300],
-        ['level' => 4, 'name' => 'Steady Scholar', 'xp' => 600],
-        ['level' => 5, 'name' => 'Long-Haul Learner', 'xp' => 1200],
+        ['level' => 2, 'name' => 'Finding Your Rhythm', 'xp' => 12000],
+        ['level' => 3, 'name' => 'Building Momentum', 'xp' => 30000],
+        ['level' => 4, 'name' => 'Steady Scholar', 'xp' => 60000],
+        ['level' => 5, 'name' => 'Long-Haul Learner', 'xp' => 120000],
     ];
 
     /** @var list<array{key: string, name: string, description: string, level: int, xp: int}> */
     public const UNLOCKS = [
-        ['key' => 'rhythm', 'name' => '30-day study rhythm', 'description' => 'See which days you made time to study over the past month.', 'level' => 2, 'xp' => 120],
-        ['key' => 'weekdays', 'name' => 'Weekday patterns', 'description' => 'Compare saved study minutes across the days of the week.', 'level' => 3, 'xp' => 300],
-        ['key' => 'momentum', 'name' => 'Monthly momentum', 'description' => 'Compare your recent 30 days with the 30 days before them.', 'level' => 4, 'xp' => 600],
-        ['key' => 'six_months', 'name' => 'Six-month study trend', 'description' => 'See how your saved study time has changed month by month.', 'level' => 5, 'xp' => 1200],
+        ['key' => 'rhythm', 'name' => '30-day study rhythm', 'description' => 'See which days you made time to study over the past month.', 'level' => 2, 'xp' => 12000],
+        ['key' => 'weekdays', 'name' => 'Weekday patterns', 'description' => 'Compare saved study minutes across the days of the week.', 'level' => 3, 'xp' => 30000],
+        ['key' => 'momentum', 'name' => 'Monthly momentum', 'description' => 'Compare your recent 30 days with the 30 days before them.', 'level' => 4, 'xp' => 60000],
+        ['key' => 'six_months', 'name' => 'Six-month study trend', 'description' => 'See how your saved study time has changed month by month.', 'level' => 5, 'xp' => 120000],
     ];
 
     /**
@@ -39,7 +41,8 @@ class StudyProgressionService
         $tomorrow = $today->modify('+1 day');
         $streakXp = $lifetimeTotals['streak_xp'] ?? 0;
         $totalStudyMinutes = $lifetimeTotals['total_minutes'] ?? 0;
-        $xp = $totalStudyMinutes + $streakXp;
+        $studyXp = $totalStudyMinutes * self::XP_PER_STUDY_MINUTE;
+        $xp = $studyXp + $streakXp;
         $studyDates = [];
         $dailyMinutes = [];
         $weekdayMinutes = array_fill(1, 7, 0);
@@ -65,7 +68,7 @@ class StudyProgressionService
             $date = $localCompletedAt->format('Y-m-d');
             $month = $localCompletedAt->format('Y-m');
             if ($lifetimeTotals === null) {
-                $xp += $minutes;
+                $xp += $minutes * self::XP_PER_STUDY_MINUTE;
                 $totalStudyMinutes += $minutes;
             }
             $studyDates[$date] = true;
@@ -123,7 +126,7 @@ class StudyProgressionService
 
         return [
             'xp' => $xp,
-            'study_xp' => $totalStudyMinutes,
+            'study_xp' => $studyXp,
             'streak_xp' => $streakXp,
             'current_streak' => $lifetimeTotals['current_streak'] ?? 0,
             'level' => $currentLevel['level'],

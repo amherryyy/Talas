@@ -9,6 +9,7 @@ use App\Services\DailyPlanService;
 use App\Services\TopicPriorityService;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\Response;
 use DateTimeImmutable;
 use DateTimeZone;
 
@@ -59,6 +60,35 @@ class Plans extends BaseController
         }
 
         return redirect()->to(site_url('student/plan'))->with('success', 'Today’s plan is ready. You can adjust it below.');
+    }
+
+    public function updateProgress(int $itemId): Response|RedirectResponse
+    {
+        $rawDone = $this->request->getPost('done');
+        $validDone = $rawDone === null || (is_string($rawDone) && $rawDone === '1');
+        $progress = $rawDone === '1' ? 'done' : 'in_progress';
+        $result = $validDone
+            ? (new StudyPlanModel())->updateItemTopicProgressForOwnerDate($this->ownerId(), $this->today(), $itemId, $progress)
+            : 'invalid';
+        $updated = $result === 'updated';
+        $message = match ($result) {
+            'updated' => $progress === 'done' ? 'Topic marked done.' : 'Topic moved back to in progress.',
+            'missing' => 'That plan topic is no longer available.',
+            default => 'The topic progress could not be updated. Try again.',
+        };
+
+        if ($this->request->isAJAX()) {
+            return $this->response
+                ->setStatusCode($updated ? 200 : ($result === 'missing' ? 404 : 422))
+                ->setJSON([
+                    'ok' => $updated,
+                    'progress' => $progress,
+                    'message' => $message,
+                    'csrf' => ['name' => csrf_token(), 'hash' => csrf_hash()],
+                ]);
+        }
+
+        return redirect()->to(site_url('student/plan'))->with($updated ? 'success' : 'error', $message);
     }
 
     public function updateDuration(int $itemId): RedirectResponse

@@ -39,17 +39,17 @@ final class StudentStreakTest extends CIUnitTestCase
 
         $firstVisit = $this->getAuthenticated('student');
         $firstVisit->assertOK();
-        $firstVisit->assertSee('Daily streak reward: +5 XP');
+        $firstVisit->assertSee('Daily streak reward: +500 XP');
         $firstVisit->assertSee('1-day streak');
         $firstVisit->assertSee('class="streak-flame is-new"');
 
         $repeatVisit = $this->getAuthenticated('student/plan');
         $repeatVisit->assertOK();
-        $repeatVisit->assertDontSee('Daily streak reward: +5 XP');
+        $repeatVisit->assertDontSee('Daily streak reward: +500 XP');
 
         $rows = (new StudentStreakModel())->where('user_id', (int) $student->id)->findAll();
         $this->assertCount(1, $rows);
-        $this->assertSame(5, (new StudentStreakModel())->totalXpForOwner((int) $student->id));
+        $this->assertSame(500, (new StudentStreakModel())->totalXpForOwner((int) $student->id));
     }
 
     public function testStreakContinuesAcrossCalendarDaysAndResetsAfterAMissedDay(): void
@@ -68,7 +68,7 @@ final class StudentStreakTest extends CIUnitTestCase
         $this->assertSame(2, $nextDay['streak_days']);
         $this->assertTrue($missedDay['awarded']);
         $this->assertSame(1, $missedDay['streak_days']);
-        $this->assertSame(15, (new StudentStreakModel())->totalXpForOwner((int) $student->id));
+        $this->assertSame(1500, (new StudentStreakModel())->totalXpForOwner((int) $student->id));
     }
 
     public function testStreakRecordsBelongToTheirStudentAndAdminsDoNotEarnVisitXp(): void
@@ -81,7 +81,7 @@ final class StudentStreakTest extends CIUnitTestCase
         $now = new DateTimeImmutable('2026-10-03 12:00:00', $timezone);
         $service->recordVisit((int) $student->id, $now, $timezone);
 
-        $this->assertSame(5, (new StudentStreakModel())->totalXpForOwner((int) $student->id));
+        $this->assertSame(500, (new StudentStreakModel())->totalXpForOwner((int) $student->id));
         $this->assertSame(0, (new StudentStreakModel())->totalXpForOwner((int) $otherStudent->id));
 
         $this->authenticateAs($admin);

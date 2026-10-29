@@ -292,7 +292,7 @@ $joinUrl = site_url('register');
                         <a href="<?= esc($workspaceUrl) ?>"><?= esc($workspaceLabel) ?></a>
                     <?php endif ?>
                     <?php if ($isStudent): ?>
-                        <a href="<?= esc(site_url('student#app-tour')) ?>">Show app tour</a>
+                        <a href="<?= esc(site_url('student')) ?>#app-tour">Show app tour</a>
                     <?php endif ?>
                     <?= view('partials/language_switcher') ?>
                     <?php if (! $isLoggedIn): ?>
@@ -330,7 +330,7 @@ $joinUrl = site_url('register');
                     <?php endif ?>
                 </div>
             </div>
-            <img class="welcome-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="Duno, a cheerful lightbulb study buddy wearing a Filipino salakot" width="1228" height="1285" fetchpriority="high">
+            <img class="welcome-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="Duno, a cheerful lightbulb study buddy wearing a Filipino salakot" width="512" height="536" fetchpriority="high">
         </div>
     </section>
 

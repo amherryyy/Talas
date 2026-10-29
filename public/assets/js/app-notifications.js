@@ -4,11 +4,24 @@
 
     const dismissLabel = stack.dataset.dismissLabel || 'Dismiss notification';
     const mascotSource = stack.dataset.mascotSrc;
+    const mascotSources = {
+        success: mascotSource,
+        info: stack.dataset.mascotInfoSrc || mascotSource,
+        warning: stack.dataset.mascotWarningSrc || mascotSource,
+        error: stack.dataset.mascotErrorSrc || mascotSource,
+    };
+    const rewardMascotSource = stack.dataset.mascotRewardSrc || mascotSource;
     const titles = {
         success: stack.dataset.titleSuccess || 'Nice work!',
         info: stack.dataset.titleInfo || 'A little note',
         warning: stack.dataset.titleWarning || 'Quick heads-up',
         error: stack.dataset.titleError || "Let's sort this out",
+    };
+    const dialogue = {
+        success: stack.dataset.dialogueSuccess || 'You made it happen. Keep that little win moving.',
+        info: stack.dataset.dialogueInfo || 'Here is a quick note to help with your next step.',
+        warning: stack.dataset.dialogueWarning || 'Pause for a moment and check this before continuing.',
+        error: stack.dataset.dialogueError || 'That did not go as planned. Check the details below, then try again when you are ready.',
     };
     const emotions = {
         success: String.fromCodePoint(0x1f973),
@@ -28,8 +41,21 @@
         card.addEventListener('focusin', () => window.clearTimeout(timeout), { once: true });
     }
 
+    function wireCard(card) {
+        const mood = card.dataset.mood || 'info';
+        card.querySelector('.duno-toast-dismiss')?.addEventListener('click', event => {
+            event.preventDefault();
+            dismiss(card);
+        });
+        if (mood === 'success' || mood === 'info') {
+            dismiss(card, mood === 'success' ? 7000 : 9000);
+        }
+    }
+
     function addNotification(source) {
         const isList = source.matches('ul.errors, ol.errors');
+        const authAlert = Boolean(source.closest('.duno-auth'));
+        const compact = authAlert && source.classList.contains('alert-success');
         const requestedType = source.dataset.notificationType;
         const mood = ['success', 'info', 'warning', 'error'].includes(requestedType)
             ? requestedType
@@ -37,11 +63,16 @@
                 ? 'error'
                 : source.classList.contains('alert-warning')
                     ? 'warning'
-                    : source.classList.contains('alert-info')
+                : source.classList.contains('alert-info')
                         ? 'info'
-                        : 'success';
+                    : source.classList.contains('alert-success')
+                        ? 'success'
+                        : source.getAttribute('role') === 'alert'
+                            ? 'error'
+                            : 'success';
+        const isReward = mood === 'success' && (source.dataset.notificationReward === 'true' || source.classList.contains('streak-reward-notice'));
         const card = document.createElement('article');
-        card.className = 'duno-toast';
+        card.className = `duno-toast${compact ? ' duno-toast-compact' : ''}${isReward ? ' streak-reward-notice' : ''}`;
         card.dataset.mood = mood;
         card.setAttribute('role', mood === 'error' || mood === 'warning' ? 'alert' : 'status');
         card.setAttribute('aria-live', mood === 'error' || mood === 'warning' ? 'assertive' : 'polite');
@@ -50,8 +81,11 @@
         mascot.className = 'duno-toast-mascot';
         mascot.setAttribute('aria-hidden', 'true');
         const image = document.createElement('img');
-        image.src = mascotSource;
+        image.src = isReward ? rewardMascotSource : (mascotSources[mood] || mascotSource);
         image.alt = '';
+        image.width = 512;
+        image.height = 536;
+        image.decoding = 'async';
         mascot.append(image);
         const emotion = document.createElement('span');
         emotion.className = 'duno-toast-emotion';
@@ -62,8 +96,17 @@
         copy.className = 'duno-toast-copy';
         const title = document.createElement('strong');
         title.className = 'duno-toast-title';
-        title.textContent = titles[mood];
-        copy.append(title);
+        if (!compact) {
+            title.textContent = titles[mood];
+            copy.append(title);
+        }
+
+        const dialogueLine = document.createElement('p');
+        dialogueLine.className = 'duno-toast-dialogue';
+        if (!compact) {
+            dialogueLine.textContent = dialogue[mood];
+            copy.append(dialogueLine);
+        }
 
         if (isList && source.children.length > 0) {
             const list = document.createElement('ul');
@@ -77,7 +120,10 @@
         } else {
             const message = document.createElement('p');
             message.className = 'duno-toast-message';
-            message.textContent = source.textContent.trim();
+            const sourceMessage = source.textContent.trim();
+            message.textContent = /successfully logged out/i.test(sourceMessage)
+                ? (stack.dataset.loggedOutShort || "You've logged out.")
+                : sourceMessage;
             copy.append(message);
         }
 
@@ -86,14 +132,14 @@
         close.type = 'button';
         close.setAttribute('aria-label', dismissLabel);
         close.textContent = '\u00d7';
-        close.addEventListener('click', () => dismiss(card));
 
         card.append(mascot, copy, close);
         stack.append(card);
         source.remove();
-
-        if (mood === 'success' || mood === 'info') dismiss(card, mood === 'success' ? 7000 : 9000);
+        wireCard(card);
     }
+
+    stack.querySelectorAll('.duno-toast').forEach(wireCard);
 
     document.querySelectorAll(selector).forEach(source => {
         if (!source.closest('[data-notification-stack]') || !source.matches('.duno-toast')) {

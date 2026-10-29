@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <h1>Topics in <?= esc($subject['name']) ?></h1>
-<p class="back-navigation"><a class="button secondary" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubject')) ?></a></p>
+<p class="back-navigation"><a class="button secondary back-link-button" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>"><span aria-hidden="true">←</span> <?= esc(lang('App.backToSubject')) ?></a></p>
 <p><a class="button" href="<?= esc(site_url('student/subjects/' . $subject['id'] . '/topics/new')) ?>"><?= esc(lang('App.addTopic')) ?></a></p>
 
 <?php if ($topics === []): ?>

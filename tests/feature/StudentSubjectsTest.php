@@ -40,7 +40,11 @@ final class StudentSubjectsTest extends CIUnitTestCase
 
         $newForm = $this->getAuthenticated('student/subjects/new');
         $newForm->assertOK();
-        $this->assertStringContainsString('name="csrf_test_name"', $newForm->response()->getBody());
+        $newFormBody = $newForm->response()->getBody();
+        $this->assertStringContainsString('name="csrf_test_name"', $newFormBody);
+        $this->assertStringContainsString('class="button secondary back-link-button"', $newFormBody);
+        $this->assertStringContainsString('name="program_id"', $newFormBody);
+        $this->assertStringContainsString('name="course_id"', $newFormBody);
 
         $this->postAuthenticated('student/subjects', [
             'name' => '<script>alert(1)</script>',
@@ -52,6 +56,9 @@ final class StudentSubjectsTest extends CIUnitTestCase
 
         $show = $this->getAuthenticated('student/subjects/' . $subject['id']);
         $show->assertOK();
+        $showBody = $show->response()->getBody();
+        $this->assertStringContainsString('data-mood="success"', $showBody);
+        $this->assertStringContainsString('duno-toast-mascot', $showBody);
         $show->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;');
         $show->assertDontSee('<script>alert(1)</script>');
 
@@ -66,6 +73,72 @@ final class StudentSubjectsTest extends CIUnitTestCase
             ->assertRedirect();
 
         $this->assertCount(0, $subjects->findAllForOwner((int) $student->id));
+    }
+
+    public function testStudentCanCreateAndFilterSubjectsByNvsuProgram(): void
+    {
+        $student = $this->createUser('nvsu-program-subjects', 'student');
+        $this->authenticateAs($student);
+
+        $program = (new App\Services\NvsuCurriculumCatalog())->find('bsit-web-mobile');
+        $this->assertNotNull($program);
+        $course = $program['courses'][0];
+
+        $this->postAuthenticated('student/subjects', [
+            'program_id' => $program['id'],
+            'course_id' => $course['id'],
+            'name' => 'Client supplied title is ignored for a catalog course',
+        ])->assertRedirect();
+
+        $subjects = new App\Models\SubjectModel();
+        $owned = $subjects->findAllForOwner((int) $student->id, $program['id']);
+        $this->assertCount(1, $owned);
+        $this->assertSame($course['title'], $owned[0]['name']);
+        $this->assertSame($program['id'], $owned[0]['program_id']);
+
+        $this->postAuthenticated('student/subjects', [
+            'program_id' => 'bsis-business-analytics',
+            'name' => 'Business Analytics notes',
+        ])->assertRedirect();
+
+        $filtered = $this->getAuthenticated('student/subjects?program=' . $program['id']);
+        $filtered->assertOK();
+        $filtered->assertSee($course['title']);
+        $filtered->assertDontSee('Business Analytics notes');
+    }
+
+    public function testStudentCannotSubmitCourseFromAnotherNvsuProgram(): void
+    {
+        $student = $this->createUser('nvsu-course-validation', 'student');
+        $this->authenticateAs($student);
+        $program = (new App\Services\NvsuCurriculumCatalog())->find('bsit-web-mobile');
+        $otherProgram = (new App\Services\NvsuCurriculumCatalog())->find('bsis-business-analytics');
+        $this->assertNotNull($program);
+        $this->assertNotNull($otherProgram);
+
+        $this->postAuthenticated('student/subjects', [
+            'program_id' => $program['id'],
+            'course_id' => $otherProgram['courses'][0]['id'],
+            'name' => 'Tampered course',
+        ])->assertRedirect();
+
+        $this->assertSame([], (new App\Models\SubjectModel())->findAllForOwner((int) $student->id));
+        $this->getAuthenticated('student/subjects/new')->assertSee('Choose a course from the selected NVSU program.');
+    }
+
+    public function testSubjectListExplainsProgramFilterAndSubjectCreationMeaning(): void
+    {
+        $student = $this->createUser('nvsu-picker-explanation', 'student');
+        $this->authenticateAs($student);
+
+        $list = $this->getAuthenticated('student/subjects');
+        $list->assertOK();
+        $list->assertSee('Filters subjects you have already added.');
+        $list->assertSee('Show my subjects');
+
+        $form = $this->getAuthenticated('student/subjects/new');
+        $form->assertOK();
+        $form->assertSee('Your selection filters the course choices below; the chosen course becomes this subject.');
     }
 
     public function testStudentCatalogUsesItsInlineBackLinkWithoutADuplicateButton(): void
@@ -142,6 +215,10 @@ final class StudentSubjectsTest extends CIUnitTestCase
             [mb_strtoupper($duplicate['title']), $selected['title']],
             array_column($subjects->findAllForOwner((int) $student->id), 'name'),
         );
+        $this->assertSame(
+            [$program['id'], $program['id']],
+            array_column($subjects->findAllForOwner((int) $student->id), 'program_id'),
+        );
         $this->assertSame(['Private course'], array_column($subjects->findAllForOwner((int) $otherStudent->id), 'name'));
         $this->getAuthenticated('student/subjects')->assertSee('1 duplicate was skipped');
     }
@@ -177,6 +254,30 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $response->assertSee('Biology lab');
         $response->assertDontSee('Biology seminar');
         $this->assertSame('', $response->response()->getHeaderLine('Location'));
+    }
+
+    public function testNvsuProgramFilterSubmitsAsPostAndShowsOnlyMatchingSubjects(): void
+    {
+        $student = $this->createUser('nvsu-program-filter', 'student');
+        $subjects = new App\Models\SubjectModel();
+        $subjects->insert(['user_id' => $student->id, 'name' => 'Systems Analysis', 'program_id' => 'bsis-service-management']);
+        $subjects->insert(['user_id' => $student->id, 'name' => 'Cell Biology', 'program_id' => null]);
+        $this->authenticateAs($student);
+
+        $page = $this->getAuthenticated('student/subjects');
+        $page->assertOK();
+        $pageHtml = $page->response()->getBody();
+        $this->assertStringContainsString('method="post" action="http://example.com/index.php/student/subjects/search"', $pageHtml);
+        $this->assertStringContainsString('name="program_id"', $pageHtml);
+
+        $filtered = $this->postAuthenticated('student/subjects/search', [
+            'query' => '',
+            'program_id' => 'bsis-service-management',
+        ]);
+        $filtered->assertOK();
+        $filtered->assertSee('Systems Analysis');
+        $filtered->assertDontSee('Cell Biology');
+        $this->assertSame('', $filtered->response()->getHeaderLine('Location'));
     }
 
     public function testStudentCanPreviewSourcedChedTemplate(): void

@@ -28,24 +28,22 @@
                 <?php endforeach ?>
             </select>
         </div>
-        <div>
-            <label for="filter-importance">Importance</label>
-            <select id="filter-importance" name="importance">
-                <option value="">Any importance</option>
-                <?php foreach (['low' => 'Low', 'medium' => 'Medium', 'high' => 'High'] as $value => $label): ?>
-                    <option value="<?= esc($value) ?>" <?= $filters['importance'] === $value ? 'selected' : '' ?>><?= esc($label) ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
-        <div>
-            <label for="filter-progress">Progress</label>
-            <select id="filter-progress" name="progress">
-                <option value="">Any progress</option>
-                <?php foreach (['not_started' => 'Not started', 'in_progress' => 'In progress', 'done' => 'Done'] as $value => $label): ?>
-                    <option value="<?= esc($value) ?>" <?= $filters['progress'] === $value ? 'selected' : '' ?>><?= esc($label) ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+        <?= view('student/partials/segmented_choice', [
+            'choiceId' => 'filter-importance',
+            'choiceName' => 'importance',
+            'choiceLabel' => 'Importance',
+            'choiceValue' => (string) $filters['importance'],
+            'choiceClass' => 'topic-filter-choice',
+            'choiceOptions' => ['' => 'Any', 'low' => 'Low', 'medium' => 'Medium', 'high' => 'High'],
+        ]) ?>
+        <?= view('student/partials/segmented_choice', [
+            'choiceId' => 'filter-progress',
+            'choiceName' => 'progress',
+            'choiceLabel' => 'Progress',
+            'choiceValue' => (string) $filters['progress'],
+            'choiceClass' => 'topic-filter-choice',
+            'choiceOptions' => ['' => 'Any', 'not_started' => 'Not started', 'in_progress' => 'In progress', 'done' => 'Done'],
+        ]) ?>
         <div>
             <label for="filter-due-state">Due date</label>
             <select id="filter-due-state" name="due_state">

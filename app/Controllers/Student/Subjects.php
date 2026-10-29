@@ -20,10 +20,15 @@ class Subjects extends BaseController
     public function index(): string
     {
         $subjects = new SubjectModel();
+        $nvsuCurricula = new NvsuCurriculumCatalog();
+        $programId = $this->request->getGet('program');
+        $programId = is_string($programId) && $nvsuCurricula->find($programId) !== null ? $programId : '';
 
         return view('student/subjects/index', [
-            'subjects' => $subjects->findAllForOwner($this->ownerId()),
+            'subjects' => $subjects->findAllForOwner($this->ownerId(), $programId),
             'query' => '',
+            'programId' => $programId,
+            'nvsuCurricula' => $nvsuCurricula->all(),
             'errors' => [],
         ]);
     }
@@ -151,29 +156,44 @@ class Subjects extends BaseController
         }
         $query = mb_substr(trim($query), 0, 120);
         $ownerId = $this->ownerId();
+        $nvsuCurricula = new NvsuCurriculumCatalog();
+        $programId = $this->request->getPost('program_id');
+        $programId = is_string($programId) && $nvsuCurricula->find($programId) !== null ? $programId : '';
 
         return view('student/subjects/index', [
-            'subjects' => (new SubjectModel())->searchForOwner($ownerId, $query),
+            'subjects' => (new SubjectModel())->searchForOwner($ownerId, $query, $programId),
             'query' => $query,
+            'programId' => $programId,
+            'nvsuCurricula' => $nvsuCurricula->all(),
             'errors' => $errors,
         ]);
     }
 
     public function newSubject(): string
     {
+        $catalog = new NvsuCurriculumCatalog();
         return view('student/subjects/form', [
             'subject' => null,
+            'nvsuCurricula' => $catalog->all(),
+            'selectedCourseId' => '',
             'errors'  => session()->getFlashdata('errors') ?? [],
         ]);
     }
 
     public function create(): RedirectResponse
     {
-        $name = $this->submittedName();
+        [$name, $programId, $selectionErrors] = $this->submittedSubjectSelection();
+        if ($selectionErrors !== []) {
+            return redirect()->to(site_url('student/subjects/new'))
+                ->withInput()
+                ->with('errors', $selectionErrors);
+        }
+
         $subjects = new SubjectModel();
         $subjectId = $subjects->insert([
             'user_id' => $this->ownerId(),
             'name'    => $name,
+            'program_id' => $programId,
         ], true);
 
         if ($subjectId === false) {
@@ -188,16 +208,35 @@ class Subjects extends BaseController
 
     public function show(int $subjectId): string
     {
+        $subject = $this->ownedSubject($subjectId);
+        $program = (new NvsuCurriculumCatalog())->find((string) ($subject['program_id'] ?? ''));
+
         return view('student/subjects/show', [
-            'subject' => $this->ownedSubject($subjectId),
+            'subject' => $subject,
+            'programTitle' => $program['title'] ?? null,
             'topics'  => (new TopicModel())->findAllForSubjectOwner($subjectId, $this->ownerId()),
         ]);
     }
 
     public function edit(int $subjectId): string
     {
+        $subject = $this->ownedSubject($subjectId);
+        $catalog = new NvsuCurriculumCatalog();
+        $selectedCourseId = '';
+        $program = $catalog->find((string) ($subject['program_id'] ?? ''));
+        if ($program !== null) {
+            foreach ($program['courses'] as $course) {
+                if ($course['title'] === $subject['name']) {
+                    $selectedCourseId = $course['id'];
+                    break;
+                }
+            }
+        }
+
         return view('student/subjects/form', [
-            'subject' => $this->ownedSubject($subjectId),
+            'subject' => $subject,
+            'nvsuCurricula' => $catalog->all(),
+            'selectedCourseId' => $selectedCourseId,
             'errors'  => session()->getFlashdata('errors') ?? [],
         ]);
     }
@@ -205,9 +244,15 @@ class Subjects extends BaseController
     public function update(int $subjectId): RedirectResponse
     {
         $this->ownedSubject($subjectId);
+        [$name, $programId, $selectionErrors] = $this->submittedSubjectSelection();
+        if ($selectionErrors !== []) {
+            return redirect()->to(site_url('student/subjects/' . $subjectId . '/edit'))
+                ->withInput()
+                ->with('errors', $selectionErrors);
+        }
 
         $subjects = new SubjectModel();
-        if (! $subjects->updateForOwner($subjectId, $this->ownerId(), $this->submittedName())) {
+        if (! $subjects->updateForOwner($subjectId, $this->ownerId(), $name, $programId)) {
             return redirect()->to(site_url('student/subjects/' . $subjectId . '/edit'))
                 ->withInput()
                 ->with('errors', $this->saveErrors($subjects));
@@ -259,6 +304,37 @@ class Subjects extends BaseController
         $name = $this->request->getPost('name');
 
         return is_string($name) ? trim($name) : '';
+    }
+
+    /** @return array{string, ?string, array<string, string>} */
+    private function submittedSubjectSelection(): array
+    {
+        $errors = [];
+        $programId = $this->request->getPost('program_id');
+        $programId = is_string($programId) ? trim($programId) : '';
+        $catalog = new NvsuCurriculumCatalog();
+
+        if ($programId !== '' && $catalog->find($programId) === null) {
+            $errors['program_id'] = 'Choose a program from the NVSU course lists.';
+            $programId = '';
+        }
+
+        $courseId = $this->request->getPost('course_id');
+        $name = $this->submittedName();
+        if ($courseId !== null && $courseId !== '') {
+            if (! is_string($courseId) || $programId === '') {
+                $errors['course_id'] = 'Choose an NVSU program before selecting one of its courses.';
+            } else {
+                $courses = $catalog->selectedCourses($programId, [$courseId]);
+                if ($courses === []) {
+                    $errors['course_id'] = 'Choose a course from the selected NVSU program.';
+                } else {
+                    $name = $courses[0]['title'];
+                }
+            }
+        }
+
+        return [$name, $programId === '' ? null : $programId, $errors];
     }
 
     /** @return array<string, string> */

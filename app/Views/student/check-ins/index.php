@@ -13,23 +13,24 @@
 
 <section aria-labelledby="new-check-in-heading">
     <h2 id="new-check-in-heading">Add a check-in</h2>
-    <form method="post" action="<?= esc(site_url('student/check-ins')) ?>">
+    <form class="check-in-entry-form" method="post" action="<?= esc(site_url('student/check-ins')) ?>">
         <?= csrf_field() ?>
-        <label for="workload-rating">Workload</label>
-        <select id="workload-rating" name="workload_rating" required>
-            <option value="">Choose a rating</option>
-            <?php foreach ([1 => '1 — Very light', 2 => '2', 3 => '3', 4 => '4', 5 => '5 — Very heavy'] as $rating => $label): ?>
-                <option value="<?= esc((string) $rating) ?>"<?= (string) old('workload_rating', '') === (string) $rating ? ' selected' : '' ?>><?= esc($label) ?></option>
-            <?php endforeach ?>
-        </select>
-
-        <label for="energy-rating">Energy</label>
-        <select id="energy-rating" name="energy_rating" required>
-            <option value="">Choose a rating</option>
-            <?php foreach ([1 => '1 — Very low', 2 => '2', 3 => '3', 4 => '4', 5 => '5 — Very high'] as $rating => $label): ?>
-                <option value="<?= esc((string) $rating) ?>"<?= (string) old('energy_rating', '') === (string) $rating ? ' selected' : '' ?>><?= esc($label) ?></option>
-            <?php endforeach ?>
-        </select>
+        <?= view('student/partials/rating_scale', [
+            'scaleName' => 'workload_rating',
+            'scaleId' => 'workload-rating',
+            'scaleLabel' => 'Workload',
+            'scaleValue' => (string) old('workload_rating', ''),
+            'scaleLowLabel' => 'Very light',
+            'scaleHighLabel' => 'Very heavy',
+        ]) ?>
+        <?= view('student/partials/rating_scale', [
+            'scaleName' => 'energy_rating',
+            'scaleId' => 'energy-rating',
+            'scaleLabel' => 'Energy',
+            'scaleValue' => (string) old('energy_rating', ''),
+            'scaleLowLabel' => 'Very low',
+            'scaleHighLabel' => 'Very high',
+        ]) ?>
         <p class="muted">Rate each from 1 to 5. This is optional, not an assessment.</p>
         <button type="submit">Save private check-in</button>
     </form>

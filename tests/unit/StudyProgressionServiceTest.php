@@ -38,7 +38,7 @@ final class StudyProgressionServiceTest extends CIUnitTestCase
                 $this->timezone,
             );
 
-            $this->assertSame($minutes, $summary['xp']);
+            $this->assertSame($minutes * StudyProgressionService::XP_PER_STUDY_MINUTE, $summary['xp']);
             $this->assertSame($level, $summary['level']);
         }
 
@@ -64,10 +64,10 @@ final class StudyProgressionServiceTest extends CIUnitTestCase
             $this->session('2026-10-21 10:00:00', 15),
         ], new DateTimeImmutable('2026-10-25 13:00:00', $this->timezone), $this->timezone);
 
-        $this->assertSame(180, $summary['xp']);
+        $this->assertSame(18000, $summary['xp']);
         $this->assertSame(2, $summary['level']);
-        $this->assertSame(60, $summary['level_progress_xp']);
-        $this->assertSame(180, $summary['level_progress_max']);
+        $this->assertSame(6000, $summary['level_progress_xp']);
+        $this->assertSame(18000, $summary['level_progress_max']);
         $this->assertSame(5, $summary['study_days_all_time']);
         $this->assertSame(5, $summary['study_days_last_30']);
         $this->assertTrue($summary['badges'][0]['unlocked']);

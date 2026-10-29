@@ -21,9 +21,9 @@ class NvsuCurriculumImportService
             return ['ok' => false, 'imported' => 0, 'duplicates' => 0];
         }
 
-        $existingNames = [];
+        $existingSubjects = [];
         foreach ($this->subjects->findAllForOwner($ownerId) as $subject) {
-            $existingNames[mb_strtolower(trim((string) $subject['name']))] = true;
+            $existingSubjects[mb_strtolower(trim((string) $subject['name']))] = $subject;
         }
 
         $db = Database::connect();
@@ -33,17 +33,31 @@ class NvsuCurriculumImportService
 
         foreach ($courses as $course) {
             $key = mb_strtolower(trim($course['title']));
-            if (isset($existingNames[$key])) {
+            if (isset($existingSubjects[$key])) {
+                $existingSubject = $existingSubjects[$key];
+                if (empty($existingSubject['program_id'])
+                    && ! $this->subjects->updateForOwner((int) $existingSubject['id'], $ownerId, (string) $existingSubject['name'], $programId)) {
+                    $db->transRollback();
+                    return ['ok' => false, 'imported' => 0, 'duplicates' => 0];
+                }
                 $duplicates++;
                 continue;
             }
 
-            if ($this->subjects->insert(['user_id' => $ownerId, 'name' => $course['title']]) === false) {
+            if ($this->subjects->insert([
+                'user_id' => $ownerId,
+                'name' => $course['title'],
+                'program_id' => $programId,
+            ]) === false) {
                 $db->transRollback();
                 return ['ok' => false, 'imported' => 0, 'duplicates' => 0];
             }
 
-            $existingNames[$key] = true;
+            $existingSubjects[$key] = [
+                'id' => $this->subjects->getInsertID(),
+                'name' => $course['title'],
+                'program_id' => $programId,
+            ];
             $imported++;
         }
 

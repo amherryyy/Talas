@@ -39,7 +39,8 @@ class StudySessions extends BaseController
 
         $ownerId = $this->ownerId();
         $sessionModel = new StudySessionModel();
-        $xpBefore = $sessionModel->totalMinutesForOwner($ownerId) + (new StudentStreakModel())->totalXpForOwner($ownerId);
+        $xpBefore = $sessionModel->totalMinutesForOwner($ownerId) * StudyProgressionService::XP_PER_STUDY_MINUTE
+            + (new StudentStreakModel())->totalXpForOwner($ownerId);
         $completedAt = $this->now();
         $sessionId = $sessionModel->createForOwner(
             $ownerId,
@@ -53,7 +54,7 @@ class StudySessions extends BaseController
             return redirect()->to(site_url('student/sessions'))->withInput()->with('error', 'The session could not be saved. Please check your selections and try again.');
         }
 
-        return $this->sessionSavedRedirect($xpBefore, $xpBefore + $input['duration_minutes']);
+        return $this->sessionSavedRedirect($xpBefore, $xpBefore + $input['duration_minutes'] * StudyProgressionService::XP_PER_STUDY_MINUTE);
     }
 
     public function edit(int $sessionId): string
@@ -86,7 +87,7 @@ class StudySessions extends BaseController
             return $input;
         }
 
-        $xpBefore = (new StudySessionModel())->totalMinutesForOwner($ownerId)
+        $xpBefore = (new StudySessionModel())->totalMinutesForOwner($ownerId) * StudyProgressionService::XP_PER_STUDY_MINUTE
             + (new StudentStreakModel())->totalXpForOwner($ownerId);
         if (! (new StudySessionModel())->updateForOwner(
             $sessionId,
@@ -99,7 +100,9 @@ class StudySessions extends BaseController
                 ->withInput()->with('error', 'The session could not be updated. Please check your selections and try again.');
         }
 
-        $xpAfter = $xpBefore - (int) $session['duration_minutes'] + $input['duration_minutes'];
+        $xpAfter = $xpBefore
+            - (int) $session['duration_minutes'] * StudyProgressionService::XP_PER_STUDY_MINUTE
+            + $input['duration_minutes'] * StudyProgressionService::XP_PER_STUDY_MINUTE;
 
         return $this->sessionSavedRedirect($xpBefore, $xpAfter, 'Study session updated.');
     }

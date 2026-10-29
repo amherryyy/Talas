@@ -28,7 +28,8 @@ final class AralyticsServiceTest extends CIUnitTestCase
         $this->assertSame(60, $summary['total_minutes']);
         $this->assertSame(30.0, $summary['average_minutes']);
         $this->assertSame(60, $summary['subject_totals'][0]['total_minutes']);
-        $this->assertSame('No topic', $summary['topic_totals'][1]['topic_title']);
+        $this->assertSame('No topic', $summary['topic_totals'][0]['topic_title']);
+        $this->assertSame('Algebra', $summary['topic_totals'][1]['topic_title']);
     }
 
     public function testTodayAndEmptyPeriodsHaveClearZeroTotals(): void

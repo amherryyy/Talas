@@ -160,7 +160,7 @@ CREATE TABLE `study_plan_items` (
   KEY `study_plan_items_topic_id_foreign` (`topic_id`),
   KEY `plan_id_position` (`plan_id`,`position`),
   CONSTRAINT `study_plan_items_plan_id_foreign` FOREIGN KEY (`plan_id`) REFERENCES `study_plans` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `study_plan_items_topic_id_foreign` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE ON UPDATE SET NULL
+  CONSTRAINT `study_plan_items_topic_id_foreign` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -192,8 +192,8 @@ CREATE TABLE `study_sessions` (
   KEY `user_id_completed_at` (`user_id`,`completed_at`),
   KEY `subject_id` (`subject_id`),
   KEY `topic_id` (`topic_id`),
-  CONSTRAINT `study_sessions_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `study_sessions_topic_id_foreign` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `study_sessions_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `study_sessions_topic_id_foreign` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `study_sessions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
