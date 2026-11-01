@@ -30,7 +30,7 @@ class StudyPlanModel extends Model
     {
         $rows = $this->db->table('study_plans sp')
             ->select('sp.plan_date, COUNT(spi.plan_id) AS item_count')
-            ->join('study_plan_items spi', 'spi.plan_id = sp.id', 'left')
+            ->join('study_plan_items spi', 'spi.plan_id = sp.id AND spi.user_id = sp.user_id', 'left')
             ->where('sp.user_id', $ownerId)
             ->where('sp.plan_date >=', $startDate)
             ->where('sp.plan_date <=', $endDate)
@@ -46,7 +46,7 @@ class StudyPlanModel extends Model
     }
 
     /** @param list<array<string, mixed>> $items */
-    public function replaceForOwnerDate(int $ownerId, string $date, int $availableMinutes, array $items, ?string $startTime = null): bool
+    public function replaceForOwnerDate(int $ownerId, string $date, int $availableMinutes, array $items, ?string $startTime, ?string $curriculumId): bool
     {
         if ($availableMinutes < DailyPlanService::MIN_AVAILABLE_MINUTES
             || $availableMinutes > DailyPlanService::MAX_AVAILABLE_MINUTES) {
@@ -80,8 +80,13 @@ class StudyPlanModel extends Model
                 $ownedTopicIds = $db->table('topics')
                     ->select('topics.id')
                     ->join('subjects', 'subjects.id = topics.subject_id')
+                    ->where('topics.user_id', $ownerId)
                     ->where('subjects.user_id', $ownerId)
                     ->whereIn('topics.id', $topicIds)
+                    ->groupStart()
+                    ->where('subjects.program_id', $curriculumId)
+                    ->orWhere('subjects.program_id', null)
+                    ->groupEnd()
                     ->get()->getResultArray();
                 $ownedTopicIds = array_map(static fn (array $topic): int => (int) $topic['id'], $ownedTopicIds);
                 sort($ownedTopicIds);
@@ -97,7 +102,7 @@ class StudyPlanModel extends Model
             if (is_array($existing)) {
                 $planId = (int) $existing['id'];
                 $this->update($planId, ['available_minutes' => $availableMinutes]);
-                $db->table('study_plan_items')->where('plan_id', $planId)->delete();
+                $db->table('study_plan_items')->where('plan_id', $planId)->where('user_id', $ownerId)->delete();
             } else {
                 $planId = (int) $this->insert([
                     'user_id' => $ownerId,
@@ -111,6 +116,7 @@ class StudyPlanModel extends Model
             foreach ($items as $item) {
                 $db->table('study_plan_items')->insert([
                     'plan_id' => $planId,
+                    'user_id' => $ownerId,
                     'topic_id' => $item['topic_id'],
                     'topic_title' => $item['topic_title'],
                     'subject_name' => $item['subject_name'],
@@ -142,6 +148,7 @@ class StudyPlanModel extends Model
         int $duration,
         string $startTime,
         ?int $availableMinutes = null,
+        ?string $curriculumId = null,
     ): array {
         $startMinute = $this->timeToMinutes($startTime);
         if ($topicId < 1 || $duration < 1 || $duration > DailyPlanService::MAX_AVAILABLE_MINUTES
@@ -153,7 +160,9 @@ class StudyPlanModel extends Model
             ->select('topics.id, topics.title, topics.progress, subjects.name AS subject_name')
             ->join('subjects', 'subjects.id = topics.subject_id')
             ->where('topics.id', $topicId)
+            ->where('topics.user_id', $ownerId)
             ->where('subjects.user_id', $ownerId)
+            ->groupStart()->where('subjects.program_id', $curriculumId)->orWhere('subjects.program_id', null)->groupEnd()
             ->get()->getRowArray();
         if (! is_array($topic) || $topic['progress'] === 'done') {
             return ['status' => 'topic_unavailable'];
@@ -209,6 +218,7 @@ class StudyPlanModel extends Model
             $now = date('Y-m-d H:i:s');
             $db->table('study_plan_items')->insert([
                 'plan_id' => $planId,
+                'user_id' => $ownerId,
                 'topic_id' => $topicId,
                 'topic_title' => $topic['title'],
                 'subject_name' => $topic['subject_name'],
@@ -230,7 +240,7 @@ class StudyPlanModel extends Model
     }
 
     /** @return array{status: string, item_id?: int} */
-    public function scheduleExistingBlockForOwnerDate(int $ownerId, string $date, int $itemId, string $startTime): array
+    public function scheduleExistingBlockForOwnerDate(int $ownerId, string $date, int $itemId, string $startTime, ?string $curriculumId): array
     {
         $startMinute = $this->timeToMinutes($startTime);
         if ($itemId < 1 || $startMinute === null) {
@@ -250,6 +260,9 @@ class StudyPlanModel extends Model
             }
         }
         if ($target === null || $target['topic_id'] === null) {
+            return ['status' => 'missing'];
+        }
+        if (! $this->topicBelongsToAcademicProgram($ownerId, (int) $target['topic_id'], $curriculumId)) {
             return ['status' => 'missing'];
         }
         if ($target['start_time'] !== null) {
@@ -274,6 +287,7 @@ class StudyPlanModel extends Model
         $updated = $this->db->table('study_plan_items')
             ->where('id', $itemId)
             ->where('plan_id', $planId)
+            ->where('user_id', $ownerId)
             ->where('start_time', null)
             ->update(['start_time' => $this->minutesToTime($startMinute), 'updated_at' => $now]);
         if (! $updated) {
@@ -284,7 +298,7 @@ class StudyPlanModel extends Model
         return ['status' => 'scheduled', 'item_id' => $itemId];
     }
 
-    public function updateItemTopicProgressForOwnerDate(int $ownerId, string $date, int $itemId, string $progress): string
+    public function updateItemTopicProgressForOwnerDate(int $ownerId, string $date, int $itemId, string $progress, ?string $curriculumId): string
     {
         if (! in_array($progress, ['in_progress', 'done'], true)) {
             return 'invalid';
@@ -303,12 +317,42 @@ class StudyPlanModel extends Model
                 return 'missing';
             }
 
-            return (new TopicModel())->updateProgressForOwner((int) $item['topic_id'], $ownerId, $progress)
+            return (new TopicModel())->updateProgressForAcademicProgramOwner((int) $item['topic_id'], $ownerId, $progress, $curriculumId)
                 ? 'updated'
                 : 'missing';
         }
 
         return 'missing';
+    }
+
+    public function itemBelongsToAcademicProgramOwnerDate(int $ownerId, string $date, int $itemId, ?string $curriculumId): bool
+    {
+        $plan = $this->where('user_id', $ownerId)->where('plan_date', $date)->first();
+        if (! is_array($plan)) {
+            return false;
+        }
+        foreach ((new StudyPlanItemModel())->findForOwnerPlan((int) $plan['id'], $ownerId) as $item) {
+            if ((int) $item['id'] === $itemId) {
+                return $item['topic_id'] === null
+                    || $this->topicBelongsToAcademicProgram($ownerId, (int) $item['topic_id'], $curriculumId);
+            }
+        }
+
+        return false;
+    }
+
+    private function topicBelongsToAcademicProgram(int $ownerId, int $topicId, ?string $curriculumId): bool
+    {
+        $builder = $this->db->table('topics')->select('topics.id')
+            ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.id', $topicId)->where('topics.user_id', $ownerId)->where('subjects.user_id', $ownerId);
+        if ($curriculumId === null || $curriculumId === '') {
+            $builder->where('subjects.program_id', null);
+        } else {
+            $builder->groupStart()->where('subjects.program_id', $curriculumId)->orWhere('subjects.program_id', null)->groupEnd();
+        }
+
+        return is_array($builder->get()->getRowArray());
     }
 
     public function changeItemDurationForOwnerToday(int $ownerId, string $date, int $itemId, int $duration): string
@@ -362,7 +406,7 @@ class StudyPlanModel extends Model
                     }
                 }
             }
-            $db->table('study_plan_items')->where('id', $itemId)->where('plan_id', $planId)
+            $db->table('study_plan_items')->where('id', $itemId)->where('plan_id', $planId)->where('user_id', $ownerId)
                 ->update(['duration_minutes' => $duration, 'updated_at' => date('Y-m-d H:i:s')]);
             $db->transCommit();
 
@@ -380,13 +424,13 @@ class StudyPlanModel extends Model
             return false;
         }
         $planId = (int) $plan['id'];
-        $exists = $this->db->table('study_plan_items')->where('id', $itemId)->where('plan_id', $planId)->countAllResults() > 0;
+        $exists = $this->db->table('study_plan_items')->where('id', $itemId)->where('plan_id', $planId)->where('user_id', $ownerId)->countAllResults() > 0;
         if (! $exists) {
             return false;
         }
-        $removed = $this->db->table('study_plan_items')->where('id', $itemId)->where('plan_id', $planId)->delete();
+        $removed = $this->db->table('study_plan_items')->where('id', $itemId)->where('plan_id', $planId)->where('user_id', $ownerId)->delete();
         if ($removed) {
-            $this->renumberItems($planId);
+            $this->renumberItems($planId, $ownerId);
         }
 
         return (bool) $removed;
@@ -420,19 +464,19 @@ class StudyPlanModel extends Model
 
         $db = $this->db;
         $db->transBegin();
-        $db->table('study_plan_items')->where('plan_id', $planId)->where('id', $items[$index]['id'])->update(['position' => 0]);
-        $db->table('study_plan_items')->where('plan_id', $planId)->where('id', $items[$otherIndex]['id'])->update(['position' => $items[$index]['position']]);
-        $db->table('study_plan_items')->where('plan_id', $planId)->where('id', $items[$index]['id'])->update(['position' => $items[$otherIndex]['position']]);
+        $db->table('study_plan_items')->where('plan_id', $planId)->where('user_id', $ownerId)->where('id', $items[$index]['id'])->update(['position' => 0]);
+        $db->table('study_plan_items')->where('plan_id', $planId)->where('user_id', $ownerId)->where('id', $items[$otherIndex]['id'])->update(['position' => $items[$index]['position']]);
+        $db->table('study_plan_items')->where('plan_id', $planId)->where('user_id', $ownerId)->where('id', $items[$index]['id'])->update(['position' => $items[$otherIndex]['position']]);
         $db->transCommit();
 
         return $db->transStatus() ? 'updated' : 'failed';
     }
 
-    private function renumberItems(int $planId): void
+    private function renumberItems(int $planId, int $ownerId): void
     {
-        $items = $this->db->table('study_plan_items')->where('plan_id', $planId)->orderBy('position', 'ASC')->get()->getResultArray();
+        $items = $this->db->table('study_plan_items')->where('plan_id', $planId)->where('user_id', $ownerId)->orderBy('position', 'ASC')->get()->getResultArray();
         foreach ($items as $index => $item) {
-            $this->db->table('study_plan_items')->where('id', $item['id'])->update(['position' => $index + 1]);
+            $this->db->table('study_plan_items')->where('id', $item['id'])->where('plan_id', $planId)->where('user_id', $ownerId)->update(['position' => $index + 1]);
         }
     }
 

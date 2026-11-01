@@ -2,6 +2,949 @@
 
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
+### Lightweight Duno mascot animation system
+
+Date / story: 2026-11-01 / reusable mascot gestures
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner requested implementation of a lightweight CSS and JavaScript mascot system using the existing official PNG and explicitly cancelled the proposed 3D implementation.
+
+Assistance used: Added a reusable CodeIgniter view partial and state controller for idle, greeting, thinking, celebrating, and solo gestures. Connected the states to the home hero, onboarding carousel, Plan processing forms, newly saved study sessions and level-ups, and keyboard/touch mascot controls. Kept the PNG artwork unchanged, created a full-resolution lossless WebP delivery copy with a PNG fallback, included the smaller asset in the PWA static cache, and honored reduced-motion and hidden-page behavior.
+
+Suggestions or code retained: Added `app/Views/partials/duno_mascot.php` and `public/assets/js/duno-mascot.js`; updated the existing views, CSS, onboarding/auth/level-up scripts, service worker, mascot guide, and affected feature assertions.
+
+Student changes and decisions: The owner selected the CSS and JavaScript implementation and the original transparent PNG as the animation asset. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax and JavaScript syntax checks passed; `git diff --check` passed. Eleven focused Home, Dashboard, Plan, study-session, and authentication feature tests passed (169 assertions). Chromium checked the component at 320, 400, 768, and 1280 px, verified Tab/Enter and tap activation, automatic return to idle, and reduced-motion suppression. Image comparison confirmed identical alpha and all non-transparent source pixels; browser-scaled output differed by at most 1/255 per color channel, while the WebP is 36% smaller. The responsive login-page E2E check passed. The two authenticated E2E checks did not reach the student landing from the saved synthetic account and showed an account-access denial; full student-page browser review remains open. A separate expanded Dashboard test run had one unrelated curriculum-source expectation failure.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Shared footer alignment pass - 2026-11-01
+
+Allowed use confirmed by: The owner asked for a desktop and mobile alignment audit across all page footers.
+
+Assistance used: Audited the shared footer partial and found its layout differed by page shell, with overlapping width/breakpoint rules, footer widths that did not match their content shells, and phone disclosure headings aligned to one side while their toggle marks sat at the opposite edge. Standardized the footer into a centered brand, balanced auto-fitting link groups, centered group labels and link lists, and a centered legal/copyright/icon-credit stack. Matched the footer width to the landing, About, legal, student, and admin shells; kept two-column footer groups on phones; arranged legal links evenly on very narrow screens; and raised footer links to 44-pixel touch targets. Public, About/legal, student, and admin pages all use this partial.
+
+Suggestions or code retained: Updated responsive footer styles in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. PHP syntax check for the shared footer partial passed. Source review confirmed the footer uses widths that match each page shell. I did not reload or alter the owner's active browser page; fresh desktop/mobile visual review remains open.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Landing mascot orbit backdrop - 2026-11-01
+
+Allowed use confirmed by: The owner requested using the signed-in homepage mascot backdrop on the public landing page.
+
+Assistance used: Reused the existing dashboard visual language in the public welcome hero: soft lavender glow, lavender and warm-gold orbit rings, and a purple sparkle. Removed the overlapping landing-page glow shape and kept the mascot accessible and interactive.
+
+Suggestions or code retained: Updated `app/Views/home.php` and responsive styles in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP lint and `git diff --check` passed. The owner is actively reviewing the local site, so I did not open or alter the browser session; manual visual review remains open.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Subject detail and desktop footer polish - 2026-11-01
+
+Allowed use confirmed by: The owner pointed out the plain subject detail page and the desktop copyright alignment.
+
+Assistance used: Reworked the subject detail into a clear heading, topic count, study-material panel, and compact topic rows with status and due-date cues. Centered the copyright line across the footer width on desktop.
+
+Suggestions or code retained: Updated `app/Views/student/subjects/show.php` and responsive styles in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP lint for the changed subject view and `git diff --check` passed. I did not run tests or open another browser session because the owner is actively reviewing the local site; manual visual review remains open.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Landing-page backdrop refinement - 2026-11-01
+
+Allowed use confirmed by: The owner asked to remove the double yellow circle on the landing page and adapt a BrewedOps Motion Library idea to Duno's palette.
+
+Assistance used: Replaced the hard-edged concentric gold circle with one asymmetrical, soft purple-and-mint mesh glow behind the hero mascot, and retinted the secondary drifting glow to mint/lavender. The visual direction adapts the library's gradient-mesh treatment rather than copying a screen or code.
+
+Suggestions or code retained: Updated the hero background in `public/assets/css/duno-ui.css` and `app/Views/home.php`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` and PHP syntax lint for `app/Views/home.php` passed. The local dashboard tour overlay and subsequent student-page navigation prevented a clean visual check of the landing hero after the edit; browser visual verification remains open.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Formal project title visibility - 2026-11-01
+
+Allowed use confirmed by: The owner asked why the formal project title was not visible in the interface.
+
+Assistance used: Added the full formal title to the About page as a distinct, compact project-identification line and updated that page's document title. The Duno product headline and dashboard remain concise.
+
+Suggestions or code retained: Updated `app/Views/about.php` and `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Browser review was not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Footer legal-link alignment - 2026-11-01
+
+Allowed use confirmed by: The owner asked to center the About & help, Terms, Privacy, and Cookies links with the footer brand and copyright.
+
+Assistance used: Centered the wrapping legal-link row so it aligns with the centered footer brand and copyright on wide and narrow screens.
+
+Suggestions or code retained: Updated `.app-footer-legal` in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. The refreshed local landing-page screenshot showed the legal links centered; a follow-up update explicitly centers the entire legal, copyright, and attribution block.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Additional in-scope admin measures - 2026-11-01
+
+Allowed use confirmed by: The owner asked for further admin dashboard analytics within the Duno project scope and accepted the proposed setup coverage, saved-plan patterns, and unfinished-topic workload measures.
+
+Assistance used: Added independent saved-record coverage milestones; last-30-day planning summaries calculated first per student and then as medians; and a due-date snapshot for students with unfinished topics. Used existing application records, excluded check-ins, distinguished saved plans from completed study, documented overlapping date categories, and applied minimum-cohort suppression. No new tracking or package was added.
+
+Suggestions or code retained: Updated `app/Services/AdminDashboardSummaryService.php`, `app/Views/admin/dashboard.php`, admin CSS, and F-12 requirement/story/traceability documentation.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax and `git diff --check` passed; automated and browser checks were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Make the dashboard tour shortcut easier to understand
+
+Date / story: 2026-11-01 / student dashboard tour entry point
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner said the app-tour link looked random and authorized either removing it or improving its presentation.
+
+Assistance used: Kept the replayable tour available on the dashboard, changed the plain text link into a compact labeled help action, and removed the duplicate tour link from the shared footer.
+
+Suggestions or code retained: Updated the dashboard, footer link groups, locale labels, and focused dashboard feature assertion. The tour behavior and replay anchor did not change.
+
+Student changes and decisions: The owner authorized the choice between removal and a visual improvement. Nothing was staged or uploaded.
+
+How the student verified and can explain the result: Focused dashboard tests passed (6 tests, 91 assertions); PHP syntax checks and `git diff --check` passed. Visual browser review was not available in this session.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Redesign the home and landing page
+
+Date / story: 2026-11-01 / responsive home-page visual refinement
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared the home-page screenshot and asked to improve the first-page design and overall UI.
+
+Assistance used: Reworked the home hero hierarchy, removed duplicate account/workspace prompts from its main action, made Focus the visually distinct first route, shortened the other tool descriptions, and arranged the remaining destinations in compact responsive layouts. Kept the Duno wordmark, mascot, tool destinations, footer, mobile navigation, and tour behavior.
+
+Suggestions or code retained: Updated `app/Views/home.php`, `public/assets/css/duno-ui.css`, and `tests/feature/HomeTest.php`.
+
+Student changes and decisions: No files were staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Focused Home feature tests passed (3 tests, 50 assertions) and PHP syntax/diff checks passed. Playwright could not launch Chromium (`spawn EPERM`), so visual browser review remains unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add the developer’s social profiles to About
+
+Date / story: 2026-11-01 / About page social contact
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner supplied the LinkedIn profile URL for display on the About page.
+
+Assistance used: Added the LinkedIn and Facebook links as the developer’s personal profiles, with clear labels that do not imply they are official Duno accounts.
+
+Suggestions or code retained: Updated `app/Views/about.php` and `tests/feature/AboutPageTest.php` as the owner supplied each URL.
+
+Student changes and decisions: The owner supplied the profile URL. Nothing was staged or uploaded.
+
+How the student verified and can explain the result: The focused About page test passed (1 test, 16 assertions); PHP syntax passed and `git diff --check` found no whitespace errors. Deployment and browser rendering remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Route problem reports to GitHub Issues
+
+Date / story: 2026-11-01 / About page problem reporting
+
+Tool and model: OpenAI Codex using the connected GitHub repository metadata; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner supplied the Duno repository and said problem reports should go to issues.
+
+Assistance used: Linked the About page problem-report section to the repository’s new-issue page and noted that reporters must sign in to GitHub and should not post passwords or private study records.
+
+Suggestions or code retained: Updated `app/Views/about.php` and `tests/feature/AboutPageTest.php`. The public repository metadata is accessible; issue search returned no existing open issues.
+
+Student changes and decisions: The owner supplied the repository URL and report destination. No issue was created and nothing was staged or uploaded.
+
+How the student verified and can explain the result: The focused About page test passed (1 test, 16 assertions), PHP syntax passed, and `git diff --check` found no whitespace errors. Direct visual browser verification remains unavailable in this session.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Increase XP rewards while keeping level thresholds
+
+Date / story: 2026-11-01 / F-14 progression reward pacing
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner selected 10x rewards with existing level thresholds retained.
+
+Assistance used: Changed study rewards to 1,000 XP per saved minute and first-daily-visit awards to 5,000 XP. Kept the 12,000 / 30,000 / 60,000 / 120,000 level thresholds, added save and adjustment notifications, and prepared a forward migration to scale existing 500-XP daily rows by ten. Updated the requirement, story, acceptance, and deployment notes.
+
+Suggestions or code retained: Updated progression and streak services, session handling, notification view/locales, progression display, tests, and `docs/2026-11-01-progression-xp-rewards-upgrade.sql`. The host upgrade and release upload remain pending.
+
+Student changes and decisions: The owner chose the reward multiplier and retained thresholds. Existing unrelated worktree edits were preserved. Nothing was staged, committed, pushed, merged, packaged, uploaded, or applied to the hosted database.
+
+How the student verified and can explain the result: Focused PHPUnit checks passed (23 tests, 268 assertions) for progression thresholds, streak awards, session saves/edits/deletes, dashboard, and Aralytics. PHP syntax checks passed for 16 changed PHP files and `git diff --check` passed with only existing LF-to-CRLF notices. Composer audit could not reach Packagist because the configured proxy at 127.0.0.1:9 refused the connection. The CUA browser access host was unavailable, so visual review was not completed. The InfinityFree database and deployed behavior remain unverified for this change.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Redesign the shared footer and add preliminary legal information pages
+
+Date / story: 2026-11-01 / shared footer and legal information
+
+Tool and model: OpenAI Codex using official National Privacy Commission sources; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to improve the footer and add Terms, Privacy, Cookies, or related user information.
+
+Assistance used: Reworked the shared footer into mobile disclosure groups with a clear legal-link row; added public Terms, Privacy, and Cookies pages describing behavior found in the current source. Existing policy drafts and project records leave publisher identity, privacy contact, request process, provider details, and retention unresolved, so the pages are visibly marked preliminary and review pending.
+
+Suggestions or code retained: Added `app/Controllers/Legal.php`, `app/Views/legal/page.php`, public routes, footer styles and disclosure script, locale labels, and focused feature coverage. No consent banner or agreement gate was added.
+
+Student changes and decisions: The owner requested the footer and user-facing policy information. Nothing was staged, committed, pushed, merged, or uploaded.
+
+How the student verified and can explain the result: The focused legal and public-home suite passed 3 tests and 60 assertions with XAMPP `intl`/SQLite extensions enabled and coverage disabled. Changed PHP files passed syntax checks; the footer JavaScript passed `node --check`; `git diff --check` passed with existing line-ending notices only. Browser rendering and project/institutional policy approval remain pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Design the About and help page
+
+Date / story: 2026-11-01 / public About page, product guide, FAQ, and project information
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked for an About page covering how to use Duno, rationale, developers, contact, socials, FAQs, and problem reports.
+
+Assistance used: Reviewed the approved feature descriptions and existing app behavior; designed a responsive, editorial-style guide with a five-step workflow, focused rationale, expandable FAQs, and project contact areas. Public developer identities, support contact, social profiles, and a report destination were not found in project files, so the page states that these details are pending instead of inventing contact paths or collecting reports.
+
+Suggestions or code retained: Added the public About route/controller/view, shared-footer link, responsive styles, and focused feature test. No report form, mail service, or new user-data collection was added.
+
+Student changes and decisions: The owner requested the page sections. Nothing was staged, committed, pushed, merged, or uploaded.
+
+How the student verified and can explain the result: The focused About, legal, and public-home suite passed 4 tests and 73 assertions with XAMPP `intl`/SQLite extensions enabled and coverage disabled. Changed PHP files passed syntax checks; the footer JavaScript passed `node --check`; `git diff --check` passed with existing line-ending notices only. Composer audit could not reach Packagist from this environment; no dependencies changed. Browser rendering remains unverified because the browser access host was unavailable. At this original page review, project names, contact details, official social URLs, and the report destination remained for the owner to supply; the owner later provided the public contact address recorded below.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add the owner-supplied Duno contact email
+
+Date / story: 2026-11-01 / About page contact information
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner supplied `mhracads@gmail.com` for the public contact section.
+
+Assistance used: Added a direct `mailto:` contact link. The owner later chose `duno@gmail.com` as the visible label while retaining `mhracads@gmail.com` as the message destination.
+
+Suggestions or code retained: Updated `app/Views/about.php`, its contact link styling in `public/assets/css/duno-ui.css`, and `tests/feature/AboutPageTest.php`.
+
+Student changes and decisions: The owner requested use of this address on the About page. Nothing was staged or uploaded.
+
+How the student verified and can explain the result: The focused About page test passed (1 test, 13 assertions); PHP syntax and `git diff --check` passed. Deployment and browser rendering remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+The owner later clarified that the visible contact label should be `duno@gmail.com`, with clicks routed to the supplied inbox `mhracads@gmail.com`. The actual inbox remains present in the link target and accessibility label; copying the visible text requires a configured mailbox or forwarding alias to deliver messages. The updated About page test passed (1 test, 16 assertions); PHP syntax and diff checks passed.
+
+### Soften the notification toast shadow
+
+Date / story: 2026-11-01 / student notification visual cleanup
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a screenshot and said the popup notification shadow looked unusual.
+
+Assistance used: Replaced the broad dark toast shadow with a shorter, lighter two-layer shadow, removed the translucent blur surface that was creating a haze, and softened the mascot drop shadow.
+
+Suggestions or code retained: Updated the notification toast rules in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged or uploaded. Manual browser review remains pending.
+
+How the student verified and can explain the result: The subject feature suite passed (19 tests, 235 assertions) and `git diff --check` passed with Git reporting existing LF-to-CRLF notices. Manual browser review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Fix the Duno Focus search icon alignment
+
+Date / story: 2026-11-01 / Focus topic search control
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a mobile screenshot showing the magnifier clipped and the search input misaligned.
+
+Assistance used: Increased the icon’s reserved flex width and strengthened the search-input selector so it overrides the shared search-field sizing, keeping the icon and text centered in one control.
+
+Suggestions or code retained: Updated the Focus search rules in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged or uploaded. Manual browser review remains pending.
+
+How the student verified and can explain the result: The topic feature suite passed (11 tests, 196 assertions) and `git diff --check` passed with Git reporting existing LF-to-CRLF notices. Manual browser review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Refine profile surfaces and read-only account fields
+
+Date / story: 2026-11-01 / student profile visual cleanup
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a profile screenshot and asked for a sleeker card and a clearer verified-email field.
+
+Assistance used: Tightened the profile card and identity header, aligned field groups, styled the editable username control, replaced the browser-default email field appearance with a distinct verified read-only treatment, and changed the long academic program value to a wrapping read-only display.
+
+Suggestions or code retained: Updated the profile view and styles and adjusted the profile feature assertion for the read-only academic program presentation.
+
+Student changes and decisions: Nothing was staged or uploaded. Manual browser review remains pending.
+
+How the student verified and can explain the result: The profile/academic-program feature suite passed (2 tests, 42 assertions). PHP syntax checks and `git diff --check` passed with Git reporting existing LF-to-CRLF notices. Manual browser review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Redesign the Study Guide subject and topic pickers
+
+Date / story: 2026-11-01 / Study Guide selection controls
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a screenshot of the native subject dropdown and asked for a sleeker, more modern design.
+
+Assistance used: Added styled, searchable popover pickers for subjects and topics, including selected states, keyboard navigation, and reduced-motion behavior. The existing native selects remain as progressive fallback and continue to drive the established Guide logic.
+
+Suggestions or code retained: Updated the dashboard labels, Study Guide JavaScript and CSS, and feature assertions.
+
+Student changes and decisions: Nothing was staged or uploaded. Manual browser review remains pending.
+
+How the student verified and can explain the result: The dashboard feature suite passed (6 tests, 90 assertions); JavaScript syntax, PHP syntax, and `git diff --check` passed with Git reporting existing LF-to-CRLF notices. Manual browser review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Replace the browser-native plan time popup
+
+Date / story: 2026-11-01 / Duno Plan time entry
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a screenshot of the oversized native time picker and asked to improve its UI.
+
+Assistance used: Replaced the browser-controlled time popup with a compact, styled text field that accepts familiar 12-hour input and 24-hour input. The server normalizes either format to the existing 24-hour plan value; scheduling and overlap rules are unchanged.
+
+Suggestions or code retained: Updated the plan view, its focused CSS, the Plans controller, and feature assertions for markup and time normalization.
+
+Student changes and decisions: Nothing was staged or uploaded. Manual browser review remains pending.
+
+How the student verified and can explain the result: The plan feature suite passed (11 tests, 123 assertions), including 12-hour input normalization and markup checks. PHP syntax checks and `git diff --check` passed with Git reporting existing LF-to-CRLF notices. Manual browser review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Simplify the More menu and relocate language preferences
+
+Date / story: 2026-11-01 / student navigation cleanup
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to apply the menu organization and decluttering recommendations.
+
+Assistance used: Removed duplicate Home and the app-tour link from More; grouped Subjects, Topics, Guide, and private check-ins together; kept Profile in Account; moved language selection into Profile preferences; added a dashboard tour link; and made the mobile More panel opaque, wider, and easier to scan with clear current-page and touch states.
+
+Suggestions or code retained: Updated the student layout, profile and dashboard views, English/Filipino/Taglish labels, tour descriptions, menu styles, and focused feature assertions.
+
+Student changes and decisions: Nothing was staged or uploaded. Manual browser review remains pending.
+
+How the student verified and can explain the result: The dashboard feature suite passed (6 tests, 88 assertions) and the academic-program/profile suite passed (2 tests, 40 assertions). PHP syntax, JavaScript syntax, and `git diff --check` passed with Git reporting existing LF-to-CRLF notices. Manual browser review could not be completed because the browser access host was unavailable.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Improve the Subjects page course list
+
+Date / story: 2026-11-01 / student subject catalogue list
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner said the Subjects page list looked plain and unattractive and shared a screenshot.
+
+Assistance used: Replaced the thin underlined text rows with a compact framed course list. Each subject has a numbered scan marker, clear name, and right-side arrow in a consistent tap target. Added a fallback label for punctuation-only names.
+
+Suggestions or code retained: Updated `app/Views/student/subjects/index.php`, focused styles in `public/assets/css/duno-ui.css`, and subject-list feature assertions.
+
+Student changes and decisions: Browser visual review remains pending; nothing was staged or uploaded.
+
+How the student verified and can explain the result: The subject feature suite passed (19 tests, 235 assertions); PHP syntax checks passed for the view and test, and `git diff --check` passed with line-ending notices. Browser visual review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Refine the private check-in rating chart
+
+Date / story: 2026-11-01 / Aralytics private check-in distribution
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to make the small paired-bar graph more appealing and consistent with the other Aralytics charts.
+
+Assistance used: Added a soft chart plot area, subtle dashed gridlines, dynamic value ticks, rounded gradient workload/energy bars, count labels only for non-zero bars, rating pills, and a stronger legend/table hierarchy. Counts and privacy behavior remain unchanged; the table continues to show zeros.
+
+Suggestions or code retained: Updated the check-in SVG and focused styles in `app/Views/student/aralytics/index.php` and `public/assets/css/duno-ui.css`, with assertions in `tests/feature/StudentCheckInsTest.php`.
+
+Student changes and decisions: Browser visual review remains pending; nothing was staged or uploaded.
+
+How the student verified and can explain the result: The check-in feature suite passed (8 tests, 83 assertions); PHP syntax checks passed for the view and test, and `git diff --check` passed with line-ending notices. Browser visual review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Restore contrast in Study Guide goal buttons
+
+Date / story: 2026-11-01 / Study Guide goal choices
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner reported that text in the goal buttons was hard to read and supplied a screenshot.
+
+Assistance used: Found that the shared workspace button selector had greater specificity than the unscoped goal-button base rule. Added scoped colors for default, hover, and selected states: white or pale lavender surfaces, dark title/description text, and a purple number marker.
+
+Suggestions or code retained: Updated Study Guide goal-button rules in `public/assets/css/duno-ui.css`. Goal selection behavior did not change.
+
+Student changes and decisions: Browser visual review is pending; nothing was staged or uploaded.
+
+How the student verified and can explain the result: The dashboard feature suite passed (6 tests, 78 assertions), and `git diff --check` passed with line-ending notices. The local review server returned the updated CSS with the contrast selectors; browser visual review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add distinct color treatments to dashboard study tools
+
+Date / story: 2026-11-01 / student dashboard tool cards
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner said the study-tool cards looked generic and asked for an aesthetic treatment such as gradients.
+
+Assistance used: Replaced the mostly white surfaces with separate soft lavender, green, amber, and blue gradients tied to Focus, Plan, Timer, and Aralytics. Added low-contrast corner glows and corrected the mobile grid so all four tools use matching two-column spans and card heights.
+
+Suggestions or code retained: Updated the dashboard tool-card rules in `public/assets/css/duno-ui.css`; no content, navigation, or feature behavior changed.
+
+Student changes and decisions: Browser review remains pending; nothing was staged or uploaded.
+
+How the student verified and can explain the result: The dashboard feature suite passed (6 tests, 78 assertions), and `git diff --check` passed with line-ending notices. Browser visual review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Improve the program picker, topic ratings, and dashboard subject list
+
+Date / story: 2026-11-01 / NVSU Bayombong program selection and student dashboard UI
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner pointed out that the Low topic-rating control was misaligned, the program list repeated campus/college text, and the home Subjects and topics area was messy. The owner asked to focus on NVSU Bayombong or add a college choice before the program.
+
+Assistance used: Added a college-first, Bayombong-only program picker with server-side campus and college/program matching; aligned the topic rating choices against shared form-label styling; simplified the home heading and removed its duplicate Browse topics link; and placed home subjects in one contained list panel with a consistent title/detail/action layout and panel footer. Punctuation-only legacy names now display as “Untitled subject.”
+
+Suggestions or code retained: Updated `AcademicProgramCatalog`, the student academic-program controller/view/script, dashboard markup and responsive CSS, the F-01 requirement, the onboarding story, and focused feature assertions. Existing saved program IDs remain resolvable through the complete catalog. No schema, user data, subject records, dependencies, or routes were changed. Nothing was staged, committed, pushed, packaged, or uploaded.
+
+Student changes and decisions: The picker now limits new choices to NVSU Bayombong and shows program titles after college selection. Browser rendering still needs owner review.
+
+How the student verified and can explain the result: The focused academic-program and dashboard feature tests passed (8 tests, 114 assertions); the full PHPUnit suite passed (109 tests, 1,129 assertions) using XAMPP PHP with its installed `intl` and `sqlite3` extensions enabled for the CLI. After the owner said the home section still looked messy and provided a screenshot, the revised dashboard test passed (6 tests, 78 assertions), including punctuation-only names. PHP syntax checks passed for the touched PHP files, `node --check` passed for the selector script, and `git diff --check` passed with line-ending notices. Browser rendering remains for the owner to review.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Align timer preset actions
+
+Date / story: 2026-11-01 / Duno Timer mobile preset alignment
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner supplied a screenshot showing “Use this block” overlapping the preset name and asked for the alignment to be fixed.
+
+Assistance used: The owner clarified that the heading and preset text were still misaligned. Found the shared button rule was overriding the preset's grid display, leaving its text centered. Grouped the mascot, clock mark, kicker, title, and instruction into explicit header columns; set the preset button itself to grid with a dedicated flex title/action row; and aligned the duration copy to the left.
+
+Suggestions or code retained: Updated `app/Views/student/sessions/index.php`, timer preset CSS, and the study-session feature assertions. Timer behavior and preset values are unchanged.
+
+Student changes and decisions: Browser visual review is pending; nothing was staged or uploaded.
+
+How the student verified and can explain the result: The focused study-session feature suite passed (6 tests, 58 assertions); PHP syntax checks passed for the view and test, and `git diff --check` passed with line-ending notices. Browser visual review remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Repair onboarding illustration alignment and reduce repeated UI
+
+Date / story: 2026-11-01 / F-13 first-visit onboarding tour
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to check the onboarding images and specified avoiding redundant or generic card-heavy UI.
+
+Assistance used: Reviewed the provided mobile screenshots and the existing carousel view, styles, and script. Replaced track-level percentage movement with per-illustration movement by one slide width so the image index stays paired with the headline. Removed the duplicate welcome kicker and two floating callout pills, and removed the large framed art background so the existing mascot/SVG illustrations sit directly on the page.
+
+Suggestions or code retained: Updated `app/Views/partials/app_tour.php`, `public/assets/css/duno-ui.css`, and `public/assets/js/onboarding-tour.js`; added the pairing/phone-width criterion and verification record to `docs/student-onboarding-story.md`. No schema or runtime dependency changed. Nothing was staged, committed, packaged, or uploaded.
+
+Student changes and decisions: The owner asked for the illustration integration check; local implementation now sets each of the three illustrations to the position matching the current slide. Local PHP lint and Node syntax checks passed. Chromium did not launch under Playwright (`spawn EPERM`), and the CUA browser host was unavailable, so rendered browser verification remains pending.
+
+How the student verified and can explain the result: The student can explain that independent slide transforms tie each illustration directly to the current slide index, and that removing the repeated label and callout pills gives the slide copy and illustration more room. Source checks passed; the exact mobile rendering still needs a browser review.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Compact the shared mobile UI and make long Aralytics details optional
+
+Date / story: 2026-11-01 / F-13 UI consistency and mobile-density audit
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner requested an application-wide UI/UX audit with a more compact layout, less scrolling, and aligned controls.
+
+Assistance used: Reviewed shared workspace navigation, responsive CSS, dashboard/list/form/report views, and official Apple, Material 3, and WCAG guidance. Reduced the student mobile bar from six destinations to five and moved Guide into More; tightened mobile dashboard dimensions and shared spacing; changed short repeated list cards to compact separators; aligned common action controls; and made Aralytics breakdown, check-in pattern, and progression insight sections collapsible. Added print rules to keep required report breakdowns visible.
+
+Suggestions or code retained: Updated `app/Views/partials/mobile_bottom_nav.php`, `app/Views/student/subjects/layout.php`, `app/Views/student/aralytics/index.php`, `public/assets/css/student-navigation.css`, `public/assets/css/duno-ui.css`, `docs/requirements.md`, and `docs/ui-ux-consistency-audit-2026-11-01.md`. No product calculations, route permissions, persisted data, or runtime dependencies changed.
+
+Student changes and decisions: The Guide remains reachable from both the dashboard and More menu. Five student destinations remain visible in the mobile navigation. Nothing was staged, committed, pushed, merged, or deployed.
+
+How the student verified and can explain the result: The full PHPUnit suite passed 109 tests and 1,121 assertions. PHP syntax checks passed for the changed navigation, layout, and Aralytics views; `git diff --check` passed with LF-to-CRLF conversion notices only. Sampled core text/button contrast ratios range from 4.57:1 to 6.75:1. Browser access was unavailable, so rendered mobile/tablet/desktop layout, keyboard flow, and print output remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Implement the approved one-program-per-account flow
+
+Date / story: 2026-11-01 / F-01 academic-program onboarding
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner approved one current academic program per college student account and requested continuing the project work.
+
+Assistance used: Derived account-level options from the existing NVSU campus directory; added a route gate, one-time conditional save, read-only Profile display, schema migration and manual host SQL, student-facing setup copy, requirement/story/deployment updates, and feature coverage. Kept `subjects.program_id` as an independent per-subject curriculum reference.
+
+Suggestions or code retained: Added `AcademicProgramCatalog`, `StudentAcademicProgram` controller/filter/view, migration `2026-11-01-000001_AddAcademicProgramToUsers`, `StudentAcademicProgramTest`, and the linked story/deployment records. Existing subject rows are not changed.
+
+Student changes and decisions: Existing signed-in accounts with no account-level selection will be directed to select once after deployment; no value is backfilled. The owner handles later account-program changes through the project administrator. Nothing was staged, committed, pushed, merged, packaged, or uploaded; no hosted database was modified.
+
+How the student verified and can explain the result: The focused program feature suite passed 2 tests and 31 assertions; the full suite passed 106 tests and 1,086 assertions locally with XAMPP `intl` and `sqlite3` enabled. PHP syntax checks passed for changed PHP files; `git diff --check` passed. PHPUnit reports that no code-coverage driver is installed. Hosted schema and browser behavior are pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Audit requested UI, feature, admin, and privacy changes
+
+Date / story: 2026-11-01 / cross-feature UX and privacy audit; F-07 hours/minutes input
+
+Tool and model: OpenAI Codex with the web search tool for official Philippine privacy sources; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner provided a detailed implementation brief and explicitly asked that the approved SRS remain the baseline and scope conflicts be identified before changing behavior.
+
+Assistance used: Compared the request with the approved SRS, routes, controllers, models, views, storage/auth configuration, existing feature stories and tests. Implemented hours/minutes controls for Plan generation and the mobile add sheet, normalized to the existing minute total, and preserved existing `available_minutes` submissions. Added a focused feature test and audit/policy draft documents. Consulted the Philippine Official Gazette and National Privacy Commission pages to reference the Act and data-subject rights in clearly marked unpublished drafts.
+
+Suggestions or code retained: Updated `app/Controllers/Student/Plans.php`, `app/Views/student/plans/show.php`, `public/assets/css/duno-ui.css`, `tests/feature/StudentPlansTest.php`, F-07 requirements/story/traceability, and the deployment note. Added `docs/ui-ux-feature-privacy-audit-2026-11-01.md`, `docs/drafts/terms-and-conditions-draft.md`, and `docs/drafts/privacy-notice-draft.md`. No schema, cookie banner, legal acknowledgement, new analytics instrumentation, or account-program model was added.
+
+Student changes and decisions: The owner requested hours/minutes and approved the 15â€“480 minute behavior in the existing SRS. The focused Plan suite passed 10 tests and 114 assertions; the full PHP suite passed 104 tests and 1,053 assertions. PHPUnit reports no code-coverage driver. Browser visual review remains open because Chromium failed to launch with `spawn EPERM` and the browser-control host was unavailable. Nothing was staged, committed, packaged, or uploaded.
+
+How the student verified and can explain the result: `1 hour 30 minutes` is converted server-side to the same 90-minute value already used by plan generation, capacity rules, replacement forms, and the database. The tests also cover 45 minutes, invalid totals, the mobile add flow, and the legacy minute-based confirmation path. The audit distinguishes already-approved behavior from proposed changes; policy drafts retain placeholders for facts that have not been verified and are not linked in the app.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Verify the uploaded r8 response-hardening package
+
+Date / story: 2026-11-01 / post-upload host response check
+
+Tool and model: OpenAI Codex using Brave DevTools; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner reported uploading r8 and requested live verification before creating the second student test account.
+
+Assistance used: Used same-origin read-only Brave requests and inspected only statuses, final route behavior, cache/security headers, the release marker, and two booleans confirming the branded 403 fallback. Did not copy cookies, credentials, private account pages, or student data.
+
+Suggestions or code retained: Updated `docs/deployment.md`, `docs/acceptance-verification-plan.md`, `README.md`, `docs/development-blueprint.md`, and `docs/version-control.md` with r8 host evidence. No application code changed.
+
+Student changes and decisions: The marker returned `duno-full-release-20261101-r8` with HTTP 200 and no-store. The signed-out Focus route returned 302 to login; no topics were displayed. Four tested private paths returned 403 with no-store plus the expected frame, content-type, and referrer headers. The 403 response body for `app/Config/Paths.php` matched the branded Duno page and expected title. An unknown route returned 404 with no-store. Cross-owner access is still pending the owner's second synthetic student account; complete uploaded-file parity and true offline behavior remain unverified.
+
+How the student verified and can explain the result: Brave DevTools recorded the response table and Network panel showed the 302 redirect. The focused 403 body check returned status 403, all checked headers, and `branded=true` / `expectedTitle=true`. No account was created and no hosted data was modified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Continue live PWA and cross-account acceptance checks
+
+Date / story: 2026-11-01 / F-15 PWA and S-02 owner isolation
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to continue the remaining live checks and clarified that the old account is in Brave.
+
+Assistance used: Installed Duno as an Edge app and confirmed the signed-in workspace opened. Reviewed the new account's Aralytics print preview: it contained only that account's two synthetic Timer sessions and excluded private check-ins. Reviewed the old account's Brave Aralytics and confirmed it contained its own CSPC 6/CFG activity, with no new-account temporary topic visible. Continued the offline Timer save probe: the offline POST returned `ERR_INTERNET_DISCONNECTED`; after connectivity was restored, manually refreshing replayed the failed form and created synthetic session 5. This appears to be browser form resubmission, not a background queue.
+
+Suggestions or code retained: Updated `docs/acceptance-verification-plan.md` and `docs/deployment.md` with the install, report, cross-account and offline retry evidence. No application source, database schema, or hosted files were changed. Synthetic topic 7 and sessions 4–5 remain in the new account for the owner to remove.
+
+Student changes and decisions: Existing worktree changes were preserved. The optional Edge taskbar/Start pin prompt was declined; Duno remains installed as an Edge app. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Observed the Edge `App installed` state and separate Duno app window, the two-minute report preview with no private check-ins, and the old account's separate Aralytics summary. The report isolation review is read-only. The offline save required a deliberate refresh after reconnection before a session appeared. Unsupported-browser behavior, cross-owner POST/delete and foreign-reference cases, and complete uploaded-file parity remain open.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Prevent stale release-marker and static 403 responses
+
+Date / story: 2026-11-01 / response-cache and static-denial header hardening
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to proceed with the next production-priority item after the live status/header check.
+
+Assistance used: Inspected the package builder and both deployment `.htaccess` files. Added a PHP endpoint for the existing `/assets/release-version.txt` URL, with explicit no-store headers, and routed the mutable marker URL to that endpoint. Added a PHP 403 error-document wrapper that sends no-store, frame, content-type, and referrer headers before rendering the existing static branded page. Avoided Apache `Header` directives because previous host 500 troubleshooting had removed those directives from the deployment path.
+
+Suggestions or code retained: Updated `public/release-version.php`, `public/status/403.php`, `public/.htaccess`, `public/assets/release-version.txt`, `scripts/Build-InfinityFreePackage.ps1`, and deployment/acceptance documentation. Committed as `120b76665ab062d5133f71ce03117093fb1f7a7f` on `release/duno-production-r7`. Built `build/duno-full-release-20261101-r8.zip` from that commit (1,241 entries, 5,373,531 bytes; SHA-256 `703F22A55598BC4F831FEAF0A9C85AF0327B678A5BAB8686C21AF0DBDFFA0874`). Composer used locked local dependencies and removed development packages; Packagist was unreachable, so no dependency update occurred. No PHP tests were added or run; the two new PHP files passed syntax checks and the package builder passed PowerShell parsing.
+
+Student changes and decisions: The exact status URL remains `/assets/release-version.txt`; the source file remains the marker body and the package builder includes the endpoint. Generated packages now use `/status/403.php` for server-level 403 responses. Existing static `/status/403.html` remains the HTML body. The owner must upload the reviewed r8 package before host behavior is considered verified. Pre-existing documentation-only worktree changes were preserved and left unstaged. No push or upload was performed.
+
+How the student verified and can explain the result: Reviewed the generated rewrite/error-document rules and source-to-package copy paths. Archive review confirmed 1,241 entries, all required root/error/PWA files, forward-slash paths, no root `.env` or Composer manifests, and the r8 marker. PHP syntax and PowerShell parsing passed; `git diff --check` passed with existing line-ending warnings. Host testing remains required to confirm the provider preserves the 403 status and forwards PHP-generated no-store/security headers. No accounts, hosted data, or production files were changed.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Check the uploaded r7 release in Brave
+
+Date / story: 2026-11-01 / post-upload host acceptance
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner uploaded r7 and asked to continue the production priorities and host checks.
+
+Assistance used: Read the release marker in Brave using a fresh cache-busting query; checked signed-out Focus routing, private-path fallback content, static 403/404 pages, an unknown clean route, manifest, service-worker script, and offline page. Brave displayed an Install Duno affordance. Compared the raw manifest display with the local UTF-8 file. Attempted to inspect response metadata in DevTools, but this UI automation path did not expose reliable HTTP status/header details. Machine fetches were intercepted by the host's JavaScript challenge.
+
+Suggestions or code retained: No runtime code changed. Updated deployment and acceptance evidence to record the live marker and content-level outcomes, the older r3 tab response, and remaining checks.
+
+Student changes and decisions: The fresh marker request returned `duno-full-release-20261101-r7`; an older tab continued to show r3 after hard refresh. Signed-out Focus redirected to Login without showing topics. Four non-public paths rendered Duno's branded 403 page; static 403/404 pages and an unknown clean route rendered branded fallbacks; the manifest, service worker source, and offline page loaded. `/.env` was not probed. No host data was modified, no test accounts were created, and no files were uploaded by the agent.
+
+How the student verified and can explain the result: Browser-visible response content was reviewed. These observations do not establish HTTP status codes, response headers, complete uploaded-file parity, actual offline navigation, worker activation/cache state, or cross-owner protection. The owner can reproduce the marker check at `/assets/release-version.txt?cache-bust=<new-value>`.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Capture live r7 response status and headers before cross-owner testing
+
+Date / story: 2026-11-01 / hosted response-status and header check
+
+Tool and model: OpenAI Codex with Brave DevTools; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to complete the response status/header check before creating another synthetic student account.
+
+Assistance used: Issued same-origin read-only GET requests from Brave DevTools and recorded only status, final URL, content type, cache policy, and selected security headers. No cookies, credentials, response bodies for account pages, or student data were copied into the record.
+
+Suggestions or code retained: Updated `docs/acceptance-verification-plan.md` and `docs/deployment.md` with response-level results and cache/header gaps. No application code or host data changed.
+
+Student changes and decisions: The mutable release marker returned HTTP 200 and had a 30-day public cache policy. Signed-out Focus returned 302 to login; login returned 200 with no-store and the checked security headers. Four private-path probes returned 403, but those responses were publicly cacheable and lacked the checked frame, content-type, and referrer headers. An unknown route returned 404 with no-store. The 30-day marker caching is consistent with the old tab showing r3 but does not establish causation. Cross-owner testing is still pending and should use two synthetic student accounts.
+
+How the student verified and can explain the result: Brave DevTools displayed the live same-origin request rows; the status and header values were captured from the Console result table. No tests, account creation, upload, or database changes were performed in this step.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Establish the reviewed r7 source baseline and package
+
+Date / story: 2026-11-01 / remaining release review and r7 package provenance
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner agreed to complete the remaining reviews, including feature-test coverage, a reviewed Git baseline, a fresh package, and live checks.
+
+Assistance used: Added assertions for HTTP 403, no-store, and security headers on a role-denial response; ran the focused and full PHPUnit suites; ran PHP/JavaScript syntax checks and package inventory checks; established the release branch and source commit; built the r7 ZIP. An initial ZIP implementation was rejected after inventory found Windows backslash paths, then rebuilt with normalized forward-slash paths. Attempted read-only live checks, but the web fetcher and shell could not reach the host, and the browser automation stopped when it could not confidently determine the current URL.
+
+Suggestions or code retained: Source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` on `release/duno-production-r7` includes the role-denial response header fix and test assertions. The local archive `build/duno-full-release-20261101-r7.zip` contains 1,239 entries, is 5,372,534 bytes, and has SHA-256 `B48283C634F98F9C3820C38AB5F9A035D380E97F28187456CEAE297DE87863C4`. Release records now identify r6 as stale and r7 as the current local candidate.
+
+Student changes and decisions: The owner authorized a local reviewed baseline and fresh package. The r7 package was not uploaded or pushed. Host status, role/private-path denial behavior, response headers/cache, PWA behavior, and host error-page rendering remain unverified. The prior `/.env` observation was not repeated.
+
+How the student verified and can explain the result: Focused PHPUnit passed (1 test, 8 assertions); full PHPUnit passed (103 tests, 1,031 assertions); packaged PHP syntax passed for all 1,036 files. Archive inspection found 1,239 entries, required root/error files, no `.env` or root Composer manifests, and no backslash or traversal paths. Live URL checks failed at tool/network access and provide no HTTP evidence.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Run priority production-readiness checks and prepare local r6 package
+
+Date / story: 2026-11-01 / release verification and S-06 error fallback delivery
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to resume the priority track and finish production-readiness tasks within an estimated 3-4 hours.
+
+Assistance used: Enabled the local PHP CLI SQLite extension, ran the full PHPUnit suite, configured the isolated synthetic MariaDB review service and PHP review router, ran the responsive Playwright suite, updated its assertions for the explicit-goal Duno Guide and branded 403/404 responses, audited locked dependencies after clearing process proxy variables, fixed the role-denial filter to render the branded 403 page, and assembled/inspected a fresh r6 InfinityFree package.
+
+Suggestions or code retained: `ExclusiveRoleFilter` now returns the shared Duno 403 view with HTTP 403 instead of plain text. The E2E suite checks the Guide goal flow and branded 403/404 responses. The current local marker is `duno-full-release-20261101-r6`; the package is `build/duno-full-release-20261101-r6.zip`, with 1,239 entries, 5,372,414 bytes, and SHA-256 `F95CBD32FC661E515384A33EC5DDC912AFF4F118F10F248EAA81AB0C36AE92BC`. It includes the root deny rules and static status pages, has no `.env`, and uses forward-slash archive paths.
+
+Student changes and decisions: The owner asked to return to the live priority track after local fallback implementation. The current task did not include FTP upload, staging, commit, push, or merge. The live vendor-path denial, cross-owner cases, response headers/cache, full PWA install/offline checks, and InfinityFree custom error-page behavior are still outstanding. The owner-directed `/.env` probe remains closed.
+
+How the student verified and can explain the result: Full PHPUnit passed (103 tests, 1,027 assertions); Playwright passed 3/3 against the isolated review database, including local error status/copy; Composer audit found no advisories; PHP syntax passed for 1,036 packaged PHP files; PowerShell parsed the package builder; the ZIP inventory validated `.htaccess`, both static status pages, no `.env`, and zero backslash paths. Live-host verification remains pending. No PHP style tool is configured.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Complete release review and close the role-denial header finding
+
+Date / story: 2026-11-01 / final static release review
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to continue the review and then requested the identified role-denial header issue be fixed.
+
+Assistance used: Reviewed the dirty release worktree, owner-scoped topic and study-plan paths, migrations, route filters, static fallback pages, package builder, release/version records, Guide rendering and owner-scoped dashboard data, PWA allowlists/offline fallback, and changed auth/error views. Found that CodeIgniter short-circuits route processing on a role-filter 403 before global after-filters run. Applied the existing no-store and CodeIgniter SecureHeaders filters directly to that denial response. Confirmed the existing r6 ZIP predates this fix and updated release records to mark it stale.
+
+Suggestions or code retained: Updated `app/Filters/ExclusiveRoleFilter.php`; aligned release-status records in `README.md`, `docs/deployment.md`, `docs/version-control.md`, `docs/acceptance-verification-plan.md`, `docs/ai-agent-workflow.md`, `docs/development-blueprint.md`, `docs/project-overview-and-restart.md`, `docs/DUNO_SRS_TRACEABILITY.md`, and academic-evidence summaries. No migration or database changes were made.
+
+Student changes and decisions: Production config uses MySQLi with an empty DB prefix, so the migration's raw MySQL table names do not block the current InfinityFree target; prefix-enabled MySQL deployments remain unsupported by that raw DDL. Added a feature assertion for the no-store and security headers on a role-denial response. No files were staged, committed, pushed, packaged, or uploaded.
+
+How the student verified and can explain the result: The focused test passed (1 test, 8 assertions) and the full PHPUnit suite passed (103 tests, 1,031 assertions) using XAMPP PHP with `intl` and `sqlite3` extensions enabled and coverage disabled. PHP lint passed for `ExclusiveRoleFilter.php`; `git diff --check` passed with only line-ending conversion warnings. The existing r6 archive SHA-256 remains a valid identity for the stale archive only. The replacement release still needs a reviewed source baseline and fresh package.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Reconcile repository and release version records before upload
+
+Date / story: 2026-11-01 / pre-release Git and provenance audit
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to diagnose and fix version-control and unverified version issues across the project before uploading the release package.
+
+Assistance used: Inspected repository instructions, Git branch/upstream/remote/history/tag state, tracked and untracked worktree state, Composer constraints and lockfile, the r6 package's installed dependency manifest, package marker and SHA-256, and current release/version references in project documentation. Replaced obsolete first-commit/GitHub-setup instructions with the actual connected-repository workflow. Reconciled current branch/release snapshots and corrected r4/r5/r6 status contradictions while retaining dated historical records.
+
+Suggestions or code retained: Updated `docs/version-control.md`, `docs/ai-agent-workflow.md`, `docs/development-blueprint.md`, `docs/project-overview-and-restart.md`, `docs/deployment.md`, `docs/acceptance-verification-plan.md`, `docs/DUNO_SRS_TRACEABILITY.md`, and `README.md`. Runtime code, dependencies, schema, package contents, release marker, and Git history were not changed.
+
+Student changes and decisions: Verified `main` and `origin/main` both point to `310c5e520ed15509582a2f96af434e24e3065b14`, with no commit divergence; no release tags exist. The worktree remains dirty and the r6 archive was built from that commit plus local changes, so the base commit alone does not reproduce it. The r6 ZIP hash is recorded as `F95CBD32FC661E515384A33EC5DDC912AFF4F118F10F248EAA81AB0C36AE92BC`. Composer lock and package manifest both resolve CodeIgniter Framework 4.7.5 and Shield 1.4.1. The owner-reported PHP 8.4.27 host runtime and r5 live marker remain owner reports rather than independently verified facts. No staging, commit, push, merge, upload, or package rebuild was performed.
+
+How the student verified and can explain the result: Compared the local branch and upstream refs, confirmed zero ahead/behind commits, inspected the commit and tag refs, resolved the locked package versions with Composer, parsed the packaged `vendor/composer/installed.json`, and recomputed the r6 ZIP SHA-256. `git diff --check` passed. Searched current documentation for obsolete branch heads, first-commit setup instructions, and r4/r5/r6 status contradictions; remaining older references are labeled as dated historical records. No application tests were run because this change only reconciles documentation and repository provenance.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Implement Duno-branded 403 and 404 fallbacks
+
+Date / story: 2026-11-01 / S-06, S-08, S-09 branded error fallbacks
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner approved implementing the planned fallback pages before returning to the priority-task track.
+
+Assistance used: Added a shared Duno error view with distinct localized 403 and 404 text, keyboard-visible recovery links, and responsive brand styling. Added static host-level 403/404 pages and wired the InfinityFree package builder and `.htaccess` files to copy and serve them while preserving private-path deny rules. Updated the deployment story and acceptance notes.
+
+Suggestions or code retained: Added `app/Views/errors/html/duno_error_page.php` and `error_403.php`, refreshed `error_404.php`, added `public/assets/css/duno-errors.css` and `public/status/{403,404}.html`, added English/Filipino/Taglish strings, and updated `public/.htaccess` plus `scripts/Build-InfinityFreePackage.ps1`. The offline page and service worker were not changed. No migration, new dependency, stage, commit, package build, or upload occurred.
+
+Student changes and decisions: The owner authorized implementation using the documented default: separate 403/404 messages with a shared Duno design and Home/Sign in recovery. Provider-generated 403 pages may remain outside Duno's control; private-path protection stays in place.
+
+How the student verified and can explain the result: PHP lint passed for the three changed error views and all three language catalogs; the package-builder PowerShell script parsed without errors; `git diff --check` reported no whitespace errors. Automated tests and browser/host visual checks were not run; InfinityFree's `ErrorDocument` behavior remains unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Record signed-out access and plan branded error fallbacks
+
+Date / story: 2026-11-01 / S-06, S-08, S-09 host-denial and error-page follow-up
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to save the live path-check result and plan proper fallback pages for the affected URLs.
+
+Assistance used: Recorded the owner's signed-out Focus redirect and Back-button observation, the InfinityFree 403 page shown for `/app/Config/Paths.php`, and the Duno offline page shown for `/.env`. Reviewed the existing service-worker fallback, package denial rules, deployment notes, and acceptance plan, then drafted a bounded branded-error story that preserves server-level denials and separates host 403s from network-offline recovery.
+
+Suggestions or code retained: Updated `docs/deployment.md` and `docs/acceptance-verification-plan.md`; added `docs/error-pages-story.md`. The story proposes separate Duno 403/404 messages for app-rendered errors and a static host 403 document only if InfinityFree supports it. It explicitly keeps the private-path denial rules, treats provider-branded 403 output as host-specific, and does not count the offline fallback as proof of a 403/404. No runtime behavior, package, schema, or product requirements changed.
+
+Student changes and decisions: The owner reports signed-out Focus redirected to login and Back did not reveal topics. The owner reports `/app/Config/Paths.php` displayed the provider 403 page with no source contents, and `/.env` displayed the offline recovery page. Per the existing deployment note, the `/.env` probe is not to be repeated. No files were staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Cross-checked the service-worker fetch fallback and generated `.htaccess` rules against the reported pages. Reviewed the proposed story for non-disclosure and preserving deny rules. No tests or browser checks were run for this documentation-only update.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Make Duno Guide interactive and action-oriented
+
+Date / story: 2026-11-01 / F-10 curated study guidance enhancement
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to make the Guide more interactive and useful for deciding how to approach a selected subject or topic.
+
+Assistance used: Audited the Guide against F-10 and the verified CHED outcome map, then updated the student dashboard, curated method content, owner-scoped subject/topic inputs, interaction script, responsive styling, requirement traceability, acceptance procedure, and this log. The Guide sequences static activities according to the student's explicit goal: understand an idea, remember key points, or practice solving.
+
+Suggestions or code retained: Four curated methods now include concrete steps based on the existing What Works Clearinghouse source. Students can select an owned subject/topic and see the deterministic steps for their chosen session goal. Verified CHED program-outcome associations remain available for supported linked NVSU BSCS/BSIS/BSIT programs and are labeled as Duno's editorial study aid. No AI, adaptive inference, schema change, or content persistence was introduced.
+
+Student changes and decisions: The product owner requested this improvement. No scope was added for AI-generated advice, course-specific outcome mapping, or guarantees of academic results. No files were staged, committed, pushed, merged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax passed for the dashboard controller, curated study content, and dashboard view. JavaScript syntax passed for the Guide interaction module; `git diff --check` passed. Automated and browser tests were not run in this turn. Live r5 has not received this Guide update.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Prepare full r5 package with narrow-screen login repair
+
+Date / story: 2026-10-31 / responsive login repair and release packaging
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to prepare an updated full package and said they would upload it.
+
+Assistance used: Read the repository release instructions and packaging workflow, checked current r4 live status, set the asset release marker to r5, built the full InfinityFree package from the accumulated working tree, checked package contents and PHP syntax, and updated release status in README, development blueprint, deployment, version-control, acceptance, and this log.
+
+Suggestions or code retained: `build/duno-full-release-20261031-r5.zip` contains 1,234 entries (5,365,646 bytes), SHA-256 `EB0F1C9EA0C43FD1AD54E311FF42FAB236CE8911B5E8370971CA51CEE3BFFA61`. The package contains the r5 marker, root `.htaccess`, manifest, service worker, offline page, and narrow-screen login CSS repair; packaged CSS hash matches source. No `.env` is included. PHP syntax passed for 167 packaged PHP files. The three-test local responsive suite passed in the preceding task.
+
+Student changes and decisions: Live site remains r4. Hosted migrations 000001/000002 are already applied; no SQL was run because this release changes styling only. Package is built from a dirty working tree at `310c5e5`, not a clean Git commit. No files were staged, committed, pushed, merged, or uploaded. Composer dependency installation used the locked local dependency tree because Packagist was unreachable; dependency vulnerability audit remains unverified.
+
+How the student verified and can explain the result: The ZIP has a root `.htaccess`, expected marker and PWA files, no `.env`, and includes the CSS repair. PHP lint passed for all 167 packaged PHP files. SHA-256 is recorded above. Upload and post-upload browser acceptance remain the owner upload and acceptance steps.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Prepare and inspect full r4 InfinityFree package
+
+Date / story: 2026-10-31 / approved SRS and PWA release packaging
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to prepare a fresh package containing current approved SRS changes and stated they would upload it.
+
+Assistance used: Reviewed repository and release instructions, confirmed local `main` at `310c5e5` tracks `origin/main`, bumped the public marker to r4, ran the full PHPUnit suite, assembled the InfinityFree root package, and inspected its files and ZIP entries. Updated README, development blueprint, deployment, version-control, acceptance, SRS traceability, PWA story, and this AI-use log.
+
+Suggestions or code retained: `build/duno-full-release-20261031-r4.zip` contains 1,234 entries (5,365,641 bytes), uses forward-slash paths, and has SHA-256 `406B4503E5524A817F8BD0199C3592F333396A11C61DE6077EF8E7A57A580671`. The archive includes root `.htaccess`, r4 release marker, manifest, service worker, offline page, app/assets, and production dependencies. No `.env`, root Composer manifest, project tests/docs, or local tools were found. Root denial rules include `app`, `vendor`, and `writable`; PHP syntax passed for 167 packaged application/front-controller files. Full PHPUnit passed (103 tests, 1,027 assertions). `git diff --check` and PWA static checks passed.
+
+Student changes and decisions: The owner will upload. No SQL was rerun; hosted migrations 000001/000002 were already verified. No files were staged, committed, pushed, merged, or uploaded. The package was built from a dirty worktree, not a clean commit. Composer installation completed from the lockfile while Packagist was unavailable; the Composer vulnerability audit could not complete because its metadata request failed. Live marker remains r3 until the owner uploads the r4 ZIP.
+
+How the student verified and can explain the result: The archive contains a root `.htaccess` and `assets/release-version.txt`; ZIP paths use forward slashes; `.env` is absent. The packaged code passed PHP syntax checks. Composer removed 30 development packages in the package copy. The host `.env` and writable data must be preserved during extraction; no further database migration is needed. Browser PWA and post-upload route/security acceptance remain pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Verify uploaded r4 and repair narrow login layout/test selectors
+
+Date / story: 2026-10-31 / live PWA smoke and responsive acceptance
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner confirmed the release URLs and asked whether Playwright could perform the tiring browser checks.
+
+Assistance used: Ran read-only Playwright checks against the public r4 site for release marker, manifest JSON body, service-worker MIME/registration, homepage layout, and browser errors. Ran the existing responsive E2E suite against the isolated local review database and its synthetic account. The suite exposed a login header overflow at 320/400px and stale selectors for password visibility, accessible radio groups, the mobile Plan agenda, and check-in rating controls. Updated the narrow-screen auth header CSS and test locators; recorded live/local evidence and limitations in the acceptance plan, deployment notes, and traceability matrix.
+
+Suggestions or code retained: `public/assets/css/duno-ui.css` now hides the auth brand tagline at widths up to 26rem so the language control fits. `tests/e2e/responsive.spec.js` now targets the actual accessible controls and responsive Plan layout. The live r4 package predates this CSS repair; it needs a later package update before the fix reaches production.
+
+Student changes and decisions: Only an isolated local synthetic review account/database was used for authenticated checks; the live site received GET-only requests and no forms were submitted. No production records, hosted database, stage, commit, push, merge, or upload were changed.
+
+How the student verified and can explain the result: Live browser-session checks received the r4 marker (200), manifest JSON body (200; no `Content-Type` header), and `sw.js` (200, `application/javascript`); the service worker was active with root scope. The homepage had no horizontal overflow at 390/768/1365px. Local Playwright login CSS checks passed at 320/360/400/768/1280px, and all three existing responsive E2E tests passed against the local isolated database. `git diff --check` passed. PWA installability/offline/cache checks and live authenticated flows remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Tighten the PWA cache allowlist and verify deployment marker
+
+Date / story: 2026-10-31 / approved F-15 PWA privacy and release evidence
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner approved the bounded PWA scope and continued the active SRS verification task by supplying the live release marker.
+
+Assistance used: Reviewed the PWA worker, manifest, offline fallback, layouts, and package builder. Replaced broad caching of every `/assets/` path with an exact set of reviewed shell asset paths plus manifest/favicon/offline page. Updated the PWA story, SRS traceability, deployment, acceptance, and AI-use records.
+
+Suggestions or code retained: JavaScript syntax checks passed for `public/sw.js` and `public/assets/js/pwa.js`; manifest JSON, relative scope, and maskable icon were validated; all 10 precache files exist. The owner confirmed the hosted release marker text matches local `duno-full-release-20261029-r3`. This is marker-string evidence, not file-level or source-commit parity. Browser install/offline/cache, package-output, and host behavior checks remain unrun.
+
+Student changes and decisions: No database changes, packaging, upload, stage, commit, or push were performed. Existing unrelated working-tree edits were preserved.
+
+How the student verified and can explain the result: The service worker now checks exact allowlisted URL pathnames while permitting version query strings for those known files. It continues to send navigations to the network and uses the cached offline recovery page on fetch failure. The static checks do not simulate a browser or prove live host behavior.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Verify SRS priority, plan, StudyGuide, and ownership changes
+
+Date / story: 2026-10-31 / focused local acceptance checks after hosted SRS migrations
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to proceed with the next SRS alignment work after confirming the hosted database migrations.
+
+Assistance used: Ran focused PHPUnit coverage for topic priority, topic CRUD/ownership, plan generation/ownership, saved study-session references, and curated StudyGuide outcome mapping. Fixed migration 000002's ownership preflight to apply the configured database table prefix, and corrected synthetic feature-test fixtures to populate the newly required `user_id` values.
+
+Suggestions or code retained: `TopicPriorityServiceTest`, `StudentTopicsTest`, `StudentPlansTest`, `StudentStudySessionsTest`, and `StudySuggestionsTest` passed together (32 tests, 384 assertions). PHP syntax checks for migration 000002 and `TopicPriorityService` passed; `git diff --check` passed. No production database or hosted application was modified. The local release marker is `duno-full-release-20261029-r3`; the owner independently opened the hosted marker and reported the same string. This confirms marker text only, not uploaded-file parity or source commit identity. The browser-tool request itself redirected to an InfinityFree-generated 403.
+
+Student changes and decisions: Existing unrelated working-tree changes were preserved. No stage, commit, push, merge, package build, or upload was performed.
+
+How the student verified and can explain the result: Ran PHPUnit with the local PHP 8.2.12 executable and the `intl` and SQLite extensions enabled. The migration-prefix issue initially caused test setup errors; fixture ownership omissions in topic, plan, and session tests were then corrected. After those repairs, all focused checks passed. The owner checked the public marker URL in their browser and supplied its text. These results establish local test behavior and marker-string agreement only; browser/device feature checks and cross-owner live acceptance remain pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Record hosted SRS schema migrations 000001 and 000002
+
+Date / story: 2026-10-31 / hosted database parity for difficulty-aware Focus/Plan and owner-scoped plan/topic references
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner requested focus on approved SRS priorities and manually applied the prepared phpMyAdmin migration procedure, sharing each result for verification.
+
+Assistance used: Guided the owner through preflight, ordered schema updates, owner-ID backfill, zero-row consistency checks, composite index/foreign-key installation, old-constraint removal, and ledger recording. Updated deployment, SRS traceability, acceptance-plan, and paper evidence to reflect the owner-provided SQL outputs.
+
+Suggestions or code retained: Migration 000001 added `topics.difficulty VARCHAR(8) NOT NULL DEFAULT 'medium'` and was recorded as row 17/batch 12. Migration 000002 added/backfilled non-null `user_id` columns on `topics` and `study_plan_items` (3 topics and 1 plan item updated), installed three composite owner-aware foreign keys with the expected delete/update rules, and was recorded as row 18/batch 13. All three ownership preflight queries returned zero rows. No application code or schema was changed by the agent.
+
+Student changes and decisions: The owner executed the SQL through phpMyAdmin. No stage, commit, push, merge, package build, or upload was performed. The owner reports the live pages are available; the deployed revision and route-specific runtime acceptance are not identified.
+
+How the student verified and can explain the result: Reviewed the shared phpMyAdmin outputs: ledger rows 17/12 and 18/13, nullable/default topic difficulty, added owner columns before constraint installation, three FK definitions and exact rules, and empty results for all three owner-consistency checks. The agent did not independently query the hosted database.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Refresh SRS and paper evidence after hosted pages became available
+
+Date / story: 2026-10-31 / SRS priority and live availability evidence
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner reported that the live pages now load and asked to prioritize remaining work from the approved SRS.
+
+Assistance used: Updated the SRS traceability, acceptance plan, deployment notes, system-design paper pack, and system-analysis evidence report to supersede the earlier provider-403 status with the owner's availability report. Distinguished a general page-availability report from route-specific functional/security acceptance and from schema/release verification.
+
+Suggestions or code retained: No application code, schema, or requirements changed. The next release gate remains confirmation of hosted migration parity for `2026-10-30-000001` and `2026-10-30-000002`, followed by acceptance evidence against a named deployed revision. The last phpMyAdmin ledger evidence in the repository is through `2026-10-29-000005`, batch 11; later migrations were confirmed only in the isolated local review database.
+
+Student changes and decisions: The owner says all pages were checked and asks to defer the remaining unexpected page scenarios until later. No tests, live requests, migrations, package build, stage, commit, push, merge, or upload were performed.
+
+How the student verified and can explain the result: Cross-referenced the approved requirements, migration procedure, latest recorded hosted ledger, and paper artifacts. Checked the edited documents for stale statements that the site still returns a provider-generated 403. No new feature acceptance result is claimed.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Audit requirements and prepare the system-design paper packet
+
+Date / story: 2026-10-29 / requirements coverage, schema, architecture, and wireframe audit for the project paper
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to compare the main features with approved requirements and prepare schema/database design, wireframes, and architecture material for the paper.
+
+Assistance used: Reviewed approved requirements and story records, routes, filters, controllers, services, models, migrations, deployment notes, and Git state. Prepared a requirements/security traceability matrix, logical architecture view, ER diagram/table dictionary, and low-fidelity wireframe sketches. Corrected stale title/decision wording in the requirements baseline.
+
+Suggestions or code retained: Added [`system-design-paper-pack.md`](system-design-paper-pack.md) and updated [`requirements.md`](requirements.md). The packet records which claims are source-backed and which live/visual checks are currently unavailable. No schema or runtime behavior was changed.
+
+Student changes and decisions: The paper packet is an implementation-grounded draft. It identifies application-enforced owner scoping (not database-native RLS), code-defined course catalogues, student-managed check-in retention, and the current InfinityFree 403 as material design/status facts. The owner remains responsible for matching the final paper to the instructor's required format and for collecting final presentation screenshots.
+
+How the student verified and can explain the result: Cross-checked the packet against current source and documentation; `git diff --check` passed. No automated tests or fresh browser checks were run. `.git` is read-only in this environment, so no branch, stage, commit, push, merge, package, or upload occurred.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Incorporate proposal objectives into the SRS alignment draft
+
+Date / story: 2026-10-30 / proposal-objective alignment
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied the proposal's general and three specific objectives after asking what was needed to commence SRS alignment.
+Assistance used: Reproduced the supplied objectives in `docs/DUNO_SRS_ALIGNMENT_DRAFT.md`, mapped each objective to repository evidence, updated the traceability report and system-design packet, and checked ISO/IEC 25010 publication details against the official ISO catalogue. Identified that task difficulty is absent from the topic model/priority inputs and that static StudyGuide suggestions are not tied to course/program learning outcomes. Asked the owner to decide how these two gaps should be treated.
+Suggestions or code retained: Documentation-only edits. No topic difficulty schema/priority change, learning-outcome mapping, reminder/offline feature, test, or deployment change was made while scope/behavior remains undecided.
+Student changes and decisions: The owner identified the text as the proposal objectives. The original proposal file and formal approval provenance were not supplied; the draft records that limitation. Existing unrelated worktree changes were preserved; no staging, commit, push, merge, package, or upload occurred.
+How the student verified and can explain the result: Compared objective claims against `TopicModel`, `TopicPriorityService`, `StudySuggestions`, F-06/F-07/F-10, and their story documents. Confirmed from the official ISO catalogue that ISO/IEC 25010:2023 is published as the second product-quality-model edition and describes nine characteristics. Checked local document links and whitespace after the edits. No application tests were run because no code changed.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Prepare an SRS alignment working draft from approved requirements
+
+Date / story: 2026-10-30 / paper SRS alignment
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to begin aligning the project to prepare the SRS report, with the earlier instruction not to treat survey preferences or unresolved requirements as approval.
+Assistance used: Created `docs/DUNO_SRS_ALIGNMENT_DRAFT.md` using the approved F-01–F-14 and S-01–S-10 repository baseline, current architecture/schema notes, and the SRS traceability review. Preserved objective/source gaps as placeholders and kept reminder/offline ideas explicitly unapproved.
+Suggestions or code retained: The document is an SRS-style working draft with product scope, actors, requirement status summaries, security, quality decisions, interfaces/data, survey limits, traceability, and approval actions. No application code, database schema, migration, or feature behavior changed.
+Student changes and decisions: The owner requested that alignment work begin. The attached draft and approved requirements file remain unchanged; existing unrelated working-tree changes were preserved. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+How the student verified and can explain the result: Compared the draft against `requirements.md`, `DUNO_SRS_TRACEABILITY.md`, and `system-design-paper-pack.md`; checked linked repository paths and Markdown structure. No application tests were run because this change only adds paper documentation.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Align the system-design packet with the SRS traceability review
+
+Date / story: 2026-10-30 / paper requirements alignment
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked to begin aligning the project for the SRS report, with the prior instruction to preserve approved scope and distinguish candidate requirements from survey evidence.
+Assistance used: Corrected the system-design packet's assertion that all F-01–F-14 are simply implemented. Added explicit per-requirement implementation statuses and a link to the complete SRS FR/NFR traceability review. Clarified that F-14 is approved scope missing a dedicated FR in the attached draft, while reminders/offline access remain unapproved.
+Suggestions or code retained: Documentation-only edits to `docs/system-design-paper-pack.md` and this log. No application behavior, database schema, migration, deployment, or requirement scope was changed.
+Student changes and decisions: Kept the existing owner-approved requirements baseline as the authority while the attached SRS remains a draft. Existing unrelated working-tree changes were preserved; nothing was staged, committed, pushed, merged, packaged, or uploaded.
+How the student verified and can explain the result: Read the current paper packet and traceability matrix; checked the updated functional coverage table for consistent column count and status wording. No tests or browser checks were run because only paper documentation changed. Documentation links and whitespace are being checked before handoff.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### Project pause restart inventory
 
 Date / story: 2026-10-25 / overview the project and initialize the restart task board
@@ -1522,4 +2465,561 @@ Assistance used: Inspected the generated hosting root `.htaccess` and current In
 Suggestions or code retained: Updated `.htaccess`, `scripts/Build-InfinityFreePackage.ps1`, and deployment notes. The hosted database migration is unrelated and must not be rerun.
 Student changes and decisions: The owner reported the r3 ZIP was uploaded. A replacement root `.htaccess` is the minimal recovery action; upload remains the owner's action.
 How the student verified and can explain the result: Confirmed the host-sensitive directives were present in the generated package. Source and package-generator review confirms these directive groups are no longer emitted; reload the site after replacing the live root `.htaccess` to confirm recovery.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Fix namespaced route-marker reference in the front controller
+
+Date / story: 2026-10-29 / restore local and packaged CI4 front-controller boot
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner was unsure how to proceed after the hosted 403 troubleshooting; the agent checked whether the existing local review setup could provide a demo fallback and reported the concrete PHP fatal before correcting it.
+Assistance used: Started the isolated synthetic review MariaDB database, enabled XAMPP's existing `php_intl.dll` only for the local server process, and used the local login request to expose `Class "InfinityFreeRouteMarker" not found`. Added the missing `App\Services\InfinityFreeRouteMarker` import in `public/index.php` and recorded the finding in deployment notes.
+Suggestions or code retained: Corrected the front controller; the existing package builder rewrites only the helper include path and therefore packages this corrected import. No host credentials, user records, schema changes, dependencies, or hosted files were changed.
+Student changes and decisions: The owner is considering a new InfinityFree account; the agent recommended against migrating before testing because all free accounts use the same mandatory browser check. The isolated local review DB was advanced through the repository's current migrations so it can support a local demonstration. Its data is synthetic. The original shared XAMPP database and existing hosted database were left untouched.
+How the student verified and can explain the result: PHP lint and local `/login` HTTP verification are recorded in the session handoff. Automated tests were not run. The branch could not be created because `.git` is read-only in the current sandbox; no staging, commit, push, packaging, or upload occurred. The InfinityFree-generated 403 remains outside this code correction and was not independently resolved.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Map draft SRS requirements to approved scope and repository evidence
+
+Date / story: 2026-10-29 / SRS traceability review for paper artifacts
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner asked for a repository inspection, requirement traceability matrix, conflict/source review, and an ordered gap-filling plan; code changes were limited to explicitly approved scope.
+Assistance used: Compared the supplied Markdown and DOCX SRS with the owner-approved repository requirements, story decisions, source code, tests, migration records, and existing technical evidence report. Added `docs/DUNO_SRS_TRACEABILITY.md` with implementation/approval distinctions, limitations, omissions, and a sequenced plan. No application code or schema was changed because the identified gaps are candidate requirements, evidence gaps, or deployment checks rather than an unambiguous approved defect.
+Suggestions or code retained: Retained the traceability report and this summary. Survey preferences for reminders/offline access remain evidence only; neither feature was implemented.
+Student changes and decisions: The owner supplied the SRS files and instructed that unresolved scope must not be implemented without approval. Existing uncommitted files were preserved; no staging, commit, push, merge, package, or upload occurred.
+How the student verified and can explain the result: Read-only inspection of repository revision `310c5e5` and the current working tree; inspected DOCX OOXML for tracked changes/comments; mapped requirements to source and existing tests. No tests, lint, dependency audit, live browser, database, or host checks were run. The report labels these as not run and distinguishes repository evidence from production acceptance.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Implement approved proposal-alignment changes
+
+Date / story: 2026-10-30 / topic difficulty and verified StudyGuide outcome mapping
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner supplied proposal objectives, explicitly approved adding topic difficulty to Focus/Plan and mapping Guide content to course/program learning outcomes, then selected verified outcome sources only.
+Assistance used: Added the topic difficulty field/migration, default and validation, Focus score contribution and explanation, Plan ordering integration, Guide subject selector scoped to the signed-in owner's supported NVSU computing subjects, and outcome display. Verified outcome mapping uses CHED CMO No. 25, s. 2015 program outcomes; it is not represented as a course-level or CHED-prescribed study-method mapping. Updated the requirements, stories, deployment note, SRS traceability, system analysis evidence, and paper-design packet.
+Suggestions or code retained: Added Low/Medium/High topic difficulty (1/2/3 priority points; Medium default) and outcome display for verified NVSU-linked BSCS/BSIS/BSIT program families. Other programs remain unmapped. No reminder, offline, or AI feature was added.
+Student changes and decisions: The implementation remains in the worktree. The host migration is not applied, and no branch, stage, commit, push, merge, package, or upload occurred. Existing unrelated edits were preserved.
+How the student verified and can explain the result: Focused PHPUnit passed (31 tests, 355 assertions); PHP syntax checks passed for changed PHP files; `git diff --check` passed. PHPUnit reported no code coverage driver. Live browser/host behavior, dependency audit, and hosted schema remain unverified.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Align the SRS to the approved repository baseline and supplied evidence
+
+Date / story: 2026-10-30 / align SRS v1.0, proposal, survey analysis, and `requirements.md`
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner instructed that the supplied SRS must align with `requirements.md`, provided the proposal and survey-results documents, confirmed the evaluation remains pending, and requested a standard SRS structure because no institutional template is required.
+Assistance used: Read `Duno App SysFun Proposal.docx`, `Duno App SRS survey results.docx`, `DUNO_SRS_v1.0.docx`, and the repository requirements. Updated the SRS alignment document with the proposal objectives, reported survey results and limitations, evaluation-pending status, and an explicit conflict/disposition table. Kept `requirements.md` normative; survey preferences do not authorize scope changes. Updated related traceability/system-design notes.
+Suggestions or code retained: The aligned SRS records unapproved/deferred PWA/offline and reminder scope; missing task estimated duration and session notes; general rather than topic-specific study guidance; workload/energy-only check-ins; and aggregate-only administration. No runtime code, schema, survey values, or evaluation results were changed.
+Student changes and decisions: The proposal and survey DOCX files remain source documents; the repository deliverable is Markdown at `docs/DUNO_SRS_ALIGNMENT_DRAFT.md`, version 1.1 working copy. Formal adviser/stakeholder approval and proposal sign-off date are not recorded. No stage, commit, push, upload, or database migration occurred.
+How the student verified and can explain the result: Manually compared proposal text and survey tables with the approved requirements and implementation stories. `git diff --check` was run after documentation edits. No new application tests, raw survey recalculation, evaluation, or browser checks were performed for this documentation-only alignment.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Implement the owner-approved bounded PWA
+
+Date / story: 2026-10-30 / F-15 installable Duno PWA
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+Allowed use confirmed by: The owner stated that the PWA should be implemented before next week and approved implementation decisions for its other aspects.
+Assistance used: Added a relative-scope web app manifest and app icons; a service worker that only caches selected same-origin public assets, never caches HTML navigations, and shows an offline recovery page after navigation failure; localized connection status and a supported-browser install prompt; PWA links/scripts across public, auth, student, and admin layouts; and package-builder copying/required-file checks. Updated requirements, architecture, deployment, SRS alignment, traceability, and story documentation to distinguish approved static fallback from excluded offline records, queued writes, sync, and reminders.
+Suggestions or code retained: All listed source/documentation changes are in the working tree. No schema migration, background worker, native app, offline data store, or queued mutation was added.
+Student changes and decisions: F-15 approved by the owner on 2026-10-30. No stage, commit, push, merge, or upload occurred.
+How the student verified and can explain the result: Confirmed every service-worker precache path exists and inspected the allowlist/route behavior manually. Syntax, manifest parsing, package output, feature checks, browser install/offline behavior, and InfinityFree behavior are pending or not run; do not claim installability is live until the secure-host browser check passes.
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Complete the SRS-aligned system-design packet
+
+Date / story: 2026-10-30 / architecture, ERD, wireframes, and SRS traceability consistency
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to continue the work needed after aligning the project to the new SRS. Repository guidance requires material AI assistance to be recorded.
+
+Assistance used: Reconciled the implementation-grounded paper packet with approved F-01 through F-15, including the bounded PWA and topic-difficulty migration. Replaced corrupted architecture and wireframe text with clean, source-consistent diagrams and sketches; clarified that the PWA caches public static assets only; recorded host verification and hosted migration gaps. Corrected stale F-14 and offline-deferred statements in the SRS traceability review.
+
+Suggestions or code retained: Documentation-only updates to system-design-paper-pack.md, DUNO_SRS_TRACEABILITY.md, and this log. No application code, schema, migration, release, or requirement scope changed.
+
+Student changes and decisions: Kept the repository requirements baseline authoritative, retained the SRS as an aligned working draft pending formal stakeholder/adviser approval, and preserved existing unrelated worktree edits. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Cross-checked the packet feature status and architecture against requirements, migrations, PWA files, and existing traceability. Checked relative Markdown links, fenced blocks, and trailing whitespace in the updated paper documents. No tests, browser, database, host, or package checks were run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Audit HTML output escaping and remove a JavaScript HTML sink
+
+Date / story: 2026-10-30 / output-escaping and DOM-sink review
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to begin the necessary follow-up work after asking whether Duno uses input escaping like htmlspecialchars().
+
+Assistance used: Reviewed PHP view output, CodeIgniter's `esc()` helper, form validation examples, notification rendering, and browser-side DOM updates. Confirmed user-controlled values in reviewed views use HTML escaping and notifications use `textContent`. Escaped static translated strings in the custom 400, 404, and production error views; changed the password visibility control to create its fixed SVG through DOM APIs instead of assigning `innerHTML`.
+
+Suggestions or code retained: Updated `app/Views/errors/html/error_400.php`, `app/Views/errors/html/error_404.php`, `app/Views/errors/html/production.php`, and `public/assets/js/auth-password-visibility.js`. No schema, requirements, or deployment changes were made.
+
+Student changes and decisions: This is defense-in-depth output handling; it does not change input validation rules. Existing unrelated edits remain untouched. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the changed templates and DOM creation logic; confirmed the password-toggle script no longer uses HTML-string DOM sinks. No PHPUnit or browser tests were run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Strengthen owner-scoped reads for saved plan items
+
+Date / story: 2026-10-30 / F-07 and S-02 plan-item ownership review
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to proceed with the remaining work based on the approved requirements and SRS alignment.
+
+Assistance used: Reviewed daily-plan write/read paths after the traceability report identified that the database schema lacks a composite plan-owner/topic-owner constraint. Confirmed write operations already verify topic ownership. Tightened the shared owner-scoped plan-item read query so it excludes a linked topic and its saved snapshot if the topic's parent subject does not belong to the plan owner. Updated the traceability and system-design documents to retain the database-level constraint as an explicit follow-up.
+
+Suggestions or code retained: Changed `app/Models/StudyPlanItemModel.php` and updated `docs/DUNO_SRS_TRACEABILITY.md` and `docs/system-design-paper-pack.md`. No schema migration was added because the existing snapshot-preserving topic deletion behavior and deployed migration state require a separately reviewed forward migration.
+
+Student changes and decisions: The approved owner-scoping behavior is unchanged; this is a defensive read filter. Existing unrelated worktree changes remain untouched. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the query and related write paths; PHP syntax and whitespace checks are recorded below in the task handoff. No PHPUnit or browser tests were run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add database owner constraints for topics and saved study-plan items
+
+Date / story: 2026-10-30 / approved F-07 and S-02 integrity follow-up
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to proceed with remaining approved requirements work and accepted this integrity follow-up in the task sequence.
+
+Assistance used: Added a forward migration that backfills topic and plan-item owner IDs from authoritative parents, checks for inconsistent references, and adds composite MariaDB foreign keys binding topics to subject owners and plan items to both plan and topic owners. Made the migration tolerate already-completed DDL pieces after an interrupted run. Updated plan-item reads and writes to scope by owner. Topic deletion clears only the live plan topic reference, preserving its stored title/subject snapshot. Prepared an ordered phpMyAdmin upgrade script and updated deployment, traceability, and system-design notes.
+
+Suggestions or code retained: Added `app/Database/Migrations/2026-10-30-000002_EnforceStudyPlanOwnership.php` and `docs/2026-10-30-plan-topic-owner-upgrade.sql`; updated `StudyPlanModel`, `StudyPlanItemModel`, `TopicModel`, and related paper/deployment records. Migration 000001 (topic difficulty) must be applied and verified first. Host SQL is not part of the public application package.
+
+Student changes and decisions: Existing uncommitted changes were preserved. The owner must apply and verify the hosted migrations before uploading application code that reads the new owner columns. No database, stage, commit, push, merge, package, or upload action was performed.
+
+How the student verified and can explain the result: Reviewed the migration order, parent/child key definitions, data backfill and preflight checks, saved-plan snapshot behavior, and each plan-item access path. PHP syntax and whitespace checks are recorded in the task handoff. Automated tests, local migration execution, and hosted database behavior were not run or verified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Prepare approved-requirement acceptance procedures for the project paper
+
+Date / story: 2026-10-31 / SRS traceability and release-evidence plan
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to continue the implementation and paper tasks aligned with the approved requirements and SRS.
+
+Assistance used: Consolidated F-01 through F-15 and S-01 through S-10 into manual scenarios with preconditions, actions, expected results, evidence guidance, and initial Not run statuses. Added release-evidence and pending ISO/IEC 25010 protocol gates, and linked the plan from the SRS and system-design packet. Preserved the distinction between source evidence, historical checks, current host access, and evaluation results.
+
+Suggestions or code retained: Added `docs/acceptance-verification-plan.md` and linked it from `docs/DUNO_SRS_ALIGNMENT_DRAFT.md`, `docs/DUNO_SRS_TRACEABILITY.md`, and `docs/system-design-paper-pack.md`. No application behavior, schema, requirements scope, automated tests, or database state changed.
+
+Student changes and decisions: Existing mixed worktree changes were preserved. No tests were run; all new cases are procedures only and are explicitly marked Not run. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Cross-referenced each procedure with approved requirement wording and stories, checked the document links and status language, and ran `git diff --check`. The host remains reported as provider-403 and ISO/IEC 25010 evaluation remains pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Apply and verify the owner-scope migrations in the isolated review database
+
+Date / story: 2026-10-31 / local schema verification for F-04, F-07, and S-02
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner said to proceed with the migration step after the acceptance-plan work. The configured isolated local review DB is documented for synthetic-data schema and browser review.
+
+Assistance used: Inspected the configured database target without printing credentials, confirmed it was `127.0.0.1:3308` / `talas_review`, reviewed the pending migration ledger, and applied only migrations `2026-10-30-000001_AddTopicDifficulty` and `2026-10-30-000002_EnforceStudyPlanOwnership` to that isolated local review database. Verified both ledger entries in batch 7, both owner columns, all three composite foreign-key definitions and delete/update rules, and zero rows from each ownership preflight query.
+
+Suggestions or code retained: No additional runtime code or schema was changed in this step. Updated `docs/deployment.md` and `docs/DUNO_SRS_TRACEABILITY.md` to record local verification separately from hosted status.
+
+Student changes and decisions: The local review DB contains synthetic data and is separate from the damaged shared XAMPP instance and InfinityFree. No hosted database, shared XAMPP data, stage, commit, push, merge, package, or upload was touched. The hosted migrations must still be applied and verified before uploading app code that requires the new columns.
+
+How the student verified and can explain the result: `spark migrate:status --all` reports difficulty and owner-scope migrations in batch 7; `spark db:table` shows the two new owner columns and their populated sample rows. A read-only local MariaDB metadata query shows composite topic/subject and plan-item/plan/topic constraints with `RESTRICT/CASCADE`, `CASCADE/CASCADE`, and `RESTRICT/RESTRICT` rules respectively; all three owner consistency counts are zero. Automated tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Require list selection only when the account program has a sourced NVSU list
+
+Date / story: 2026-11-01 / F-01 academic-program onboarding and F-03 subject CRUD clarification
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner clarified that students may type a subject only when their selected program has no NVSU subject list.
+
+Assistance used: Updated subject create/edit validation and copy so mapped programs require a course from their own NVSU list, while programs without a sourced list accept a trimmed typed subject name. Scoped subject list/search to the account curriculum and legacy unassigned rows; left subjects tied to other curricula out of that account view. Kept the subject curriculum reference separate from the one-time account program. Updated stale import expectations and the requirements/story/README notes.
+
+Suggestions or code retained: Updated `app/Controllers/Student/Subjects.php`, `app/Models/SubjectModel.php`, `app/Services/NvsuCurriculumImportService.php`, the three student subject views, `tests/feature/StudentSubjectsTest.php`, `docs/academic-program-onboarding-story.md`, `docs/requirements.md`, and `README.md`. No schema migration or database change was added for this clarification.
+
+Student changes and decisions: Existing worktree edits were preserved. No files were staged, committed, pushed, merged, packaged, or uploaded. The hosted migration and browser behavior remain pending.
+
+How the student verified and can explain the result: The student can explain that the selected account program controls which subject-entry path appears: choose from its sourced list when available, otherwise type the name. The full PHPUnit suite passed 107 tests and 1,087 assertions; PHP lint passed for the changed PHP files, and `git diff --check` found no whitespace errors. PHPUnit reported no code-coverage driver. CUA could not attach to a browser, so the rendered view still needs visual review.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add a subject and topic overview to the student homepage
+
+Date / story: 2026-11-01 / F-04 topic workflow discoverability
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to continue implementing nonconflicting items from the supplied UI/UX and feature brief before staging.
+
+Assistance used: Reviewed existing dashboard links and the owner-scoped subject/topic routes. Added a short current-program subject list with topic counts, two topic-title previews per subject, and direct links into subject/topic management. The dashboard shows at most four subjects and keeps create/edit/delete forms in their owner-checked pages.
+
+Suggestions or code retained: Updated `app/Controllers/Student/Dashboard.php`, `app/Views/student/dashboard.php`, `public/assets/css/duno-ui.css`, `tests/feature/StudentDashboardTest.php`, and `docs/ui-ux-feature-privacy-audit-2026-11-01.md`. No route or schema changes were made.
+
+Student changes and decisions: No files were staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: The full PHPUnit suite passed 108 tests and 1,105 assertions, including current-program scoping, private-record exclusion, topic counts/previews, and Subjects/Topics destinations. PHP lint passed for the changed PHP files and `git diff --check` found no whitespace errors; PHPUnit reported no code-coverage driver. The rendered dashboard has not had browser review in this session.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Map admin analytics to stored data before expanding the dashboard
+
+Date / story: 2026-11-01 / UI/UX and privacy audit, admin analytics review
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner requested continuing with additional changes from the supplied UI/UX, analytics, and privacy brief before staging.
+
+Assistance used: Inspected the five-card admin summary and the existing users, study-plan, study-session, and daily-visit schemas. Documented metrics supported by stored records and distinguished them from usage, error, and plan-adherence measures that need instrumentation or are not represented in the current schema. Recorded privacy limits for cohort and date filters.
+
+Suggestions or code retained: Updated `docs/ui-ux-feature-privacy-audit-2026-11-01.md`. No admin runtime, database, or configuration change was made.
+
+Student changes and decisions: This was the discovery pass. The owner subsequently approved expanding F-12, and the implementation is recorded below. No files were staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Cross-checked each candidate against the admin summary service and the migrations defining plans, plan items, sessions, daily visits, and account onboarding. The document distinguishes stored facts from unavailable event measures; no new runtime behavior was introduced.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add privacy-bounded admin metrics and charts
+
+Date / story: 2026-11-01 / F-12 aggregate admin analytics expansion
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner explicitly requested these metrics and modern, sleek charts on 2026-11-01.
+
+Assistance used: Expanded the admin summary with saved-plan count, average saved-session length, 30-day recorded student visit-days, academic-program selection completion, eight complete weekly visit bins, and six monthly registration bins. Added responsive inline SVG bar charts with accessible descriptions and expandable table equivalents, and refined the layout with the existing CSS system. Added a five-student privacy threshold for trend bins and required at least five accounts in both program-selection groups. No new tracking, chart dependency, schema, or instrumentation was added.
+
+Suggestions or code retained: Updated `app/Services/AdminDashboardSummaryService.php`, `app/Views/admin/dashboard.php`, `app/Views/admin/partials/bar_chart.php`, `public/assets/css/duno-ui.css`, `tests/feature/AdminDashboardTest.php`, F-12 requirements/story/traceability, and the UI/privacy audit. Onboarding completion remains unavailable until the program-selection migration is applied. The stored data cannot establish plan completion/adherence, page views, feature adoption, or application error rates.
+
+Student changes and decisions: No files were staged, committed, pushed, merged, packaged, or uploaded. The local implementation has not been deployed.
+
+How the student verified and can explain the result: Focused admin feature tests passed (4 tests, 52 assertions) and the full PHPUnit suite passed (109 tests, 1,121 assertions) using SQLite with coverage disabled because no driver is installed. PHP syntax checks passed for the changed service, view, partial, and test; `git diff --check` passed with Git reporting only LF-to-CRLF conversion notices. The browser access host was unavailable, so rendered chart appearance was not reviewed. Hosted schema/runtime checks remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Refine the About page contact and social links
+
+Date / story: 2026-11-01 / About page contact section layout
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a screenshot and requested a more considered contact-section design.
+
+Assistance used: Replaced the plain stacked contact list with a two-column email/problem layout and a separate full-width social-profile row. Clarified the section heading, reduced the report text, separated and styled the LinkedIn/Facebook actions, and kept the visible email label and configured mail destination unchanged.
+
+Suggestions or code retained: Updated `app/Views/about.php`, `public/assets/css/duno-ui.css`, and `tests/feature/AboutPageTest.php`.
+
+Student changes and decisions: No files were staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Focused About page tests passed (1 test, 18 assertions); PHP syntax passed and `git diff --check` found no whitespace errors. Browser rendering remains unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Add About navigation and self-service account deletion
+
+Date / story: 2026-11-01 / F-16 account deletion and compact navigation
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner requested adding About to the compact menu and account deletion to Profile.
+
+Assistance used: Added the About link to the student More menu. Added a Profile deletion form that requires the current password and exact `DELETE` confirmation, removes dependent student records and the Shield account inside a database transaction, and signs the student out after success. Refined the deletion panel hierarchy, warning treatment, input alignment, and destructive action styling. Updated Terms and Privacy copy to describe in-app deletion without promising provider backup expiry.
+
+Suggestions or code retained: Updated `app/Config/Routes.php`, `app/Controllers/Student/Profile.php`, `app/Controllers/Legal.php`, `app/Views/student/subjects/layout.php`, `app/Views/student/profile.php`, the English/Filipino/Taglish app language files, `public/assets/css/duno-ui.css`, `docs/requirements.md`, `docs/DUNO_SRS_TRACEABILITY.md`, and `docs/ui-ux-feature-privacy-audit-2026-11-01.md`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks passed for the changed PHP files, `php spark routes` with the local `intl` extension confirmed About and the protected Profile deletion route, and `git diff --check` found no whitespace errors (Git reported only LF-to-CRLF conversion notices for two documentation files). The latest CSS-only visual refinement was checked with `git diff --check`; browser review and automated tests were not run. The account deletion route uses the existing student authentication and CSRF-protected POST form.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Shorten Guide copy and polish the shared footer
+
+Date / story: 2026-11-01 / Guide panel and footer refinement
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to reduce excess text, center the footer logo if appropriate, and add a 2026 rights-reserved notice.
+
+Assistance used: Condensed Guide instructions and live status messages, shortened the source note while retaining both citations and the editorial-connection clarification, centered the footer wordmark at mobile widths, and added a localized copyright notice.
+
+Suggestions or code retained: Updated `app/Views/student/dashboard.php`, `public/assets/js/study-guide-outcomes.js`, `app/Views/partials/app_footer.php`, the English/Filipino/Taglish app language files, and `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP/JavaScript syntax checks and `git diff --check` passed. Browser rendering was not reviewed in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Align the Plan add-block fields
+
+Date / story: 2026-11-01 / mobile Plan add-block sheet alignment
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a mobile screenshot and requested correction of awkward, asymmetrical field alignment.
+
+Assistance used: Made the available-time fieldset fill the sheet width, matched labels and control heights, removed the cramped time-format badge, and moved the time example beneath both paired fields so the helper row aligns evenly.
+
+Suggestions or code retained: Updated `app/Views/student/plans/show.php` and `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax and `git diff --check` passed. Automated tests and browser review were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Separate the dashboard tour shortcut from the mascot
+
+Date / story: 2026-11-01 / mobile dashboard hero spacing
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared a phone screenshot and pointed out that the app-tour shortcut was crowded against the mascot.
+
+Assistance used: Added more vertical space between hero copy and mascot artwork on narrow screens, reduced and right-aligned the mascot, and moved the decorative label to the opposite side.
+
+Suggestions or code retained: Updated the mobile hero rules in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Browser rendering was not reviewed in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Enlarge the dashboard mascot and refine information pages
+
+Date / story: 2026-11-01 / dashboard hero, footer, About and legal page polish
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner requested a two-times larger dashboard mascot, completion of the footer group, and UI improvements to About/help, Terms, Privacy, and Cookies.
+
+Assistance used: Doubled the dashboard mascot sizing at desktop and mobile breakpoints while keeping the phone hero composition separated. Completed the four-column footer with an Account group for Profile and the app tour. Added shared, active-state navigation across About and the three legal pages; converted legal text sections into numbered editorial rows and refined the preliminary notice surface.
+
+Suggestions or code retained: Updated `public/assets/css/duno-ui.css`, `app/Views/student/subjects/layout.php`, `app/Views/about.php`, and `app/Views/legal/page.php`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks passed for the changed views and `git diff --check` found no whitespace errors. Automated tests and browser rendering were not checked in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Restore tablet dashboard and footer layouts
+
+Date / story: 2026-11-01 / tablet responsive layout correction
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner shared iPad/desktop-width screenshots showing the progression card and footer compressing after mobile styling changes.
+
+Assistance used: Corrected the tablet progression card into a full-width overview with two balanced detail columns, restored the phone layout to one column, and moved the footer brand above its four evenly spaced navigation groups at tablet widths.
+
+Suggestions or code retained: Updated responsive overrides in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Browser rendering and automated tests were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Desktop Duno Focus pane sizing � 2026-11-01
+
+Allowed use confirmed by: The owner shared a desktop Focus screenshot and requested a taller workspace so the priority detail explanation is visible without inner scrolling.
+
+Assistance used: Increased the desktop Focus workspace height from 70vh (48rem cap, 31rem minimum) to 86vh (54rem cap, 36rem minimum). This gives the third pane enough vertical room at common desktop viewport sizes while retaining the existing mobile and tablet-specific sizing rules.
+
+Suggestions or code retained: Updated the `.focus-browser` sizing rule in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Browser rendering and automated tests were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Desktop Duno Focus height adjustment � 2026-11-01
+
+Allowed use confirmed by: The owner asked to extend the desktop Focus workspace further after reviewing the first height adjustment.
+
+Assistance used: Raised the desktop Focus workspace sizing to 96vh, capped at 60rem, with a 40rem minimum. Tablet and phone overrides remain in place.
+
+Suggestions or code retained: Updated the `.focus-browser` sizing rule in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Browser rendering and automated tests were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Admin dashboard responsive redesign - 2026-11-01
+
+Allowed use confirmed by: The owner shared desktop and mobile screenshots of the admin analytics page and asked for a complete responsive redesign aligned with the student dashboard.
+
+Assistance used: Restyled the admin analytics workspace with a contained glass surface, clearer overview and section hierarchy, metric tiles, chart cards, compact empty-state messages, and a mobile header that places language controls on their own row. Preserved the existing analytics values and privacy threshold behavior.
+
+Suggestions or code retained: Added scoped responsive admin styles at the end of `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Browser rendering and automated tests were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Admin dashboard chart and summary refinements - 2026-11-01
+
+Allowed use confirmed by: The owner asked to continue improving the admin dashboard after reviewing the BrewedOps Motion Library dashboard patterns.
+
+Assistance used: Added an aggregate privacy status to the admin overview, visible values above non-zero chart bars, and a distinct zero-data state. Kept the work within the existing PHP, SVG, and CSS stack; no new package was needed.
+
+Suggestions or code retained: Updated `app/Views/admin/dashboard.php`, `app/Views/admin/partials/bar_chart.php`, and scoped styles in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks and `git diff --check` passed. Browser visual review and automated tests were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Admin research analytics - 2026-11-01
+
+Allowed use confirmed by: The owner requested weekly active-student counts, saved-session length distribution, and a current topic-status snapshot for research purposes.
+
+Assistance used: Extended the admin summary service to derive unique weekly active students, a session median with a middle-50% range, and topic-status percentages by distinct student contributors. Added a grouped weekly comparison chart, a duration-range visual, and status bars. Applied minimum-group withholding and clarified that topic status is a current self-reported snapshot, not a learning assessment. No new event collection or third-party UI dependency was added.
+
+Suggestions or code retained: Updated `app/Services/AdminDashboardSummaryService.php`, `app/Views/admin/dashboard.php`, `app/Views/admin/partials/bar_chart.php`, scoped responsive styles in `public/assets/css/duno-ui.css`, and the F-12 requirement/story/traceability documentation.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks passed for the changed service and views; `git diff --check` passed. Automated tests and browser visual review were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Admin dashboard print layout - 2026-11-01
+
+Allowed use confirmed by: The owner requested a print feature for the admin dashboard.
+
+Assistance used: Added a keyboard-accessible print action wired to the browser print dialog and print-specific CSS that removes navigation and controls while preserving the admin aggregate metrics, charts, numeric tables, privacy note, suppression labels, and a generated snapshot timestamp. Updated the F-12 requirement, story, and traceability record. No print/export package or downloadable data format was added.
+
+Suggestions or code retained: Updated `app/Views/admin/dashboard.php`, added `public/assets/js/admin-dashboard.js`, adjusted `public/assets/css/duno-ui.css`, and updated F-12 documentation.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks and `git diff --check` passed. Browser interaction and print-preview layout were not checked in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Mascot idle animation refinement - 2026-11-01
+
+Allowed use confirmed by: The owner said the mascot movement was too small and asked for it to be more noticeable.
+
+Assistance used: Increased the reusable idle cycle's lift from 0.55rem to 1.15rem, added a restrained scale and tilt, and shortened the loop from 4.4 to 3.6 seconds. The offscreen pause and reduced-motion preference remain in place.
+
+Suggestions or code retained: Updated the shared mascot keyframes and idle timing in `public/assets/css/duno-ui.css`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Brave was refreshed at the local landing page; before this refinement, runtime inspection confirmed the mascot resumes when visible and pauses when offscreen. A post-change computed-style read and reduced-motion browser check were not completed in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Duno Plan mascot placement - 2026-11-01
+
+Allowed use confirmed by: The owner pointed out that the desktop Duno Plan page had a randomly placed mascot.
+
+Assistance used: Fixed the plan-generation heading row so the heading has no inherited page-level margin and the mascot stays adjacent rather than being pushed to the far side of the page. The thinking mascot is now hidden at rest and appears only during the generation form's thinking state.
+
+Suggestions or code retained: Updated plan-generation heading and mascot visibility styles in `public/assets/css/duno-ui.css`; existing form-submit mascot behavior remains in `public/assets/js/duno-mascot.js`.
+
+Student changes and decisions: Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax and `git diff --check` passed. I did not reload the owner's active page; desktop and mobile rendered review remains open.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Shared background gradient mesh - 2026-11-01
+
+Allowed use confirmed by: The owner asked to explore BrewedOps backgrounds and gradients and integrate a compatible treatment, especially on the site background.
+
+Assistance used: Reviewed [BrewedOps Motion Library](https://brewedops.cloud/motionlibrary/)'s ambient backgrounds and shader/gradient examples. Applied the gradient-mesh direction as a static, layered lavender, mint, and warm-gold canvas shared by the landing, workspace, admin, and authentication page shells. After owner feedback that it was too faint and too plain, increased the color strength and added a subtle topographic contour texture with sparse dots, keeping both behind content. The vector texture is a local asset; no external scripts, libraries, or GPU effects were added.
+
+Suggestions or code retained: Added reusable `--duno-background-mesh` and `--duno-background-contours` CSS tokens in `public/assets/css/duno-ui.css` and added `public/assets/images/duno-contour-texture.svg`.
+
+Student changes and decisions: The owner requested exploring and integrating a compatible background treatment. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. I did not run tests or open the owner's active browser session; visual review across viewport sizes remains open.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Offline recovery connection feedback - 2026-11-01
+
+Allowed use confirmed by: The owner asked to explore other useful patterns in BrewedOps Motion Library that could improve Duno pages.
+
+Assistance used: Reviewed [BrewedOps Motion Library](https://brewedops.cloud/motionlibrary/)'s empty/error-state references, including its offline-and-back-online recovery pattern. Updated Duno's existing PWA fallback with a live connection status, a manual retry state, and a one-time reload when the browser reports that connectivity returned. Kept the explicit notice that saved study data and offline changes are unavailable. Bumped the worker cache version and allowlisted the local background texture so installed clients can receive the new public assets.
+
+Suggestions or code retained: Updated `public/offline.html`, `public/sw.js`, and `docs/pwa-story.md`.
+
+Student changes and decisions: The owner asked to find useful BrewedOps patterns to integrate. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. The service-worker allowlist and page behavior were source-reviewed; a full offline/reconnect browser check remains pending after deployment.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Repository and release-state inventory - 2026-11-01
+
+Allowed use confirmed by: The owner asked to begin cleaning up staged/unstaged work and reconcile what has been uploaded and checked.
+
+Assistance used: Compared the current branch and index/worktree status with the r8 release provenance and deployment notes. Confirmed the index is empty, classified the uncommitted work at a high level, identified the two newer database migrations as not included in r8, and corrected the restart-board release snapshot from r7 to r8. No branch, index, commit, or deployment operation was performed.
+
+Suggestions or code retained: Updated the r8 snapshot and deployment summary in `docs/project-overview-and-restart.md`.
+
+Student changes and decisions: The owner asked to focus on repository cleanup. The version-control workflow requires owner direction on splitting the accumulated changes; staging remains unapproved.
+
+How the student verified and can explain the result: Read-only Git status and branch inspection; `git diff --check` passed for the corrected board entry. No tests were needed for this status documentation update.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Academic program batch review - 2026-11-01
+
+Allowed use confirmed by: The owner selected Academic Program & Curriculum as the first batch for review during repository cleanup.
+
+Assistance used: Reviewed the one-time selection flow, current-program subject list and create/update validation, the nullable account migration and hosted SQL, route filters, documentation, and related tests. The first implementation pass enforces the selected curriculum in the subject list and subject form, but owner-wide subject/topic queries remain in Topics, Plan, and Timer paths; owner-scoped direct subject lookups also do not check the account curriculum. Existing subjects tagged to another NVSU curriculum could therefore remain reachable outside the filtered list. Identified unrelated account deletion and public About/legal route hunks mixed into shared files, and the separate XP migration as a different batch.
+
+Suggestions or code retained: No application source was changed and nothing was staged. The review finding must be resolved or explicitly accepted before this batch is called ready for staging.
+
+Student changes and decisions: The owner asked to review this batch only; no staging authorization was given.
+
+How the student verified and can explain the result: PHP syntax passed for 19 related PHP files and `git diff --check` passed for the reviewed tracked files. Automated tests and browser review were not run; the existing story's earlier test claim was not independently rechecked.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Academic program active-workflow scope follow-up - 2026-11-01
+
+Allowed use confirmed by: The owner selected Academic Program & Curriculum as the first review batch and asked what remained to do. The identified cross-workflow scope gap was the agreed blocker to making this batch reviewable.
+
+Assistance used: Updated owner-scoped subject/topic queries and student controllers so Focus, topic search, direct subject/topic routes, Plan generation and block actions, and Timer choices and submissions enforce the selected curriculum plus legacy unassigned subjects. Existing saved Timer history remains visible. Updated the story and deployment notes with the behavior and outstanding verification.
+
+Suggestions or code retained: Changes are local and unstaged in `AcademicProgramCatalog`, `SubjectModel`, `TopicModel`, `StudyPlanModel`, and the student Subjects, Topics, Plans, and StudySessions controllers. Updated `docs/academic-program-onboarding-story.md`, `docs/deployment.md`, and this log entry.
+
+Student changes and decisions: Program scope and preservation of saved history follow the previously approved single-program curriculum behavior. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks passed for all eight changed application PHP files, and `git diff --check` passed. Automated tests and browser checks were not run; the repository workflow requires owner review and active-scope acceptance before release.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Hosted academic program schema migration - 2026-11-01
+
+Allowed use confirmed by: The owner explicitly asked to start the hosted migration and confirmed a database backup was ready and the Duno database was selected.
+
+Assistance used: Ran read-only preflight queries in phpMyAdmin. The migration ledger row and all three target columns were absent. Added nullable `academic_program_id` (`VARCHAR(80)`), `academic_program_title` (`VARCHAR(255)`), and `academic_program_selected_at` (`DATETIME`) columns to `users`, then recorded `2026-11-01-000001` as migration ID 19, batch 14. Read-only final queries confirmed the ledger row and all three nullable column definitions. No user or subject values were updated.
+
+Suggestions or code retained: Updated `docs/academic-program-onboarding-story.md`, `docs/deployment.md`, and this log. The SQL script remains as deployment evidence and must not be rerun; it is not part of the FTP package.
+
+Student changes and decisions: The owner requested the hosted migration after confirming the backup. No application files were uploaded, and nothing was staged, committed, or pushed.
+
+How the student verified and can explain the result: phpMyAdmin reported one migration row inserted. Final SQL output showed ID 19, version `2026-11-01-000001`, class `App\Database\Migrations\AddAcademicProgramToUsers`, batch 14, and all three nullable columns. Application runtime checks remain pending until the reviewed code is uploaded.
+
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.

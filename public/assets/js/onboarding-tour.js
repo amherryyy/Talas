@@ -18,7 +18,7 @@
     const storageKey = `duno-app-tour-v1-${userKey}`;
     const tourCopy = document.documentElement.lang.startsWith('fil') ? {
         progress: 'Pagsisimula · Hakbang {step} sa {total}', skip: 'Laktawan ang gabay', next: 'Susunod', finish: 'Tapos na',
-        welcomeProgress: 'Maligayang pagdating · {step} sa 3', welcomeKicker: 'MALIGAYANG PAGDATING SA DUNO', startTour: 'Tingnan ang gabay',
+        welcomeProgress: 'Maligayang pagdating · {step} sa 3', startTour: 'Tingnan ang gabay',
         welcomeSlides: [
             ['Simulan sa isang hakbang.', 'Pinagsasama ng Duno ang mga asignatura, plano, at oras ng pag-aaral para malaman mo kung saan magsisimula.'],
             ['Gawing malinaw ang araw mo.', 'Gamitin ang Duno Pokus at Plano para pumili ng paksa at maglaan ng oras para rito.'],
@@ -31,11 +31,11 @@
             ['Duno Orasan', 'Orasan ang iyong pag-aaral, tingnan ang lumipas na oras, at i-save lamang kapag handa ka na.'],
             ['Aralytics', 'Balikan ang mga na-save mong sesyon gamit ang mga kabuuan, pattern, at simpleng chart.'],
             ['Duno Gabay', 'Tingnan ang maiikling pangkalahatang mungkahi sa pag-aaral at piliin ang angkop sa kurso mo.'],
-            ['Iba pang pahina', 'Nasa menu ang mga asignatura, paksa, at pribadong tala. Pribado ang mga tala mo. Maaari mong ulitin ang gabay dito.'],
+            ['Iba pang pahina', 'Nasa More ang mga asignatura, paksa, Gabay, pribadong tala, at Profile. Sa Profile mo mababago ang wika; nasa dashboard ang link para ulitin ang tour.'],
         ],
     } : document.documentElement.lang.startsWith('en-PH') ? {
         progress: 'Getting started · Step {step} of {total}', skip: 'I-skip ang tour', next: 'Next', finish: 'Tapos na',
-        welcomeProgress: 'Welcome sa Duno · {step} of 3', welcomeKicker: 'WELCOME SA DUNO', startTour: 'Simulan ang tour',
+        welcomeProgress: 'Welcome sa Duno · {step} of 3', startTour: 'Simulan ang tour',
         welcomeSlides: [
             ['Simulan sa isang study step.', 'Nasa Duno na ang subjects, plans, at study time mo para mas madaling malaman kung ano ang uunahin.'],
             ['Ayusin ang busy mong araw.', 'Gamitin ang Duno Focus at Plan para pumili ng topic at maglaan ng time na swak sa schedule mo.'],
@@ -48,11 +48,11 @@
             ['Duno Timer', 'I-time ang study session mo, tingnan ang elapsed time, at i-save lang kapag gusto mo.'],
             ['Aralytics', 'Balikan ang mga saved study session mo gamit ang totals, patterns, at simple charts.'],
             ['Duno Guide', 'Mag-browse ng short, general study suggestions at piliin ang swak sa course mo.'],
-            ['More pages', 'Nasa More ang subjects, topics, at private check-ins. Private ang check-ins mo. Puwede mong ulitin ang tour mula rito.'],
+            ['More pages', 'Nasa More ang Subjects, Topics, Guide, private check-ins, at Profile. Sa Profile mo mababago ang language; nasa dashboard ang link para ulitin ang tour.'],
         ],
     } : {
         progress: 'Getting started · Step {step} of {total}', skip: 'Skip tour', next: 'Next', finish: 'Finish',
-        welcomeProgress: 'Welcome · {step} of 3', welcomeKicker: 'WELCOME TO DUNO', startTour: 'Take the tour',
+        welcomeProgress: 'Welcome · {step} of 3', startTour: 'Take the tour',
         welcomeSlides: [
             ['Make room for your next study step.', 'Duno keeps your subjects, plans, and study time together so it’s easier to know where to begin.'],
             ['Turn a busy day into a clear plan.', 'Use Duno Focus and Plan to choose a topic and fit it into the time you have.'],
@@ -65,7 +65,7 @@
             ['Duno Timer', 'Time a study session, review the elapsed time, and save it only when you choose.'],
             ['Aralytics', 'Look back at the study sessions you saved through totals, patterns, and simple charts.'],
             ['Duno Guide', 'Browse short, general study suggestions and choose the ones that fit your course.'],
-            ['More pages', 'More contains subjects, topics, and private check-ins. Your check-ins stay private. You can replay this tour from the same menu after you finish.'],
+            ['More pages', 'More holds Subjects, Topics, Guide, private check-ins, and Profile. Change the app language in Profile; replay the tour from the dashboard.'],
         ],
     };
     const steps = tourCopy.steps.map(([title, copy], index) => ({ target: ['start', 'focus', 'plan', 'timer', 'aralytics', 'guide', 'more'][index], title, copy }));
@@ -76,8 +76,7 @@
     const next = tour.querySelector('[data-tour-next]');
     const skip = tour.querySelector('[data-tour-skip]');
     const carousel = tour.querySelector('[data-tour-carousel]');
-    const welcomeTrack = tour.querySelector('[data-welcome-track]');
-    const welcomeKicker = tour.querySelector('[data-welcome-kicker]');
+    const welcomeArtSlides = [...tour.querySelectorAll('.welcome-art-slide')];
     const welcomeTitle = tour.querySelector('[data-welcome-title]');
     const welcomeCopy = tour.querySelector('[data-welcome-copy]');
     const welcomeIndicator = tour.querySelector('[data-welcome-indicator]');
@@ -91,8 +90,7 @@
         || !(next instanceof HTMLButtonElement)
         || !(skip instanceof HTMLButtonElement)
         || !(carousel instanceof HTMLElement)
-        || !(welcomeTrack instanceof HTMLElement)
-        || !(welcomeKicker instanceof HTMLElement)
+        || welcomeArtSlides.length !== tourCopy.welcomeSlides.length
         || !(welcomeTitle instanceof HTMLElement)
         || !(welcomeCopy instanceof HTMLElement)
         || !(welcomeIndicator instanceof HTMLElement)
@@ -278,16 +276,18 @@
         if (shade instanceof HTMLElement) shade.classList.add('is-welcome');
         document.body.classList.add('app-tour-welcome-open');
         carousel.hidden = false;
+        window.Duno?.play('greeting', '.welcome-art-mascot');
         const intro = tour.querySelector('.app-tour-intro');
         if (intro instanceof HTMLElement) intro.hidden = true;
         tour.setAttribute('aria-labelledby', 'welcome-carousel-title');
         tour.setAttribute('aria-describedby', 'welcome-carousel-copy');
         const [headline, sentence] = tourCopy.welcomeSlides[welcomeIndex];
         progress.textContent = tourCopy.welcomeProgress.replace('{step}', String(welcomeIndex + 1));
-        welcomeKicker.textContent = tourCopy.welcomeKicker;
         welcomeTitle.textContent = headline;
         welcomeCopy.textContent = sentence;
-        welcomeTrack.style.transform = `translateX(-${welcomeIndex * (100 / tourCopy.welcomeSlides.length)}%)`;
+        welcomeArtSlides.forEach((slide, slideIndex) => {
+            slide.style.transform = `translateX(${(slideIndex - welcomeIndex) * 100}%)`;
+        });
         welcomeIndicator.style.transform = `translateX(${welcomeIndex * 2.75}rem) translateY(-50%)`;
         welcomeDotsGroup.setAttribute('aria-label', welcomeSlideGroupLabel);
         welcomeDots.forEach((dot, dotIndex) => {

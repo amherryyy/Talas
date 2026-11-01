@@ -17,11 +17,27 @@ if ($includeFlashNotifications) {
         $flashNotifications[] = [
             'type' => 'success',
             'message' => lang('App.dailyReward', [
-                $dailyStreakReward['xp'],
+                number_format((int) $dailyStreakReward['xp']),
                 $dailyStreakReward['streak_days'],
                 lang($dailyStreakReward['streak_days'] === 1 ? 'App.day' : 'App.days'),
             ]),
             'reward' => true,
+        ];
+    }
+
+    if ($studyXpReward = session()->getFlashdata('study_xp_reward')) {
+        $flashNotifications[] = [
+            'type' => 'success',
+            'message' => lang('App.studyXpReward', [number_format((int) $studyXpReward['xp'])]),
+            'reward' => true,
+            'reward_kind' => 'study',
+        ];
+    }
+
+    if ($studyXpAdjustment = session()->getFlashdata('study_xp_adjustment')) {
+        $flashNotifications[] = [
+            'type' => 'info',
+            'message' => lang('App.studyXpAdjustment', [number_format((int) $studyXpAdjustment['xp'])]),
         ];
     }
 }
@@ -77,7 +93,7 @@ $notificationMascots = [
         <?php $type = in_array($notification['type'], ['success', 'info', 'warning', 'error'], true) ? $notification['type'] : 'info'; ?>
         <?php $compact = $type === 'success' && preg_match('/logged out|log out|nakapag-log out/i', $notification['message']) === 1; ?>
         <?php $mascotFile = ! empty($notification['reward']) ? 'duno-mascot-celebrating.webp' : $notificationMascots[$type]; ?>
-        <article class="duno-toast<?= ! empty($notification['reward']) ? ' streak-reward-notice' : '' ?><?= $compact ? ' duno-toast-compact' : '' ?>" data-mood="<?= esc($type) ?>" role="<?= $type === 'error' || $type === 'warning' ? 'alert' : 'status' ?>" aria-live="<?= $type === 'error' || $type === 'warning' ? 'assertive' : 'polite' ?>">
+        <article class="duno-toast<?= ! empty($notification['reward']) ? (($notification['reward_kind'] ?? '') === 'study' ? ' xp-reward-notice' : ' streak-reward-notice') : '' ?>"<?= ! empty($notification['reward']) ? ' data-notification-reward="true"' : '' ?> data-mood="<?= esc($type) ?>" role="<?= $type === 'error' || $type === 'warning' ? 'alert' : 'status' ?>" aria-live="<?= $type === 'error' || $type === 'warning' ? 'assertive' : 'polite' ?>">
             <span class="duno-toast-mascot" aria-hidden="true">
                 <img src="<?= esc(duno_asset('assets/images/' . $mascotFile)) ?>" alt="" width="512" height="536">
                 <span class="duno-toast-emotion"><?= esc($notificationEmotions[$type]) ?></span>

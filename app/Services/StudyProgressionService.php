@@ -7,7 +7,7 @@ use DateTimeZone;
 
 class StudyProgressionService
 {
-    public const XP_PER_STUDY_MINUTE = 100;
+    public const XP_PER_STUDY_MINUTE = 1000;
 
     /** @var list<array{level: int, name: string, xp: int}> */
     public const LEVELS = [

@@ -60,35 +60,35 @@ final class StudentAralyticsTest extends CIUnitTestCase
         $response->assertSee('Time by topic');
         $response->assertSee('Study minutes by subject');
         $response->assertSee('Dated sessions');
-        $response->assertSee('6500 XP');
-        $response->assertSee('6000 study + 500 streak');
-        $response->assertDontSee('54500 XP');
+        $response->assertSee('65,000 XP');
+        $response->assertSee('60,000 study + 5,000 streak');
+        $response->assertDontSee('545,000 XP');
     }
 
     public function testProgressionRecalculatesFromCurrentSavedSessionRecords(): void
     {
         $student = $this->createUser('aralytics-progression');
         $subjectId = $this->createSubject((int) $student->id, 'Biology');
-        $sessionId = $this->createSession((int) $student->id, $subjectId, null, 114, $this->localDate('today') . ' 09:00:00');
+        $sessionId = $this->createSession((int) $student->id, $subjectId, null, 6, $this->localDate('today') . ' 09:00:00');
         $this->authenticateAs($student);
 
         $before = $this->getAuthenticated('student/aralytics');
         $before->assertOK();
-        $before->assertSee('11900 XP');
+        $before->assertSee('11,000 XP');
         $before->assertSee('Level 1');
 
         $sessions = new StudySessionModel();
-        $this->assertTrue($sessions->updateForOwner($sessionId, (int) $student->id, $subjectId, null, 115));
+        $this->assertTrue($sessions->updateForOwner($sessionId, (int) $student->id, $subjectId, null, 7));
         $afterUpdate = $this->getAuthenticated('student/aralytics');
         $afterUpdate->assertOK();
-        $afterUpdate->assertSee('12000 XP');
+        $afterUpdate->assertSee('12,000 XP');
         $afterUpdate->assertSee('Level 2');
         $afterUpdate->assertSee('30-day study rhythm');
 
         $this->assertTrue($sessions->deleteForOwner($sessionId, (int) $student->id));
         $afterDelete = $this->getAuthenticated('student/aralytics');
         $afterDelete->assertOK();
-        $afterDelete->assertSee('500 XP');
+        $afterDelete->assertSee('5,000 XP');
         $afterDelete->assertSee('Level 1');
     }
 
@@ -138,6 +138,7 @@ final class StudentAralyticsTest extends CIUnitTestCase
             'title' => $title,
             'due_date' => null,
             'importance' => 'medium',
+            'difficulty' => 'medium',
             'progress' => 'not_started',
         ], true);
     }
@@ -172,8 +173,21 @@ final class StudentAralyticsTest extends CIUnitTestCase
 
     private function authenticateAs(User $user): void
     {
+        $this->seedAccountProgramWhenStudent($user);
         $this->actingAs($user);
         $this->withSession($_SESSION);
+    }
+
+    private function seedAccountProgramWhenStudent(User $user): void
+    {
+        if (! $user->inGroup('student') || $user->inGroup('admin')) {
+            return;
+        }
+        $program = (new App\Services\AcademicProgramCatalog())->all()[0];
+        db_connect()->table('users')->where('id', (int) $user->id)->update([
+            'academic_program_id' => $program['id'], 'academic_program_title' => $program['title'],
+            'academic_program_selected_at' => '2026-11-01 00:00:00',
+        ]);
     }
 
     private function getAuthenticated(string $path): TestResponse

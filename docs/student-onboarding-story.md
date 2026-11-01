@@ -1,7 +1,7 @@
 # Story: first-visit student onboarding tour
 
 **Requirement:** F-13
-**State:** Implemented locally; browser review deferred until the accumulated update batch is uploaded to InfinityFree, per owner direction.
+**State:** Implemented locally; 2026-11-01 carousel alignment repair awaits visual confirmation because the local browser runner could not launch.
 **Owner decisions:** Show a suggestive tour the first time a student enters the app; allow students who already know Duno to skip it; remember completion in the current browser only (2026-10-26).
 
 ## User story
@@ -30,13 +30,15 @@ As a new student, I can get a quick introduction to Duno's existing tools, skip 
 7. Reduced-motion preferences suppress smooth scrolling and entrance animation. The instruction card moves to avoid covering the active target when the viewport allows; the tour remains usable at phone, tablet, and desktop widths.
 8. First-run slides describe Duno's study space, planning tools, and saved-session insights in the selected English, Taglish, or Filipino copy. The carousel fits mobile viewports and supports keyboard navigation without introducing external fonts, libraries, or sample data.
 9. Students can select a welcome slide using clearly labeled, keyboard-accessible page-dot buttons or swipe horizontally across the illustration. Back/Next remain available, vertical scrolling is not captured by the swipe gesture, and reduced-motion settings are respected.
+10. Each welcome slide keeps its own illustration aligned with its headline and copy, fully within the illustration area at phone widths; the carousel does not show the next slide's art or an empty final slide.
 
 ## Verification
 
 - PHP syntax passed for the changed controllers/views/partials. JavaScript syntax passed for the tour and check-in prompt modules. `git diff --check` passed.
 - The full PHPUnit suite passed: 77 tests and 717 assertions. Feature coverage confirms the account-scoped tour appears on the student dashboard/start page and stays absent for guests and admins.
 - The 2026-10-29 welcome carousel changes were reviewed in source only; tests and browser visual review were not run for that update.
-- Per the owner, visual browser review is deferred until the accumulated updates are uploaded to InfinityFree.
+- On 2026-11-01, changed carousel art to move each illustration by its own width so it remains paired with its slide copy. Removed the repeated welcome kicker and floating callout pills to reduce duplicated labeling and card clutter. PHP lint and JavaScript syntax checks passed. Playwright could not launch Chromium (`spawn EPERM`), so no rendered visual confirmation was available in this environment.
+- A rendered browser review still needs to confirm the three slide pairings at phone widths; the local browser runner could not launch during this check.
 - No upload, deployment, database migration, staging, or commit was performed for this task.
 
 ## 2026-10-27 spotlight and accessibility refinement

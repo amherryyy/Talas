@@ -4,20 +4,20 @@
         <div class="progression-copy">
             <p class="workspace-kicker">Your Duno journey</p>
             <h2 id="progression-heading">Level <?= esc((string) $progression['level']) ?> · <?= esc($progression['level_name']) ?></h2>
-            <p><strong><?= esc((string) $progression['xp']) ?> XP</strong> <span class="muted">(<?= esc((string) $progression['study_xp']) ?> study + <?= esc((string) $progression['streak_xp']) ?> streak)</span></p>
-            <p class="progression-xp-rule">100 XP per saved study minute; +500 XP for your first app visit each day.</p>
+            <p><strong><?= esc(number_format((int) $progression['xp'])) ?> XP</strong> <span class="muted">(<?= esc(number_format((int) $progression['study_xp'])) ?> study + <?= esc(number_format((int) $progression['streak_xp'])) ?> streak)</span></p>
+            <p class="progression-xp-rule">1,000 XP per saved study minute; +5,000 XP for your first app visit each day.</p>
         </div>
     </div>
     <div class="progression-track">
         <?php if ($progression['next_level_name'] !== null): ?>
             <progress value="<?= esc((string) $progression['level_progress_xp']) ?>" max="<?= esc((string) $progression['level_progress_max']) ?>" aria-label="Progress toward Level <?= esc((string) ($progression['level'] + 1)) ?>"></progress>
-            <p class="muted"><?= esc((string) ($progression['next_level_xp'] - $progression['xp'])) ?> XP to Level <?= esc((string) ($progression['level'] + 1)) ?> · <?= esc($progression['next_level_name']) ?></p>
+            <p class="muted"><?= esc(number_format(max(0, (int) $progression['next_level_xp'] - (int) $progression['xp']))) ?> XP to Level <?= esc((string) ($progression['level'] + 1)) ?> · <?= esc($progression['next_level_name']) ?></p>
         <?php else: ?>
             <progress value="100" max="100" aria-label="All current levels completed"></progress>
             <p class="muted">All current levels reached. Your saved study time keeps adding to your record.</p>
         <?php endif ?>
         <?php if ($progression['next_unlock'] !== null): ?>
-            <p class="progression-next-unlock"><strong>Next Aralytics unlock:</strong> <?= esc($progression['next_unlock']['name']) ?> at <?= esc((string) $progression['next_unlock']['xp']) ?> XP.</p>
+            <p class="progression-next-unlock"><strong>Next Aralytics unlock:</strong> <?= esc($progression['next_unlock']['name']) ?> at <?= esc(number_format((int) $progression['next_unlock']['xp'])) ?> XP.</p>
         <?php else: ?>
             <p class="progression-next-unlock"><strong>Aralytics bonus:</strong> all current insights unlocked.</p>
         <?php endif ?>

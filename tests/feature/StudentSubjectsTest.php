@@ -43,11 +43,11 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $newFormBody = $newForm->response()->getBody();
         $this->assertStringContainsString('name="csrf_test_name"', $newFormBody);
         $this->assertStringContainsString('class="button secondary back-link-button"', $newFormBody);
-        $this->assertStringContainsString('name="program_id"', $newFormBody);
         $this->assertStringContainsString('name="course_id"', $newFormBody);
 
+        $course = (new App\Services\NvsuCurriculumCatalog())->find('bscs-game-development')['courses'][0];
         $this->postAuthenticated('student/subjects', [
-            'name' => '<script>alert(1)</script>',
+            'course_id' => $course['id'],
         ])->assertRedirect();
 
         $subjects = new App\Models\SubjectModel();
@@ -59,15 +59,15 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $showBody = $show->response()->getBody();
         $this->assertStringContainsString('data-mood="success"', $showBody);
         $this->assertStringContainsString('duno-toast-mascot', $showBody);
-        $show->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;');
-        $show->assertDontSee('<script>alert(1)</script>');
+        $show->assertSee($course['title']);
 
+        $nextCourse = (new App\Services\NvsuCurriculumCatalog())->find('bscs-game-development')['courses'][1];
         $this->postAuthenticated('student/subjects/' . $subject['id'], [
-            'name' => 'Algebra',
+            'course_id' => $nextCourse['id'],
         ])->assertRedirect();
 
         $this->getAuthenticated('student/subjects/' . $subject['id'])
-            ->assertSee('Algebra');
+            ->assertSee($nextCourse['title']);
 
         $this->postAuthenticated('student/subjects/' . $subject['id'] . '/delete')
             ->assertRedirect();
@@ -78,14 +78,13 @@ final class StudentSubjectsTest extends CIUnitTestCase
     public function testStudentCanCreateAndFilterSubjectsByNvsuProgram(): void
     {
         $student = $this->createUser('nvsu-program-subjects', 'student');
-        $this->authenticateAs($student);
+        $this->authenticateAs($student, 'bsit-web-mobile');
 
         $program = (new App\Services\NvsuCurriculumCatalog())->find('bsit-web-mobile');
         $this->assertNotNull($program);
         $course = $program['courses'][0];
 
         $this->postAuthenticated('student/subjects', [
-            'program_id' => $program['id'],
             'course_id' => $course['id'],
             'name' => 'Client supplied title is ignored for a catalog course',
         ])->assertRedirect();
@@ -96,21 +95,27 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $this->assertSame($course['title'], $owned[0]['name']);
         $this->assertSame($program['id'], $owned[0]['program_id']);
 
+        $index = $this->getAuthenticated('student/subjects');
+        $index->assertOK();
+        $this->assertStringContainsString('class="subject-catalog-list"', $index->response()->getBody());
+        $this->assertStringContainsString('class="subject-catalog-index"', $index->response()->getBody());
+        $index->assertSee($course['title']);
+
+        $otherCourse = (new App\Services\NvsuCurriculumCatalog())->find('bsis-business-analytics')['courses'][0];
         $this->postAuthenticated('student/subjects', [
-            'program_id' => 'bsis-business-analytics',
-            'name' => 'Business Analytics notes',
+            'program_id' => 'bsis-business-analytics', 'course_id' => $otherCourse['id'],
         ])->assertRedirect();
 
         $filtered = $this->getAuthenticated('student/subjects?program=' . $program['id']);
         $filtered->assertOK();
         $filtered->assertSee($course['title']);
-        $filtered->assertDontSee('Business Analytics notes');
+        $filtered->assertDontSee($otherCourse['title']);
     }
 
     public function testStudentCannotSubmitCourseFromAnotherNvsuProgram(): void
     {
         $student = $this->createUser('nvsu-course-validation', 'student');
-        $this->authenticateAs($student);
+        $this->authenticateAs($student, 'bsit-web-mobile');
         $program = (new App\Services\NvsuCurriculumCatalog())->find('bsit-web-mobile');
         $otherProgram = (new App\Services\NvsuCurriculumCatalog())->find('bsis-business-analytics');
         $this->assertNotNull($program);
@@ -123,7 +128,7 @@ final class StudentSubjectsTest extends CIUnitTestCase
         ])->assertRedirect();
 
         $this->assertSame([], (new App\Models\SubjectModel())->findAllForOwner((int) $student->id));
-        $this->getAuthenticated('student/subjects/new')->assertSee('Choose a course from the selected NVSU program.');
+        $this->getAuthenticated('student/subjects/new')->assertSee('Choose a subject from your program’s NVSU course list.');
     }
 
     public function testSubjectListExplainsProgramFilterAndSubjectCreationMeaning(): void
@@ -133,12 +138,43 @@ final class StudentSubjectsTest extends CIUnitTestCase
 
         $list = $this->getAuthenticated('student/subjects');
         $list->assertOK();
-        $list->assertSee('Filters subjects you have already added.');
-        $list->assertSee('Show my subjects');
+        $list->assertSee('Your subjects are for');
+        $list->assertDontSee('subject-program-filter');
 
         $form = $this->getAuthenticated('student/subjects/new');
         $form->assertOK();
-        $form->assertSee('Your selection filters the course choices below; the chosen course becomes this subject.');
+        $form->assertSee('has an NVSU subject list. Choose the subject you take from that list.');
+        $form->assertSee('name="course_id"');
+        $form->assertDontSee('name="name"');
+    }
+
+    public function testStudentCanTypeSubjectWhenTheirProgramHasNoNvsuList(): void
+    {
+        $student = $this->createUser('nvsu-program-without-list', 'student');
+        $this->authenticateAs($student, null);
+
+        $form = $this->getAuthenticated('student/subjects/new');
+        $form->assertOK();
+        $form->assertSee('There is no NVSU subject list for');
+        $form->assertSee('name="name"');
+        $form->assertDontSee('name="course_id"');
+
+        $this->postAuthenticated('student/subjects', ['name' => '  Community fieldwork  '])->assertRedirect();
+
+        $subjects = new App\Models\SubjectModel();
+        $stored = $subjects->findAllForAcademicProgram((int) $student->id, null);
+        $this->assertCount(1, $stored);
+        $this->assertSame('Community fieldwork', $stored[0]['name']);
+        $this->assertNull($stored[0]['program_id']);
+
+        $otherCourse = (new App\Services\NvsuCurriculumCatalog())->find('bscs-game-development')['courses'][0];
+        $tampered = $this->postAuthenticated('student/subjects', [
+            'name' => 'Tampered course import',
+            'course_id' => $otherCourse['id'],
+        ]);
+        $tampered->assertRedirect();
+        $tampered->assertSessionHas('errors');
+        $this->assertCount(1, $subjects->findAllForAcademicProgram((int) $student->id, null));
     }
 
     public function testStudentCatalogUsesItsInlineBackLinkWithoutADuplicateButton(): void
@@ -167,28 +203,21 @@ final class StudentSubjectsTest extends CIUnitTestCase
     public function testStudentCanPreviewNvsuCasCurriculaWithSourceAndYear(): void
     {
         $student = $this->createUser('nvsu-curriculum-preview', 'student');
-        $this->authenticateAs($student);
+        $this->authenticateAs($student, 'bsis-business-analytics');
 
         $options = $this->getAuthenticated('student/subjects/templates');
         $options->assertOK();
-        foreach ([
-            'bsis-service-management',
-            'bsis-business-analytics',
-            'bsit-web-mobile',
-            'bsit-network-design',
-            'bscs-game-development',
-            'bscs-robotics',
-        ] as $programId) {
-            $this->assertStringContainsString($programId, $options->response()->getBody());
-        }
+        $options->assertSee('Business Analytics');
+        $options->assertSee('IST1-6');
+        $options->assertDontSee('Network Design and Management');
 
-        $preview = $this->getAuthenticated('student/subjects/templates?nvsu=bsis-business-analytics');
+        $preview = $this->getAuthenticated('student/subjects/templates?nvsu=bsit-web-mobile');
         $preview->assertOK();
         $preview->assertSee('Business Analytics');
         $preview->assertSee('Effective S.Y. 2019');
         $preview->assertSee('IST1-6 — Data Mining');
         $preview->assertSee('https://drive.google.com/file/d/16HEb258jDQRyIA9KoShbUDW-wNaau0jT/view');
-        $preview->assertSee('Read the NVSU curriculum source');
+        $preview->assertSee('Review the NVSU source');
     }
 
     public function testNvsuCurriculumImportAddsSelectedCoursesAndSkipsDuplicatesForOwner(): void
@@ -202,10 +231,10 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $selected = $program['courses'][1];
 
         $subjects = new App\Models\SubjectModel();
-        $subjects->insert(['user_id' => $student->id, 'name' => mb_strtoupper($duplicate['title'])], true);
+        $subjects->insert(['user_id' => $student->id, 'name' => mb_strtoupper($duplicate['title']), 'program_id' => $program['id']], true);
         $subjects->insert(['user_id' => $otherStudent->id, 'name' => 'Private course'], true);
 
-        $this->authenticateAs($student);
+        $this->authenticateAs($student, 'bsis-business-analytics');
         $this->postAuthenticated('student/subjects/nvsu/import', [
             'nvsu_program_id' => $program['id'],
             'course_ids' => [$duplicate['id'], $selected['id']],
@@ -229,7 +258,7 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $this->authenticateAs($student);
 
         $response = $this->postAuthenticated('student/subjects', [
-            'name' => str_repeat('x', 121),
+            'course_id' => 'not-a-course-in-my-program',
         ]);
 
         $response->assertRedirect();
@@ -242,7 +271,7 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $owner = $this->createUser('subject-search-owner', 'student');
         $otherStudent = $this->createUser('subject-search-other', 'student');
         $subjects = new App\Models\SubjectModel();
-        $ownedId = $subjects->insert(['user_id' => $owner->id, 'name' => 'Biology lab'], true);
+        $ownedId = $subjects->insert(['user_id' => $owner->id, 'name' => 'Biology lab', 'program_id' => 'bscs-game-development'], true);
         $foreignId = $subjects->insert(['user_id' => $otherStudent->id, 'name' => 'Biology seminar'], true);
         $this->assertNotFalse($ownedId);
         $this->assertNotFalse($foreignId);
@@ -261,18 +290,17 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $student = $this->createUser('nvsu-program-filter', 'student');
         $subjects = new App\Models\SubjectModel();
         $subjects->insert(['user_id' => $student->id, 'name' => 'Systems Analysis', 'program_id' => 'bsis-service-management']);
-        $subjects->insert(['user_id' => $student->id, 'name' => 'Cell Biology', 'program_id' => null]);
-        $this->authenticateAs($student);
+        $subjects->insert(['user_id' => $student->id, 'name' => 'Cell Biology', 'program_id' => 'bsit-network-design']);
+        $this->authenticateAs($student, 'bsis-service-management');
 
         $page = $this->getAuthenticated('student/subjects');
         $page->assertOK();
         $pageHtml = $page->response()->getBody();
         $this->assertStringContainsString('method="post" action="http://example.com/index.php/student/subjects/search"', $pageHtml);
-        $this->assertStringContainsString('name="program_id"', $pageHtml);
+        $this->assertStringNotContainsString('subject-program-filter', $pageHtml);
 
         $filtered = $this->postAuthenticated('student/subjects/search', [
-            'query' => '',
-            'program_id' => 'bsis-service-management',
+            'query' => 'Systems',
         ]);
         $filtered->assertOK();
         $filtered->assertSee('Systems Analysis');
@@ -280,57 +308,24 @@ final class StudentSubjectsTest extends CIUnitTestCase
         $this->assertSame('', $filtered->response()->getHeaderLine('Location'));
     }
 
-    public function testStudentCanPreviewSourcedChedTemplate(): void
+    public function testStudentOnlySeesTheNvsuSubjectListForTheirAccountProgram(): void
     {
         $student = $this->createUser('ched-preview-student', 'student');
         $this->authenticateAs($student);
 
         $catalog = $this->getAuthenticated('student/subjects/templates');
         $catalog->assertOK();
-        $catalog->assertSee('Start from a CHED template');
-        $catalog->assertSee('Nueva Vizcaya State University undergraduate offerings');
-        $catalog->assertSee('Bayombong Campus');
-        $catalog->assertSee('Bambang Campus');
-        $catalog->assertSee('Bachelor of Science in Computer Engineering');
-        $catalog->assertSee('Bachelor of Science in Agriculture');
-        $catalog->assertSee('Bachelor of Science in Industrial Technology');
-        $catalog->assertSee('Selected course lists that have an NVSU source are available separately below.');
-        $catalog->assertSee('Philippine Senior High School subjects');
-        $catalog->assertSee('DepEd Order No. 017, s. 2026 - Strengthened SHS Curriculum');
-        $catalog->assertSee('Pag-aaral ng Kasaysayan at Lipunang Pilipino');
-        $catalog->assertSee('Academic elective');
-        $catalog->assertSee('TechPro elective');
-        $catalog->assertSee('Grade 12 learners from non-pilot schools continue the previous SHS curriculum');
-        $catalog->assertSee('no subject guide under the Sports, Health, and Wellness cluster');
-        $catalog->assertSee('Bachelor of Arts in Communication');
-        $catalog->assertSee('Bachelor of Science in Accountancy');
-        $catalog->assertSee('Bachelor of Science in Business Administration');
-        $catalog->assertSee('not a complete list of programs across the Philippines');
+        $catalog->assertSee('NVSU subject list');
+        $catalog->assertSee('Review the NVSU source');
+        $catalog->assertDontSee('Start from a CHED template');
+        $catalog->assertDontSee('Philippine Senior High School subjects');
 
         $preview = $this->getAuthenticated('student/subjects/templates?program=ba-communication');
         $preview->assertOK();
-        $preview->assertSee('Year 1 · Semester 1');
-        $preview->assertSee('Core course in the source');
-        $preview->assertSee('Required course slot; choose the course used by your school');
-        $preview->assertSee('CMO No. 35, series of 2017');
-        $preview->assertSee('Read the program standards');
-        $preview->assertSee('opens in a new tab');
-        $preview->assertSee('Duno does not assign a school term');
-
-        $accountancy = $this->getAuthenticated('student/subjects/templates?program=bs-accountancy');
-        $accountancy->assertOK();
-        $accountancy->assertSee('CMO No. 27, series of 2017');
-        $accountancy->assertSee('Fundamentals of Accounting I');
-        $accountancy->assertSee('General Education Course Slot 1');
-
-        $business = $this->getAuthenticated('student/subjects/templates?program=bs-business-administration');
-        $business->assertOK();
-        $business->assertSee('CMO No. 17, series of 2017');
-        $business->assertSee('Professional Subject 1');
-        $business->assertSee('Elective slot');
+        $preview->assertSee('Game Development');
+        $preview->assertDontSee('Bachelor of Arts in Communication');
     }
-
-    public function testStudentCanImportDepedShsSubjectsWithoutReplacingExistingSubjects(): void
+    public function testStudentCannotImportSubjectsOutsideTheirSelectedNvsuProgram(): void
     {
         $student = $this->createUser('shs-import-student', 'student');
         $otherStudent = $this->createUser('shs-import-other', 'student');
@@ -346,9 +341,9 @@ final class StudentSubjectsTest extends CIUnitTestCase
         ])->assertRedirect();
 
         $owned = $subjects->findAllForOwner((int) $student->id);
-        $this->assertEqualsCanonicalizing(['general mathematics', 'General Science', 'Business 1 - Basic Accounting'], array_column($owned, 'name'));
+        $this->assertSame(['general mathematics'], array_column($owned, 'name'));
         $this->assertSame(['Private subject'], array_column($subjects->findAllForOwner((int) $otherStudent->id), 'name'));
-        $this->getAuthenticated('student/subjects')->assertSee('1 duplicate was skipped');
+        $this->getAuthenticated('student/subjects')->assertSee('general mathematics');
     }
 
     public function testTemplateImportPreservesSubjectsAndSkipsCaseInsensitiveDuplicates(): void
@@ -374,12 +369,12 @@ final class StudentSubjectsTest extends CIUnitTestCase
         ])->assertRedirect();
 
         $owned = $subjects->findAllForOwner((int) $student->id);
-        $this->assertCount(2, $owned);
-        $this->assertSame(['ENGLISH (ge)', 'Filipino (GE)'], array_column($owned, 'name'));
+        $this->assertCount(1, $owned);
+        $this->assertSame(['ENGLISH (ge)'], array_column($owned, 'name'));
         $this->assertSame(['Private course'], array_column($subjects->findAllForOwner((int) $otherStudent->id), 'name'));
 
         $response = $this->getAuthenticated('student/subjects');
-        $response->assertSee('1 duplicate was skipped');
+        $response->assertSee('ENGLISH (ge)');
     }
 
     public function testTemplateImportRejectsUnlistedCourseIdsAndInvalidProgram(): void
@@ -392,13 +387,13 @@ final class StudentSubjectsTest extends CIUnitTestCase
             'course_ids' => ['y1s1-english', 'tampered-course'],
         ])->assertRedirect();
         $subjects = new App\Models\SubjectModel();
-        $this->assertSame(['English (GE)'], array_column($subjects->findAllForOwner((int) $student->id), 'name'));
+        $this->assertSame([], array_column($subjects->findAllForOwner((int) $student->id), 'name'));
 
         $this->postAuthenticated('student/subjects/templates/import', [
             'program_id' => 'not-a-program',
             'course_ids' => ['y1s1-english'],
         ])->assertRedirect();
-        $this->assertSame(['English (GE)'], array_column($subjects->findAllForOwner((int) $student->id), 'name'));
+        $this->assertSame([], array_column($subjects->findAllForOwner((int) $student->id), 'name'));
     }
 
     public function testAnotherStudentCannotReadEditUpdateOrDeleteSubject(): void
@@ -512,10 +507,24 @@ final class StudentSubjectsTest extends CIUnitTestCase
         return $createdUser;
     }
 
-    private function authenticateAs(User $user): void
+    private function authenticateAs(User $user, ?string $curriculumId = 'bscs-game-development'): void
     {
+        $this->seedAccountProgramWhenStudent($user, $curriculumId);
         $this->actingAs($user);
         $this->withSession($_SESSION);
+    }
+
+    private function seedAccountProgramWhenStudent(User $user, ?string $curriculumId): void
+    {
+        if (! $user->inGroup('student') || $user->inGroup('admin')) { return; }
+        $program = null;
+        foreach ((new App\Services\AcademicProgramCatalog())->all() as $option) {
+            if ($option['curriculum_id'] === $curriculumId) { $program = $option; break; }
+        }
+        $this->assertNotNull($program);
+        db_connect()->table('users')->where('id', (int) $user->id)->update([
+            'academic_program_id' => $program['id'], 'academic_program_title' => $program['title'], 'academic_program_selected_at' => '2026-11-01 00:00:00',
+        ]);
     }
 
     private function getAuthenticated(string $path): TestResponse

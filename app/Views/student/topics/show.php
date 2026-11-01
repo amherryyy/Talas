@@ -8,6 +8,7 @@
         <div><dt>Subject</dt><dd><?= esc($subject['name']) ?></dd></div>
         <div><dt>Due date</dt><dd><?= $topic['due_date'] === null ? 'No due date' : esc($topic['due_date']) ?></dd></div>
         <div><dt>Importance</dt><dd><?= esc(ucfirst($topic['importance'])) ?></dd></div>
+        <div><dt>Difficulty</dt><dd><?= esc(ucfirst($topic['difficulty'])) ?></dd></div>
         <div><dt>Progress</dt><dd><?= esc(ucwords(str_replace('_', ' ', $topic['progress']))) ?></dd></div>
     </dl>
 </section>

@@ -61,7 +61,8 @@ final class AuthenticationFlowTest extends CIUnitTestCase
             'password' => 'K9!vP3#rT6@x',
         ])->assertRedirect();
 
-        $this->get('student')->assertOK();
+        $this->get('student')->assertRedirectTo(site_url('student/academic-program'));
+        $this->get('student/academic-program')->assertOK();
 
         $this->postWithCsrf('logout')->assertRedirect();
         $login = $this->get('login');

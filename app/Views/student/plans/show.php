@@ -1,6 +1,20 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
+<?php
+$formatPlanTime = static function (mixed $time): string {
+    if (! is_string($time) || trim($time) === '') {
+        return '';
+    }
+
+    $time = trim($time);
+    $parsedTime = DateTimeImmutable::createFromFormat('!H:i', $time);
+
+    return $parsedTime !== false && $parsedTime->format('H:i') === $time ? $parsedTime->format('g:i A') : $time;
+};
+$displayStartTime = $formatPlanTime($startTime);
+$displayAgendaTime = $formatPlanTime($agendaDefaultTime);
+?>
 <h1>Duno Plan</h1>
 <p class="muted plan-desktop-intro">Plan for today · <?= esc($today) ?>. Blocks follow topic priority; adjust, move, or remove them.</p>
 
@@ -72,7 +86,7 @@
     <section class="notice" aria-labelledby="replace-heading">
         <h2 id="replace-heading">Replace today’s plan?</h2>
         <p>Generating a new plan for today will replace its current blocks and edits.</p>
-        <form method="post" action="<?= esc(site_url('student/plan/generate')) ?>">
+    <form method="post" action="<?= esc(site_url('student/plan/generate')) ?>" data-duno-plan-form>
             <?= csrf_field() ?>
             <input type="hidden" name="available_minutes" value="<?= esc((string) $availableMinutes) ?>">
             <input type="hidden" name="plan_date" value="<?= esc($desktopPlanDate) ?>">
@@ -85,16 +99,23 @@
 <?php endif ?>
 
 <section aria-labelledby="generate-heading">
-    <h2 id="generate-heading">Generate or regenerate</h2>
-    <form method="post" action="<?= esc(site_url('student/plan/generate')) ?>">
+    <div class="plan-generate-heading"><h2 id="generate-heading">Generate or regenerate</h2><?= view('partials/duno_mascot', ['mascotClass' => 'plan-thinking-mascot', 'mascotState' => 'idle', 'mascotInteractive' => false, 'mascotAlt' => '']) ?></div>
+    <form method="post" action="<?= esc(site_url('student/plan/generate')) ?>" data-duno-plan-form>
         <?= csrf_field() ?>
         <input type="hidden" name="plan_date" value="<?= esc($desktopPlanDate) ?>">
-        <label for="available_minutes">Available study time for today (minutes)</label>
-        <input id="available_minutes" name="available_minutes" type="number" min="15" max="480" step="1" required value="<?= esc((string) ($availableMinutes !== '' ? $availableMinutes : ($plan['available_minutes'] ?? ''))) ?>">
-        <p class="muted">Choose 15 to 480 minutes. Each unfinished topic gets a 25-minute block, shortened to fit.</p>
-        <label for="plan_start_time">Start these blocks at (optional)</label>
-        <input id="plan_start_time" name="start_time" type="time" value="<?= esc((string) $startTime) ?>">
-        <p class="muted">If you leave the start time blank, blocks stay unscheduled.</p>
+        <fieldset class="plan-availability-fields" aria-describedby="plan-availability-hint">
+            <legend>Available study time for today</legend>
+            <div><label for="available_hours">Hours</label><input id="available_hours" name="available_hours" type="number" min="0" max="8" step="1" inputmode="numeric" required value="<?= esc((string) $availableHours) ?>"></div>
+            <div><label for="available_remainder_minutes">Minutes</label><input id="available_remainder_minutes" name="available_remainder_minutes" type="number" min="0" max="59" step="1" inputmode="numeric" required value="<?= esc((string) $availableRemainderMinutes) ?>"></div>
+        </fieldset>
+        <p id="plan-availability-hint" class="muted">Enter 15 minutes to 8 hours. Each unfinished topic gets a 25-minute block, shortened to fit.</p>
+        <label for="plan_start_time">Start these blocks at <span class="plan-time-optional">Optional</span></label>
+        <div class="plan-time-entry">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+            <input id="plan_start_time" name="start_time" type="text" inputmode="text" autocomplete="off" maxlength="8" pattern="(?:0?[1-9]|1[0-2]):[0-5][0-9]\s?[AaPp][Mm]|(?:[01][0-9]|2[0-3]):[0-5][0-9]" placeholder="8:45 AM" aria-describedby="plan-start-time-hint" value="<?= esc($displayStartTime) ?>">
+            <span class="plan-time-format">12h or 24h</span>
+        </div>
+        <p id="plan-start-time-hint" class="muted plan-time-hint">For example, 8:45 AM or 20:45. Leave blank to keep blocks unscheduled.</p>
         <button type="submit">Build plan</button>
     </form>
 </section>
@@ -192,13 +213,23 @@
             <?php foreach ($topicOptions as $topic): ?><option value="<?= esc($topic['value']) ?>" data-duration="<?= esc((string) $topic['duration']) ?>"><?= esc($topic['label']) ?></option><?php endforeach ?>
         </select>
         <div class="plan-agenda-sheet-fields">
-            <div><label for="agenda-start-time">Start time</label><input id="agenda-start-time" name="start_time" type="time" required value="<?= esc((string) $agendaDefaultTime) ?>"></div>
+            <div>
+                <label for="agenda-start-time">Start time</label>
+                <div class="plan-time-entry">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                    <input id="agenda-start-time" name="start_time" type="text" inputmode="text" autocomplete="off" maxlength="8" pattern="(?:0?[1-9]|1[0-2]):[0-5][0-9]\s?[AaPp][Mm]|(?:[01][0-9]|2[0-3]):[0-5][0-9]" required placeholder="8:45 AM" aria-describedby="agenda-start-time-hint" value="<?= esc($displayAgendaTime) ?>">
+                </div>
+            </div>
             <div><label for="agenda-duration">Duration</label><div class="plan-agenda-duration-field"><input id="agenda-duration" name="duration_minutes" type="number" min="1" max="480" value="25" required><span>min</span></div></div>
+            <p id="agenda-start-time-hint" class="plan-time-hint">Enter 8:45 AM or 20:45.</p>
         </div>
         <?php if ($agendaPlan === null): ?>
-            <label for="agenda-available">Available study time for <?= esc($selectedDateLabel) ?> (minutes)</label>
-            <input id="agenda-available" name="available_minutes" type="number" min="15" max="480" step="1" required>
-            <p class="plan-agenda-field-hint">Set a daily limit between 15 and 480 minutes. Added blocks must fit within it.</p>
+            <fieldset class="plan-availability-fields" aria-describedby="agenda-availability-hint">
+                <legend>Available study time for <?= esc($selectedDateLabel) ?></legend>
+                <div><label for="agenda-available-hours">Hours</label><input id="agenda-available-hours" name="available_hours" type="number" min="0" max="8" step="1" inputmode="numeric" required></div>
+                <div><label for="agenda-available-remainder">Minutes</label><input id="agenda-available-remainder" name="available_remainder_minutes" type="number" min="0" max="59" step="1" inputmode="numeric" required></div>
+            </fieldset>
+            <p id="agenda-availability-hint" class="plan-agenda-field-hint">Enter 15 minutes to 8 hours. Added blocks must fit within it.</p>
         <?php else: ?>
             <input type="hidden" name="available_minutes" value="<?= esc((string) $agendaPlan['available_minutes']) ?>">
             <p class="plan-agenda-field-hint"><?= esc((string) $agendaPlan['available_minutes']) ?> minutes available for this day.</p>

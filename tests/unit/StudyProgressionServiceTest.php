@@ -21,14 +21,14 @@ final class StudyProgressionServiceTest extends CIUnitTestCase
         $service = new StudyProgressionService();
         $expected = [
             [0, 1],
-            [119, 1],
-            [120, 2],
-            [299, 2],
-            [300, 3],
-            [599, 3],
-            [600, 4],
-            [1199, 4],
-            [1200, 5],
+            [11, 1],
+            [12, 2],
+            [29, 2],
+            [30, 3],
+            [59, 3],
+            [60, 4],
+            [119, 4],
+            [120, 5],
         ];
 
         foreach ($expected as [$minutes, $level]) {
@@ -43,7 +43,7 @@ final class StudyProgressionServiceTest extends CIUnitTestCase
         }
 
         $atFirstUnlock = $service->summarize(
-            [$this->session('2026-10-25 12:00:00', 120)],
+            [$this->session('2026-10-25 12:00:00', 12)],
             new DateTimeImmutable('2026-10-25 13:00:00', $this->timezone),
             $this->timezone,
         );
@@ -64,10 +64,10 @@ final class StudyProgressionServiceTest extends CIUnitTestCase
             $this->session('2026-10-21 10:00:00', 15),
         ], new DateTimeImmutable('2026-10-25 13:00:00', $this->timezone), $this->timezone);
 
-        $this->assertSame(18000, $summary['xp']);
-        $this->assertSame(2, $summary['level']);
-        $this->assertSame(6000, $summary['level_progress_xp']);
-        $this->assertSame(18000, $summary['level_progress_max']);
+        $this->assertSame(180000, $summary['xp']);
+        $this->assertSame(5, $summary['level']);
+        $this->assertSame(0, $summary['level_progress_xp']);
+        $this->assertSame(0, $summary['level_progress_max']);
         $this->assertSame(5, $summary['study_days_all_time']);
         $this->assertSame(5, $summary['study_days_last_30']);
         $this->assertTrue($summary['badges'][0]['unlocked']);

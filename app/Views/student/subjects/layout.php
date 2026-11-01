@@ -5,14 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
+    <?= view('partials/pwa_head') ?>
     <title><?= esc($pageTitle ?? 'Your study space') ?> · duno.</title>
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
 </head>
 <body class="duno-workspace has-mobile-navigation">
 <a class="skip-link" href="#main-content"><?= esc(lang('App.skipMain')) ?></a>
+<?= view('partials/pwa_network_status') ?>
 <div class="shell">
     <?php
+    $isAcademicProgramSelection = ($isAcademicProgramSelection ?? false) === true;
     $currentPath = trim(service('uri')->getPath(), '/');
     $currentPath = preg_replace('#^index\.php/?#', '', $currentPath);
     $isTopicPage = str_contains($currentPath, '/topics');
@@ -33,6 +36,9 @@
             <span class="brand-wordmark" data-tour-target="start">duno.</span>
             <span class="brand-tagline">Your Little Study Buddy.</span>
         </a>
+        <?php if ($isAcademicProgramSelection): ?>
+            <form method="post" action="<?= esc(site_url('logout')) ?>" class="program-setup-signout"><?= csrf_field() ?><button type="submit"><?= esc(lang('App.signOut')) ?></button></form>
+        <?php else: ?>
         <nav class="workspace-nav" aria-label="<?= esc(lang('App.primaryNav')) ?>">
             <?php foreach ($primaryLinks as $link): ?>
                 <?php $isGuide = $link['label'] === 'Guide'; $isCurrent = ! $isGuide && ($currentPath === $link['path'] || str_starts_with($currentPath, $link['path'] . '/')); ?>
@@ -44,21 +50,17 @@
         <details class="student-menu" data-student-menu>
             <summary aria-label="<?= esc(lang('App.openMore')) ?>"<?= $isMorePage ? ' aria-current="page"' : '' ?> data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span><span><?= esc(lang('App.more')) ?></span></summary>
             <nav aria-label="<?= esc(lang('App.moreNav')) ?>">
-                <div class="student-menu-group" role="group" aria-labelledby="student-menu-workspace">
-                    <p id="student-menu-workspace" class="student-menu-group-title"><?= esc(lang('App.menuWorkspace')) ?></p>
-                    <a href="<?= esc(site_url('student')) ?>"<?= $currentPath === 'student' ? ' aria-current="page"' : '' ?> data-home-nav><?= esc(lang('App.home')) ?></a>
-                    <a href="<?= esc(site_url('student')) ?>#app-tour"><?= esc(lang('App.showTour')) ?></a>
-                </div>
                 <div class="student-menu-group" role="group" aria-labelledby="student-menu-study">
                     <p id="student-menu-study" class="student-menu-group-title"><?= esc(lang('App.menuStudy')) ?></p>
                     <a href="<?= esc(site_url('student/subjects')) ?>"<?= str_starts_with($currentPath, 'student/subjects') && ! $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.subjects')) ?></a>
                     <a href="<?= esc(site_url('student/topics')) ?>"<?= str_starts_with($currentPath, 'student/topics') || $isTopicPage ? ' aria-current="page"' : '' ?>><?= esc(lang('App.topics')) ?></a>
+                    <a href="<?= esc(site_url('student#guide-heading')) ?>" data-guide-nav><?= esc(lang('App.guide')) ?></a>
                     <a href="<?= esc(site_url('student/check-ins')) ?>"<?= str_contains($currentPath, 'check-ins') ? ' aria-current="page"' : '' ?>><?= esc(lang('App.privateCheckins')) ?></a>
+                    <a href="<?= esc(site_url('about')) ?>"<?= $currentPath === 'about' ? ' aria-current="page"' : '' ?>><?= esc(lang('App.about')) ?></a>
                 </div>
                 <div class="student-menu-group" role="group" aria-labelledby="student-menu-account">
                     <p id="student-menu-account" class="student-menu-group-title"><?= esc(lang('App.menuAccount')) ?></p>
                     <a href="<?= esc(site_url('student/profile')) ?>"<?= $currentPath === 'student/profile' ? ' aria-current="page"' : '' ?>><?= esc(lang('App.profile')) ?></a>
-                    <?= view('partials/language_switcher') ?>
                     <form method="post" action="<?= esc(site_url('logout')) ?>">
                         <?= csrf_field() ?>
                         <button type="submit"><?= esc(lang('App.signOut')) ?></button>
@@ -66,13 +68,16 @@
                 </div>
             </nav>
         </details>
+        <?php endif ?>
     </header>
     <main id="main-content">
         <?= view('partials/app_notifications') ?>
         <?= $this->renderSection('content') ?>
     </main>
 </div>
+<script src="<?= esc(duno_asset('assets/js/duno-mascot.js')) ?>" defer></script>
 <script src="<?= esc(duno_asset('assets/js/onboarding-tour.js')) ?>" defer></script>
+<?php if (! $isAcademicProgramSelection): ?>
 <?= view('partials/app_footer', ['footerGroups' => [
     ['id' => 'footer-study', 'title' => lang('App.footerStudy'), 'links' => [
         ['label' => lang('App.home'), 'href' => site_url('student')],
@@ -87,6 +92,9 @@
     ]],
     ['id' => 'footer-guide', 'title' => lang('App.footerExplore'), 'links' => [
         ['label' => lang('App.guide'), 'href' => site_url('student#guide-heading')],
+    ]],
+    ['id' => 'footer-account', 'title' => lang('App.footerAccount'), 'links' => [
+        ['label' => lang('App.profile'), 'href' => site_url('student/profile')],
         ['label' => lang('App.showTour'), 'href' => site_url('student#app-tour')],
     ]],
 ]]) ?>
@@ -95,11 +103,13 @@
     'appTourUserId' => (string) auth()->id(),
     'appTourAutoStart' => true,
 ]) ?>
+<?php endif ?>
 <?php if ($levelUp = session()->getFlashdata('level_up')): ?>
     <?= $this->include('student/partials/level_up_dialog', ['levelUp' => $levelUp]) ?>
 <?php endif ?>
 <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
-<script src="<?= esc(duno_asset('assets/js/student-navigation.js')) ?>" defer></script>
+<?php if (! $isAcademicProgramSelection): ?><script src="<?= esc(duno_asset('assets/js/student-navigation.js')) ?>" defer></script><?php endif ?>
+<script src="<?= esc(duno_asset('assets/js/pwa.js')) ?>" defer></script>
 <?php if ($levelUp): ?><script src="<?= esc(duno_asset('assets/js/level-up.js')) ?>" defer></script><?php endif ?>
 </body>
 </html>

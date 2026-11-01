@@ -7,6 +7,7 @@ use App\Filters\ExpiredRegistrationCleanupFilter;
 use App\Filters\LanguagePreferenceFilter;
 use App\Filters\NoStorePagesFilter;
 use App\Filters\StudentStreakFilter;
+use App\Filters\StudentAcademicProgramFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -41,6 +42,7 @@ class Filters extends BaseFilters
         'performance'    => PerformanceMetrics::class,
         'exclusive-role' => ExclusiveRoleFilter::class,
         'student-streak' => StudentStreakFilter::class,
+        'student-program' => StudentAcademicProgramFilter::class,
         'language-preference' => LanguagePreferenceFilter::class,
         'no-store-pages' => NoStorePagesFilter::class,
         'expired-registration-cleanup' => ExpiredRegistrationCleanupFilter::class,

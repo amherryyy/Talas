@@ -1,69 +1,42 @@
 # Talas version-control workflow
 
-This is the operating procedure for local Git, staging, commits, GitHub, and pull requests. The project owner reviews and accepts changes. Agents may edit and prepare a reviewable change, but must not stage, commit, push, merge, or publish unless the owner explicitly authorizes that action.
+The project owner reviews and accepts changes. Agents may edit and prepare reviewable changes, but must not stage, commit, push, merge, or publish unless the owner explicitly authorizes that action.
 
-Replace example repository URLs, branch names, and file paths with the actual values before running commands.
+## Audited repository and release state
 
-## Current repository state
+Checked 2026-11-01:
 
-Local Git snapshot, checked 2026-10-29 after PR #15: GitHub reports PR #15 merged into `main` (merge commit `3dda2b0`, head `16b1673`). The local branch still points at the merged PR head, while its `main`/`origin/main` tracking refs are stale. The worktree contains a mixed, uncommitted batch across Plan agenda/schema, route normalization, onboarding, authentication UI, and shared responsive styling. The owner confirmed hosted migration 16/batch 11 for the agenda. Preserve the edits; do not push more work to the already-merged branch. Before Git changes, obtain current `main`, separate the accumulated stories into focused commits/PRs, and recheck that no user changes are lost. The route and Plan fixes passed the local test suite; see `docs/deployment.md` for deployment status. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+- The repository has established Git history and a configured GitHub remote (`origin`). Base `main` and `origin/main` remain at `310c5e520ed15509582a2f96af434e24e3065b14`. The reviewed release branch `release/duno-production-r7` has source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3`.
+- The r7 source baseline groups the reviewed accumulated product, test, and documentation changes into one release-readiness commit. The worktree has subsequent release-record documentation edits; inspect actual Git status before further operations. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+- No Git release tags are present. The release marker is not a Git tag, commit ID, or content hash.
+- Composer resolves CodeIgniter Framework `v4.7.5` and Shield `v1.4.1` in `composer.lock`. The r6 package's `vendor/composer/installed.json` was checked and contains those same versions. The owner-reported host PHP version is 8.4.27 (2026-10-25); it has not been independently checked in this session.
+- `duno-full-release-20261101-r7.zip` has SHA-256 `B48283C634F98F9C3820C38AB5F9A035D380E97F28187456CEAE297DE87863C4`; it contains 1,239 entries (5,372,534 bytes), marker r7, CI4 4.7.5 and Shield 1.4.1, and was built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3`. The owner uploaded it and a fresh cache-busted Brave request returned r7. The archive hash identifies ZIP bytes; the full commit identifies source files. Complete host file parity is not verified.
+- The r6 ZIP remains stale and must not be uploaded. Its SHA-256 is `F95CBD32FC661E515384A33EC5DDC912AFF4F118F10F248EAA81AB0C36AE92BC`; it predates the role-denial header fix and was built from dirty `main`.
+- The response-hardening changes are committed at `120b76665ab062d5133f71ce03117093fb1f7a7f` on `release/duno-production-r7`. The r8 package has 1,241 entries (5,373,531 bytes) and SHA-256 `703F22A55598BC4F831FEAF0A9C85AF0327B678A5BAB8686C21AF0DBDFFA0874`; it is built from that clean commit and the owner uploaded it. Brave confirmed r8 marker and tested header/status behavior. Documentation-only changes from earlier work remain in the worktree and were not included in the deployment ZIP.
+- The owner reports r5 was used for live Aralytics acceptance. R7 is now the uploaded release by owner report, and its marker was independently read in Brave. An old open tab still showed r3, so stale response/cache behavior requires follow-up. Uploaded-file parity and full live behavior remain unverified.
 
-## One-time GitHub setup
+## Review and release procedure
 
-### 1. Review the local snapshot
-
-From PowerShell in the project root:
+Before any Git operation, inspect the actual repository state:
 
 ```powershell
 git status --short --branch
 git status --short --ignored
-git check-ignore -v .env .tools/composer.phar vendor writable/logs writable/cache
+git diff --check
+git diff --stat
+git diff
+git ls-files --others --exclude-standard
 ```
 
-Confirm that `.env`, local Composer tooling, `vendor/`, runtime data, machine-specific `.vscode/`, and temporary host-probe upload fixtures are ignored. The root `env` file is the framework's configuration template and is expected to be versioned; the real `.env` is not. `.vscode/settings.json` currently contains an absolute XAMPP path, so keep it local. Review all source, docs, tests, and deployment files for credentials, real student data, local paths, or temporary probes.
+Review ignored files separately for `.env`, local Composer tooling, `vendor/`, runtime data, machine-specific `.vscode/`, and temporary host probes. The root `env` file is the framework template and may be tracked; the real `.env` must remain ignored. Never include credentials, real student data, local databases, logs, caches, or temporary probes in a commit or release package.
 
-### 2. Create the first local commit
+The current worktree is already dirty. Do not switch branches, pull, reset, or stage it as a routine cleanup step. First review and classify every existing change, preserve unrelated work, and get owner direction for how to divide the accumulated stories. For a future reviewed story, create a focused branch from an up-to-date `main` only after the worktree is clean and the owner has authorized the required Git operations.
 
-This repository has no prior history, so the first commit establishes the reviewed project baseline on `main`. After reviewing the complete snapshot, stage the intended project files and inspect the index before committing:
-
-```powershell
-git add -A
-git status --short
-git diff --cached --check
-git diff --cached --stat
-git diff --cached --name-status
-git diff --cached
-```
-
-If any local, generated, secret, or unrelated file appears, unstage only that path. On the unborn branch, use `git rm --cached -- <path>`; after the first commit, use `git restore --staged -- <path>`. Correct `.gitignore` if appropriate, then recheck the full staged diff. Do not commit until the index contains only the reviewed baseline.
-
-Use a clear initial message, for example:
-
-```powershell
-git commit -m "chore: establish Talas CI4 foundation"
-git status --short --branch
-git log -1 --oneline
-```
-
-The initial commit records the current scaffold, including work already present locally. It does not mean the authentication story has passed its database-backed acceptance checks.
-
-### 3. Connect and publish to GitHub
-
-Create the GitHub repository without initializing it with a README, license, or `.gitignore` when publishing this existing local history. Then add the actual repository URL and verify it before the first push:
-
-```powershell
-git remote add origin https://github.com/OWNER/REPOSITORY.git
-git remote -v
-git push -u origin main
-```
-
-Use the account's approved HTTPS or SSH authentication; never put a token or password in the URL, a command, or repository files. If the GitHub repository already has commits, stop and inspect both histories. Preserve and reconcile the remote history; never force-push to make them match.
-
-After the first push, enable GitHub branch protection for `main` when available: require pull requests, prevent force-pushes and deletion, and require configured CI checks once CI exists. Until checks are configured, say so in the review; do not invent a passing status gate.
+Before a future release is treated as tied to source control, build from an owner-reviewed clean commit and record that full commit hash alongside the package filename, release marker, locked dependency versions, and archive SHA-256. Do not label a dirty-worktree archive reproducible from its base commit. Keep the marker and Git provenance as separate fields.
 
 ## Per-story branch and staging flow
 
-Start each ready story from an up-to-date `main` and use one focused branch:
+Once the owner has approved the Git operations and the worktree is clean, start each story from current `main`:
 
 ```powershell
 git status --short --branch
@@ -72,16 +45,9 @@ git pull --ff-only origin main
 git switch -c feature/F-02-role-boundaries
 ```
 
-Use `fix/` for a defect and `docs/` for documentation-only work. Do not start if the working tree has unexplained changes; identify and preserve them first. Do not pull or switch branches in the current unborn repository until its initial commit and remote setup are complete.
+Use `fix/` for a defect and `docs/` for a documentation-only change. Keep each branch focused. If an existing worktree is dirty or contains unexplained changes, stop before switching or pulling and preserve that work.
 
-While working, keep changes scoped to the story. Before staging, inspect both tracked and untracked files:
-
-```powershell
-git status --short
-git diff
-```
-
-Stage only the paths that belong to the story:
+Stage only paths that belong to the reviewed story:
 
 ```powershell
 git add -- app/Config/Routes.php app/Filters/ExclusiveRoleFilter.php docs/auth-foundation-story.md
@@ -92,9 +58,7 @@ git diff --cached --name-status
 git diff --cached
 ```
 
-Replace the example paths with the actual story files. Do not use `git add .` or `git add -A` for routine story commits. Do not stage unrelated user changes, secrets, `.env`, local databases, uploads, logs, caches, `vendor/`, `.tools/`, or temporary hosting probes. If a file is already staged accidentally, unstage that specific path and review again.
-
-Run the story's required checks, then recheck the staged diff. Commit only the reviewed index. Use a concise Conventional Commit message, such as:
+Do not use `git add .` or `git add -A` for routine story commits. If a file is staged accidentally, unstage only that path with `git restore --staged -- <path>`, then inspect the index again. Run the required checks, review the complete staged diff, and commit only after owner authorization. Use a concise Conventional Commit message, for example:
 
 ```text
 feat(auth): enforce student and admin route roles
@@ -102,9 +66,7 @@ fix(plan): reject sessions outside the selected day
 docs(workflow): define staging and GitHub process
 ```
 
-One branch should represent one story. Use additional commits only for meaningful, reviewable steps; do not amend or rewrite a commit that has already been pushed unless the owner explicitly directs it and collaborators are not relying on it.
-
-## Push and review
+## Push, pull request, and merge
 
 Push a story branch only when the owner has authorized publication:
 
@@ -112,21 +74,17 @@ Push a story branch only when the owner has authorized publication:
 git push -u origin feature/F-02-role-boundaries
 ```
 
-Open a pull request targeting `main` with a complete, self-contained description. Use `.github/PULL_REQUEST_TEMPLATE.md` and fill in every applicable section: story/requirement IDs and motivation, user-visible changes, security/privacy impact, verification with actual results (including checks not run and why), AI-use log status, and known limitations or deployment impact. Link related docs when relevant. Keep the title concise and specific; write the body so a reviewer can understand the change without reconstructing it from commit messages. Review the concrete GitHub diff and CI results; a green build does not replace authorization, privacy, or browser checks.
-
-After owner review and acceptance, merge using the repository's selected GitHub review process. Do not merge or deploy on the owner's behalf. Then update local `main` with `git pull --ff-only origin main` before beginning the next story branch. Keep the branch until the merge is confirmed; delete it only through the normal GitHub cleanup after confirmation.
+Never put tokens or passwords in URLs, commands, or repository files. Open a pull request targeting `main` with the project template and actual verification results, including checks not run and why. Review the GitHub diff and CI output; a green build does not replace authorization, privacy, browser, or host acceptance. Do not merge or deploy without owner authorization. After a merge is confirmed, update local `main` with `git pull --ff-only origin main` before beginning another story branch.
 
 ## Safe staging checklist
 
-Before every commit, confirm:
-
-- [ ] The branch is the intended story branch (or this is the reviewed initial baseline commit).
-- [ ] `git status --short` contains no unexplained changes.
-- [ ] The staged file list contains only this story's intended files.
-- [ ] The staged diff has been read, not just summarized.
+- [ ] The branch is the intended story branch and Git operations are authorized.
+- [ ] The worktree has no unexplained changes.
+- [ ] The staged file list contains only the story's intended files.
+- [ ] The complete staged diff has been reviewed.
 - [ ] No credentials, private data, local environment files, generated dependencies, or temporary probes are staged.
 - [ ] `git diff --cached --check` reports no whitespace errors.
-- [ ] Required checks and their actual results are recorded.
-- [ ] The commit message describes the change and requirement/story where useful.
+- [ ] Required checks and actual results are recorded.
+- [ ] The commit message describes the change and story where useful.
 
-When anything is uncertain, leave it unstaged and ask the project owner to review that path. A clean, narrow index is the boundary of what the next commit will contain.
+When anything is uncertain, leave it unstaged and ask the project owner to review that path.

@@ -5,8 +5,8 @@ $canOpenStudentTools = $isStudent;
 $tools = [
     [
         'name' => 'Duno Focus',
-        'eyebrow' => 'Choose a next step',
-        'description' => 'See unfinished topics in a clear, explainable order.',
+        'eyebrow' => 'NEXT TOPIC',
+        'description' => 'Find unfinished topics in an explainable priority order.',
         'path' => 'student/priority',
         'icon' => 'target',
         'tone' => 'lavender',
@@ -14,8 +14,8 @@ $tools = [
     ],
     [
         'name' => 'Duno Plan',
-        'eyebrow' => 'Shape your study time',
-        'description' => 'Build and adjust a plan around the time you have.',
+        'eyebrow' => 'STUDY SCHEDULE',
+        'description' => 'Shape available time into a study plan.',
         'path' => 'student/plan',
         'icon' => 'calendar',
         'tone' => 'mint',
@@ -23,8 +23,8 @@ $tools = [
     ],
     [
         'name' => 'Duno Timer',
-        'eyebrow' => 'Settle into a session',
-        'description' => 'Time a study session and save it when you are done.',
+        'eyebrow' => 'STUDY SESSION',
+        'description' => 'Time a session and save it when you choose.',
         'path' => 'student/sessions',
         'icon' => 'stopwatch',
         'tone' => 'gold',
@@ -32,8 +32,8 @@ $tools = [
     ],
     [
         'name' => 'Aralytics',
-        'eyebrow' => 'Look back at your work',
-        'description' => 'Review simple summaries of your recorded study time.',
+        'eyebrow' => 'STUDY HISTORY',
+        'description' => 'Review the study time you saved.',
         'path' => 'student/aralytics',
         'icon' => 'chart-2',
         'tone' => 'blue',
@@ -154,7 +154,7 @@ $joinUrl = site_url('register');
         }
         .welcome-gradient-drift { position: absolute; z-index: 0; display: block; width: clamp(11rem, 29vw, 23rem); aspect-ratio: 1; border-radius: 50%; pointer-events: none; opacity: .44; will-change: transform; }
         .welcome-gradient-drift-one { top: -48%; left: 4%; background: radial-gradient(circle, rgb(139 123 232 / 31%) 0%, rgb(196 188 255 / 18%) 43%, transparent 72%); animation: duno-gradient-drift-one 9s ease-in-out -2s infinite alternate; }
-        .welcome-gradient-drift-two { top: 18%; left: 37%; background: radial-gradient(circle, rgb(255 211 126 / 28%) 0%, rgb(255 232 181 / 16%) 43%, transparent 72%); animation: duno-gradient-drift-two 11s ease-in-out -5s infinite alternate; }
+        .welcome-gradient-drift-two { top: 18%; left: 37%; background: radial-gradient(circle, rgb(185 232 209 / 34%) 0%, rgb(237 233 254 / 27%) 43%, transparent 72%); animation: duno-gradient-drift-two 11s ease-in-out -5s infinite alternate; }
         .welcome-gradient-drift-three { right: 9%; bottom: -57%; background: radial-gradient(circle, rgb(126 191 166 / 25%) 0%, rgb(186 224 206 / 15%) 43%, transparent 72%); animation: duno-gradient-drift-three 8s ease-in-out -3s infinite alternate; }
         .welcome-gradient-drift-four { top: -55%; right: -13%; background: radial-gradient(circle, rgb(160 147 238 / 23%) 0%, rgb(213 208 255 / 14%) 43%, transparent 72%); animation: duno-gradient-drift-four 12s ease-in-out -7s infinite alternate; }
         @keyframes duno-gradient-drift-one { to { transform: translate(16%, 12%) scale(1.08); } }
@@ -276,9 +276,11 @@ $joinUrl = site_url('register');
     </style>
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
+    <?= view('partials/pwa_head') ?>
 </head>
 <body class="duno-landing <?= ! $isLoggedIn || $isStudent || $isAdmin ? 'has-mobile-navigation' : '' ?>">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/pwa_network_status') ?>
 <?= view('partials/app_notifications') ?>
 <header class="topbar">
     <div class="shell topbar-inner">
@@ -298,6 +300,7 @@ $joinUrl = site_url('register');
             <details class="menu">
                 <summary aria-label="Toggle main menu" data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span></summary>
                 <nav class="menu-panel" aria-label="Main menu">
+                    <button class="menu-button" type="button" data-pwa-install hidden><?= esc(lang('App.installApp')) ?></button>
                     <a href="<?= esc(site_url('')) ?>">Home</a>
                     <?php if ($isLoggedIn && $workspaceUrl !== null): ?>
                         <a href="<?= esc($workspaceUrl) ?>"><?= esc($workspaceLabel) ?></a>
@@ -330,22 +333,33 @@ $joinUrl = site_url('register');
         <div class="welcome-layout">
             <div class="welcome-copy">
                 <p class="overline"><?= $isStudent ? 'Your study space' : 'A little more focus, one step at a time' ?></p>
-                <h1 id="welcome-heading"><?= $isStudent ? 'What are we studying today?' : 'Make room for your next study step.' ?></h1>
+                <h1 id="welcome-heading"><?= $isStudent ? 'What are we studying today?' : 'A clearer way to begin studying.' ?></h1>
                 <p class="lead">
                     <?= $isStudent
-                        ? 'Choose a tool, work at your pace, and keep your study activity in one place.'
-                        : 'Organize topics, make a plan, and keep track of study sessions with Duno.' ?>
+                        ? 'Choose one next step and use the time you have.'
+                        : 'Organize topics, plan your time, and keep track of the sessions you save.' ?>
                 </p>
                 <div class="welcome-actions">
                     <?php if (! $isLoggedIn): ?>
-                        <a class="pill pill-primary" href="<?= esc($joinUrl) ?>">Create your student account</a>
-                        <a class="pill" href="<?= esc(site_url('login')) ?>">I already have an account</a>
+                        <a class="pill pill-primary" href="#tools">Explore the tools <span aria-hidden="true">↓</span></a>
+                    <?php elseif ($isStudent): ?>
+                        <a class="pill pill-primary" href="#tools">Choose a tool <span aria-hidden="true">↓</span></a>
                     <?php elseif ($workspaceUrl !== null): ?>
                         <a class="pill pill-primary" href="<?= esc($workspaceUrl) ?>"><?= esc($workspaceLabel) ?></a>
                     <?php endif ?>
                 </div>
             </div>
-            <img class="welcome-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="Duno, a cheerful lightbulb study buddy wearing a Filipino salakot" width="512" height="536" fetchpriority="high">
+            <div class="welcome-mascot-art">
+                <span class="hero-art-glow" aria-hidden="true"></span>
+                <span class="hero-orbit hero-orbit-one" aria-hidden="true"></span>
+                <span class="hero-orbit hero-orbit-two" aria-hidden="true"></span>
+                <svg class="hero-art-constellation" viewBox="0 0 360 300" focusable="false" aria-hidden="true">
+                    <ellipse class="constellation-track constellation-track-one" cx="180" cy="150" rx="132" ry="100"></ellipse>
+                    <ellipse class="constellation-track constellation-track-two" cx="180" cy="150" rx="112" ry="83" transform="rotate(-34 180 150)"></ellipse>
+                    <path class="constellation-star constellation-star-two" d="M292 224c1.5 8 4 10.5 12 12-8 1.5-10.5 4-12 12-1.5-8-4-10.5-12-12 8-1.5 10.5-4 12-12Z"></path>
+                </svg>
+                <?= view('partials/duno_mascot', ['mascotClass' => 'welcome-mascot', 'mascotAlt' => 'Duno, a cheerful lightbulb study buddy wearing a Filipino salakot', 'mascotInteractive' => true, 'mascotLabel' => 'Tap Duno for a playful hello']) ?>
+            </div>
         </div>
     </section>
 
@@ -357,10 +371,11 @@ $joinUrl = site_url('register');
         <div class="tool-grid">
             <?php foreach ($tools as $tool): ?>
                 <?php $toolUrl = site_url($tool['path']); ?>
+                <?php $toolClass = $tool['path'] === 'student/priority' ? ' tool-card-focus' : ''; ?>
                 <?php if ($canOpenStudentTools): ?>
-                <a class="tool-card <?= esc($tool['tone']) ?>" href="<?= esc($toolUrl) ?>" data-tour-target="<?= esc($tool['tour']) ?>">
+                <a class="tool-card<?= $toolClass ?> <?= esc($tool['tone']) ?>" href="<?= esc($toolUrl) ?>" data-tour-target="<?= esc($tool['tour']) ?>">
                 <?php else: ?>
-                <article class="tool-card <?= esc($tool['tone']) ?>">
+                <article class="tool-card<?= $toolClass ?> <?= esc($tool['tone']) ?>">
                 <?php endif ?>
                     <span class="tool-mark" aria-hidden="true"><span class="solar-icon solar-icon-<?= esc($tool['icon']) ?>"></span></span>
                     <span class="tool-copy">
@@ -464,7 +479,9 @@ $footerGroups = $isStudent ? [
 <?php if (! $isLoggedIn): ?>
 <script type="module" src="<?= esc(duno_asset('assets/js/public-bottom-nav.js')) ?>"></script>
 <?php endif ?>
+<script src="<?= esc(duno_asset('assets/js/duno-mascot.js')) ?>" defer></script>
 <?php if ($isStudent): ?><script src="<?= esc(duno_asset('assets/js/onboarding-tour.js')) ?>" defer></script><?php endif ?>
 <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/pwa.js')) ?>" defer></script>
 </body>
 </html>

@@ -22,14 +22,12 @@
     <section class="app-tour-carousel" data-tour-carousel aria-labelledby="welcome-carousel-title" aria-describedby="welcome-carousel-copy" hidden>
         <div class="welcome-carousel-layout">
             <div class="welcome-carousel-art" aria-hidden="true">
-                <div class="welcome-art-track" data-welcome-track>
+                <div class="welcome-art-track">
                     <div class="welcome-art-slide welcome-art-first">
                         <span class="welcome-art-glow"></span>
                         <span class="welcome-art-orbit welcome-art-orbit-one"></span>
                         <span class="welcome-art-orbit welcome-art-orbit-two"></span>
-                        <img class="welcome-art-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="" width="512" height="536">
-                        <span class="welcome-art-float welcome-art-note"><i aria-hidden="true">✦</i><span>one step at a time</span></span>
-                        <span class="welcome-art-float welcome-art-check"><i aria-hidden="true">✓</i><span>ready when you are</span></span>
+                        <?= view('partials/duno_mascot', ['mascotClass' => 'welcome-art-mascot', 'mascotState' => 'idle', 'mascotInteractive' => false, 'mascotAlt' => '']) ?>
                     </div>
                     <div class="welcome-art-slide">
                         <svg viewBox="0 0 540 420" focusable="false">
@@ -97,7 +95,6 @@
             </div>
             <div class="welcome-carousel-copy">
                 <div class="welcome-carousel-brand"><span class="welcome-brand-mark" aria-hidden="true">✦</span><span><strong>duno.</strong><small>Your Little Study Buddy.</small></span></div>
-                <p class="workspace-kicker" data-welcome-kicker>WELCOME TO DUNO</p>
                 <h2 id="welcome-carousel-title" data-welcome-title tabindex="-1">Make room for your next study step.</h2>
                 <p id="welcome-carousel-copy" class="welcome-carousel-lead" data-welcome-copy>Duno keeps your subjects, plans, and study time together so it’s easier to know where to begin.</p>
                 <div class="welcome-carousel-indicators">
@@ -112,7 +109,7 @@
         </div>
     </section>
     <div class="app-tour-intro">
-        <img class="app-tour-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="" width="512" height="536" aria-hidden="true">
+        <?= view('partials/duno_mascot', ['mascotClass' => 'app-tour-mascot', 'mascotState' => 'idle', 'mascotInteractive' => false, 'mascotAlt' => '']) ?>
         <div>
             <h2 id="app-tour-title" data-tour-title tabindex="-1"><?= esc(lang('App.welcomeDuno')) ?></h2>
             <p id="app-tour-copy" class="app-tour-copy" data-tour-copy></p>

@@ -22,7 +22,7 @@ class NvsuCurriculumImportService
         }
 
         $existingSubjects = [];
-        foreach ($this->subjects->findAllForOwner($ownerId) as $subject) {
+        foreach ($this->subjects->findAllForAcademicProgram($ownerId, $programId) as $subject) {
             $existingSubjects[mb_strtolower(trim((string) $subject['name']))] = $subject;
         }
 

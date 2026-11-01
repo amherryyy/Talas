@@ -27,6 +27,7 @@ As a student, I can enter the study time I have today, get a plan that fits, and
 8. A planned block may have a nullable start time. A chosen start time on plan generation lays out its generated blocks sequentially by duration. Existing blocks without a time stay visibly unscheduled until the student schedules them.
 9. From the mobile add sheet, a student may add one of their unfinished topics or assign a start time to an existing unscheduled block. Added blocks must fit the day's available-minute cap and may not overlap another scheduled block. The existing topic uniqueness and owner-scope rules remain in force; arbitrary meetings, locations, attendees, and non-study calendar events are outside Duno Plan.
 10. The current-time marker appears only for the selected app-local date that is today. It is positioned relative to scheduled blocks; older blocks without a start time are grouped as unscheduled.
+11. Available time is entered as whole hours and remaining minutes, then normalized to the existing 15â€“480 total-minute rule and `available_minutes` storage. The minute portion is 0â€“59; existing minute-based submissions remain supported for confirmations and compatible callers.
 
 The checklist card presentation adapts the progress-card snippet supplied by the owner from BrewedOps Motion Library. Duno's card uses current saved plan topics and existing topic-progress values rather than sample lesson content.
 
@@ -42,6 +43,7 @@ The owner approved the mobile agenda adaptation on 2026-10-29. It uses `study_pl
 - Cross-student plan and topic reads/writes are denied, including direct requests.
 - A progress-card change updates only the signed-in student's topic referenced by today's owned plan item; invalid or unavailable items are rejected.
 - The phone agenda can move across weeks and dates, and shows each selected day's owner-scoped blocks; desktop generation and editing continue to use today's plan.
+- The hours/minutes inputs accept values such as 0 hours 45 minutes and 1 hour 30 minutes, reject totals below 15 or above 480 minutes, and preserve the existing total-minute plan record and replacement confirmation.
 - A mobile add rejects a topic from another student, duplicate topics, over-capacity durations, invalid times, and overlaps. Previously unscheduled blocks can be scheduled without changing their topic or duration.
 - Mobile topic progress uses the same saved `done`/`in_progress` status as the desktop checklist; the now line appears only on the app-local current date.
 - With JavaScript enabled, the progress bar and completion badge update in place. With JavaScript disabled, the normal CSRF-protected form still updates the topic and reloads the Plan page.

@@ -24,6 +24,8 @@ Start-Process -FilePath C:\xampp\mysql\bin\mysqld.exe -ArgumentList '--defaults-
 
 **Current local review status (2026-10-25):** The isolated review DB on port 3308 is reachable; `migrate:status --all` using `.tools/talas-review-env.php` confirmed all nine expected migrations. An unauthenticated `mysqladmin ping` returned access denied because it used the default Windows account without a password; this was not a connectivity failure. The running MariaDB process owns the review data files, so do not launch a duplicate. Several older PHP servers also occupy the usual 8080 port. The current local visual review used port 18080, `app.baseURL=http://localhost:18080/`, `php_intl.dll`, and a temporary review router with the development toolbar disabled. The corrupt shared XAMPP data directory remains untouched.
 
+**Schema review update (2026-10-31):** The same isolated `talas_review` database on `127.0.0.1:3308` now has migration `2026-10-30-000001_AddTopicDifficulty` and `2026-10-30-000002_EnforceStudyPlanOwnership`, both in batch 7. The owner columns, composite FK metadata, and three zero-row ownership preflights were verified. These local migrations do not modify the hosted InfinityFree database; do not confuse this local ledger with the host's migration 16/batch 11 ledger.
+
 **Streak migration follow-up (2026-10-26):** `2026-10-26-000001_CreateStudentStreakDays` adds one unique owner/date row for streak XP. Feature tests apply it to isolated in-memory SQLite. The existing `.tools` browser-review DB was not migrated: its configured database access was denied during the R-08 browser-review attempt. The shared XAMPP database and the hosted database were not changed.
 
 ## Run the local web app

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= lang('Errors.badRequest') ?></title>
+    <title><?= esc(lang('Errors.badRequest')) ?></title>
 
     <style>
         div.logo {
@@ -80,7 +80,7 @@
         <?php if (ENVIRONMENT !== 'production') : ?>
             <?= nl2br(esc($message)) ?>
         <?php else : ?>
-            <?= lang('Errors.sorryBadRequest') ?>
+            <?= esc(lang('Errors.sorryBadRequest')) ?>
         <?php endif; ?>
     </p>
     <nav class="page-navigation" aria-label="Page navigation">

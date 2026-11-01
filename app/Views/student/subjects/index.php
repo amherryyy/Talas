@@ -2,26 +2,15 @@
 
 <?= $this->section('content') ?>
 <h1><?= esc(lang('App.yourSubjects')) ?></h1>
-<p><?= esc(lang('App.subjectsIntro')) ?></p>
-<?php $programTitles = array_column($nvsuCurricula, 'title', 'id'); ?>
+<p>Your subjects are for <?= esc($academicProgram['title']) ?>.
+    <?php if ($academicProgram['curriculum_id'] !== null): ?>Choose subjects from its NVSU list.<?php else: ?>Type your subject names because an NVSU list is not available for this program.<?php endif ?>
+</p>
 <div class="actions">
     <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> <?= esc(lang('App.addSubject')) ?></a>
-    <a class="button secondary" href="<?= esc(site_url('student/subjects/templates')) ?>"><?= esc(lang('App.programCatalog')) ?></a>
+    <?php if ($academicProgram['curriculum_id'] !== null): ?>
+        <a class="button secondary" href="<?= esc(site_url('student/subjects/templates')) ?>">View my subject list</a>
+    <?php endif ?>
 </div>
-
-<form method="post" action="<?= esc(site_url('student/subjects/search')) ?>" class="subject-program-filter">
-    <?= csrf_field() ?>
-    <input type="hidden" name="query" value="">
-    <label for="subject-program-filter">NVSU course list</label>
-    <select id="subject-program-filter" name="program_id">
-        <option value="">All my subjects</option>
-        <?php foreach ($nvsuCurricula as $program): ?>
-            <option value="<?= esc($program['id']) ?>"<?= $programId === $program['id'] ? ' selected' : '' ?>><?= esc($program['title']) ?></option>
-        <?php endforeach ?>
-    </select>
-    <p class="muted">Filters subjects you have already added. Choosing a course in the add form creates that course as a subject; this filter does not import a whole curriculum.</p>
-    <div class="actions"><button type="submit">Show my subjects</button></div>
-</form>
 
 <?php if ($errors !== []): ?>
     <ul class="errors" role="alert">
@@ -33,7 +22,6 @@
 
 <form method="post" action="<?= esc(site_url('student/subjects/search')) ?>">
     <?= csrf_field() ?>
-    <input type="hidden" name="program_id" value="<?= esc($programId) ?>">
     <label for="subject-query"><?= esc(lang('App.searchSubjects')) ?></label>
     <input id="subject-query" name="query" type="search" maxlength="120" value="<?= esc($query) ?>" autocomplete="off">
     <div class="actions">
@@ -46,8 +34,8 @@
 <?php if ($subjects === []): ?>
     <section class="empty-state" aria-labelledby="subjects-empty-heading">
         <span class="empty-state-mark" aria-hidden="true"><span class="solar-icon solar-icon-book-2"></span></span>
-        <h2 id="subjects-empty-heading"><?= $query === '' && $programId !== '' ? 'No saved subjects for this course list yet.' : ($query === '' ? 'Start with a subject.' : 'No subjects match that search.') ?></h2>
-        <p><?= $query === '' && $programId !== '' ? 'Add a subject and choose a course from this NVSU list. The course you choose will appear here.' : ($query === '' ? 'Add a course or class to keep its topics and study sessions together.' : 'Try another search, or clear the filter to see your full subject list.') ?></p>
+        <h2 id="subjects-empty-heading"><?= $query === '' ? 'Add a subject to get started.' : 'No subjects match that search.' ?></h2>
+        <p><?= $query === '' ? 'Subjects stay with your selected program. Each one can have its own topics and study history.' : 'Try another search, or clear it to see your subjects.' ?></p>
         <div class="actions">
             <?php if ($query !== ''): ?>
                 <a class="button secondary" href="<?= esc(site_url('student/subjects')) ?>"><?= esc(lang('App.clearSearch')) ?></a>
@@ -57,13 +45,16 @@
         </div>
     </section>
 <?php else: ?>
-    <ul class="subject-list">
-        <?php foreach ($subjects as $subject): ?>
+    <ul class="subject-catalog-list">
+        <?php foreach ($subjects as $subjectIndex => $subject): ?>
             <li>
-                <a href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>"><?= esc($subject['name']) ?></a>
-                <?php if (! empty($subject['program_id']) && isset($programTitles[$subject['program_id']])): ?>
-                    <span class="muted subject-program-label"><?= esc($programTitles[$subject['program_id']]) ?></span>
-                <?php endif ?>
+                <?php $subjectName = trim((string) $subject['name']); ?>
+                <?php if ($subjectName === '' || preg_match('/[\p{L}\p{N}]/u', $subjectName) !== 1) { $subjectName = 'Untitled subject'; } ?>
+                <a class="subject-catalog-entry" href="<?= esc(site_url('student/subjects/' . $subject['id'])) ?>">
+                    <span class="subject-catalog-index" aria-hidden="true"><?= esc(str_pad((string) ($subjectIndex + 1), 2, '0', STR_PAD_LEFT)) ?></span>
+                    <span class="subject-catalog-name"><?= esc($subjectName) ?></span>
+                    <span class="subject-catalog-arrow" aria-hidden="true">&#8594;</span>
+                </a>
             </li>
         <?php endforeach ?>
     </ul>

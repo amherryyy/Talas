@@ -9,4 +9,5 @@
     });
 
     dialog.showModal();
+    window.Duno?.play('celebrating', '.level-up-mascot');
 })();

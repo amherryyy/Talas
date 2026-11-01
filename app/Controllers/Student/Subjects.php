@@ -5,13 +5,9 @@ namespace App\Controllers\Student;
 use App\Controllers\BaseController;
 use App\Models\SubjectModel;
 use App\Models\TopicModel;
-use App\Services\ChedCurriculumCatalog;
-use App\Services\ChedCurriculumImportService;
-use App\Services\DepedShsCatalog;
-use App\Services\DepedShsImportService;
-use App\Services\NvsuProgramCatalog;
 use App\Services\NvsuCurriculumCatalog;
 use App\Services\NvsuCurriculumImportService;
+use App\Services\AcademicProgramCatalog;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 
@@ -19,41 +15,28 @@ class Subjects extends BaseController
 {
     public function index(): string
     {
-        $subjects = new SubjectModel();
-        $nvsuCurricula = new NvsuCurriculumCatalog();
-        $programId = $this->request->getGet('program');
-        $programId = is_string($programId) && $nvsuCurricula->find($programId) !== null ? $programId : '';
+        $program = $this->currentAcademicProgram();
+        $curriculum = $program['curriculum_id'] === null ? null : (new NvsuCurriculumCatalog())->find($program['curriculum_id']);
 
         return view('student/subjects/index', [
-            'subjects' => $subjects->findAllForOwner($this->ownerId(), $programId),
+            'subjects' => (new SubjectModel())->findAllForAcademicProgram($this->ownerId(), $program['curriculum_id']),
             'query' => '',
-            'programId' => $programId,
-            'nvsuCurricula' => $nvsuCurricula->all(),
+            'programId' => $program['curriculum_id'],
+            'academicProgram' => $program,
+            'nvsuCurricula' => $curriculum === null ? [] : [$curriculum],
             'errors' => [],
         ]);
     }
 
     public function templates(): string
     {
-        $catalog = new ChedCurriculumCatalog();
-        $nvsuCatalog = new NvsuCurriculumCatalog();
-        $programId = $this->request->getGet('program');
-        $programId = is_string($programId) ? $programId : '';
-        $nvsuProgramId = $this->request->getGet('nvsu');
-        $nvsuProgramId = is_string($nvsuProgramId) ? $nvsuProgramId : '';
+        $academicProgram = $this->currentAcademicProgram();
+        $curriculum = $academicProgram['curriculum_id'] === null ? null : (new NvsuCurriculumCatalog())->find($academicProgram['curriculum_id']);
 
-        return view('student/subjects/templates', [
-            'programs' => $catalog->all(),
-            'nvsuCampuses' => (new NvsuProgramCatalog())->all(),
-            'nvsuCurricula' => $nvsuCatalog->all(),
-            'nvsuProgramId' => $nvsuProgramId,
-            'nvsuProgram' => $nvsuProgramId === '' ? null : $nvsuCatalog->find($nvsuProgramId),
+        return view('student/subjects/curriculum', [
+            'academicProgram' => $academicProgram,
+            'curriculum' => $curriculum,
             'nvsuErrors' => session()->getFlashdata('nvsu_errors') ?? [],
-            'shsGroups' => (new DepedShsCatalog())->groups(),
-            'program' => $programId === '' ? null : $catalog->find($programId),
-            'programId' => $programId,
-            'errors' => session()->getFlashdata('errors') ?? [],
-            'shsErrors' => session()->getFlashdata('shs_errors') ?? [],
         ]);
     }
 
@@ -62,8 +45,9 @@ class Subjects extends BaseController
         $programId = $this->request->getPost('nvsu_program_id');
         $courseIds = $this->request->getPost('course_ids');
         $catalog = new NvsuCurriculumCatalog();
+        $accountProgram = $this->currentAcademicProgram();
 
-        if (! is_string($programId) || $catalog->find($programId) === null) {
+        if (! is_string($programId) || $programId !== $accountProgram['curriculum_id'] || $catalog->find($programId) === null) {
             return redirect()->to(site_url('student/subjects/templates#nvsu-curricula'))
                 ->with('nvsu_errors', ['Choose an NVSU course list from the available references.']);
         }
@@ -90,56 +74,14 @@ class Subjects extends BaseController
 
     public function importTemplate(): RedirectResponse
     {
-        $programId = $this->request->getPost('program_id');
-        $courseIds = $this->request->getPost('course_ids');
-
-        if (! is_string($programId) || (new ChedCurriculumCatalog())->find($programId) === null) {
-            return redirect()->to(site_url('student/subjects/templates'))
-                ->with('errors', ['Choose a curriculum template from the list.']);
-        }
-
-        if (! is_array($courseIds) || count($courseIds) > 100
-            || array_filter($courseIds, static fn ($id): bool => ! is_string($id)) !== []) {
-            return redirect()->to(site_url('student/subjects/templates?program=' . rawurlencode($programId)))
-                ->with('errors', ['Select courses from the curriculum preview.']);
-        }
-
-        $result = (new ChedCurriculumImportService())->import($programId, array_values($courseIds), $this->ownerId());
-        if (! $result['ok']) {
-            return redirect()->to(site_url('student/subjects/templates?program=' . rawurlencode($programId)))
-                ->with('errors', ['Select at least one course from this template. If you selected courses, try again.']);
-        }
-
-        $message = $result['imported'] . ' course' . ($result['imported'] === 1 ? '' : 's') . ' added to your subjects.';
-        if ($result['duplicates'] > 0) {
-            $message .= ' ' . $result['duplicates'] . ' duplicate' . ($result['duplicates'] === 1 ? ' was' : 's were') . ' skipped.';
-        }
-
-        return redirect()->to(site_url('student/subjects'))
-            ->with('success', $message);
+        return redirect()->to(site_url('student/subjects/templates'))
+            ->with('error', 'Only subjects from your selected NVSU program can be added here.');
     }
 
     public function importShsSubjects(): RedirectResponse
     {
-        $subjectIds = $this->request->getPost('subject_ids');
-        if (! is_array($subjectIds) || count($subjectIds) > 150
-            || array_filter($subjectIds, static fn ($id): bool => ! is_string($id)) !== []) {
-            return redirect()->to(site_url('student/subjects/templates#deped-shs'))
-                ->with('shs_errors', ['Select subjects from the DepEd SHS list.']);
-        }
-
-        $result = (new DepedShsImportService())->import(array_values($subjectIds), $this->ownerId());
-        if (! $result['ok']) {
-            return redirect()->to(site_url('student/subjects/templates#deped-shs'))
-                ->with('shs_errors', ['Select at least one subject from the DepEd SHS list.']);
-        }
-
-        $message = $result['imported'] . ' SHS subject' . ($result['imported'] === 1 ? '' : 's') . ' added to your subjects.';
-        if ($result['duplicates'] > 0) {
-            $message .= ' ' . $result['duplicates'] . ' duplicate' . ($result['duplicates'] === 1 ? ' was' : 's were') . ' skipped.';
-        }
-
-        return redirect()->to(site_url('student/subjects'))->with('success', $message);
+        return redirect()->to(site_url('student/subjects/templates'))
+            ->with('error', 'Only subjects from your selected NVSU program can be added here.');
     }
 
     public function search(): string
@@ -156,25 +98,28 @@ class Subjects extends BaseController
         }
         $query = mb_substr(trim($query), 0, 120);
         $ownerId = $this->ownerId();
-        $nvsuCurricula = new NvsuCurriculumCatalog();
-        $programId = $this->request->getPost('program_id');
-        $programId = is_string($programId) && $nvsuCurricula->find($programId) !== null ? $programId : '';
+        $academicProgram = $this->currentAcademicProgram();
+        $curriculum = $academicProgram['curriculum_id'] === null ? null : (new NvsuCurriculumCatalog())->find($academicProgram['curriculum_id']);
 
         return view('student/subjects/index', [
-            'subjects' => (new SubjectModel())->searchForOwner($ownerId, $query, $programId),
+            'subjects' => (new SubjectModel())->searchForAcademicProgram($ownerId, $query, $academicProgram['curriculum_id']),
             'query' => $query,
-            'programId' => $programId,
-            'nvsuCurricula' => $nvsuCurricula->all(),
+            'programId' => $academicProgram['curriculum_id'],
+            'academicProgram' => $academicProgram,
+            'nvsuCurricula' => $curriculum === null ? [] : [$curriculum],
             'errors' => $errors,
         ]);
     }
 
     public function newSubject(): string
     {
+        $academicProgram = $this->currentAcademicProgram();
         $catalog = new NvsuCurriculumCatalog();
+        $curriculum = $academicProgram['curriculum_id'] === null ? null : $catalog->find($academicProgram['curriculum_id']);
         return view('student/subjects/form', [
             'subject' => null,
-            'nvsuCurricula' => $catalog->all(),
+            'academicProgram' => $academicProgram,
+            'nvsuCurricula' => $curriculum === null ? [] : [$curriculum],
             'selectedCourseId' => '',
             'errors'  => session()->getFlashdata('errors') ?? [],
         ]);
@@ -221,9 +166,10 @@ class Subjects extends BaseController
     public function edit(int $subjectId): string
     {
         $subject = $this->ownedSubject($subjectId);
+        $academicProgram = $this->currentAcademicProgram();
         $catalog = new NvsuCurriculumCatalog();
         $selectedCourseId = '';
-        $program = $catalog->find((string) ($subject['program_id'] ?? ''));
+        $program = $academicProgram['curriculum_id'] === null ? null : $catalog->find($academicProgram['curriculum_id']);
         if ($program !== null) {
             foreach ($program['courses'] as $course) {
                 if ($course['title'] === $subject['name']) {
@@ -235,7 +181,8 @@ class Subjects extends BaseController
 
         return view('student/subjects/form', [
             'subject' => $subject,
-            'nvsuCurricula' => $catalog->all(),
+            'academicProgram' => $academicProgram,
+            'nvsuCurricula' => $program === null ? [] : [$program],
             'selectedCourseId' => $selectedCourseId,
             'errors'  => session()->getFlashdata('errors') ?? [],
         ]);
@@ -290,7 +237,8 @@ class Subjects extends BaseController
     /** @return array<string, mixed> */
     private function ownedSubject(int $subjectId): array
     {
-        $subject = (new SubjectModel())->findForOwner($subjectId, $this->ownerId());
+        $program = $this->currentAcademicProgram();
+        $subject = (new SubjectModel())->findForAcademicProgramOwner($subjectId, $this->ownerId(), $program['curriculum_id']);
 
         if ($subject === null) {
             throw PageNotFoundException::forPageNotFound();
@@ -299,42 +247,55 @@ class Subjects extends BaseController
         return $subject;
     }
 
-    private function submittedName(): string
+    /** @return array{id: string, title: string, campus: string, college: string, curriculum_id: ?string} */
+    private function currentAcademicProgram(): array
     {
-        $name = $this->request->getPost('name');
+        $selectedId = db_connect()->table('users')->select('academic_program_id')
+            ->where('id', $this->ownerId())->get()->getRow('academic_program_id');
+        $program = is_string($selectedId) ? (new AcademicProgramCatalog())->find($selectedId) : null;
 
-        return is_string($name) ? trim($name) : '';
+        if ($program === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $program;
     }
 
     /** @return array{string, ?string, array<string, string>} */
     private function submittedSubjectSelection(): array
     {
         $errors = [];
-        $programId = $this->request->getPost('program_id');
-        $programId = is_string($programId) ? trim($programId) : '';
+        $program = $this->currentAcademicProgram();
+        $programId = $program['curriculum_id'];
         $catalog = new NvsuCurriculumCatalog();
 
-        if ($programId !== '' && $catalog->find($programId) === null) {
-            $errors['program_id'] = 'Choose a program from the NVSU course lists.';
-            $programId = '';
-        }
-
         $courseId = $this->request->getPost('course_id');
-        $name = $this->submittedName();
-        if ($courseId !== null && $courseId !== '') {
-            if (! is_string($courseId) || $programId === '') {
-                $errors['course_id'] = 'Choose an NVSU program before selecting one of its courses.';
-            } else {
-                $courses = $catalog->selectedCourses($programId, [$courseId]);
-                if ($courses === []) {
-                    $errors['course_id'] = 'Choose a course from the selected NVSU program.';
-                } else {
-                    $name = $courses[0]['title'];
-                }
+        if ($programId === null) {
+            $name = $this->request->getPost('name');
+            if (! is_string($name) || trim($name) === '' || mb_strlen(trim($name)) > 120) {
+                $errors['name'] = 'Enter a subject name of 1 to 120 characters.';
+                return ['', null, $errors];
             }
+
+            if (is_string($courseId) && $courseId !== '') {
+                $errors['course_id'] = 'This program has no NVSU course list. Enter the subject name instead.';
+                return ['', null, $errors];
+            }
+
+            return [trim($name), null, $errors];
         }
 
-        return [$name, $programId === '' ? null : $programId, $errors];
+        if (! is_string($courseId) || $courseId === '') {
+            $errors['course_id'] = 'Choose a subject from your program’s NVSU course list.';
+            return ['', $programId, $errors];
+        }
+        $courses = $catalog->selectedCourses($programId, [$courseId]);
+        if ($courses === []) {
+            $errors['course_id'] = 'Choose a subject from your program’s NVSU course list.';
+            return ['', $programId, $errors];
+        }
+
+        return [$courses[0]['title'], $programId, $errors];
     }
 
     /** @return array<string, string> */

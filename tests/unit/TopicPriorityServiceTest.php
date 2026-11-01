@@ -27,17 +27,33 @@ final class TopicPriorityServiceTest extends CIUnitTestCase
             'Soon medium importance',
             'Undated high importance',
         ], array_column($topics, 'title'));
-        $this->assertSame([5, 5, 4, 4, 4], array_column($topics, 'priority_score'));
+        $this->assertSame([7, 7, 6, 6, 6], array_column($topics, 'priority_score'));
         $this->assertSame([
             'Importance: Low (+1)',
+            'Difficulty: Medium (+2)',
             'Due today (+3)',
             'Not started (+1)',
         ], $topics[0]['priority_reasons']);
         $this->assertSame([
             'Importance: High (+3)',
+            'Difficulty: Medium (+2)',
             'No due date (+0)',
             'Not started (+1)',
         ], $topics[4]['priority_reasons']);
+    }
+
+    public function testHigherDifficultyRaisesTopicPriority(): void
+    {
+        $service = new TopicPriorityService();
+        $topics = $service->rank([
+            $this->topic(1, 'Lower difficulty', null, 'medium', 'in_progress', 'low'),
+            $this->topic(2, 'Higher difficulty', null, 'medium', 'in_progress', 'high'),
+        ], '2026-10-15');
+
+        $this->assertSame(['Higher difficulty', 'Lower difficulty'], array_column($topics, 'title'));
+        $this->assertSame([5, 3], array_column($topics, 'priority_score'));
+        $this->assertSame('Difficulty: High (+3)', $topics[0]['priority_reasons'][1]);
+        $this->assertSame('Difficulty: Low (+1)', $topics[1]['priority_reasons'][1]);
     }
 
     public function testTieBreakersUseNearestDueDateThenTitle(): void
@@ -72,7 +88,7 @@ final class TopicPriorityServiceTest extends CIUnitTestCase
     }
 
     /** @return array<string, int|string|null> */
-    private function topic(int $id, string $title, ?string $dueDate, string $importance, string $progress): array
+    private function topic(int $id, string $title, ?string $dueDate, string $importance, string $progress, string $difficulty = 'medium'): array
     {
         return [
             'id' => $id,
@@ -81,6 +97,7 @@ final class TopicPriorityServiceTest extends CIUnitTestCase
             'title' => $title,
             'due_date' => $dueDate,
             'importance' => $importance,
+            'difficulty' => $difficulty,
             'progress' => $progress,
         ];
     }
