@@ -3,7 +3,7 @@
 **Status:** Draft for project owner/adviser review; not an evaluation result.
 **Purpose:** Define a repeatable evaluation of Duno against the four quality characteristics named in the project objective: Functional Suitability, Performance Efficiency, Reliability, and Security.
 **Requirements baseline:** Owner-approved `docs/requirements.md` (F-01–F-15 and S-01–S-10), plus the approved story decisions linked from it.
-**Evaluation target:** Must be recorded before execution. The project reports r5 as owner-reported live; exact file parity is unverified. The local r6 ZIP is unuploaded and stale after the final role-denial header fix (`docs/deployment.md`). Do not silently substitute one for the other. Record the exact release marker, source/package identity if known, host/environment and migration state.
+**Evaluation target:** Must be recorded before execution. The project reports r5 as owner-reported live; exact file parity is unverified. Candidate r7 is a local, unuploaded package built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` (`docs/deployment.md`). Record the exact release marker, source/package identity, host/environment, and migration state before evaluation.
 
 This protocol uses the four project-selected quality characteristics as evaluation categories. It does not claim certification or full conformance to every part of ISO/IEC 25010:2023. The selected measures and acceptance thresholds require project owner/adviser approval before results are collected.
 

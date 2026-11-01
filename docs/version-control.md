@@ -6,12 +6,13 @@ The project owner reviews and accepts changes. Agents may edit and prepare revie
 
 Checked 2026-11-01:
 
-- The repository has established Git history and a configured GitHub remote (`origin`). The checked-out branch is `main` at `310c5e520ed15509582a2f96af434e24e3065b14`, equal to `origin/main` (0 commits ahead or behind). The latest commit is `Merge InfinityFree .htaccess compatibility fix`.
-- The working tree contains accumulated product, test, and documentation changes. There are no staged changes. Preserve all of them; do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
+- The repository has established Git history and a configured GitHub remote (`origin`). Base `main` and `origin/main` remain at `310c5e520ed15509582a2f96af434e24e3065b14`. The reviewed release branch `release/duno-production-r7` has source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3`.
+- The r7 source baseline groups the reviewed accumulated product, test, and documentation changes into one release-readiness commit. The worktree has subsequent release-record documentation edits; inspect actual Git status before further operations. Do not use `reset --hard`, `clean`, force-push, or branch deletion to resolve uncertainty.
 - No Git release tags are present. The release marker is not a Git tag, commit ID, or content hash.
 - Composer resolves CodeIgniter Framework `v4.7.5` and Shield `v1.4.1` in `composer.lock`. The r6 package's `vendor/composer/installed.json` was checked and contains those same versions. The owner-reported host PHP version is 8.4.27 (2026-10-25); it has not been independently checked in this session.
-- `duno-full-release-20261101-r6.zip` has SHA-256 `F95CBD32FC661E515384A33EC5DDC912AFF4F118F10F248EAA81AB0C36AE92BC`. Its public marker is `duno-full-release-20261101-r6`. It was built from the `main` commit above plus uncommitted worktree changes; it is not reproducible from that commit alone and has not been uploaded. A role-denial response-header fix was applied after assembly, so this ZIP is stale and must not be uploaded. The archive hash identifies the ZIP bytes, not the Git source revision.
-- The owner reports r5 was used for live Aralytics acceptance and reports the r5 marker. Uploaded-file parity has not been independently verified. The stale r6 ZIP remains local; no replacement package has been built.
+- `duno-full-release-20261101-r7.zip` has SHA-256 `B48283C634F98F9C3820C38AB5F9A035D380E97F28187456CEAE297DE87863C4`; it contains 1,239 entries (5,372,534 bytes), marker r7, CI4 4.7.5 and Shield 1.4.1, and was built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3`. It has not been uploaded. The archive hash identifies ZIP bytes; the full commit identifies source files.
+- The r6 ZIP remains stale and must not be uploaded. Its SHA-256 is `F95CBD32FC661E515384A33EC5DDC912AFF4F118F10F248EAA81AB0C36AE92BC`; it predates the role-denial header fix and was built from dirty `main`.
+- The owner reports r5 was used for live Aralytics acceptance and reports the r5 marker. Uploaded-file parity has not been independently verified. R7 is a local candidate only; uploaded-file parity and live behavior remain unverified.
 
 ## Review and release procedure
 

@@ -2,6 +2,24 @@
 
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
+### Establish the reviewed r7 source baseline and package
+
+Date / story: 2026-11-01 / remaining release review and r7 package provenance
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner agreed to complete the remaining reviews, including feature-test coverage, a reviewed Git baseline, a fresh package, and live checks.
+
+Assistance used: Added assertions for HTTP 403, no-store, and security headers on a role-denial response; ran the focused and full PHPUnit suites; ran PHP/JavaScript syntax checks and package inventory checks; established the release branch and source commit; built the r7 ZIP. An initial ZIP implementation was rejected after inventory found Windows backslash paths, then rebuilt with normalized forward-slash paths. Attempted read-only live checks, but the web fetcher and shell could not reach the host, and the browser automation stopped when it could not confidently determine the current URL.
+
+Suggestions or code retained: Source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` on `release/duno-production-r7` includes the role-denial response header fix and test assertions. The local archive `build/duno-full-release-20261101-r7.zip` contains 1,239 entries, is 5,372,534 bytes, and has SHA-256 `B48283C634F98F9C3820C38AB5F9A035D380E97F28187456CEAE297DE87863C4`. Release records now identify r6 as stale and r7 as the current local candidate.
+
+Student changes and decisions: The owner authorized a local reviewed baseline and fresh package. The r7 package was not uploaded or pushed. Host status, role/private-path denial behavior, response headers/cache, PWA behavior, and host error-page rendering remain unverified. The prior `/.env` observation was not repeated.
+
+How the student verified and can explain the result: Focused PHPUnit passed (1 test, 8 assertions); full PHPUnit passed (103 tests, 1,031 assertions); packaged PHP syntax passed for all 1,036 files. Archive inspection found 1,239 entries, required root/error files, no `.env` or root Composer manifests, and no backslash or traversal paths. Live URL checks failed at tool/network access and provide no HTTP evidence.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### Run priority production-readiness checks and prepare local r6 package
 
 Date / story: 2026-11-01 / release verification and S-06 error fallback delivery
