@@ -53,10 +53,11 @@ try {
     }
     Copy-Item -LiteralPath $assets -Destination (Join-Path $packageRoot 'assets') -Recurse
 
-    foreach ($publicFile in @('favicon.ico', 'robots.txt', 'manifest.webmanifest', 'sw.js', 'offline.html')) {
+    $requiredPublicFiles = @('manifest.webmanifest', 'sw.js', 'offline.html', 'release-version.php')
+    foreach ($publicFile in @('favicon.ico', 'robots.txt') + $requiredPublicFiles) {
         $sourceFile = Join-Path $projectRoot "public\$publicFile"
-        if ($publicFile -in @('manifest.webmanifest', 'sw.js', 'offline.html') -and -not (Test-Path -LiteralPath $sourceFile -PathType Leaf)) {
-            throw "Required PWA root file is missing: '$sourceFile'."
+        if ($publicFile -in $requiredPublicFiles -and -not (Test-Path -LiteralPath $sourceFile -PathType Leaf)) {
+            throw "Required public root file is missing: '$sourceFile'."
         }
         if (Test-Path -LiteralPath $sourceFile -PathType Leaf) {
             Copy-Item -LiteralPath $sourceFile -Destination (Join-Path $packageRoot $publicFile)
@@ -65,7 +66,7 @@ try {
 
     $statusSource = Join-Path $projectRoot 'public\status'
     $statusTarget = Join-Path $packageRoot 'status'
-    foreach ($statusPage in @('403.html', '404.html')) {
+    foreach ($statusPage in @('403.html', '403.php', '404.html')) {
         $statusFile = Join-Path $statusSource $statusPage
         if (-not (Test-Path -LiteralPath $statusFile -PathType Leaf)) {
             throw "Required static error page is missing: '$statusFile'."
@@ -89,12 +90,17 @@ try {
     [System.IO.File]::WriteAllText((Join-Path $packageRoot 'index.php'), $entryPoint, $utf8NoBom)
 
     $rootHtaccess = @'
-# Keep private paths denied and show only static recovery pages for server errors.
-ErrorDocument 403 /status/403.html
+# Keep private paths denied and show the branded recovery page with explicit
+# no-store/security headers for server-level access denials.
+ErrorDocument 403 /status/403.php
 ErrorDocument 404 /status/404.html
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Serve the mutable release marker through PHP so host static-cache defaults
+    # cannot leave browsers or proxies reporting an old release for 30 days.
+    RewriteRule ^assets/release-version\.txt$ release-version.php [L]
 
     # Deny application source, dependencies, runtime data, development tools, and hidden files.
     RewriteRule ^(?:app|build|builds|docs|node_modules|public|system|tests|vendor|writable)(?:/|$) - [F,L,NC]

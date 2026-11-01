@@ -1,8 +1,8 @@
 # Disable directory browsing
 Options -Indexes
 
-# Keep server-level denials in place while offering a static, non-sensitive recovery page.
-ErrorDocument 403 /status/403.html
+# Keep server-level denials in place while the PHP error document adds safe response headers.
+ErrorDocument 403 /status/403.php
 ErrorDocument 404 /status/404.html
 
 # ----------------------------------------------------------------------
@@ -14,6 +14,7 @@ ErrorDocument 404 /status/404.html
 <IfModule mod_rewrite.c>
 	Options +FollowSymlinks
 	RewriteEngine On
+	RewriteRule ^assets/release-version\.txt$ release-version.php [L]
 
 	# If you installed CodeIgniter in a subfolder, you will need to
 	# change the following line to match the subfolder you need.

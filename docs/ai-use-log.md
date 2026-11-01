@@ -2,6 +2,60 @@
 
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
+### Prevent stale release-marker and static 403 responses
+
+Date / story: 2026-11-01 / response-cache and static-denial header hardening
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to proceed with the next production-priority item after the live status/header check.
+
+Assistance used: Inspected the package builder and both deployment `.htaccess` files. Added a PHP endpoint for the existing `/assets/release-version.txt` URL, with explicit no-store headers, and routed the mutable marker URL to that endpoint. Added a PHP 403 error-document wrapper that sends no-store, frame, content-type, and referrer headers before rendering the existing static branded page. Avoided Apache `Header` directives because previous host 500 troubleshooting had removed those directives from the deployment path.
+
+Suggestions or code retained: Updated `public/release-version.php`, `public/status/403.php`, `public/.htaccess`, `public/assets/release-version.txt`, `scripts/Build-InfinityFreePackage.ps1`, and deployment/acceptance documentation. Built review preview `build/duno-full-release-20261101-r8-preview.zip` (1,241 entries, 5,373,528 bytes; SHA-256 `9C3345FF486869072F0C70DCFE04A2A553F20895F14235C312988E688B60D8FC`). Composer used the locked local dependencies and removed development packages; Packagist was unreachable, so no dependency update occurred. No PHP tests were added or run; the two new PHP files passed syntax checks and the package builder passed PowerShell parsing. The preview package is not clean-commit release output and must not be uploaded as production.
+
+Student changes and decisions: The exact status URL remains `/assets/release-version.txt`; the source file remains the marker body and the package builder includes the endpoint. Generated packages now use `/status/403.php` for server-level 403 responses. Existing static `/status/403.html` remains the HTML body. The owner must upload a reviewed package before host behavior is considered verified. The worktree was already dirty and was preserved; nothing was staged, committed, pushed, merged, or published.
+
+How the student verified and can explain the result: Reviewed the generated rewrite/error-document rules and source-to-package copy paths. Archive review confirmed 1,241 entries, all required root/error/PWA files, forward-slash paths, no root `.env` or Composer manifests, and the r8 marker. PHP syntax and PowerShell parsing passed; `git diff --check` passed with existing line-ending warnings. Host testing remains required to confirm the provider preserves the 403 status and forwards PHP-generated no-store/security headers. No accounts, hosted data, or production files were changed.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Check the uploaded r7 release in Brave
+
+Date / story: 2026-11-01 / post-upload host acceptance
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner uploaded r7 and asked to continue the production priorities and host checks.
+
+Assistance used: Read the release marker in Brave using a fresh cache-busting query; checked signed-out Focus routing, private-path fallback content, static 403/404 pages, an unknown clean route, manifest, service-worker script, and offline page. Brave displayed an Install Duno affordance. Compared the raw manifest display with the local UTF-8 file. Attempted to inspect response metadata in DevTools, but this UI automation path did not expose reliable HTTP status/header details. Machine fetches were intercepted by the host's JavaScript challenge.
+
+Suggestions or code retained: No runtime code changed. Updated deployment and acceptance evidence to record the live marker and content-level outcomes, the older r3 tab response, and remaining checks.
+
+Student changes and decisions: The fresh marker request returned `duno-full-release-20261101-r7`; an older tab continued to show r3 after hard refresh. Signed-out Focus redirected to Login without showing topics. Four non-public paths rendered Duno's branded 403 page; static 403/404 pages and an unknown clean route rendered branded fallbacks; the manifest, service worker source, and offline page loaded. `/.env` was not probed. No host data was modified, no test accounts were created, and no files were uploaded by the agent.
+
+How the student verified and can explain the result: Browser-visible response content was reviewed. These observations do not establish HTTP status codes, response headers, complete uploaded-file parity, actual offline navigation, worker activation/cache state, or cross-owner protection. The owner can reproduce the marker check at `/assets/release-version.txt?cache-bust=<new-value>`.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+### Capture live r7 response status and headers before cross-owner testing
+
+Date / story: 2026-11-01 / hosted response-status and header check
+
+Tool and model: OpenAI Codex with Brave DevTools; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner asked to complete the response status/header check before creating another synthetic student account.
+
+Assistance used: Issued same-origin read-only GET requests from Brave DevTools and recorded only status, final URL, content type, cache policy, and selected security headers. No cookies, credentials, response bodies for account pages, or student data were copied into the record.
+
+Suggestions or code retained: Updated `docs/acceptance-verification-plan.md` and `docs/deployment.md` with response-level results and cache/header gaps. No application code or host data changed.
+
+Student changes and decisions: The mutable release marker returned HTTP 200 and had a 30-day public cache policy. Signed-out Focus returned 302 to login; login returned 200 with no-store and the checked security headers. Four private-path probes returned 403, but those responses were publicly cacheable and lacked the checked frame, content-type, and referrer headers. An unknown route returned 404 with no-store. The 30-day marker caching is consistent with the old tab showing r3 but does not establish causation. Cross-owner testing is still pending and should use two synthetic student accounts.
+
+How the student verified and can explain the result: Brave DevTools displayed the live same-origin request rows; the status and header values were captured from the Console result table. No tests, account creation, upload, or database changes were performed in this step.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### Establish the reviewed r7 source baseline and package
 
 Date / story: 2026-11-01 / remaining release review and r7 package provenance
