@@ -2,6 +2,7 @@
 
 use CodeIgniter\Boot;
 use Config\Paths;
+use App\Services\InfinityFreeRouteMarker;
 
 require_once __DIR__ . '/../app/Services/InfinityFreeRouteMarker.php';
 

@@ -53,12 +53,25 @@ try {
     }
     Copy-Item -LiteralPath $assets -Destination (Join-Path $packageRoot 'assets') -Recurse
 
-    foreach ($publicFile in @('favicon.ico', 'robots.txt')) {
+    foreach ($publicFile in @('favicon.ico', 'robots.txt', 'manifest.webmanifest', 'sw.js', 'offline.html')) {
         $sourceFile = Join-Path $projectRoot "public\$publicFile"
+        if ($publicFile -in @('manifest.webmanifest', 'sw.js', 'offline.html') -and -not (Test-Path -LiteralPath $sourceFile -PathType Leaf)) {
+            throw "Required PWA root file is missing: '$sourceFile'."
+        }
         if (Test-Path -LiteralPath $sourceFile -PathType Leaf) {
             Copy-Item -LiteralPath $sourceFile -Destination (Join-Path $packageRoot $publicFile)
         }
     }
+
+    $statusSource = Join-Path $projectRoot 'public\status'
+    $statusTarget = Join-Path $packageRoot 'status'
+    foreach ($statusPage in @('403.html', '404.html')) {
+        $statusFile = Join-Path $statusSource $statusPage
+        if (-not (Test-Path -LiteralPath $statusFile -PathType Leaf)) {
+            throw "Required static error page is missing: '$statusFile'."
+        }
+    }
+    Copy-Item -LiteralPath $statusSource -Destination $statusTarget -Recurse
 
     $entryPoint = Get-Content -LiteralPath (Join-Path $projectRoot 'public\index.php') -Raw
     $oldPathsInclude = "require FCPATH . '../app/Config/Paths.php';"
@@ -76,6 +89,10 @@ try {
     [System.IO.File]::WriteAllText((Join-Path $packageRoot 'index.php'), $entryPoint, $utf8NoBom)
 
     $rootHtaccess = @'
+# Keep private paths denied and show only static recovery pages for server errors.
+ErrorDocument 403 /status/403.html
+ErrorDocument 404 /status/404.html
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -95,7 +112,7 @@ try {
 </IfModule>
 
 <IfModule !mod_rewrite.c>
-    ErrorDocument 404 index.php
+    ErrorDocument 404 /status/404.html
 </IfModule>
 
 '@

@@ -35,6 +35,16 @@
         'choiceOptions' => ['low' => 'Low', 'medium' => 'Medium', 'high' => 'High'],
     ]) ?>
 
+    <?php $difficulty = old('difficulty', $topic['difficulty'] ?? 'medium'); ?>
+    <?= view('student/partials/segmented_choice', [
+        'choiceId' => 'difficulty',
+        'choiceName' => 'difficulty',
+        'choiceLabel' => 'Difficulty',
+        'choiceValue' => (string) $difficulty,
+        'choiceClass' => 'topic-difficulty-choice',
+        'choiceOptions' => ['low' => 'Low', 'medium' => 'Medium', 'high' => 'High'],
+    ]) ?>
+
     <?php $progress = old('progress', $topic['progress'] ?? 'not_started'); ?>
     <?= view('student/partials/segmented_choice', [
         'choiceId' => 'progress',

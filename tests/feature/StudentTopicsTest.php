@@ -44,6 +44,7 @@ final class StudentTopicsTest extends CIUnitTestCase
             'title'      => '<script>alert(1)</script>',
             'due_date'   => '',
             'importance' => 'medium',
+            'difficulty' => 'medium',
             'progress'   => 'not_started',
         ])->assertRedirect();
 
@@ -53,6 +54,7 @@ final class StudentTopicsTest extends CIUnitTestCase
         $topicId = (int) $stored[0]['id'];
         $this->assertNull($stored[0]['due_date']);
         $this->assertSame('medium', $stored[0]['importance']);
+        $this->assertSame('medium', $stored[0]['difficulty']);
         $this->assertSame('not_started', $stored[0]['progress']);
 
         $subjectPage = $this->getAuthenticated('student/subjects/' . $subjectId);
@@ -61,12 +63,14 @@ final class StudentTopicsTest extends CIUnitTestCase
         $topicPage = $this->getAuthenticated('student/subjects/' . $subjectId . '/topics/' . $topicId);
         $topicPage->assertSee('No due date');
         $topicPage->assertSee('Medium');
+        $topicPage->assertSee('Difficulty');
         $topicPage->assertSee('Not Started');
 
         $this->postAuthenticated('student/subjects/' . $subjectId . '/topics/' . $topicId, [
             'title'      => 'Systems of equations',
             'due_date'   => '2026-01-10',
             'importance' => 'high',
+            'difficulty' => 'high',
             'progress'   => 'in_progress',
         ])->assertRedirect();
 
@@ -75,6 +79,7 @@ final class StudentTopicsTest extends CIUnitTestCase
         $this->assertSame('Systems of equations', $updated['title']);
         $this->assertSame('2026-01-10', $updated['due_date']);
         $this->assertSame('high', $updated['importance']);
+        $this->assertSame('high', $updated['difficulty']);
         $this->assertSame('in_progress', $updated['progress']);
 
         $this->postAuthenticated('student/subjects/' . $subjectId . '/topics/' . $topicId . '/delete')->assertRedirect();
@@ -187,7 +192,8 @@ final class StudentTopicsTest extends CIUnitTestCase
         ]);
         $page->assertDontSee('Completed topic');
         $page->assertDontSee('Foreign unfinished topic');
-        $page->assertSee('Score 5');
+        $page->assertSee('Score 7');
+        $page->assertSee('Difficulty: Medium (+2)');
         $page->assertSee('Due today (+3)');
         $page->assertSee('Not started (+1)');
         $page->assertSee('Overdue (+3)');
@@ -220,6 +226,7 @@ final class StudentTopicsTest extends CIUnitTestCase
             ['title' => 'Valid', 'due_date' => '2026-02-30', 'importance' => 'medium', 'progress' => 'not_started'],
             ['title' => 'Valid', 'due_date' => '', 'importance' => 'urgent', 'progress' => 'not_started'],
             ['title' => 'Valid', 'due_date' => '', 'importance' => 'medium', 'progress' => 'blocked'],
+            ['title' => 'Valid', 'due_date' => '', 'importance' => 'medium', 'difficulty' => 'impossible', 'progress' => 'not_started'],
         ] as $invalidTopic) {
             $response = $this->postAuthenticated('student/subjects/' . $subjectId . '/topics', $invalidTopic);
             $response->assertRedirect();
@@ -238,16 +245,20 @@ final class StudentTopicsTest extends CIUnitTestCase
         $topics = new App\Models\TopicModel();
         $foreignTopicId = $topics->insert([
             'subject_id' => $foreignSubjectId,
+            'user_id' => (int) $otherStudent->id,
             'title' => 'Foreign topic',
             'due_date' => null,
             'importance' => 'medium',
+            'difficulty' => 'medium',
             'progress' => 'not_started',
         ], true);
         $ownTopicId = $topics->insert([
             'subject_id' => $ownerSubjectId,
+            'user_id' => (int) $owner->id,
             'title' => 'Own topic',
             'due_date' => null,
             'importance' => 'medium',
+            'difficulty' => 'medium',
             'progress' => 'not_started',
         ], true);
         $this->assertNotFalse($foreignTopicId);
@@ -264,7 +275,7 @@ final class StudentTopicsTest extends CIUnitTestCase
 
         $this->assertNotFound(fn () => $this->postAuthenticated(
             'student/subjects/' . $ownerSubjectId . '/topics/' . $foreignTopicId,
-            ['title' => 'Tampered', 'due_date' => '', 'importance' => 'high', 'progress' => 'done'],
+            ['title' => 'Tampered', 'due_date' => '', 'importance' => 'high', 'difficulty' => 'high', 'progress' => 'done'],
         ));
         $this->assertNotFound(fn () => $this->postAuthenticated(
             'student/subjects/' . $ownerSubjectId . '/topics/' . $foreignTopicId . '/delete',
@@ -280,9 +291,11 @@ final class StudentTopicsTest extends CIUnitTestCase
         $subjectId = $this->createSubject((int) $student->id);
         $topicId = (new App\Models\TopicModel())->insert([
             'subject_id' => $subjectId,
+            'user_id' => (int) $student->id,
             'title' => 'Referenced topic',
             'due_date' => null,
             'importance' => 'medium',
+            'difficulty' => 'medium',
             'progress' => 'not_started',
         ], true);
         $this->assertNotFalse($topicId);
@@ -346,6 +359,7 @@ final class StudentTopicsTest extends CIUnitTestCase
                 'title' => 'No token',
                 'due_date' => '',
                 'importance' => 'medium',
+                'difficulty' => 'medium',
                 'progress' => 'not_started',
             ]);
             $this->fail('A state-changing request without a CSRF token must be rejected.');
@@ -367,13 +381,18 @@ final class StudentTopicsTest extends CIUnitTestCase
         return (int) $subjectId;
     }
 
-    private function insertTopic(int $subjectId, string $title, ?string $dueDate = null, string $importance = 'medium', string $progress = 'not_started'): int
+    private function insertTopic(int $subjectId, string $title, ?string $dueDate = null, string $importance = 'medium', string $progress = 'not_started', string $difficulty = 'medium'): int
     {
+        $subject = (new App\Models\SubjectModel())->find($subjectId);
+        $this->assertIsArray($subject);
+
         $topicId = (new App\Models\TopicModel())->insert([
             'subject_id' => $subjectId,
+            'user_id' => (int) $subject['user_id'],
             'title' => $title,
             'due_date' => $dueDate,
             'importance' => $importance,
+            'difficulty' => $difficulty,
             'progress' => $progress,
         ], true);
         $this->assertNotFalse($topicId);

@@ -41,7 +41,7 @@ async function tabUntilFocused(page, locator, maxTabs = 20) {
 async function loginAsReviewStudent(page) {
   await page.goto('login');
   await page.getByLabel('Email').fill(email);
-  await page.getByLabel('Password').fill(password);
+  await page.getByRole('textbox', { name: 'Password' }).fill(password);
   await page.getByRole('button', { name: 'Login' }).click();
   await page.waitForURL(
     url => !url.pathname.endsWith('/login'),
@@ -56,9 +56,13 @@ test('login page fits common mobile, tablet, and desktop widths', async ({ page 
     await page.goto('login');
 
     await expect(page.getByLabel('Email')).toBeVisible();
-    await expect(page.getByLabel('Password')).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/login');
   }
+
+  const missingResponse = await page.goto('not-a-real-duno-route');
+  expect(missingResponse?.status()).toBe(404);
+  await expect(page.getByRole('heading', { name: 'We could not find that page.' })).toBeVisible();
 });
 
 test('subject and topic search pages fit common widths for a student', async ({ page }) => {
@@ -70,6 +74,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
 
   const adminResponse = await page.goto('admin');
   expect(adminResponse?.status()).toBe(403);
+  await expect(page.getByRole('heading', { name: 'This page is not available to this account.' })).toBeVisible();
 
   for (const width of viewportWidths) {
     await page.setViewportSize({ width, height: 850 });
@@ -77,7 +82,11 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.goto('student');
     await expect(page.getByRole('heading', { name: 'Make a little progress today.' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Duno Guide' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'What Works Clearinghouse practice guide (2007)' })).toHaveCount(4);
+    await expect(page.getByRole('heading', { name: 'Choose a goal to get started' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'What Works Clearinghouse practice guide (2007)' })).toHaveCount(1);
+    await page.getByRole('button', { name: /Understand an idea/ }).click();
+    await expect(page.getByRole('heading', { name: 'Build understanding by explaining it' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Read the study-method source' })).toHaveCount(3);
     await expectNoHorizontalOverflow(page, '/student');
 
     await page.goto('student/subjects');
@@ -96,8 +105,8 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.goto('student/topics');
     await expect(page.getByRole('heading', { name: 'Find a topic' })).toBeVisible();
     await expect(page.getByLabel('Search topics and subjects')).toBeVisible();
-    await expect(page.getByLabel('Importance')).toBeVisible();
-    await expect(page.getByLabel('Progress')).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Importance' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Progress' })).toBeVisible();
     await expect(page.getByLabel('Due date')).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/topics');
 
@@ -111,13 +120,17 @@ test('subject and topic search pages fit common widths for a student', async ({ 
 
     await page.goto('student/plan');
     await expect(page.getByRole('heading', { name: 'Duno Plan' })).toBeVisible();
-    await expect(page.getByLabel('Available study time today (minutes)')).toBeVisible();
+    if (width <= 832) {
+      await expect(page.getByRole('button', { name: 'Add block' })).toBeVisible();
+    } else {
+      await expect(page.getByLabel('Available study time for today (minutes)')).toBeVisible();
+    }
     await expectNoHorizontalOverflow(page, '/student/plan');
 
     await page.goto('student/check-ins');
     await expect(page.getByRole('heading', { name: 'Private check-ins' })).toBeVisible();
-    await expect(page.getByLabel('Workload')).toBeVisible();
-    await expect(page.getByLabel('Energy')).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Workload' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Energy' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/check-ins');
 
     await page.goto('student/aralytics');
@@ -132,7 +145,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expect(sourceLink).toBeFocused();
 
   await page.goto('student/plan');
-  const availableTime = page.getByLabel('Available study time today (minutes)');
+  const availableTime = page.getByLabel('Available study time for today (minutes)');
   await tabUntilFocused(page, availableTime);
   await expect(availableTime).toBeFocused();
 
@@ -172,11 +185,11 @@ test('subject and topic search pages fit common widths for a student', async ({ 
 
   await page.setViewportSize({ width: 400, height: 850 });
   await page.goto('student/check-ins');
-  await page.locator('#workload-rating').focus();
+  await page.locator('#workload-rating-1').focus();
   await page.keyboard.press('Tab');
-  await expect(page.locator('#energy-rating')).toBeFocused();
-  await page.getByLabel('Workload').selectOption('4');
-  await page.getByLabel('Energy').selectOption('3');
+  await expect(page.locator('#energy-rating-1')).toBeFocused();
+  await page.locator('label.check-in-scale-choice:has(input[name="workload_rating"][value="4"])').click();
+  await page.locator('label.check-in-scale-choice:has(input[name="energy_rating"][value="3"])').click();
   await page.getByRole('button', { name: 'Save private check-in' }).click();
   await expect(page.getByText('Private check-in saved.')).toBeVisible();
   const checkIn = page.locator('.subject-list li').first();
@@ -203,7 +216,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await page.emulateMedia({ media: 'screen' });
   await page.goto('student/check-ins');
   await checkIn.getByRole('link', { name: 'Edit' }).click();
-  await page.getByLabel('Workload').selectOption('2');
+  await page.locator('label.check-in-scale-choice:has(input[name="workload_rating"][value="2"])').click();
   await page.getByRole('button', { name: 'Save changes' }).click();
   await expect(page.locator('.subject-list li').first()).toContainText('Workload: 2/5 · Energy: 3/5');
   await expect(page.locator('.subject-list li').first().locator('time')).toHaveAttribute('datetime', savedTime);

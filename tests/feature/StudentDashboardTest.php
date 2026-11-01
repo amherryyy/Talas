@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CheckInModel;
+use App\Models\SubjectModel;
 use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Models\UserModel;
 use CodeIgniter\Shield\Test\AuthenticationTesting;
@@ -76,6 +77,27 @@ final class StudentDashboardTest extends CIUnitTestCase
         $this->assertStringContainsString('data-tour-user="' . $student->id . '"', $studentHtml);
         $this->assertStringContainsString('data-tour-target="focus"', $studentHtml);
         $this->assertStringContainsString('href="http://example.com/index.php/student#app-tour"', $studentHtml);
+    }
+
+    public function testGuideOutcomeChoicesAreLimitedToTheStudentsLinkedComputingSubjects(): void
+    {
+        $student = $this->createUser('guide-outcome-owner', 'student');
+        $other = $this->createUser('guide-outcome-other', 'student');
+        $subjects = new SubjectModel();
+        $bscsSubjectId = $subjects->insert(['user_id' => $student->id, 'name' => 'My BSCS', 'program_id' => 'bscs-game-development']);
+        $subjects->insert(['user_id' => $student->id, 'name' => 'General writing', 'program_id' => 'ba-communication']);
+        $subjects->insert(['user_id' => $other->id, 'name' => 'Private BSIT', 'program_id' => 'bsit-web-mobile']);
+        $this->authenticateAs($student);
+
+        $response = $this->getAuthenticated('student');
+        $response->assertOK();
+        $html = $response->response()->getBody();
+        $this->assertStringContainsString('value="cs" data-guide-subject-id="' . $bscsSubjectId . '">My BSCS</option>', $html);
+        $this->assertStringNotContainsString('Private BSIT', $html);
+        $this->assertStringNotContainsString('<option value="is">General writing</option>', $html);
+        $this->assertStringContainsString('CS10', $html);
+        $this->assertStringContainsString('CHED CMO No. 25, s. 2015', $html);
+        $this->assertStringContainsString('Suggestions remain general study guidance.', $html);
     }
 
     public function testPrivateCheckInsDoNotEarnStudyXp(): void

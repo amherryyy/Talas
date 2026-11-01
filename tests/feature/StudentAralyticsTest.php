@@ -138,6 +138,7 @@ final class StudentAralyticsTest extends CIUnitTestCase
             'title' => $title,
             'due_date' => null,
             'importance' => 'medium',
+            'difficulty' => 'medium',
             'progress' => 'not_started',
         ], true);
     }

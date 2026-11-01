@@ -8,7 +8,7 @@ As a student, I can manage topics under my subjects so I can track the work I pl
 
 ## Requirements
 
-- `F-04`: create and manage topics under a student's subjects, including optional due date, importance, and progress.
+- `F-04`: create and manage topics under a student's subjects, including optional due date, importance, difficulty, and progress.
 - `S-02`: every topic and parent-subject read or write is scoped to the authenticated owner.
 - `S-03`: validate input on the server, escape rendered values, and use parameterized database access.
 - `S-04`: state-changing forms use CSRF protection.
@@ -19,17 +19,18 @@ As a student, I can manage topics under my subjects so I can track the work I pl
 - A topic has a required title up to 120 characters. Duplicate titles under one subject are allowed.
 - Due date is optional and date-only; past dates are allowed so overdue topics can be represented.
 - Importance uses `low`, `medium`, or `high`.
+- Student-rated difficulty uses `low`, `medium`, or `high`.
 - Progress uses `not_started`, `in_progress`, or `done`.
 - A topic cannot be deleted while a saved study session references it. The future session migration must use a restrictive foreign key as the race-safe backstop, and the UI explains the restriction.
 - The current topics migration restricts deletion of a subject while topics reference it. When the study-session schema is introduced, it must use a restrictive foreign key from its optional `topic_id` to `topics.id`; the application also checks the `study_sessions.topic_id` reference before deletion.
-- New topics default to `medium` importance and `not_started` progress. Both values remain editable.
+- New topics default to `medium` importance, `medium` difficulty, and `not_started` progress. These values remain editable.
 
 ## Acceptance criteria
 
 1. An authenticated student can list topics within their own subject and view each topic.
 2. A student can create, edit, and delete a topic under a subject they own.
 3. Every query and mutation scopes the topic through its parent subject and authenticated owner; a guessed foreign subject/topic ID cannot disclose or change another student's data.
-4. Topic titles, optional date-only due dates, importance values, and progress values are validated server-side; rendered titles are escaped.
+4. Topic titles, optional date-only due dates, importance, difficulty, and progress values are validated server-side; rendered titles are escaped.
 5. Create, update, and delete requests require CSRF protection. Signed-out users and admins cannot use student topic routes.
 6. Deletion is blocked while saved sessions reference the topic; once sessions are implemented, the database constraint also prevents accidental cascade deletion.
 7. Tests cover CRUD, invalid fields, CSRF, signed-out/admin denial, cross-owner subject/topic references, and the session-reference deletion guard.
@@ -49,6 +50,14 @@ As a student, I can manage topics under my subjects so I can track the work I pl
 - Review the topic list and forms at desktop/narrow widths and with keyboard navigation.
 
 F-03 was integrated into `main` through PR #1 before F-04 implementation began on its own story branch.
+
+## Proposal alignment update (2026-10-30)
+
+- The owner approved adding student-rated topic difficulty and using it in Duno Focus and Duno Plan.
+- Difficulty uses the existing Low / Medium / High choice pattern. New and migrated topics default to Medium so existing records remain valid.
+- Difficulty contributes 1 / 2 / 3 points (Low / Medium / High) to the explainable Focus score. Duno Plan consumes that ranking, so more difficult topics can be scheduled earlier when other inputs are equal.
+- This is a rule-based ordering aid, not a prediction of grades or learning outcomes.
+- Migration: `2026-10-30-000001_AddTopicDifficulty`; hosted phpMyAdmin upgrade instructions are in [`2026-10-30-topic-difficulty-upgrade.sql`](2026-10-30-topic-difficulty-upgrade.sql).
 
 ## Verification update (2026-10-16)
 

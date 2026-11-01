@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
+    <?= view('partials/pwa_head') ?>
     <title><?= esc($pageTitle) ?> · duno.</title>
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
 </head>
 <body class="duno-admin has-mobile-navigation">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/pwa_network_status') ?>
 <?= view('partials/app_notifications') ?>
 <div class="shell">
     <header class="admin-header">
@@ -49,5 +51,6 @@
 ]]) ?>
 <?= $this->include('partials/admin_bottom_nav') ?>
 <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/pwa.js')) ?>" defer></script>
 </body>
 </html>

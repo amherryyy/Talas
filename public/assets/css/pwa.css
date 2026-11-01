@@ -1,0 +1,31 @@
+.pwa-network-status {
+    position: fixed;
+    z-index: 1000;
+    inset: .75rem .75rem auto;
+    display: flex;
+    width: max-content;
+    max-width: min(36rem, calc(100vw - 1.5rem));
+    align-items: flex-start;
+    gap: .65rem;
+    margin-inline: auto;
+    padding: .8rem 1rem;
+    border: 1px solid #d4b45b;
+    border-radius: 1rem;
+    background: #fff8df;
+    box-shadow: 0 12px 32px rgb(42 37 79 / 18%);
+    color: #463916;
+    font: 600 .92rem/1.45 system-ui, sans-serif;
+}
+
+.pwa-network-status[hidden] { display: none; }
+.pwa-network-status__indicator { width: .65rem; height: .65rem; flex: none; margin-top: .35rem; border-radius: 50%; background: #aa7411; }
+.pwa-network-status[data-state="online"] { border-color: #a8dbc0; background: #e5f7ee; color: #245b3b; }
+.pwa-network-status[data-state="online"] .pwa-network-status__indicator { background: #26824d; }
+
+@media (max-width: 520px) {
+    .pwa-network-status { inset: .5rem .5rem auto; max-width: calc(100vw - 1rem); padding: .75rem .85rem; font-size: .86rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pwa-network-status { scroll-behavior: auto; }
+}

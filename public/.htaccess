@@ -1,6 +1,10 @@
 # Disable directory browsing
 Options -Indexes
 
+# Keep server-level denials in place while offering a static, non-sensitive recovery page.
+ErrorDocument 403 /status/403.html
+ErrorDocument 404 /status/404.html
+
 # ----------------------------------------------------------------------
 # Rewrite engine
 # ----------------------------------------------------------------------
@@ -39,9 +43,8 @@ Options -Indexes
 </IfModule>
 
 <IfModule !mod_rewrite.c>
-	# If we don't have mod_rewrite installed, all 404's
-	# can be sent to index.php, and everything works as normal.
-	ErrorDocument 404 index.php
+	# Static fallback is available even when clean-route rewriting is unavailable.
+	ErrorDocument 404 /status/404.html
 </IfModule>
 
 # Cache versioned public assets; server-rendered student pages stay dynamic.

@@ -5,8 +5,10 @@ namespace App\Controllers\Student;
 use App\Content\StudySuggestions;
 use App\Controllers\BaseController;
 use App\Models\CheckInModel;
+use App\Models\SubjectModel;
 use App\Models\StudySessionModel;
 use App\Models\StudentStreakModel;
+use App\Models\TopicModel;
 use App\Services\StudyProgressionService;
 use DateTimeImmutable;
 use DateTimeZone;
@@ -19,6 +21,7 @@ class Dashboard extends BaseController
         $today = new DateTimeImmutable('now', $timezone);
         $todayDate = $today->format('Y-m-d');
         $ownerId = (int) auth()->id();
+        $subjects = (new SubjectModel())->findAllForOwner($ownerId);
         $hasCheckInToday = (new CheckInModel())->hasRecordForOwnerOnDate($ownerId, $todayDate);
         $todayStart = $today->setTime(0, 0);
         $sessionModel = new StudySessionModel();
@@ -37,6 +40,8 @@ class Dashboard extends BaseController
         return view('student/dashboard', [
             'pageTitle' => 'Duno workspace',
             'suggestions' => StudySuggestions::ITEMS,
+            'guideSubjects' => $subjects,
+            'guideTopics' => (new TopicModel())->findAllForOwner($ownerId),
             'suggestionSourceUrl' => StudySuggestions::SOURCE_URL,
             'suggestionSourceName' => StudySuggestions::SOURCE_NAME,
             'checkInPromptDate' => $todayDate,

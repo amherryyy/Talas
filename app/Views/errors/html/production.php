@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
 
-    <title><?= lang('Errors.whoops') ?></title>
+    <title><?= esc(lang('Errors.whoops')) ?></title>
 
     <style>
         <?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'debug.css')) ?>
@@ -18,9 +18,9 @@
 
     <div class="container text-center">
 
-        <h1 class="headline"><?= lang('Errors.whoops') ?></h1>
+        <h1 class="headline"><?= esc(lang('Errors.whoops')) ?></h1>
 
-        <p class="lead"><?= lang('Errors.weHitASnag') ?></p>
+        <p class="lead"><?= esc(lang('Errors.weHitASnag')) ?></p>
         <nav class="page-navigation" aria-label="Page navigation">
             <a href="<?= esc(site_url()) ?>" data-page-back aria-label="Go back to the previous page"><span aria-hidden="true">←</span> Back</a>
             <a href="<?= esc(site_url()) ?>" aria-label="Go to home"><span aria-hidden="true">⌂</span> Home</a>

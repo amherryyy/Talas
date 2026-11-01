@@ -183,11 +183,16 @@ final class StudentStudySessionsTest extends CIUnitTestCase
 
     private function createTopic(int $subjectId, string $title): int
     {
+        $subject = (new SubjectModel())->find($subjectId);
+        $this->assertIsArray($subject);
+
         return (int) (new TopicModel())->insert([
             'subject_id' => $subjectId,
+            'user_id' => (int) $subject['user_id'],
             'title' => $title,
             'due_date' => null,
             'importance' => 'medium',
+            'difficulty' => 'medium',
             'progress' => 'not_started',
         ], true);
     }

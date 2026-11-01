@@ -1,7 +1,7 @@
 # Duno project overview and restart board
 
-**Reviewed:** 2026-10-29
-**Repository snapshot:** `origin/main` is at `77034e4`; PR #9, PR #10, PR #11, and PR #12 are merged. PR #9's PHP 8.2/8.4 CI jobs passed; PR #10 records the local package validation.
+**Reviewed:** 2026-11-01
+**Repository snapshot:** `main` and `origin/main` are both at `310c5e520ed15509582a2f96af434e24e3065b14`; the worktree contains accumulated uncommitted changes. PR #15 is the latest merged project PR in the checked history. The local r6 ZIP is stale because it predates the final role-denial header fix; no replacement package exists. Current host status is recorded in [`deployment.md`](deployment.md). This board contains dated historical task results; it is not a fresh production acceptance report.
 **Purpose:** Resume work after the project pause and keep the remaining work visible. This board follows the states in [`ai-agent-workflow.md`](ai-agent-workflow.md). It is a local project record, not a GitHub issue board.
 
 ## Project overview
@@ -10,7 +10,7 @@ Duno is a one-month, browser-based study-planning MVP. Students manage subjects 
 
 The approved user-facing areas are **Duno Focus**, **Duno Plan**, **Duno Guide**, and **Duno Timer**; the existing name **Aralytics** remains. The approved stack is CodeIgniter 4.7.5, Shield 1.4.1, PHP, MySQL/MariaDB, server-rendered views, CSS, and small plain JavaScript modules. The deployment target is InfinityFree free hosting by FTP/FTPS. Do not add AI advice, grade prediction, native apps, background workers, or other out-of-scope features.
 
-The current remote `main` snapshot contains the starter/auth foundation, F-03 through F-13, and merged CI automation. F-03 through F-10 have recorded owner acceptance and merges through PR #5; F-11 through F-13 and restart/package work are included in PR #9. PRs #7, #9, #10, #11, and #12 are merged. Local schema/migration work and local auth review are documented. The hosted initial schema was imported as a baseline; the owner later confirmed migration 14/batch 9 and the history-preserving foreign-key actions. The owner reports R-04 is all good; earlier evidence for the homepage/assets, student auth, admin dashboard, student denial of the admin route, and private-path denials is recorded in [`deployment.md`](deployment.md).
+The checked `main` history contains the starter/auth foundation, F-03 through F-13, CI automation, and later deployment fixes through PR #15. Local schema/migration work and local auth review are documented. The owner reports R-04 is all good; later owner-reported release checks and current host limitations are recorded in [`deployment.md`](deployment.md). The r6 ZIP is stale and was built from a dirty worktree, not a clean Git release.
 
 ## Restart board
 
@@ -39,7 +39,7 @@ R-01 through R-07 are complete; R-09 is accepted, with R-10 streak, R-11 glass p
 - **Public mobile navigation:** the approved guest bar is implemented as Home, Tools, Guide, and Join; Guide opens the public curated study tips. Local syntax/HTTP checks passed, and the owner confirmed the guest experience is all good.
 - **Documentation drift:** README, workflow, requirements traceability, and story status headers have been reconciled with the current `main` snapshot. Recheck these after future merges.
 - **CI visibility:** PR #7 merged the PHP 8.2/8.4 workflow and weekly Dependabot updates. Both pull-request and post-merge `main` runs passed. The owner confirms a `main` protection rule is now configured; the intended requirements are pull requests plus the PHP 8.2 and PHP 8.4 checks. The GitHub connection could not independently read branch protection. No MySQL-backed CI or PHP style tool is configured.
-- **Deployment package and access control:** the owner reports R-04 is all good after the latest deployment work. Earlier checks recorded in `deployment.md` include the homepage/public asset, private app/vendor/writable/Composer denials, student registration/login, admin dashboard access, and student denial of the admin route. The current-main ZIP was prepared from `4c02a39`; the exact uploaded revision is not independently confirmed here.
+- **Deployment package and access control:** the owner reports R-04 is all good after the 2026-10-25 deployment work. That historical package was prepared from `4c02a39`; its exact uploaded revision was not independently confirmed. The newer status is r5 live acceptance by owner report and an unuploaded, stale r6 ZIP; no replacement package exists. See `deployment.md` and `version-control.md` for current provenance and remaining checks.
 - **Live demo:** a live demo is required and no separate Phase 2 rubric was issued, per the owner. The outline is ready in [`live-demo-runbook.md`](live-demo-runbook.md); the next preparation step is a rehearsal with synthetic data.
 - **Plan review:** the owner reports the authenticated Plan journey review is complete with no current issue. The owner also reports R-04 is all good.
 - **UI and UX redesign:** the owner accepted the original R-08 redesign and requested more mascot presence and animation. PR #12 is merged; browser and owner visual review of the follow-up are pending before packaging or deployment.
@@ -48,7 +48,7 @@ R-01 through R-07 are complete; R-09 is accepted, with R-10 streak, R-11 glass p
 - **Glass surface polish:** R-11 is implemented locally. The owner asked to accumulate updates and review them after upload; no files have been uploaded for this task.
 - **Student onboarding:** R-12 introduces the tool areas, can be skipped, and can be replayed from More. Completion is per student in browser storage; visual browser review is queued for the upload batch.
 - **NVSU and SHS curriculum catalogs:** R-13 lists NVSU undergraduate programs by Bayombong and Bambang campuses, with three separate CHED sample templates. R-14 indexes DepEd's Strengthened SHS guides for SY 2026-2027. NVSU-specific degree curricula and legacy Grade 12 subjects are not included.
-- **Repository handling:** `origin/main` is at `77034e4`. [PR #9](https://github.com/amherryyy/Talas/pull/9) merged the 22 reviewed restart/package paths; [PR #10](https://github.com/amherryyy/Talas/pull/10) merged the package validation record; PR #11 and [PR #12](https://github.com/amherryyy/Talas/pull/12) merged the UI redesign and follow-up changes. PHP 8.2/8.4 CI passed for both.
+- **Repository handling:** As checked 2026-11-01, `main` and `origin/main` are at `310c5e520ed15509582a2f96af434e24e3065b14`. PR #15 is the latest merged project PR in the checked history. The current worktree is dirty; see [`version-control.md`](version-control.md). Earlier PR and CI results below are historical evidence, not current worktree or release verification.
 
 ## Restart sequence
 

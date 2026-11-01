@@ -12,7 +12,7 @@ class TopicModel extends Model
     protected $returnType       = 'array';
     protected $useAutoIncrement = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['subject_id', 'title', 'due_date', 'importance', 'progress'];
+    protected $allowedFields    = ['subject_id', 'user_id', 'title', 'due_date', 'importance', 'difficulty', 'progress'];
     protected $useTimestamps    = true;
     protected $createdField     = 'created_at';
     protected $updatedField     = 'updated_at';
@@ -21,6 +21,7 @@ class TopicModel extends Model
         'title'      => 'required|max_length[120]',
         'due_date'   => 'permit_empty|valid_date[Y-m-d]',
         'importance' => 'required|in_list[low,medium,high]',
+        'difficulty' => 'required|in_list[low,medium,high]',
         'progress'   => 'required|in_list[not_started,in_progress,done]',
     ];
 
@@ -35,6 +36,9 @@ class TopicModel extends Model
         'importance' => [
             'in_list' => 'Choose low, medium, or high importance.',
         ],
+        'difficulty' => [
+            'in_list' => 'Choose low, medium, or high difficulty.',
+        ],
         'progress' => [
             'in_list' => 'Choose not started, in progress, or done.',
         ],
@@ -47,6 +51,7 @@ class TopicModel extends Model
             ->select('topics.*')
             ->join('subjects', 'subjects.id = topics.subject_id')
             ->where('topics.subject_id', $subjectId)
+            ->where('topics.user_id', $ownerId)
             ->where('subjects.user_id', $ownerId)
             ->orderBy('topics.due_date', 'ASC')
             ->orderBy('topics.title', 'ASC')
@@ -62,6 +67,7 @@ class TopicModel extends Model
         $builder = $this->db->table('topics')
             ->select('topics.*, subjects.name AS subject_name')
             ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.user_id', $ownerId)
             ->where('subjects.user_id', $ownerId);
 
         $query = trim((string) ($filters['query'] ?? ''));
@@ -114,6 +120,7 @@ class TopicModel extends Model
         return $this->db->table('topics')
             ->select('topics.*, subjects.name AS subject_name')
             ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.user_id', $ownerId)
             ->where('subjects.user_id', $ownerId)
             ->orderBy('topics.id', 'ASC')
             ->get()
@@ -128,6 +135,7 @@ class TopicModel extends Model
             ->join('subjects', 'subjects.id = topics.subject_id')
             ->where('topics.subject_id', $subjectId)
             ->where('topics.id', $topicId)
+            ->where('topics.user_id', $ownerId)
             ->where('subjects.user_id', $ownerId)
             ->get()
             ->getRowArray();
@@ -143,6 +151,7 @@ class TopicModel extends Model
         }
 
         $topic['subject_id'] = $subjectId;
+        $topic['user_id'] = $ownerId;
 
         return $this->insert($topic, true);
     }
@@ -154,6 +163,8 @@ class TopicModel extends Model
             return false;
         }
 
+        $topic['user_id'] = $ownerId;
+
         $ownedSubjects = $this->db->table('subjects')
             ->select('id')
             ->where('user_id', $ownerId);
@@ -161,6 +172,7 @@ class TopicModel extends Model
         return $this->builder()
             ->where('id', $topicId)
             ->where('subject_id', $subjectId)
+            ->where('user_id', $ownerId)
             ->whereIn('subject_id', $ownedSubjects)
             ->update($topic);
     }
@@ -175,6 +187,7 @@ class TopicModel extends Model
             ->select('topics.id')
             ->join('subjects', 'subjects.id = topics.subject_id')
             ->where('topics.id', $topicId)
+            ->where('topics.user_id', $ownerId)
             ->where('subjects.user_id', $ownerId)
             ->get()
             ->getRowArray();
@@ -188,6 +201,7 @@ class TopicModel extends Model
 
         return $this->builder()
             ->where('id', $topicId)
+            ->where('user_id', $ownerId)
             ->whereIn('subject_id', $ownedSubjects)
             ->update(['progress' => $progress, 'updated_at' => date('Y-m-d H:i:s')]);
     }
@@ -198,17 +212,41 @@ class TopicModel extends Model
             ->select('id')
             ->where('user_id', $ownerId);
 
-        if ($this->hasSavedSessionReference($topicId)) {
+        if ($this->findForSubjectOwner($subjectId, $topicId, $ownerId) === null) {
             return false;
         }
 
+        $db = $this->db;
         try {
-            return $this->builder()
+            $db->transBegin();
+
+            if ($this->hasSavedSessionReference($topicId)) {
+                $db->transRollback();
+                return false;
+            }
+
+            // Keep the plan's title/subject snapshots, but clear the live topic
+            // reference before the composite owner foreign key restricts delete.
+            $db->table('study_plan_items')
+                ->where('topic_id', $topicId)
+                ->where('user_id', $ownerId)
+                ->update(['topic_id' => null, 'updated_at' => date('Y-m-d H:i:s')]);
+
+            $deleted = $this->builder()
                 ->where('id', $topicId)
                 ->where('subject_id', $subjectId)
+                ->where('user_id', $ownerId)
                 ->whereIn('subject_id', $ownedSubjects)
                 ->delete();
+            if (! $deleted) {
+                $db->transRollback();
+                return false;
+            }
+
+            $db->transCommit();
+            return $db->transStatus();
         } catch (DatabaseException $exception) {
+            $db->transRollback();
             if ($this->hasSavedSessionReference($topicId)) {
                 return false;
             }

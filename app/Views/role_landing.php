@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc($pageTitle) ?> · duno.</title>
+    <?= view('partials/pwa_head') ?>
     <style {csp-style-nonce}>
         :root { color-scheme: light; font-family: system-ui, sans-serif; color: #292641; background: #F7F6FC; }
         body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 1.25rem; box-sizing: border-box; }
@@ -23,6 +24,7 @@
 </head>
 <body class="duno-role">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/pwa_network_status') ?>
 <?= view('partials/app_notifications') ?>
 <main id="main-content">
     <?= view('partials/language_switcher') ?>
@@ -39,5 +41,6 @@
     </form>
 </main>
 <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/pwa.js')) ?>" defer></script>
 </body>
 </html>

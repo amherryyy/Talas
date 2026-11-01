@@ -92,7 +92,7 @@
                                 <h2 id="focus-detail-title-<?= esc((string) $topic['id']) ?>"><?= esc($topic['title']) ?></h2>
                                 <span class="focus-score focus-score-large" aria-label="Priority score <?= esc((string) $topic['priority_score']) ?>">Score <?= esc((string) $topic['priority_score']) ?></span>
                             </div>
-                            <p class="focus-detail-intro">Duno ranks unfinished topics using importance, due date, and progress.</p>
+                            <p class="focus-detail-intro">Duno ranks unfinished topics using your difficulty and importance ratings, due date, and progress.</p>
 
                             <section class="focus-reason-card" aria-labelledby="focus-reasons-<?= esc((string) $topic['id']) ?>">
                                 <h3 id="focus-reasons-<?= esc((string) $topic['id']) ?>">Why this score:</h3>
@@ -105,6 +105,7 @@
 
                             <dl class="focus-topic-facts">
                                 <div><dt>Importance</dt><dd><?= esc(ucfirst((string) $topic['importance'])) ?></dd></div>
+                                <div><dt>Difficulty</dt><dd><?= esc(ucfirst((string) ($topic['difficulty'] ?? 'medium'))) ?></dd></div>
                                 <div><dt>Progress</dt><dd><?= esc(ucfirst(str_replace('_', ' ', (string) $topic['progress']))) ?></dd></div>
                                 <div><dt>Due date</dt><dd><?= ! empty($topic['due_date']) ? esc(date('M j, Y', strtotime($topic['due_date']))) : 'Not set' ?></dd></div>
                             </dl>

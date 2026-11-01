@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#7465d8">
+    <meta name="description" content="Duno needs an internet connection to open your account and saved study data.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Duno">
+    <link rel="icon" href="./favicon.ico" sizes="any">
+    <title>Offline — Duno</title>
+    <style>
+        :root { color-scheme: light; font-family: "Aptos", "Segoe UI", system-ui, sans-serif; color: #2e2e3a; background: #f7f6fc; }
+        * { box-sizing: border-box; }
+        body { min-width: 320px; min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 1rem; }
+        main { width: min(100%, 34rem); padding: clamp(1.4rem, 6vw, 2.5rem); border: 1px solid #e3e1eb; border-radius: 1.5rem; background: #fff; box-shadow: 0 14px 40px rgb(42 37 79 / 9%); text-align: center; }
+        img { width: min(48vw, 10rem); height: auto; }
+        h1 { margin: .8rem 0; font-size: clamp(1.6rem, 6vw, 2.2rem); letter-spacing: -.045em; }
+        p { color: #64677b; line-height: 1.6; }
+        button { min-height: 2.9rem; margin-top: .5rem; padding: .7rem 1.2rem; border: 0; border-radius: 999px; color: #fff; background: #5746bd; font: inherit; font-weight: 750; cursor: pointer; }
+        button:focus-visible { outline: 3px solid #ffda92; outline-offset: 3px; }
+        .note { font-size: .88rem; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+    </style>
+</head>
+<body>
+<main id="main-content">
+    <img src="./assets/images/duno-pwa-icon-192.png" width="192" height="192" alt="">
+    <p class="overline">duno. · Your Little Study Buddy.</p>
+    <h1>You're offline right now.</h1>
+    <p>Your account and saved study data need an internet connection. Duno does not save changes while you are offline.</p>
+    <button type="button" id="retry-connection">Try again</button>
+    <p class="note">This page and selected public design files are available offline. Your study pages and records are not stored on this device for offline use.</p>
+</main>
+<script>
+    document.getElementById('retry-connection').addEventListener('click', () => window.location.reload());
+</script>
+</body>
+</html>

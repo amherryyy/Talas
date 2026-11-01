@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use CodeIgniter\Filters\FilterInterface;
+use CodeIgniter\Filters\SecureHeaders;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -26,7 +27,15 @@ class ExclusiveRoleFilter implements FilterInterface
         };
 
         if (! $allowed) {
-            return service('response')->setStatusCode(403)->setBody('Forbidden');
+            $response = service('response')
+                ->setStatusCode(403)
+                ->setBody(view('errors/html/error_403'));
+
+            // A response returned from a before filter short-circuits the normal
+            // after-filter pass, so apply the global response protections here.
+            $response = (new NoStorePagesFilter())->after($request, $response);
+
+            return (new SecureHeaders())->after($request, $response);
         }
 
         return null;

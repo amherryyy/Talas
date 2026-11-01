@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
+    <?= view('partials/pwa_head') ?>
     <title><?= $this->renderSection('title') ?> · duno.</title>
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
     <?= $this->renderSection('pageStyles') ?>
@@ -15,6 +16,7 @@
     data-password-confirm-show="<?= esc(lang('App.showPasswordConfirm')) ?>"
     data-password-confirm-hide="<?= esc(lang('App.hidePasswordConfirm')) ?>">
     <a class="skip-link" href="#main-content"><?= esc(lang('App.skipMain')) ?></a>
+    <?= view('partials/pwa_network_status') ?>
     <?= view('partials/app_notifications', ['includeFlashNotifications' => false]) ?>
     <header class="auth-header">
     <a class="duno-brand" href="<?= esc(site_url()) ?>" aria-label="duno. — <?= esc(lang('App.brandTagline')) ?> Home">
@@ -45,5 +47,6 @@
     <script src="<?= esc(duno_asset('assets/js/auth-password-visibility.js')) ?>" defer></script>
     <?= $this->renderSection('pageScripts') ?>
     <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
+    <script src="<?= esc(duno_asset('assets/js/pwa.js')) ?>" defer></script>
 </body>
 </html>

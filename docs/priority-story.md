@@ -8,19 +8,24 @@ As a student, I can see my unfinished topics ranked by an understandable score s
 
 ## Requirements
 
-- F-06: show a rule-based priority list with a short explanation based on topic importance, due date, and progress.
+- F-06: show a rule-based priority list with a short explanation based on topic difficulty, importance, due date, and progress.
 - S-02: show only topics belonging to the authenticated student.
 - F-13: keep the list readable and usable on mobile and desktop.
 
-## Owner-approved scoring
+## Owner-approved scoring (updated 2026-10-30)
 
 - Include unfinished topics only. Exclude topics marked done.
 - Importance contributes 1 point for low, 2 for medium, and 3 for high.
+- Student-rated difficulty contributes 1 point for low, 2 for medium, and 3 for high. Existing topics default to medium.
 - Due date contributes 3 points when overdue or due today, 2 points when due within the next 7 days, 1 point when due later, and 0 points when no date is set.
 - Progress contributes 1 point when not started and 0 when in progress.
 - Total the components and sort highest score first.
 - Break equal-score ties by nearest due date first, undated topics last, then title alphabetically. If score, due date, and title are identical, use the lower topic ID as a stable final order.
-- Display the score and each component as a reason; do not imply that it predicts grades or learning outcomes.
+- Display the score and each component as a reason; do not imply that it predicts grades or guarantees learning outcomes.
+
+## Proposal alignment update (2026-10-30)
+
+The owner approved difficulty as a topic field and a priority/planning input. Difficulty follows the same three-level point scale as importance to keep the rule explainable. Duno Plan receives the ranked list from `TopicPriorityService`, so the difficulty contribution also affects which topics are planned first.
 
 ## Acceptance criteria
 

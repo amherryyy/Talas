@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f6fc">
+    <?= view('partials/pwa_head') ?>
     <title><?= esc($pageTitle ?? 'Your study space') ?> · duno.</title>
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
 </head>
 <body class="duno-workspace has-mobile-navigation">
 <a class="skip-link" href="#main-content"><?= esc(lang('App.skipMain')) ?></a>
+<?= view('partials/pwa_network_status') ?>
 <div class="shell">
     <?php
     $currentPath = trim(service('uri')->getPath(), '/');
@@ -100,6 +102,7 @@
 <?php endif ?>
 <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
 <script src="<?= esc(duno_asset('assets/js/student-navigation.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/pwa.js')) ?>" defer></script>
 <?php if ($levelUp): ?><script src="<?= esc(duno_asset('assets/js/level-up.js')) ?>" defer></script><?php endif ?>
 </body>
 </html>

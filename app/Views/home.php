@@ -276,9 +276,11 @@ $joinUrl = site_url('register');
     </style>
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/student-navigation.css')) ?>">
     <link rel="stylesheet" href="<?= esc(duno_asset('assets/css/duno-ui.css')) ?>">
+    <?= view('partials/pwa_head') ?>
 </head>
 <body class="duno-landing <?= ! $isLoggedIn || $isStudent || $isAdmin ? 'has-mobile-navigation' : '' ?>">
 <a class="skip-link" href="#main-content">Skip to main content</a>
+<?= view('partials/pwa_network_status') ?>
 <?= view('partials/app_notifications') ?>
 <header class="topbar">
     <div class="shell topbar-inner">
@@ -298,6 +300,7 @@ $joinUrl = site_url('register');
             <details class="menu">
                 <summary aria-label="Toggle main menu" data-tour-target="more"><span class="solar-icon solar-icon-hamburger-menu" aria-hidden="true"></span></summary>
                 <nav class="menu-panel" aria-label="Main menu">
+                    <button class="menu-button" type="button" data-pwa-install hidden><?= esc(lang('App.installApp')) ?></button>
                     <a href="<?= esc(site_url('')) ?>">Home</a>
                     <?php if ($isLoggedIn && $workspaceUrl !== null): ?>
                         <a href="<?= esc($workspaceUrl) ?>"><?= esc($workspaceLabel) ?></a>
@@ -466,5 +469,6 @@ $footerGroups = $isStudent ? [
 <?php endif ?>
 <?php if ($isStudent): ?><script src="<?= esc(duno_asset('assets/js/onboarding-tour.js')) ?>" defer></script><?php endif ?>
 <script src="<?= esc(duno_asset('assets/js/app-notifications.js')) ?>" defer></script>
+<script src="<?= esc(duno_asset('assets/js/pwa.js')) ?>" defer></script>
 </body>
 </html>

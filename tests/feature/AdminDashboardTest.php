@@ -107,7 +107,13 @@ final class AdminDashboardTest extends CIUnitTestCase
     {
         $student = $this->createUser('admin-summary-denied', ['student']);
         $this->authenticateAs($student);
-        $this->getAuthenticated('admin')->assertStatus(403);
+        $denied = $this->getAuthenticated('admin');
+        $denied->assertStatus(403);
+        $response = $denied->response();
+        $this->assertStringContainsString('no-store', $response->getHeaderLine('Cache-Control'));
+        $this->assertSame('SAMEORIGIN', $response->getHeaderLine('X-Frame-Options'));
+        $this->assertSame('nosniff', $response->getHeaderLine('X-Content-Type-Options'));
+        $this->assertSame('same-origin', $response->getHeaderLine('Referrer-Policy'));
 
         auth()->logout();
         $response = $this->get('admin');

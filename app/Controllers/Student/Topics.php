@@ -210,18 +210,20 @@ class Topics extends BaseController
         return $topic;
     }
 
-    /** @return array{title: string, due_date: ?string, importance: string, progress: string} */
+    /** @return array{title: string, due_date: ?string, importance: string, difficulty: string, progress: string} */
     private function submittedTopic(): array
     {
         $title = $this->request->getPost('title');
         $dueDate = $this->request->getPost('due_date');
         $importance = $this->request->getPost('importance');
+        $difficulty = $this->request->getPost('difficulty');
         $progress = $this->request->getPost('progress');
 
         return [
             'title'      => is_string($title) ? trim($title) : '',
             'due_date'   => is_string($dueDate) && $dueDate !== '' ? $dueDate : null,
             'importance' => is_string($importance) ? $importance : '',
+            'difficulty' => is_string($difficulty) && $difficulty !== '' ? $difficulty : 'medium',
             'progress'   => is_string($progress) ? $progress : '',
         ];
     }

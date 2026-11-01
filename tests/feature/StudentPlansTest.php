@@ -97,6 +97,20 @@ final class StudentPlansTest extends CIUnitTestCase
         $this->assertSame(50, (int) $this->planFor((int) $student->id)['available_minutes']);
     }
 
+    public function testPlanGenerationUsesTopicDifficultyInThePriorityOrder(): void
+    {
+        $student = $this->createUser('plan-difficulty', 'student');
+        $subjectId = $this->createSubject((int) $student->id, 'Programming');
+        $easy = $this->insertTopic($subjectId, 'Review syntax', 'medium', 'in_progress', 'low');
+        $hard = $this->insertTopic($subjectId, 'Understand recursion', 'medium', 'in_progress', 'high');
+        $this->authenticateAs($student);
+
+        $this->postAuthenticated('student/plan/generate', ['available_minutes' => '50'])->assertRedirect();
+
+        $plan = $this->planFor((int) $student->id);
+        $this->assertSame([$hard, $easy], array_map('intval', array_column($plan['items'], 'topic_id')));
+    }
+
     public function testPlanEditsCannotTargetAnotherOwnersPlanItem(): void
     {
         $owner = $this->createUser('plan-private-owner', 'student');
@@ -110,6 +124,7 @@ final class StudentPlansTest extends CIUnitTestCase
         ], true);
         (new StudyPlanItemModel())->insert([
             'plan_id' => $planId,
+            'user_id' => (int) $other->id,
             'topic_id' => $topicId,
             'topic_title' => 'Private topic',
             'subject_name' => 'Synthetic subject',
@@ -224,6 +239,7 @@ final class StudentPlansTest extends CIUnitTestCase
             foreach ([[$firstTopicId, 'Cell structure'], [$secondTopicId, 'Genetics']] as $index => [$topicId, $title]) {
                 (new StudyPlanItemModel())->insert([
                     'plan_id' => $planId,
+                    'user_id' => (int) $student->id,
                     'topic_id' => $topicId,
                     'topic_title' => $title,
                     'subject_name' => 'Biology',
@@ -258,13 +274,18 @@ final class StudentPlansTest extends CIUnitTestCase
         return (int) (new SubjectModel())->insert(['user_id' => $ownerId, 'name' => $name], true);
     }
 
-    private function insertTopic(int $subjectId, string $title, string $importance, string $progress): int
+    private function insertTopic(int $subjectId, string $title, string $importance, string $progress, string $difficulty = 'medium'): int
     {
+        $subject = (new SubjectModel())->find($subjectId);
+        $this->assertIsArray($subject);
+
         return (int) (new TopicModel())->insert([
             'subject_id' => $subjectId,
+            'user_id' => (int) $subject['user_id'],
             'title' => $title,
             'due_date' => null,
             'importance' => $importance,
+            'difficulty' => $difficulty,
             'progress' => $progress,
         ], true);
     }

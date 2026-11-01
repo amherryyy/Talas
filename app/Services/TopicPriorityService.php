@@ -24,6 +24,10 @@ class TopicPriorityService
             $importancePoints = ['low' => 1, 'medium' => 2, 'high' => 3][$importance] ?? 0;
             $importanceLabel = ucfirst($importance !== '' ? $importance : 'Unknown');
 
+            $difficulty = (string) ($topic['difficulty'] ?? 'medium');
+            $difficultyPoints = ['low' => 1, 'medium' => 2, 'high' => 3][$difficulty] ?? 2;
+            $difficultyLabel = ucfirst($difficulty !== '' ? $difficulty : 'Medium');
+
             $dueDate = $topic['due_date'] ?? null;
             $duePoints = 0;
             if (is_string($dueDate) && $dueDate !== '') {
@@ -51,9 +55,10 @@ class TopicPriorityService
                 default => 'Progress unavailable (+0)',
             };
 
-            $topic['priority_score'] = $importancePoints + $duePoints + $progressPoints;
+            $topic['priority_score'] = $importancePoints + $difficultyPoints + $duePoints + $progressPoints;
             $topic['priority_reasons'] = [
                 'Importance: ' . $importanceLabel . ' (+' . $importancePoints . ')',
+                'Difficulty: ' . $difficultyLabel . ' (+' . $difficultyPoints . ')',
                 $dueReason,
                 $progressReason,
             ];
