@@ -14,7 +14,6 @@ $items = [
     ['label' => lang('App.focus'), 'href' => site_url('student/priority'), 'icon' => 'target', 'key' => 'focus'],
     ['label' => lang('App.plan'), 'href' => site_url('student/plan'), 'icon' => 'calendar', 'key' => 'plan'],
     ['label' => lang('App.timer'), 'href' => site_url('student/sessions'), 'icon' => 'stopwatch', 'key' => 'timer'],
-    ['label' => lang('App.guide'), 'href' => site_url('student#guide-heading'), 'icon' => 'book-2', 'key' => 'guide'],
     ['label' => lang('App.aralytics'), 'href' => site_url('student/aralytics'), 'icon' => 'chart-2', 'key' => 'aralytics'],
 ];
 ?>

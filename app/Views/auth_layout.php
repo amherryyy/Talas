@@ -30,8 +30,11 @@
             <div class="auth-mascot-stage">
                 <span class="auth-mascot-orbit auth-mascot-orbit-one" aria-hidden="true"></span>
                 <span class="auth-mascot-orbit auth-mascot-orbit-two" aria-hidden="true"></span>
-                <button class="auth-mascot-button" type="button" data-auth-mascot data-cheer-src="<?= esc(duno_asset('assets/images/duno-mascot-celebrating.webp')) ?>" aria-label="Tap Duno for a little encouragement">
-                    <img src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="" width="512" height="536" aria-hidden="true" fetchpriority="high">
+                <button class="auth-mascot-button" type="button" data-auth-mascot data-duno-mascot data-duno-state="idle" data-duno-interactive aria-label="Tap Duno for a little encouragement">
+                    <picture>
+                        <source srcset="<?= esc(duno_asset('assets/images/duno-mascot-animation.webp')) ?>" type="image/webp">
+                        <img src="<?= esc(duno_asset('assets/images/duno-mascot.png')) ?>" alt="" width="1224" height="1285" aria-hidden="true" fetchpriority="high" decoding="async">
+                    </picture>
                 </button>
                 <p class="auth-mascot-message" data-auth-mascot-message aria-live="polite">One small step at a time.</p>
             </div>
@@ -43,6 +46,7 @@
         </aside>
         <div class="auth-form-region"><?= $this->renderSection('main') ?></div>
     </main>
+    <script src="<?= esc(duno_asset('assets/js/duno-mascot.js')) ?>" defer></script>
     <script src="<?= esc(duno_asset('assets/js/auth-mascot.js')) ?>" defer></script>
     <script src="<?= esc(duno_asset('assets/js/auth-password-visibility.js')) ?>" defer></script>
     <?= $this->renderSection('pageScripts') ?>

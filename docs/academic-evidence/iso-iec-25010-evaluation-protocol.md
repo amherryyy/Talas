@@ -3,7 +3,7 @@
 **Status:** Draft for project owner/adviser review; not an evaluation result.
 **Purpose:** Define a repeatable evaluation of Duno against the four quality characteristics named in the project objective: Functional Suitability, Performance Efficiency, Reliability, and Security.
 **Requirements baseline:** Owner-approved `docs/requirements.md` (F-01–F-15 and S-01–S-10), plus the approved story decisions linked from it.
-**Evaluation target:** Must be recorded before execution. The project reports r5 as owner-reported live; exact file parity is unverified. Candidate r7 is a local, unuploaded package built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` (`docs/deployment.md`). Record the exact release marker, source/package identity, host/environment, and migration state before evaluation.
+**Evaluation target:** Must be recorded before execution. The owner uploaded r7 and Brave returned marker `duno-full-release-20261101-r7` from a fresh cache-busted request. One older tab showed r3, so confirm cache consistency and uploaded-file parity before the formal evaluation. R7 was built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` (`docs/deployment.md`). Record the exact release marker, source/package identity, host/environment, and migration state before evaluation.
 
 This protocol uses the four project-selected quality characteristics as evaluation categories. It does not claim certification or full conformance to every part of ISO/IEC 25010:2023. The selected measures and acceptance thresholds require project owner/adviser approval before results are collected.
 
@@ -22,10 +22,10 @@ Complete and approve these fields with the project owner/adviser. Values are int
 
 | Decision | Approved value / record |
 |---|---|
-| Evaluated release marker and source/package identity | **Pending** |
-| Environment and URL (production, staging, or isolated local) | **Pending** |
-| Database engine/version and migration ledger state | **Pending** |
-| Browser(s), OS/device(s), screen sizes and network conditions | **Pending** |
+| Evaluated release marker and source/package identity | `duno-full-release-20261101-r8`; package SHA-256 `703F22A55598BC4F831FEAF0A9C85AF0327B678A5BAB8686C21AF0DBDFFA0874`; source commit `120b76665ab062d5133f71ce03117093fb1f7a7f`. Owner reports upload; live marker/selected response checks recorded. Full file parity **not verified**. Source: `docs/deployment.md`. |
+| Environment and URL (production, staging, or isolated local) | InfinityFree live host, HTTPS, app domain recorded in `docs/deployment.md`; deployment notes report PHP 8.4.27. Fresh host/runtime identity for this evaluation: **pending capture**. |
+| Database engine/version and migration ledger state | Hosted migration ledger owner-reported through row 18/batch 13. Exact hosted DB engine/version and a fresh ledger capture: **pending**. |
+| Browser(s), OS/device(s), screen sizes and network conditions | Brave and Edge are present in existing owner-reported r8 observations; exact browser versions, OS/device, viewport and network condition for each evaluation run: **pending capture**. |
 | Evaluation dates, evaluator roles and any external participants | **Pending** |
 | Scenario/task sample and synthetic dataset profile | **Pending** |
 | Repetitions per scenario and stopping rule | **Pending** |
@@ -33,6 +33,25 @@ Complete and approve these fields with the project owner/adviser. Values are int
 | Functional/security pass criteria and severity handling | **Pending** |
 | Consent, privacy, retention and evidence storage arrangements | **Pending** |
 | Adviser-required instrument/statistical treatment or reporting format | **Pending** |
+
+### Suggested defaults to approve or revise
+
+These are practical project targets proposed to make the protocol executable. They are **not ISO-prescribed limits**, are not yet adviser-approved, and must not be represented as approved criteria until the owner/adviser confirms them.
+
+| Decision | Suggested default |
+|---|---|
+| Scope | Cover F-01–F-15 and S-01–S-10 using the existing acceptance cases; report each requirement not exercised. |
+| Test environment | Use a local isolated copy of the r8 artifact/schema with synthetic accounts for all writes, errors and privacy tests. Use the live r8 site only for read-only checks unless the owner explicitly approves a dedicated synthetic live account and cleanup plan. |
+| Browser/viewports | Edge and Brave on the available desktop setup; 390×844 and 1365×768 CSS pixels, plus 320px width for auth overflow. Record actual browser/OS versions and do not imply a representative device sample. |
+| Performance repetitions | One separately recorded warm-up then 10 measured trials per action. Report median, min, max, and failures; do not report p95 from this small sample. |
+| Performance targets | ≤3.0 seconds to response-complete for Focus, Plan, and session-save requests; ≤5.0 seconds for Aralytics. These are proposed project targets for the fixed test profile, not standard limits. Also report page render time separately where measured. |
+| Reliability repetitions | Repeat each selected critical workflow 10 times in the isolated environment. Require 10/10 expected completions and zero data-integrity, duplicate-save, or owner-isolation discrepancies to pass this proposed check. This sample does not establish a population reliability rate. |
+| Functional criteria | Every selected case must meet its recorded expected result; any failure remains visible in results. Do not calculate a project-wide pass claim if critical cases fail or are unrun. |
+| Security criteria | Zero confirmed unauthorized disclosure, mutation, or persistence; zero open Critical/High findings at completion. Record all lower-severity findings and disposition. |
+| Participants/statistics | No human participants or satisfaction survey in this technical protocol. Use descriptive counts and timing summaries only. Add a separate approved method if the course requires participant ratings or expert review. |
+| Evidence handling | Keep raw logs/screenshots in a private local folder; include only sanitized excerpts in repository/paper. Never record passwords, verification codes, real personal data, or private check-in values. |
+
+If these values are accepted, replace “suggested” with the approval date/authority and copy the values into the run metadata before test execution. Otherwise record the revised values and rationale.
 
 Recommended default is to use synthetic accounts/data and a non-production environment for destructive, fault-injection, invalid-input and security checks. If only the live service is available, first approve a safe non-destructive scope; do not run destructive or load tests on live student data.
 

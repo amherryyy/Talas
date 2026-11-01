@@ -20,3 +20,5 @@ Authenticated pages, account/session responses, study records, forms, and POST a
 ## Verification
 
 Static checks on 2026-10-31 confirmed valid manifest JSON, relative scope, a maskable icon, all 10 pre-cache files present, and valid JavaScript syntax. The worker now allows only exact reviewed static-shell paths, plus the manifest, favicon, and offline page; version query strings remain supported by matching allowlisted paths. The r4 package includes and passed static inspection of these files. Browser install/offline/cache inspection and InfinityFree behavior still need verification before release.
+
+The offline recovery screen now presents connection state, retries on request, and reloads once when the browser reports a connection restored. It continues to state that saved account data and changes are unavailable offline. The service-worker cache version was advanced so installed clients can receive the updated fallback; its exact static allowlist now includes the local contour texture used by the shared app background. Manual reconnection and update checks remain to be repeated after deployment.

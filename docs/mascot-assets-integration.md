@@ -1,5 +1,13 @@
 # Duno mascot asset integration guide
 
+## Lightweight CSS animation controller - 2026-11-01
+
+The shared `app/Views/partials/duno_mascot.php` component animates the original transparent `duno-mascot.png` without changing its artwork. For delivery, `duno-mascot-animation.webp` is a full-resolution lossless WebP made from that PNG; the `<picture>` markup falls back to the untouched PNG. Its `data-duno-mascot` element can be controlled with `Duno.play('idle'|'greeting'|'thinking'|'celebrating'|'solo', target)`; temporary states return to idle automatically, and `Duno.destroy(target)` releases timers and observers. `public/assets/js/duno-mascot.js` uses CSS classes, an intersection observer, and a visibility listener. It does not add an animation package or a JavaScript animation loop.
+
+The states appear on the public/student home hero (idle), onboarding welcome carousel (greeting), Plan generation and agenda updates (thinking), a newly saved study session or level-up (celebrating), and keyboard/touch activated mascots (solo). Motion uses transforms, stops for reduced-motion preferences, and pauses while the component is offscreen or the document is hidden. Editing an existing session and routine navigation do not trigger a celebration. The PWA static cache includes the controller and source PNG.
+
+The original PNG contains the whole mascot on one transparent layer. This supports whole-image movement only; it does not support independent blinking or arm waving. Those gestures would need separately approved, design-matched layers or expression variants, and remain optional. The lossless WebP is 724 KB versus 1,138 KB for the PNG. Visible source pixels and alpha values match; browser scaling differed by at most one 8-bit color value (1/255), which is not perceptible.
+
 ## Purpose
 
 This guide documents the approved Duno mascot image set and how to use it in the current application. The assets are designed for the existing CodeIgniter views, local CSS, and small JavaScript modules. They add expression to existing welcome, onboarding, encouragement, and notification moments without adding a new runtime dependency or changing Duno's study behavior.

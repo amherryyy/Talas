@@ -83,6 +83,9 @@ final class StudentCheckInsTest extends CIUnitTestCase
         $report->assertOK();
         $html = $report->response()->getBody();
         $this->assertStringContainsString('<title id="rating-chart-title">Workload and energy ratings for Last 7 days</title>', $html);
+        $this->assertStringContainsString('viewBox="0 0 620 292"', $html);
+        $this->assertStringContainsString('class="rating-chart-plot"', $html);
+        $this->assertStringContainsString('id="workload-rating-gradient"', $html);
         $this->assertStringContainsString('<caption>Check-in counts by rating</caption>', $html);
         $this->assertStringContainsString('<tr><th scope="row">Workload</th><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>', $html);
         $this->assertStringContainsString('<tr><th scope="row">Energy</th><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>', $html);
@@ -223,8 +226,18 @@ final class StudentCheckInsTest extends CIUnitTestCase
 
     private function authenticateAs(User $user): void
     {
+        $this->seedAccountProgramWhenStudent($user);
         $this->actingAs($user);
         $this->withSession($_SESSION);
+    }
+
+    private function seedAccountProgramWhenStudent(User $user): void
+    {
+        if (! $user->inGroup('student') || $user->inGroup('admin')) { return; }
+        $program = (new App\Services\AcademicProgramCatalog())->all()[0];
+        db_connect()->table('users')->where('id', (int) $user->id)->update([
+            'academic_program_id' => $program['id'], 'academic_program_title' => $program['title'], 'academic_program_selected_at' => '2026-11-01 00:00:00',
+        ]);
     }
 
     private function getAuthenticated(string $path): TestResponse

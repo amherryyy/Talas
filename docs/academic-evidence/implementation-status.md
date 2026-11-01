@@ -15,12 +15,12 @@
 | Admin aggregates | F-12, S-01/S-07 | Role-protected aggregate dashboard and summary service. | Historical tests and owner reports; fresh count comparison/route test NOT VERIFIED. |
 | Responsive UI/onboarding/localization/catalog | F-13 and accepted supplemental decisions | Responsive CSS, navigation, onboarding, English/Taglish/Filipino resources, static catalogs and importer services. | Historical visual/browser notes vary by increment. Latest acceptance and catalog currency NOT VERIFIED. |
 | Progression | F-14 | XP, streak and deterministic unlock service; daily streak migration. | Unit/feature tests recorded; current host behavior NOT VERIFIED. |
-| Bounded PWA | F-15 | Manifest, icons, service worker, offline page, network notice and package inclusion in current tree. | r4 surface smoke recorded. Owner reports r5 live; exact r5 file parity, install prompt, offline interactions and cache allowlist NOT VERIFIED. Candidate r7 is local and unuploaded; PWA host behavior remains NOT VERIFIED. |
+| Bounded PWA | F-15 | Manifest, icons, service worker, offline page, network notice and package inclusion in current tree. | On r7, Brave rendered manifest JSON, worker source and offline page. Actual worker activation/scope, manifest MIME/charset, Cache Storage, offline navigation and write blocking remain NOT VERIFIED. |
 | Security/error/deployment hardening | S-03–S-10 | Escaping, CSRF/session configuration, headers, deny rules, production error views, package builder and static fallback files. | Some historical source checks and host observations. Response header matrix, exact path denial behavior, branded host fallback and safe-error behavior NOT VERIFIED. |
 
 ## Limitations and unfinished work
 
 - Current application modifications are uncommitted on `main`; no commit identifies the full current source snapshot.
-- The Oct 31 live r4 browser observations precede the Nov 1 owner report of r5 live acceptance/marker. No current release chronology conflict remains; exact deployed-file parity is still unverified. The stale r6 ZIP predates the final role-denial header fix. Candidate r7 is built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` and is not uploaded.
+- R7 is uploaded by owner report and the fresh cache-busted marker was observed in Brave. An old tab still showed r3. This does not prove full file parity. The stale r6 ZIP predates the final role-denial header fix. R7 source is commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3`.
 - “Implemented” stories may still need release-specific browser, security, or host acceptance. The open cases are enumerated in `docs/acceptance-verification-plan.md`.
 - The data collection/ISO evaluation claims in academic materials must remain pending until protocol and actual evidence are supplied.

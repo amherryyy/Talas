@@ -127,6 +127,57 @@ class TopicModel extends Model
             ->getResultArray();
     }
 
+    /** @return list<array<string, mixed>> */
+    public function findAllForAcademicProgramOwner(int $ownerId, ?string $curriculumId): array
+    {
+        $builder = $this->db->table('topics')
+            ->select('topics.*, subjects.name AS subject_name')
+            ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.user_id', $ownerId)
+            ->where('subjects.user_id', $ownerId);
+        $this->applyAcademicProgramScope($builder, $curriculumId);
+
+        return $builder->orderBy('topics.id', 'ASC')->get()->getResultArray();
+    }
+
+    /** @param array{query?: string, subject_id?: int|null, importance?: string, progress?: string, due_state?: string} $filters
+     *  @return list<array<string, mixed>>
+     */
+    public function searchForAcademicProgramOwner(int $ownerId, array $filters, ?string $curriculumId): array
+    {
+        $builder = $this->db->table('topics')
+            ->select('topics.*, subjects.name AS subject_name')
+            ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.user_id', $ownerId)
+            ->where('subjects.user_id', $ownerId);
+        $this->applyAcademicProgramScope($builder, $curriculumId);
+
+        $query = trim((string) ($filters['query'] ?? ''));
+        if ($query !== '') {
+            $builder->groupStart()->like('topics.title', $query)->orLike('subjects.name', $query)->groupEnd();
+        }
+        if (is_int($filters['subject_id'] ?? null) && $filters['subject_id'] > 0) {
+            $builder->where('topics.subject_id', $filters['subject_id']);
+        }
+        if (in_array($filters['importance'] ?? '', ['low', 'medium', 'high'], true)) {
+            $builder->where('topics.importance', $filters['importance']);
+        }
+        if (in_array($filters['progress'] ?? '', ['not_started', 'in_progress', 'done'], true)) {
+            $builder->where('topics.progress', $filters['progress']);
+        }
+        $dueState = $filters['due_state'] ?? '';
+        if ($dueState === 'undated') {
+            $builder->where('topics.due_date', null);
+        } elseif (in_array($dueState, ['upcoming', 'overdue'], true)) {
+            $today = date('Y-m-d');
+            $builder->where('topics.progress !=', 'done');
+            $builder->where('topics.due_date ' . ($dueState === 'upcoming' ? '>=' : '<'), $today);
+        }
+
+        return $builder->orderBy('topics.due_date', 'ASC')->orderBy('subjects.name', 'ASC')
+            ->orderBy('topics.title', 'ASC')->get()->getResultArray();
+    }
+
     /** @return array<string, mixed>|null */
     public function findForSubjectOwner(int $subjectId, int $topicId, int $ownerId): ?array
     {
@@ -139,6 +190,19 @@ class TopicModel extends Model
             ->where('subjects.user_id', $ownerId)
             ->get()
             ->getRowArray();
+
+        return is_array($topic) ? $topic : null;
+    }
+
+    /** @return array<string, mixed>|null */
+    public function findForAcademicProgramSubjectOwner(int $subjectId, int $topicId, int $ownerId, ?string $curriculumId): ?array
+    {
+        $builder = $this->db->table('topics')->select('topics.*')
+            ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.subject_id', $subjectId)->where('topics.id', $topicId)
+            ->where('topics.user_id', $ownerId)->where('subjects.user_id', $ownerId);
+        $this->applyAcademicProgramScope($builder, $curriculumId);
+        $topic = $builder->get()->getRowArray();
 
         return is_array($topic) ? $topic : null;
     }
@@ -203,6 +267,23 @@ class TopicModel extends Model
             ->where('id', $topicId)
             ->where('user_id', $ownerId)
             ->whereIn('subject_id', $ownedSubjects)
+            ->update(['progress' => $progress, 'updated_at' => date('Y-m-d H:i:s')]);
+    }
+
+    public function updateProgressForAcademicProgramOwner(int $topicId, int $ownerId, string $progress, ?string $curriculumId): bool
+    {
+        if (! in_array($progress, ['not_started', 'in_progress', 'done'], true)) {
+            return false;
+        }
+        $builder = $this->db->table('topics')->select('topics.id')
+            ->join('subjects', 'subjects.id = topics.subject_id')
+            ->where('topics.id', $topicId)->where('topics.user_id', $ownerId)->where('subjects.user_id', $ownerId);
+        $this->applyAcademicProgramScope($builder, $curriculumId);
+        if (! is_array($builder->get()->getRowArray())) {
+            return false;
+        }
+
+        return $this->builder()->where('id', $topicId)->where('user_id', $ownerId)
             ->update(['progress' => $progress, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 
@@ -271,5 +352,16 @@ class TopicModel extends Model
             ->where('topic_id', $topicId)
             ->limit(1)
             ->countAllResults() > 0;
+    }
+
+    private function applyAcademicProgramScope($builder, ?string $curriculumId): void
+    {
+        if ($curriculumId === null || $curriculumId === '') {
+            $builder->where('subjects.program_id', null);
+            return;
+        }
+
+        $builder->groupStart()->where('subjects.program_id', $curriculumId)
+            ->orWhere('subjects.program_id', null)->groupEnd();
     }
 }

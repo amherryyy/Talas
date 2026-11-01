@@ -1,6 +1,6 @@
 /* Duno keeps a small cache of public static files only. */
 const CACHE_PREFIX = 'duno-public-static-';
-const CACHE_NAME = `${CACHE_PREFIX}20261030-1`;
+const CACHE_NAME = `${CACHE_PREFIX}20261101-offline-recovery-1`;
 const APP_BASE = new URL('./', self.location.href);
 const OFFLINE_PAGE = new URL('offline.html', APP_BASE);
 const PRECACHE_URLS = [
@@ -11,7 +11,10 @@ const PRECACHE_URLS = [
     'assets/css/student-navigation.css',
     'assets/css/pwa.css',
     'assets/js/pwa.js',
+    'assets/js/duno-mascot.js',
+    'assets/images/duno-mascot-animation.webp',
     'assets/images/duno-mascot-welcome.webp',
+    'assets/images/duno-contour-texture.svg',
     'assets/images/duno-pwa-icon-192.png',
     'assets/images/duno-pwa-icon-512.png',
 ].map((path) => new URL(path, APP_BASE).href);

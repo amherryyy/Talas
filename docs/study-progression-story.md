@@ -1,7 +1,7 @@
 # Story: study progression and unlockable Aralytics
 
 **Requirement:** F-14 (Should) and F-09 (Must)
-**State:** Prior progression accepted 2026-10-25; streak extension accepted 2026-10-26; XP scale updated 2026-10-29.
+**State:** Prior progression accepted 2026-10-25; streak extension accepted 2026-10-26; XP awards updated 2026-10-29 and 2026-11-01.
 **Owner decision:** Keep core Aralytics available from the start; unlock optional additional insights with XP. Add a once-per-app-local-calendar-day student visit reward and streak (2026-10-26).
 
 ## User story
@@ -10,10 +10,10 @@ As a student, I can see steady progress from the study time I choose to save, ea
 
 ## Product rules
 
-- Earn 100 study XP for each minute in a saved study session. Editing or deleting sessions recalculates this study XP from the current saved records.
-- Award 500 additional XP on the first authenticated student app visit for each app-local calendar day. A student visit on the next consecutive local date increments the streak; a visit after one or more missed dates starts a new one-day streak. Reopening or refreshing the app on the same date does not add XP.
+- Earn 1,000 study XP for each minute in a saved study session. Editing or deleting sessions recalculates this study XP from the current saved records; show the amount gained after each saved session and explain XP removed when saved time decreases.
+- Award 5,000 additional XP on the first authenticated student app visit for each app-local calendar day. A student visit on the next consecutive local date increments the streak; a visit after one or more missed dates starts a new one-day streak. Reopening or refreshing the app on the same date does not add XP.
 - Store one owner-scoped activity row per local date with a unique owner/date key so simultaneous requests cannot award twice. Admin visits and private check-ins do not count.
-- Levels are deterministic: Level 1 Fresh Start (0 XP), Level 2 Finding Your Rhythm (12,000 XP), Level 3 Building Momentum (30,000 XP), Level 4 Steady Scholar (60,000 XP), and Level 5 Long-Haul Learner (120,000 XP). This 100x scale preserves the previous time-to-level pacing while making each saved session and daily visit reward feel substantial.
+- Levels are deterministic: Level 1 Fresh Start (0 XP), Level 2 Finding Your Rhythm (12,000 XP), Level 3 Building Momentum (30,000 XP), Level 4 Steady Scholar (60,000 XP), and Level 5 Long-Haul Learner (120,000 XP). The owner chose 10x larger awards while keeping these thresholds, making levels arrive 10x sooner than the previous scale.
 - If a student edits or deletes a session, XP and level are recalculated from the saved records. This keeps the display explainable and avoids a separate XP ledger.
 - Core Aralytics stays available at every level. Additional owner-scoped insights unlock at these thresholds:
   - Level 2 / 12,000 XP: daily saved study minutes across the last 30 days.
@@ -38,7 +38,7 @@ As a student, I can see steady progress from the study time I choose to save, ea
 7. Check-ins have no effect on XP, levels, badges, or unlocks; private check-in values remain excluded from admin and print views.
 8. Milestone badges reflect the saved owner-scoped data and display clear earned or in-progress status without relying on color alone.
 9. Layouts remain usable by keyboard and at phone widths. Progress cards and bonus insights do not appear in the printable study report.
-10. A first student visit awards exactly 500 XP on an app-local calendar date; same-day requests award no more. Consecutive calendar dates increase the streak, a missed date resets it, other students' visits do not affect it, and admin visits/check-ins award no streak XP.
+10. A first student visit awards exactly 5,000 XP on an app-local calendar date; same-day requests award no more. Consecutive calendar dates increase the streak, a missed date resets it, other students' visits do not affect it, and admin visits/check-ins award no streak XP.
 11. The dashboard fire icon animates on a newly awarded streak day, has a useful text equivalent, and respects reduced motion.
 
 ## Streak extension verification (2026-10-26)
@@ -50,6 +50,8 @@ As a student, I can see steady progress from the study time I choose to save, ea
 - No files were staged, committed, pushed, or deployed.
 
 ## Verification status
+
+- 2026-11-01 reward increase: study sessions now earn 1,000 XP per saved minute and the first visit per day earns 5,000 XP; thresholds remain 12,000 / 30,000 / 60,000 / 120,000 XP. Session saves display the reward and reductions explain the recalculation. Migration `2026-11-01-000002_ScaleProgressionXpRewards` converts existing 500-XP visit rows to 5,000; the hosted upgrade is pending. The earlier 2026-10-29 scale and host confirmation remain historical and are not current rates.
 
 - 2026-10-29 XP scale change: saved study minutes now earn 100 XP and the first visit per day earns 500 XP. Migration `2026-10-29-000002_ScaleProgressionXp` multiplies existing streak award rows by 100; study XP is derived from saved session minutes, so no study-session data update is needed. The owner confirmed it is applied on InfinityFree in batch 8. Level thresholds are also scaled by 100, preserving unlock pacing. Its down migration intentionally preserves XP values because it cannot distinguish converted historical rewards from new 500-XP awards; see `deployment.md`.
 

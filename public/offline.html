@@ -10,14 +10,21 @@
     <link rel="icon" href="./favicon.ico" sizes="any">
     <title>Offline — Duno</title>
     <style>
-        :root { color-scheme: light; font-family: "Aptos", "Segoe UI", system-ui, sans-serif; color: #2e2e3a; background: #f7f6fc; }
+        :root { color-scheme: light; font-family: "Aptos", "Segoe UI", system-ui, sans-serif; color: #2e2e3a; background: radial-gradient(ellipse at 8% 8%, rgb(173 160 239 / 36%), transparent 34rem), radial-gradient(ellipse at 96% 78%, rgb(185 232 209 / 29%), transparent 34rem), #f7f6fc; }
         * { box-sizing: border-box; }
         body { min-width: 320px; min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 1rem; }
-        main { width: min(100%, 34rem); padding: clamp(1.4rem, 6vw, 2.5rem); border: 1px solid #e3e1eb; border-radius: 1.5rem; background: #fff; box-shadow: 0 14px 40px rgb(42 37 79 / 9%); text-align: center; }
+        main { position: relative; width: min(100%, 34rem); overflow: hidden; padding: clamp(1.4rem, 6vw, 2.5rem); border: 1px solid rgb(255 255 255 / 92%); border-radius: 1.5rem; background: linear-gradient(145deg, rgb(255 255 255 / 97%), rgb(250 248 255 / 95%)); box-shadow: 0 18px 46px rgb(42 37 79 / 10%); text-align: center; }
+        main::before { position: absolute; inset: 0 0 auto; height: .3rem; background: linear-gradient(90deg, #7465d8, #b9e8d1 70%, #ffda92); content: ""; }
         img { width: min(48vw, 10rem); height: auto; }
         h1 { margin: .8rem 0; font-size: clamp(1.6rem, 6vw, 2.2rem); letter-spacing: -.045em; }
         p { color: #64677b; line-height: 1.6; }
-        button { min-height: 2.9rem; margin-top: .5rem; padding: .7rem 1.2rem; border: 0; border-radius: 999px; color: #fff; background: #5746bd; font: inherit; font-weight: 750; cursor: pointer; }
+        .connection-status { display: inline-flex; min-height: 2rem; align-items: center; gap: .5rem; margin: .3rem 0 .65rem; padding: .35rem .75rem; border: 1px solid #e6defa; border-radius: 999px; color: #5143a5; background: #f2efff; font-size: .78rem; font-weight: 720; }
+        .connection-status::before { width: .52rem; height: .52rem; flex: none; border-radius: 50%; background: #8b6bd6; box-shadow: 0 0 0 .2rem rgb(139 107 214 / 13%); content: ""; }
+        .connection-status[data-state="online"] { border-color: #cce9d7; color: #286344; background: #eff9f3; }
+        .connection-status[data-state="online"]::before { background: #3c9b68; box-shadow: 0 0 0 .2rem rgb(60 155 104 / 13%); }
+        button { min-height: 2.9rem; margin-top: .5rem; padding: .7rem 1.2rem; border: 0; border-radius: .85rem; color: #fff; background: #6555c7; box-shadow: 0 .5rem 1.1rem rgb(89 73 189 / 20%); font: inherit; font-weight: 750; cursor: pointer; }
+        button:hover { background: #5746bd; }
+        button:disabled { cursor: wait; opacity: .8; }
         button:focus-visible { outline: 3px solid #ffda92; outline-offset: 3px; }
         .note { font-size: .88rem; }
         @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
@@ -27,13 +34,39 @@
 <main id="main-content">
     <img src="./assets/images/duno-pwa-icon-192.png" width="192" height="192" alt="">
     <p class="overline">duno. · Your Little Study Buddy.</p>
+    <p class="connection-status" id="connection-status" role="status" aria-live="polite" data-state="offline">No internet connection</p>
     <h1>You're offline right now.</h1>
     <p>Your account and saved study data need an internet connection. Duno does not save changes while you are offline.</p>
     <button type="button" id="retry-connection">Try again</button>
     <p class="note">This page and selected public design files are available offline. Your study pages and records are not stored on this device for offline use.</p>
 </main>
 <script>
-    document.getElementById('retry-connection').addEventListener('click', () => window.location.reload());
+    const retryButton = document.getElementById('retry-connection');
+    const connectionStatus = document.getElementById('connection-status');
+
+    function showOffline() {
+        connectionStatus.dataset.state = 'offline';
+        connectionStatus.textContent = 'No internet connection';
+    }
+
+    window.addEventListener('offline', showOffline);
+    window.addEventListener('online', () => {
+        connectionStatus.dataset.state = 'online';
+        connectionStatus.textContent = 'Connection restored. Reopening Duno…';
+        retryButton.disabled = true;
+        retryButton.textContent = 'Reopening Duno…';
+        window.setTimeout(() => window.location.reload(), 700);
+    });
+
+    retryButton.addEventListener('click', () => {
+        retryButton.disabled = true;
+        retryButton.textContent = 'Checking connection…';
+        window.setTimeout(() => window.location.reload(), 120);
+    });
+
+    if (navigator.onLine) {
+        connectionStatus.textContent = 'Connection may be available. Tap Try again.';
+    }
 </script>
 </body>
 </html>

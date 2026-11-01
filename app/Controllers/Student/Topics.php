@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\SubjectModel;
 use App\Models\TopicModel;
 use App\Services\TopicPriorityService;
+use App\Services\AcademicProgramCatalog;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 
@@ -14,11 +15,12 @@ class Topics extends BaseController
     public function priority(): string
     {
         $ownerId = $this->ownerId();
-        $topics = (new TopicModel())->findAllForOwner($ownerId);
+        $program = $this->currentAcademicProgram();
+        $topics = (new TopicModel())->findAllForAcademicProgramOwner($ownerId, $program['curriculum_id']);
 
         return view('student/topics/priority', [
             'topics' => (new TopicPriorityService())->rank($topics),
-            'subjects' => (new SubjectModel())->findAllForOwner($ownerId),
+            'subjects' => (new SubjectModel())->findAllForAcademicProgram($ownerId, $program['curriculum_id']),
             'pageTitle' => 'Duno Focus',
         ]);
     }
@@ -26,6 +28,7 @@ class Topics extends BaseController
     public function all(): string
     {
         $ownerId = $this->ownerId();
+        $program = $this->currentAcademicProgram();
         $filters = [
             'query' => '',
             'subject_id' => null,
@@ -43,7 +46,7 @@ class Topics extends BaseController
             $dueState = $this->request->getPost('due_state');
             $ownedSubjectIds = array_map(
                 static fn (array $subject): int => (int) $subject['id'],
-                (new SubjectModel())->findAllForOwner($ownerId),
+                (new SubjectModel())->findAllForAcademicProgram($ownerId, $program['curriculum_id']),
             );
 
             if ($query === null) {
@@ -83,8 +86,8 @@ class Topics extends BaseController
         }
 
         return view('student/topics/all', [
-            'topics' => (new TopicModel())->searchForOwner($ownerId, $filters),
-            'subjects' => (new SubjectModel())->findAllForOwner($ownerId),
+            'topics' => (new TopicModel())->searchForAcademicProgramOwner($ownerId, $filters, $program['curriculum_id']),
+            'subjects' => (new SubjectModel())->findAllForAcademicProgram($ownerId, $program['curriculum_id']),
             'filters' => $filters,
             'errors' => $errors,
         ]);
@@ -186,10 +189,22 @@ class Topics extends BaseController
         return (int) $user->id;
     }
 
+    /** @return array{id: string, title: string, campus: string, college: string, curriculum_id: ?string} */
+    private function currentAcademicProgram(): array
+    {
+        $program = (new AcademicProgramCatalog())->forUser($this->ownerId());
+        if ($program === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $program;
+    }
+
     /** @return array<string, mixed> */
     private function ownedSubject(int $subjectId): array
     {
-        $subject = (new SubjectModel())->findForOwner($subjectId, $this->ownerId());
+        $program = $this->currentAcademicProgram();
+        $subject = (new SubjectModel())->findForAcademicProgramOwner($subjectId, $this->ownerId(), $program['curriculum_id']);
 
         if ($subject === null) {
             throw PageNotFoundException::forPageNotFound();
@@ -201,7 +216,8 @@ class Topics extends BaseController
     /** @return array<string, mixed> */
     private function ownedTopic(int $subjectId, int $topicId): array
     {
-        $topic = (new TopicModel())->findForSubjectOwner($subjectId, $topicId, $this->ownerId());
+        $program = $this->currentAcademicProgram();
+        $topic = (new TopicModel())->findForAcademicProgramSubjectOwner($subjectId, $topicId, $this->ownerId(), $program['curriculum_id']);
 
         if ($topic === null) {
             throw PageNotFoundException::forPageNotFound();

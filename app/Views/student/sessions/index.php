@@ -1,6 +1,7 @@
 <?= $this->extend('student/subjects/layout') ?>
 
 <?= $this->section('content') ?>
+<?php $studySessionCompleted = session()->getFlashdata('study_session_completed') === true; ?>
 <h1>Duno Timer</h1>
 <p>Time a session, review its duration, then choose whether to save it.</p>
 
@@ -56,17 +57,22 @@
                     </div>
                 </div>
                 <aside class="timer-rhythm-card" aria-labelledby="timer-rhythm-title">
-                    <img class="timer-mascot" src="<?= esc(duno_asset('assets/images/duno-mascot-welcome.webp')) ?>" alt="" width="512" height="536" aria-hidden="true">
-                    <span class="timer-rhythm-mark" aria-hidden="true">◷</span>
-                    <p class="timer-focus-kicker">A rhythm to try</p>
-                    <h3 id="timer-rhythm-title">Give focus a little shape</h3>
-                    <p class="timer-rhythm-instruction">Choose a focus block to load it into the timer.</p>
+                    <div class="timer-rhythm-header">
+                        <div class="timer-rhythm-illustration">
+                            <?= view('partials/duno_mascot', ['mascotClass' => 'timer-mascot', 'mascotState' => $studySessionCompleted ? 'celebrating' : 'idle', 'mascotInteractive' => false, 'mascotAlt' => '']) ?>
+                        </div>
+                        <div class="timer-rhythm-copy">
+                            <p class="timer-focus-kicker">A rhythm to try</p>
+                            <h3 id="timer-rhythm-title">Give focus a little shape</h3>
+                            <p class="timer-rhythm-instruction">Choose a focus block to load it into the timer.</p>
+                        </div>
+                    </div>
                     <button class="timer-rhythm-option" type="button" data-timer-preset="25" aria-pressed="false" aria-label="Choose Pomodoro: 25 minutes focus, 5 minutes break">
-                        <strong>Pomodoro <span class="timer-preset-action">Use this block</span></strong>
+                        <span class="timer-rhythm-option-heading"><strong>Pomodoro</strong><span class="timer-preset-action">Use this block <span aria-hidden="true">&#8594;</span></span></span>
                         <span>25 min focus · 5 min break</span>
                     </button>
                     <button class="timer-rhythm-option" type="button" data-timer-preset="50" aria-pressed="false" aria-label="Choose longer block: 50 minutes focus, 10 minutes break">
-                        <strong>Longer block <span class="timer-preset-action">Use this block</span></strong>
+                        <span class="timer-rhythm-option-heading"><strong>Longer block</strong><span class="timer-preset-action">Use this block <span aria-hidden="true">&#8594;</span></span></span>
                         <span>50 min focus · 10 min break</span>
                     </button>
                     <p class="muted">Pick what feels manageable. Pause the timer for breaks; only running time is counted.</p>

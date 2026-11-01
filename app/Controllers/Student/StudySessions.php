@@ -8,6 +8,7 @@ use App\Models\StudentStreakModel;
 use App\Models\SubjectModel;
 use App\Models\TopicModel;
 use App\Services\StudyProgressionService;
+use App\Services\AcademicProgramCatalog;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
 use DateTimeImmutable;
@@ -18,12 +19,13 @@ class StudySessions extends BaseController
     public function index(): string
     {
         $ownerId = $this->ownerId();
+        $program = $this->currentAcademicProgram();
         $rawDuration = old('duration_minutes', '');
 
         return view('student/sessions/index', [
             'sessions' => (new StudySessionModel())->findAllForOwner($ownerId),
-            'subjects' => (new SubjectModel())->findAllForOwner($ownerId),
-            'topics' => (new TopicModel())->findAllForOwner($ownerId),
+            'subjects' => (new SubjectModel())->findAllForAcademicProgram($ownerId, $program['curriculum_id']),
+            'topics' => (new TopicModel())->findAllForAcademicProgramOwner($ownerId, $program['curriculum_id']),
             'errors' => session()->getFlashdata('errors') ?? [],
             'reviewing' => is_string($rawDuration) && $rawDuration !== '',
             'pageTitle' => 'Duno Timer',
@@ -54,7 +56,7 @@ class StudySessions extends BaseController
             return redirect()->to(site_url('student/sessions'))->withInput()->with('error', 'The session could not be saved. Please check your selections and try again.');
         }
 
-        return $this->sessionSavedRedirect($xpBefore, $xpBefore + $input['duration_minutes'] * StudyProgressionService::XP_PER_STUDY_MINUTE);
+        return $this->sessionSavedRedirect($xpBefore, $xpBefore + $input['duration_minutes'] * StudyProgressionService::XP_PER_STUDY_MINUTE, newSession: true);
     }
 
     public function edit(int $sessionId): string
@@ -64,11 +66,12 @@ class StudySessions extends BaseController
         if ($session === null) {
             throw PageNotFoundException::forPageNotFound();
         }
+        $program = $this->currentAcademicProgram();
 
         return view('student/sessions/edit', [
             'studySession' => $session,
-            'subjects' => (new SubjectModel())->findAllForOwner($ownerId),
-            'topics' => (new TopicModel())->findAllForOwner($ownerId),
+            'subjects' => (new SubjectModel())->findAllForAcademicProgram($ownerId, $program['curriculum_id']),
+            'topics' => (new TopicModel())->findAllForAcademicProgramOwner($ownerId, $program['curriculum_id']),
             'errors' => session()->getFlashdata('errors') ?? [],
             'pageTitle' => 'Edit timer session',
         ]);
@@ -123,7 +126,8 @@ class StudySessions extends BaseController
     public function confirmDelete(int $sessionId): RedirectResponse
     {
         $ownerId = $this->ownerId();
-        if ((new StudySessionModel())->findForOwner($sessionId, $ownerId) === null) {
+        $studySession = (new StudySessionModel())->findForOwner($sessionId, $ownerId);
+        if ($studySession === null) {
             throw PageNotFoundException::forPageNotFound();
         }
         if ($this->request->getPost('confirm_delete') !== '1') {
@@ -133,7 +137,11 @@ class StudySessions extends BaseController
             return redirect()->to(site_url('student/sessions'))->with('error', 'The study session could not be deleted.');
         }
 
-        return redirect()->to(site_url('student/sessions'))->with('success', 'Study session deleted.');
+        return redirect()->to(site_url('student/sessions'))
+            ->with('success', 'Study session deleted.')
+            ->with('study_xp_adjustment', [
+                'xp' => (int) $studySession['duration_minutes'] * StudyProgressionService::XP_PER_STUDY_MINUTE,
+            ]);
     }
 
     /** @return array{subject_id: int, topic_id: int|null, duration_minutes: int}|RedirectResponse */
@@ -157,12 +165,13 @@ class StudySessions extends BaseController
         }
 
         $ownerId = $this->ownerId();
+        $program = $this->currentAcademicProgram();
         $subjectId = (int) $data['subject_id'];
         $topicId = $data['topic_id'] === '' ? null : (int) $data['topic_id'];
         $errors = [];
-        if ((new SubjectModel())->findForOwner($subjectId, $ownerId) === null) {
-            $errors['subject_id'] = 'Choose one of your subjects.';
-        } elseif ($topicId !== null && (new TopicModel())->findForSubjectOwner($subjectId, $topicId, $ownerId) === null) {
+        if ((new SubjectModel())->findForAcademicProgramOwner($subjectId, $ownerId, $program['curriculum_id']) === null) {
+            $errors['subject_id'] = 'Choose one of your subjects from your selected program.';
+        } elseif ($topicId !== null && (new TopicModel())->findForAcademicProgramSubjectOwner($subjectId, $topicId, $ownerId, $program['curriculum_id']) === null) {
             $errors['topic_id'] = 'Choose a topic belonging to the selected subject.';
         }
         if ($errors !== []) {
@@ -186,6 +195,17 @@ class StudySessions extends BaseController
         return (int) $user->id;
     }
 
+    /** @return array{id: string, title: string, campus: string, college: string, curriculum_id: ?string} */
+    private function currentAcademicProgram(): array
+    {
+        $program = (new AcademicProgramCatalog())->forUser($this->ownerId());
+        if ($program === null) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        return $program;
+    }
+
     private function now(): string
     {
         $timezone = new DateTimeZone(config('App')->appTimezone);
@@ -193,14 +213,24 @@ class StudySessions extends BaseController
         return (new DateTimeImmutable('now', $timezone))->format('Y-m-d H:i:s');
     }
 
-    private function sessionSavedRedirect(int $xpBefore, int $xpAfter, string $message = 'Study session saved.'): RedirectResponse
+    private function sessionSavedRedirect(int $xpBefore, int $xpAfter, string $message = 'Study session saved.', bool $newSession = false): RedirectResponse
     {
         $progression = new StudyProgressionService();
         $previousLevel = $progression->levelForXp($xpBefore);
         $newLevel = $progression->levelForXp($xpAfter);
         $response = redirect()->to(site_url('student/sessions'))->with('success', $message);
+        $xpEarned = $xpAfter - $xpBefore;
+        if ($xpEarned > 0) {
+            $response = $response->with('study_xp_reward', ['xp' => $xpEarned]);
+        } elseif ($xpEarned < 0) {
+            $response = $response->with('study_xp_adjustment', ['xp' => abs($xpEarned)]);
+        }
 
         if ($newLevel['level'] <= $previousLevel['level']) {
+            if ($newSession) {
+                $response = $response->with('study_session_completed', true);
+            }
+
             return $response;
         }
 

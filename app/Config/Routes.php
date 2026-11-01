@@ -5,6 +5,10 @@ use CodeIgniter\Router\RouteCollection;
 /** @var RouteCollection $routes */
 $routes->setAutoRoute(false);
 $routes->get('/', 'Home::index');
+$routes->get('about', 'About::index', ['as' => 'about']);
+$routes->get('terms', 'Legal::terms', ['as' => 'legal.terms']);
+$routes->get('privacy', 'Legal::privacy', ['as' => 'legal.privacy']);
+$routes->get('cookies', 'Legal::cookies', ['as' => 'legal.cookies']);
 $routes->post('language', 'LanguagePreference::update', ['as' => 'language.update']);
 
 $routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection $routes): void {
@@ -15,10 +19,13 @@ $routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection
 
 $routes->post('logout', 'Auth\\LogoutController::logoutAction', ['as' => 'logout']);
 
-$routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'student-streak']], static function (RouteCollection $routes): void {
+$routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'student-streak', 'student-program']], static function (RouteCollection $routes): void {
     $routes->get('/', 'Student\\Dashboard::index', ['as' => 'student.dashboard']);
+    $routes->get('academic-program', 'Student\\AcademicProgram::show', ['as' => 'student.academic-program']);
+    $routes->post('academic-program', 'Student\\AcademicProgram::save', ['as' => 'student.academic-program.save']);
     $routes->get('profile', 'Student\\Profile::show', ['as' => 'student.profile']);
     $routes->post('profile', 'Student\\Profile::update', ['as' => 'student.profile.update']);
+    $routes->post('profile/delete', 'Student\\Profile::deleteAccount', ['as' => 'student.profile.delete']);
     $routes->get('subjects', 'Student\\Subjects::index', ['as' => 'student.subjects.index']);
     $routes->post('subjects/search', 'Student\\Subjects::search', ['as' => 'student.subjects.search']);
     $routes->get('subjects/templates', 'Student\\Subjects::templates', ['as' => 'student.subjects.templates']);

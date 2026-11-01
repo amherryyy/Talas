@@ -52,6 +52,8 @@
         </section>
     <?php endif ?>
 
+    <details class="report-breakdown">
+        <summary>Subject, topic, and session details</summary>
     <section class="report-section" aria-labelledby="subject-totals-heading">
             <div class="report-section-heading"><div><p class="workspace-kicker">Time by subject</p><h3 id="subject-totals-heading">Where your study time went</h3></div><p class="muted">Bars show each subject’s share of this period’s study time.</p></div>
         <?php if ($summary['subject_totals'] === []): ?>
@@ -110,7 +112,10 @@
             </tbody></table>
         <?php endif ?>
     </section>
-    <section class="report-section no-print" aria-labelledby="check-in-pattern-heading">
+    </details>
+    <details class="report-disclosure no-print">
+        <summary>Private check-in trends</summary>
+    <section class="report-section" aria-labelledby="check-in-pattern-heading">
         <h3 id="check-in-pattern-heading">Your private check-in pattern</h3>
         <p class="muted">Private to you; descriptive, not an assessment or prediction. Excluded from print.</p>
         <?php if ($checkInSummary['check_in_count'] === 0): ?>
@@ -119,16 +124,27 @@
             <p><?= esc((string) $checkInSummary['check_in_count']) ?> check-ins: high workload (4–5) <?= esc((string) $checkInSummary['high_workload_count']) ?>; low energy (1–2) <?= esc((string) $checkInSummary['low_energy_count']) ?>; both <?= esc((string) $checkInSummary['high_workload_low_energy_count']) ?>.</p>
             <h4>Rating distribution</h4>
             <?php $ratingChartMax = max(1, max($checkInSummary['workload_distribution']), max($checkInSummary['energy_distribution'])); ?>
-            <?php $ratingChartBase = 220; $ratingChartHeight = 168; ?>
-            <svg class="rating-chart" viewBox="0 0 620 260" role="img" aria-labelledby="rating-chart-title rating-chart-description">
+            <?php
+            $ratingChartBase = 238;
+            $ratingChartHeight = 170;
+            $ratingChartTicks = $ratingChartMax <= 4
+                ? range($ratingChartMax, 0)
+                : array_values(array_unique([$ratingChartMax, (int) ceil($ratingChartMax / 2), 0]));
+            ?>
+            <svg class="rating-chart" viewBox="0 0 620 292" role="img" aria-labelledby="rating-chart-title rating-chart-description">
                 <title id="rating-chart-title">Workload and energy ratings for <?= esc($checkInSummary['period_label']) ?></title>
-                <desc id="rating-chart-description">Paired bars show the count at each rating from 1 to 5. Exact counts are also listed in the table below.</desc>
-                <text x="52" y="38">Number of check-ins</text>
-                <line class="grid-line" x1="52" y1="52" x2="570" y2="52" />
-                <line class="grid-line" x1="52" y1="136" x2="570" y2="136" />
-                <line class="axis-line" x1="52" y1="220" x2="570" y2="220" />
-                <text x="42" y="56" text-anchor="end"><?= esc((string) $ratingChartMax) ?></text>
-                <text x="42" y="224" text-anchor="end">0</text>
+                <desc id="rating-chart-description">Paired bars compare workload and energy check-ins at ratings 1 to 5. Zero counts and exact values are listed in the table below.</desc>
+                <defs>
+                    <linearGradient id="workload-rating-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8a78ea" /><stop offset="100%" stop-color="#5544bd" /></linearGradient>
+                    <linearGradient id="energy-rating-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#81d1aa" /><stop offset="100%" stop-color="#42a978" /></linearGradient>
+                </defs>
+                <rect class="rating-chart-plot" x="52" y="62" width="518" height="176" rx="14" />
+                <text class="rating-chart-axis-title" x="52" y="38">Number of check-ins</text>
+                <?php foreach ($ratingChartTicks as $tick): ?>
+                    <?php $tickY = $ratingChartBase - (int) round(($tick / $ratingChartMax) * $ratingChartHeight); ?>
+                    <line class="grid-line<?= $tick === 0 ? ' axis-line' : '' ?>" x1="52" y1="<?= esc((string) $tickY) ?>" x2="570" y2="<?= esc((string) $tickY) ?>" />
+                    <text class="rating-chart-tick" x="42" y="<?= esc((string) ($tickY + 4)) ?>" text-anchor="end"><?= esc((string) $tick) ?></text>
+                <?php endforeach ?>
                 <?php foreach ([1, 2, 3, 4, 5] as $rating): ?>
                     <?php
                     $center = 112 + (($rating - 1) * 100);
@@ -137,19 +153,24 @@
                     $workloadHeight = (int) round(($workloadCount / $ratingChartMax) * $ratingChartHeight);
                     $energyHeight = (int) round(($energyCount / $ratingChartMax) * $ratingChartHeight);
                     ?>
-                    <rect class="workload-bar" x="<?= esc((string) ($center - 27)) ?>" y="<?= esc((string) ($ratingChartBase - $workloadHeight)) ?>" width="24" height="<?= esc((string) $workloadHeight) ?>" rx="2" />
-                    <rect class="energy-bar" x="<?= esc((string) ($center + 3)) ?>" y="<?= esc((string) ($ratingChartBase - $energyHeight)) ?>" width="24" height="<?= esc((string) $energyHeight) ?>" rx="2" />
-                    <text class="bar-count" x="<?= esc((string) ($center - 15)) ?>" y="<?= esc((string) max(44, $ratingChartBase - $workloadHeight - 6)) ?>" text-anchor="middle"><?= esc((string) $workloadCount) ?></text>
-                    <text class="bar-count" x="<?= esc((string) ($center + 15)) ?>" y="<?= esc((string) max(44, $ratingChartBase - $energyHeight - 6)) ?>" text-anchor="middle"><?= esc((string) $energyCount) ?></text>
-                    <text x="<?= esc((string) $center) ?>" y="240" text-anchor="middle"><?= esc((string) $rating) ?></text>
+                    <?php if ($workloadCount > 0): ?>
+                        <rect class="workload-bar" x="<?= esc((string) ($center - 31)) ?>" y="<?= esc((string) ($ratingChartBase - $workloadHeight)) ?>" width="26" height="<?= esc((string) $workloadHeight) ?>" rx="7" />
+                        <text class="bar-count" x="<?= esc((string) ($center - 18)) ?>" y="<?= esc((string) max(54, $ratingChartBase - $workloadHeight - 8)) ?>" text-anchor="middle"><?= esc((string) $workloadCount) ?></text>
+                    <?php endif ?>
+                    <?php if ($energyCount > 0): ?>
+                        <rect class="energy-bar" x="<?= esc((string) ($center + 5)) ?>" y="<?= esc((string) ($ratingChartBase - $energyHeight)) ?>" width="26" height="<?= esc((string) $energyHeight) ?>" rx="7" />
+                        <text class="bar-count" x="<?= esc((string) ($center + 18)) ?>" y="<?= esc((string) max(54, $ratingChartBase - $energyHeight - 8)) ?>" text-anchor="middle"><?= esc((string) $energyCount) ?></text>
+                    <?php endif ?>
+                    <rect class="rating-label-pill" x="<?= esc((string) ($center - 15)) ?>" y="248" width="30" height="24" rx="8" />
+                    <text class="rating-chart-rating" x="<?= esc((string) $center) ?>" y="264" text-anchor="middle"><?= esc((string) $rating) ?></text>
                 <?php endforeach ?>
-                <text x="311" y="258" text-anchor="middle">Rating (1–5)</text>
+                <text class="rating-chart-axis-title rating-chart-bottom-title" x="311" y="289" text-anchor="middle">Rating scale</text>
             </svg>
-            <div class="chart-legend" aria-hidden="true">
+            <div class="chart-legend rating-chart-legend" aria-hidden="true">
                 <span><i class="chart-swatch workload"></i>Workload</span>
                 <span><i class="chart-swatch energy"></i>Energy</span>
             </div>
-            <table class="report-table">
+            <table class="report-table rating-distribution-table">
                 <caption>Check-in counts by rating</caption>
                 <thead><tr><th scope="col">Rating</th><?php foreach ([1, 2, 3, 4, 5] as $rating): ?><th scope="col"><?= esc((string) $rating) ?></th><?php endforeach ?></tr></thead>
                 <tbody>
@@ -160,7 +181,10 @@
         <?php endif ?>
     </section>
 
-    <section class="progression-insights no-print" aria-labelledby="progression-insights-heading">
+    </details>
+    <details class="report-disclosure no-print">
+        <summary>Bonus study insights</summary>
+    <section class="progression-insights" aria-labelledby="progression-insights-heading">
         <div class="dashboard-section-heading">
             <div><p class="workspace-kicker">Earned with study time and daily visits</p><h3 id="progression-insights-heading">Your unlocked insights</h3></div>
             <p class="muted">Core Aralytics stays open at every level.</p>
@@ -168,12 +192,12 @@
         <div class="progression-insight-grid">
             <?php foreach ($progression['unlocks'] as $unlock): ?>
                 <section class="progression-insight<?= $unlock['unlocked'] ? ' is-unlocked' : ' is-locked' ?>" aria-labelledby="insight-<?= esc($unlock['key']) ?>">
-                    <p class="insight-unlock-level"><?= $unlock['unlocked'] ? 'Unlocked' : 'Level ' . esc((string) $unlock['level']) . ' · ' . esc((string) $unlock['xp']) . ' XP' ?></p>
+                    <p class="insight-unlock-level"><?= $unlock['unlocked'] ? 'Unlocked' : 'Level ' . esc((string) $unlock['level']) . ' · ' . esc(number_format((int) $unlock['xp'])) . ' XP' ?></p>
                     <h4 id="insight-<?= esc($unlock['key']) ?>"><?= esc($unlock['name']) ?></h4>
                     <p class="muted"><?= esc($unlock['description']) ?></p>
                     <?php if (! $unlock['unlocked']): ?>
                         <progress value="<?= esc((string) min($progression['xp'], $unlock['xp'])) ?>" max="<?= esc((string) $unlock['xp']) ?>" aria-label="Progress to unlock <?= esc($unlock['name']) ?>"></progress>
-                        <p class="muted"><?= esc((string) max(0, $unlock['xp'] - $progression['xp'])) ?> XP to go</p>
+                        <p class="muted"><?= esc(number_format(max(0, (int) $unlock['xp'] - (int) $progression['xp']))) ?> XP to go</p>
                     <?php elseif ($unlock['key'] === 'rhythm'): ?>
                         <p><strong><?= esc((string) $progression['study_days_last_30']) ?> of 30 days</strong> had saved study time.</p>
                         <div class="rhythm-map" role="img" aria-label="Daily saved study time over the past 30 days. A table of exact minutes is available below.">
@@ -230,6 +254,7 @@
             <?php endforeach ?>
         </div>
     </section>
+    </details>
 
 </article>
 <?= $this->include('student/partials/progression_card', ['progression' => $progression]) ?>

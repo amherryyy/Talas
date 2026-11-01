@@ -46,11 +46,16 @@ final class StudentStudySessionsTest extends CIUnitTestCase
         $page->assertOK();
         $page->assertSee('Duno Timer');
         $page->assertSee('Time a session');
+        $page->assertSee('timer-rhythm-header');
+        $page->assertSee('timer-rhythm-option-heading');
+        $page->assertSee('Use this block');
         $this->postAuthenticated('student/sessions', [
             'subject_id' => (string) $subjectId,
             'topic_id' => (string) $topicId,
             'duration_minutes' => '35',
         ])->assertRedirect();
+        $rewardNotice = $this->getAuthenticated('student/sessions');
+        $rewardNotice->assertSee('+35,000 XP earned from your study session.');
 
         $sessions = new StudySessionModel();
         $saved = $sessions->findAllForOwner((int) $student->id);
@@ -66,6 +71,8 @@ final class StudentStudySessionsTest extends CIUnitTestCase
             'topic_id' => '',
             'duration_minutes' => '50',
         ])->assertRedirect();
+        $updatedReward = $this->getAuthenticated('student/sessions');
+        $updatedReward->assertSee('+15,000 XP earned from your study session.');
         $updated = $sessions->findForOwner($sessionId, (int) $student->id);
         $this->assertSame(50, (int) $updated['duration_minutes']);
         $this->assertNull($updated['topic_id']);
@@ -75,7 +82,37 @@ final class StudentStudySessionsTest extends CIUnitTestCase
         $confirmation->assertOK();
         $confirmation->assertSee('Delete study session?');
         $this->postAuthenticated('student/sessions/' . $sessionId . '/delete/confirm', ['confirm_delete' => '1'])->assertRedirect();
+        $deletedReward = $this->getAuthenticated('student/sessions');
+        $deletedReward->assertSee('50,000 study XP was removed');
         $this->assertNull($sessions->findForOwner($sessionId, (int) $student->id));
+    }
+
+    public function testNewlySavedSessionCelebratesButEditingDoesNotRepeatTheGesture(): void
+    {
+        $student = $this->createUser('session-mascot', 'student');
+        $subjectId = $this->createSubject((int) $student->id, 'Writing');
+        $this->authenticateAs($student);
+
+        $this->postAuthenticated('student/sessions', [
+            'subject_id' => (string) $subjectId,
+            'topic_id' => '',
+            'duration_minutes' => '1',
+        ])->assertRedirect();
+
+        $completed = $this->getAuthenticated('student/sessions');
+        $completed->assertOK();
+        $completed->assertSee('data-duno-state="celebrating"');
+        $sessionId = (int) (new StudySessionModel())->findAllForOwner((int) $student->id)[0]['id'];
+
+        $this->postAuthenticated('student/sessions/' . $sessionId, [
+            'subject_id' => (string) $subjectId,
+            'topic_id' => '',
+            'duration_minutes' => '2',
+        ])->assertRedirect();
+
+        $updated = $this->getAuthenticated('student/sessions');
+        $updated->assertOK();
+        $updated->assertSee('data-duno-state="idle"');
     }
 
     public function testDurationAndSubjectTopicRelationshipsAreValidatedBeforeSave(): void
@@ -216,8 +253,18 @@ final class StudentStudySessionsTest extends CIUnitTestCase
 
     private function authenticateAs(User $user): void
     {
+        $this->seedAccountProgramWhenStudent($user);
         $this->actingAs($user);
         $this->withSession($_SESSION);
+    }
+
+    private function seedAccountProgramWhenStudent(User $user): void
+    {
+        if (! $user->inGroup('student') || $user->inGroup('admin')) { return; }
+        $program = (new App\Services\AcademicProgramCatalog())->all()[0];
+        db_connect()->table('users')->where('id', (int) $user->id)->update([
+            'academic_program_id' => $program['id'], 'academic_program_title' => $program['title'], 'academic_program_selected_at' => '2026-11-01 00:00:00',
+        ]);
     }
 
     private function getAuthenticated(string $path): TestResponse

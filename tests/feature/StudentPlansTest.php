@@ -47,6 +47,9 @@ final class StudentPlansTest extends CIUnitTestCase
         $page->assertOK();
         $page->assertSee('Duno Plan');
         $page->assertSee('Blocks follow topic priority; adjust, move, or remove them.');
+        $page->assertDontSee('type="time"');
+        $page->assertSee('placeholder="8:45 AM"');
+        $page->assertSee('12h or 24h');
         $this->postAuthenticated('student/plan/generate', ['available_minutes' => '60'])->assertRedirect();
 
         $plan = $this->planFor((int) $student->id);
@@ -95,6 +98,56 @@ final class StudentPlansTest extends CIUnitTestCase
             'confirm_replacement' => '1',
         ])->assertRedirect();
         $this->assertSame(50, (int) $this->planFor((int) $student->id)['available_minutes']);
+    }
+
+    public function testHoursAndMinutesInputStoresTheExistingMinuteTotal(): void
+    {
+        $student = $this->createUser('plan-hours-minutes', 'student');
+        $this->authenticateAs($student);
+
+        $page = $this->getAuthenticated('student/plan');
+        $page->assertOK();
+        $page->assertSee('Available study time for today');
+        $this->assertStringContainsString('name="available_hours"', $page->getBody());
+        $this->assertStringContainsString('name="available_remainder_minutes"', $page->getBody());
+
+        $this->postAuthenticated('student/plan/generate', [
+            'available_hours' => '0',
+            'available_remainder_minutes' => '14',
+        ])->assertRedirect();
+        $this->assertNull((new StudyPlanModel())->findForOwnerDate((int) $student->id, $this->today()));
+
+        $this->postAuthenticated('student/plan/generate', [
+            'available_hours' => '8',
+            'available_remainder_minutes' => '1',
+        ])->assertRedirect();
+        $this->assertNull((new StudyPlanModel())->findForOwnerDate((int) $student->id, $this->today()));
+
+        $this->postAuthenticated('student/plan/generate', [
+            'available_hours' => '1',
+            'available_remainder_minutes' => '60',
+        ])->assertRedirect();
+        $this->assertNull((new StudyPlanModel())->findForOwnerDate((int) $student->id, $this->today()));
+
+        $this->postAuthenticated('student/plan/generate', [
+            'available_hours' => '0',
+            'available_remainder_minutes' => '45',
+        ])->assertRedirect();
+        $this->assertSame(45, (int) $this->planFor((int) $student->id)['available_minutes']);
+
+        $this->postAuthenticated('student/plan/generate', [
+            'available_hours' => '1',
+            'available_remainder_minutes' => '30',
+        ])->assertRedirect();
+        $confirmation = $this->getAuthenticated('student/plan');
+        $confirmation->assertOK();
+        $this->assertStringContainsString('name="available_minutes" value="90"', $confirmation->getBody());
+
+        $this->postAuthenticated('student/plan/generate', [
+            'available_minutes' => '90',
+            'confirm_replacement' => '1',
+        ])->assertRedirect();
+        $this->assertSame(90, (int) $this->planFor((int) $student->id)['available_minutes']);
     }
 
     public function testPlanGenerationUsesTopicDifficultyInThePriorityOrder(): void
@@ -181,15 +234,33 @@ final class StudentPlansTest extends CIUnitTestCase
             'plan_date' => $this->today(),
             'agenda_item' => 'topic-' . $topicId,
             'duration_minutes' => '25',
-            'start_time' => '09:00',
-            'available_minutes' => '60',
+            'start_time' => '9:00 AM',
+            'available_hours' => '1',
+            'available_remainder_minutes' => '0',
         ]);
         $response->assertRedirect();
 
         $plan = $this->planFor((int) $student->id);
         $this->assertCount(1, $plan['items']);
+        $this->assertSame(60, (int) $plan['available_minutes']);
         $this->assertSame('09:00:00', $plan['items'][0]['start_time']);
         $this->assertSame($topicId, (int) $plan['items'][0]['topic_id']);
+    }
+
+    public function testPlanStartTimeTextEntryAcceptsTwelveHourInput(): void
+    {
+        $student = $this->createUser('plan-time-entry', 'student');
+        $subjectId = $this->createSubject((int) $student->id, 'Biology');
+        $this->insertTopic($subjectId, 'Cell structure', 'high', 'not_started');
+        $this->authenticateAs($student);
+
+        $this->postAuthenticated('student/plan/generate', [
+            'available_minutes' => '25',
+            'start_time' => '8:45 PM',
+        ])->assertRedirect();
+
+        $plan = $this->planFor((int) $student->id);
+        $this->assertSame('20:45:00', $plan['items'][0]['start_time']);
     }
 
     public function testAgendaRejectsOverlappingBlocksAndForeignTopics(): void
@@ -253,7 +324,7 @@ final class StudentPlansTest extends CIUnitTestCase
 
         $page = $this->getAuthenticated('student/plan?date=' . $selectedDate);
         $page->assertOK();
-        $this->assertStringContainsString('value="10:30"', $page->getBody());
+        $this->assertStringContainsString('value="10:30 AM"', $page->getBody());
     }
 
     private function planFor(int $ownerId): array
@@ -309,8 +380,18 @@ final class StudentPlansTest extends CIUnitTestCase
 
     private function authenticateAs(User $user): void
     {
+        $this->seedAccountProgramWhenStudent($user);
         $this->actingAs($user);
         $this->withSession($_SESSION);
+    }
+
+    private function seedAccountProgramWhenStudent(User $user): void
+    {
+        if (! $user->inGroup('student') || $user->inGroup('admin')) { return; }
+        $program = (new App\Services\AcademicProgramCatalog())->all()[0];
+        db_connect()->table('users')->where('id', (int) $user->id)->update([
+            'academic_program_id' => $program['id'], 'academic_program_title' => $program['title'], 'academic_program_selected_at' => '2026-11-01 00:00:00',
+        ]);
     }
 
     private function getAuthenticated(string $path): TestResponse

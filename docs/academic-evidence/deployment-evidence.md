@@ -9,8 +9,8 @@ Project deployment notes target InfinityFree free hosting through FTP/FTPS and a
 - Host details in project notes are owner-reported: PHP 8.4.27, required extensions, HTTPS, rewrite routing, host mapping to `htdocs`.
 - On 2026-10-31, browser checks observed the live r4 marker and public PWA resources. On 2026-11-01, the owner reported r5 live acceptance and the r5 marker. This is a later owner report, not a contradiction in the timeline. Uploaded-file parity is still **NOT VERIFIED**; a marker proves only the marker text.
 - Stale r6 archive `build/duno-full-release-20261101-r6.zip` has SHA-256 `F95CBD32FC661E515384A33EC5DDC912AFF4F118F10F248EAA81AB0C36AE92BC`; it predates the final role-denial header fix and must not be uploaded.
-- Local r7 package `build/duno-full-release-20261101-r7.zip` has SHA-256 `B48283C634F98F9C3820C38AB5F9A035D380E97F28187456CEAE297DE87863C4`. It was built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` and has not been uploaded. Live behavior remains unverified.
-- No independent host request or file access was performed in this audit; host PHP and r5 status remain owner-reported.
+- R7 package `build/duno-full-release-20261101-r7.zip` has SHA-256 `B48283C634F98F9C3820C38AB5F9A035D380E97F28187456CEAE297DE87863C4`. It was built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3`, uploaded by the owner, and its marker was independently read in Brave with a cache-busting query. An older tab retained r3; complete uploaded-file parity is not established.
+- Brave rendered the signed-out Focus login redirect, branded private-path 403 fallback, static 403/404 pages, manifest, worker script and offline page. Response codes/headers, actual offline navigation and cross-owner host cases remain open. Host PHP remains owner-reported.
 
 ## Database and migration state
 

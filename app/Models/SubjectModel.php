@@ -54,12 +54,62 @@ class SubjectModel extends Model
         return $builder->orderBy('name', 'ASC')->get()->getResultArray();
     }
 
+    /** @return list<array<string, mixed>> */
+    public function findAllForAcademicProgram(int $ownerId, ?string $curriculumId): array
+    {
+        $builder = $this->where('user_id', $ownerId);
+        if ($curriculumId === null || $curriculumId === '') {
+            $builder->where('program_id', null);
+        } else {
+            $builder->groupStart()
+                ->where('program_id', $curriculumId)
+                ->orWhere('program_id', null)
+                ->groupEnd();
+        }
+
+        return $builder->orderBy('name', 'ASC')->findAll();
+    }
+
+    /** @return list<array<string, mixed>> */
+    public function searchForAcademicProgram(int $ownerId, string $query, ?string $curriculumId): array
+    {
+        $builder = $this->builder()->where('user_id', $ownerId);
+        if ($curriculumId === null || $curriculumId === '') {
+            $builder->where('program_id', null);
+        } else {
+            $builder->groupStart()
+                ->where('program_id', $curriculumId)
+                ->orWhere('program_id', null)
+                ->groupEnd();
+        }
+        if ($query !== '') {
+            $builder->like('name', $query);
+        }
+
+        return $builder->orderBy('name', 'ASC')->get()->getResultArray();
+    }
+
     /** @return array<string, mixed>|null */
     public function findForOwner(int $subjectId, int $ownerId): ?array
     {
         $subject = $this->where('id', $subjectId)
             ->where('user_id', $ownerId)
             ->first();
+
+        return is_array($subject) ? $subject : null;
+    }
+
+    /** @return array<string, mixed>|null */
+    public function findForAcademicProgramOwner(int $subjectId, int $ownerId, ?string $curriculumId): ?array
+    {
+        $builder = $this->where('id', $subjectId)->where('user_id', $ownerId);
+        if ($curriculumId === null || $curriculumId === '') {
+            $builder->where('program_id', null);
+        } else {
+            $builder->groupStart()->where('program_id', $curriculumId)->orWhere('program_id', null)->groupEnd();
+        }
+
+        $subject = $builder->first();
 
         return is_array($subject) ? $subject : null;
     }

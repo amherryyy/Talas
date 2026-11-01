@@ -432,8 +432,18 @@ final class StudentTopicsTest extends CIUnitTestCase
 
     private function authenticateAs(User $user): void
     {
+        $this->seedAccountProgramWhenStudent($user);
         $this->actingAs($user);
         $this->withSession($_SESSION);
+    }
+
+    private function seedAccountProgramWhenStudent(User $user): void
+    {
+        if (! $user->inGroup('student') || $user->inGroup('admin')) { return; }
+        $program = (new App\Services\AcademicProgramCatalog())->all()[0];
+        db_connect()->table('users')->where('id', (int) $user->id)->update([
+            'academic_program_id' => $program['id'], 'academic_program_title' => $program['title'], 'academic_program_selected_at' => '2026-11-01 00:00:00',
+        ]);
     }
 
     private function getAuthenticated(string $path): TestResponse
