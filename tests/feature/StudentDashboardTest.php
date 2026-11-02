@@ -170,7 +170,7 @@ final class StudentDashboardTest extends CIUnitTestCase
         $this->assertStringNotContainsString('<option value="is">General writing</option>', $html);
         $this->assertStringContainsString('CS10', $html);
         $this->assertStringContainsString('CHED CMO No. 25 (2015)', $html);
-        $this->assertStringContainsString('Select a subject or topic for tailored guidance.', $html);
+        $this->assertStringContainsString('Choose a goal. Add a subject or topic for a closer fit.', $html);
     }
 
     public function testPrivateCheckInsDoNotEarnStudyXp(): void
