@@ -18,11 +18,11 @@
 
             <form action="<?= esc(url_to('auth-action-verify')) ?>" method="post">
                 <?= csrf_field() ?>
-                <div class="form-floating mb-2">
+                <div class="form-field mb-2">
                     <label for="verification-code"><?= esc(lang('Registration.code')) ?></label>
                     <input
-                        class="form-control"
                         id="verification-code"
+                        class="form-control"
                         name="token"
                         type="text"
                         inputmode="numeric"

@@ -34,8 +34,6 @@ class Home extends BaseController
             'workspaceUrl'  => $workspaceUrl,
             'workspaceLabel' => $workspaceLabel,
             'suggestions' => StudySuggestions::ITEMS,
-            'suggestionSourceUrl' => StudySuggestions::SOURCE_URL,
-            'suggestionSourceName' => StudySuggestions::SOURCE_NAME,
         ]);
     }
 }

@@ -11,7 +11,7 @@ final class StudySuggestionsTest extends CIUnitTestCase
 {
     public function testCuratedSuggestionsHaveUniqueIdsAndAReputableHttpsSource(): void
     {
-        $this->assertCount(4, StudySuggestions::ITEMS);
+        $this->assertCount(7, StudySuggestions::ITEMS);
         $this->assertSame('https://ies.ed.gov/ncee/wwc/practiceguide/1', StudySuggestions::SOURCE_URL);
         $this->assertStringContainsString('What Works Clearinghouse', StudySuggestions::SOURCE_NAME);
 
@@ -19,7 +19,11 @@ final class StudySuggestionsTest extends CIUnitTestCase
         foreach (StudySuggestions::ITEMS as $suggestion) {
             $this->assertNotEmpty($suggestion['title']);
             $this->assertNotEmpty($suggestion['body']);
+            $this->assertNotEmpty($suggestion['rationale']);
             $this->assertNotEmpty($suggestion['recommendation']);
+            $this->assertStringStartsWith('https://', $suggestion['source_url']);
+            $this->assertNotEmpty($suggestion['source_label']);
+            $this->assertCount(3, $suggestion['steps']);
             $ids[] = $suggestion['id'];
         }
 

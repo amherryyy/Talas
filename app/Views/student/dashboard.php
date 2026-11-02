@@ -168,8 +168,8 @@
 
 <section class="guide-section" id="study-ideas-heading" aria-labelledby="guide-heading" data-tour-target="guide">
     <div class="dashboard-section-heading">
-        <div><p class="workspace-kicker">A clear next step for your study session</p><h2 id="guide-heading">Duno Guide</h2></div>
-        <p class="muted">Choose what you are studying and what you want to do. Duno will lay out a practical approach.</p>
+        <div><p class="workspace-kicker">DUNO&rsquo;S STUDY FIELD GUIDE</p><h2 id="guide-heading">Duno Guide</h2></div>
+        <p class="muted">Stuck on a concept, brushing up, or tackling a problem? Pick a goal; Duno will map a short route through your course material.</p>
     </div>
     <div class="guide-builder" data-study-guide>
         <div class="guide-builder-controls">
@@ -195,22 +195,22 @@
                 </div>
             </div>
             <fieldset class="guide-goal-picker">
-                <legend>What do you want to do?</legend>
+                <legend>What would help right now?</legend>
                 <div class="guide-goal-options" role="group" aria-label="Choose a study goal">
-                    <button type="button" class="guide-goal-button" data-guide-goal="understand" aria-pressed="false"><span class="guide-goal-icon" aria-hidden="true">01</span><span><strong>Understand an idea</strong><small>Make sense of a concept or connection</small></span></button>
-                    <button type="button" class="guide-goal-button" data-guide-goal="remember" aria-pressed="false"><span class="guide-goal-icon" aria-hidden="true">02</span><span><strong>Remember key points</strong><small>Recall important details without notes</small></span></button>
-                    <button type="button" class="guide-goal-button" data-guide-goal="solve" aria-pressed="false"><span class="guide-goal-icon" aria-hidden="true">03</span><span><strong>Practice solving</strong><small>Work through a problem step by step</small></span></button>
+                    <button type="button" class="guide-goal-button" data-guide-goal="understand" aria-pressed="false"><span class="guide-goal-icon" aria-hidden="true">01</span><span><strong>Untangle an idea</strong><small>Connect the why; say it in your own words</small></span></button>
+                    <button type="button" class="guide-goal-button" data-guide-goal="remember" aria-pressed="false"><span class="guide-goal-icon" aria-hidden="true">02</span><span><strong>See what stuck</strong><small>Recall first; check your notes after</small></span></button>
+                    <button type="button" class="guide-goal-button" data-guide-goal="solve" aria-pressed="false"><span class="guide-goal-icon" aria-hidden="true">03</span><span><strong>Crack a problem</strong><small>Use an example, then choose your next move</small></span></button>
                 </div>
             </fieldset>
         </div>
 
         <div class="guide-approach" data-guide-approach aria-live="polite" aria-atomic="false">
             <div class="guide-approach-heading">
-                <p class="workspace-kicker">YOUR STUDY APPROACH</p>
-                <h3 data-guide-approach-title>Pick a goal to begin</h3>
-                <p data-guide-approach-summary>Choose one outcome for this session. Change it anytime.</p>
+                <p class="workspace-kicker">YOUR NEXT MOVE</p>
+                <h3 data-guide-approach-title>Choose your next study move</h3>
+                <p class="guide-try-this" data-guide-try-this hidden><span>DUNO&rsquo;S QUICK CHALLENGE</span><strong data-guide-prompt></strong></p>
             </div>
-            <p class="guide-approach-status" data-guide-outcome-status>Select a subject or topic for tailored guidance. Verified outcomes appear for supported NVSU BSCS, BSIS, and BSIT programs.</p>
+            <p class="guide-approach-status" data-guide-outcome-status>Choose a goal. Add a subject or topic for a closer fit.</p>
             <ol class="guide-method-list" data-guide-method-list>
                 <?php foreach ($suggestions as $suggestion): ?>
                     <li>
@@ -223,24 +223,29 @@
                             <ol class="guide-method-steps">
                                 <?php foreach ($suggestion['steps'] as $step): ?><li><?= esc($step) ?></li><?php endforeach ?>
                             </ol>
-                            <p class="guide-method-evidence"><?= esc($suggestion['recommendation']) ?></p>
-                            <p class="guide-outcome-label" data-guide-outcome-label hidden>Related verified CHED program outcomes</p>
-                            <ul class="guide-outcome-list" aria-label="Related CHED program outcomes" hidden>
-                                <?php foreach (['cs', 'is', 'it'] as $guideFamily): ?>
-                                    <?php foreach (\App\Content\StudyGuideOutcomes::forSuggestion($suggestion['id'], $guideFamily) as $outcome): ?>
-                                        <li data-guide-outcome="<?= esc($guideFamily) ?>" hidden><strong><?= esc($outcome['code']) ?>:</strong> <?= esc($outcome['label']) ?></li>
+                            <details class="guide-method-details">
+                                <summary>Duno&rsquo;s field notes</summary>
+                                <p><?= esc($suggestion['rationale']) ?></p>
+                                <p class="guide-method-evidence"><?= esc($suggestion['recommendation']) ?></p>
+                                <p class="guide-outcome-label" data-guide-outcome-label hidden>Related verified CHED program outcomes</p>
+                                <ul class="guide-outcome-list" aria-label="Related CHED program outcomes" hidden>
+                                    <?php foreach (['cs', 'is', 'it'] as $guideFamily): ?>
+                                        <?php foreach (\App\Content\StudyGuideOutcomes::forSuggestion($suggestion['id'], $guideFamily) as $outcome): ?>
+                                            <li data-guide-outcome="<?= esc($guideFamily) ?>" hidden><strong><?= esc($outcome['code']) ?>:</strong> <?= esc($outcome['label']) ?></li>
+                                        <?php endforeach ?>
                                     <?php endforeach ?>
-                                <?php endforeach ?>
-                            </ul>
-                            <a href="<?= esc($suggestionSourceUrl) ?>" rel="noopener noreferrer">Read the study-method source</a>
+                                </ul>
+                                <p class="guide-outcome-citation" data-guide-outcome-citation hidden>Source: <a href="<?= esc(\App\Content\StudyGuideOutcomes::SOURCE_URL) ?>" rel="noopener noreferrer">CHED CMO No. 25 (2015)</a>. Duno&rsquo;s method connection is editorial.</p>
+                                <a href="<?= esc($suggestion['source_url']) ?>" rel="noopener noreferrer">Research: <?= esc($suggestion['source_label']) ?></a>
+                            </details>
                         </article>
                     </li>
                 <?php endforeach ?>
             </ol>
-            <p class="guide-approach-empty" data-guide-empty>Choose a goal above to see a short sequence.</p>
+            <p class="guide-approach-empty" data-guide-empty>Pick a goal and Duno will give you a place to start.</p>
         </div>
     </div>
-    <p class="guide-outcome-source">Methods are paraphrased from the <a href="<?= esc($suggestionSourceUrl) ?>" rel="noopener noreferrer">WWC practice guide (2007)</a>. Outcome links cite <a href="<?= esc(\App\Content\StudyGuideOutcomes::SOURCE_URL) ?>" rel="noopener noreferrer">CHED CMO No. 25 (2015)</a>. Duno&rsquo;s connections are editorial.</p>
+    <p class="guide-outcome-source">Open Duno&rsquo;s field notes for research and course-outcome links. Methods are general suggestions, not promises.</p>
 </section>
 <script src="<?= esc(duno_asset('assets/js/study-guide-outcomes.js')) ?>" defer></script>
 <?= $this->endSection() ?>

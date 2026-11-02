@@ -18,6 +18,7 @@ As a Talas user, I can use the approved account flow to register or receive an a
 1. Any visitor can register a student account; the server assigns the student group, and the registration form cannot select or submit a group/role.
 2. A registered student can sign in and sign out.
 3. The initial admin demo account is created through a controlled setup path; no public registration route can grant the admin group.
+   The login and student registration screens link to the dedicated `admin-sign-in` route. It renders the existing Shield login form for approved admins and works with InfinityFree's `index.php?/admin-sign-in` route format. Prospective admins can email an access request; the project owner reviews it and provisions approved accounts separately. The request link does not create or promote an account.
 4. A signed-out request cannot access protected student or admin routes.
 5. An authenticated student is denied admin routes; an admin is denied student-only routes.
 6. Role checks occur server-side and do not rely on hidden navigation links.

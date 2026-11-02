@@ -91,11 +91,16 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     }
     await expect(page.getByRole('heading', { name: 'Make a little progress today.' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Duno Guide' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Pick a goal to begin' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'WWC practice guide (2007)' })).toHaveCount(1);
-    await page.getByRole('button', { name: /Understand an idea/ }).click();
-    await expect(page.getByRole('heading', { name: 'Build understanding by explaining it' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Read the study-method source' })).toHaveCount(3);
+    await expect(page.getByRole('heading', { name: 'Choose your next study move' })).toBeVisible();
+    await page.getByRole('button', { name: /Untangle an idea/ }).click();
+    await expect(page.getByRole('heading', { name: /Untangle the idea/ })).toBeVisible();
+    const recallMethod = page.locator('[data-guide-method="recall-from-memory"]');
+    const methodDetails = recallMethod.locator('details');
+    await expect(recallMethod).toBeVisible();
+    await expect(methodDetails.locator('summary')).toHaveText('Duno’s field notes');
+    await expect(recallMethod.getByRole('link', { name: /Research:/ })).toBeHidden();
+    await methodDetails.locator('summary').click();
+    await expect(recallMethod.getByRole('link', { name: /Research:/ })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student');
 
     await page.goto('student/subjects');

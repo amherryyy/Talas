@@ -68,8 +68,6 @@ class Dashboard extends BaseController
             'guideTopics' => $guideTopics,
             'dashboardSubjects' => $dashboardSubjects,
             'subjectCount' => count($subjects),
-            'suggestionSourceUrl' => StudySuggestions::SOURCE_URL,
-            'suggestionSourceName' => StudySuggestions::SOURCE_NAME,
             'checkInPromptDate' => $todayDate,
             'checkInPromptUserKey' => (string) auth()->id(),
             'checkInPromptSatisfied' => $hasCheckInToday || session()->getFlashdata('check_in_prompt_completed') === true,

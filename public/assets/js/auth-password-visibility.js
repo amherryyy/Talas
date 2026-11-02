@@ -35,7 +35,7 @@
     }
 
     document.querySelectorAll('input[type="password"]').forEach((input) => {
-        const field = input.closest('.form-floating') ?? input.parentElement;
+        const field = input.closest('.form-field') ?? input.parentElement;
         if (!field || field.querySelector('[data-password-toggle]')) return;
 
         const isConfirmation = input.name === 'password_confirm';

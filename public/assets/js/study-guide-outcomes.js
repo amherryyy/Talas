@@ -7,7 +7,8 @@
     const goalButtons = [...guide.querySelectorAll('[data-guide-goal]')];
     const methodCards = [...guide.querySelectorAll('[data-guide-method]')];
     const title = guide.querySelector('[data-guide-approach-title]');
-    const summary = guide.querySelector('[data-guide-approach-summary]');
+    const tryThis = guide.querySelector('[data-guide-try-this]');
+    const prompt = guide.querySelector('[data-guide-prompt]');
     const status = guide.querySelector('[data-guide-outcome-status]');
     const empty = guide.querySelector('[data-guide-empty]');
 
@@ -181,19 +182,19 @@
 
     const approaches = {
         understand: {
-            title: 'Build understanding by explaining it',
-            summary: 'Recall what you know, explain the idea, then revisit it later.',
-            methods: ['recall-from-memory', 'explain-the-idea', 'space-reviews'],
+            title: 'Untangle the idea',
+            prompt: 'Close your notes. Explain {focus} in one sentence, then sketch or describe how its parts connect.',
+            methods: ['recall-from-memory', 'explain-the-idea', 'draw-from-memory'],
         },
         remember: {
-            title: 'Practice remembering without your notes',
-            summary: 'Try to retrieve key points first, check what you missed, and return to them later.',
-            methods: ['recall-from-memory', 'space-reviews'],
+            title: 'See what you can recall',
+            prompt: 'Set two minutes. Write everything you remember about {focus}, then check and correct it.',
+            methods: ['recall-from-memory', 'confidence-check', 'space-reviews'],
         },
         solve: {
-            title: 'Move from an example to your own solution',
-            summary: 'Study a worked solution, try a similar problem, and explain any step that differs.',
-            methods: ['example-then-practice', 'explain-the-idea', 'space-reviews'],
+            title: 'Find the move that fits',
+            prompt: 'Try one {focus} problem without notes. Name the clue that tells you which method fits.',
+            methods: ['example-then-practice', 'interleave-practice', 'explain-the-idea'],
         },
     };
 
@@ -253,20 +254,25 @@
             }
             card.querySelector('[data-guide-outcome-label]').hidden = cardOutcomeCount === 0;
             card.querySelector('.guide-outcome-list').hidden = cardOutcomeCount === 0;
+            card.querySelector('[data-guide-outcome-citation]').hidden = cardOutcomeCount === 0;
         }
 
         title.textContent = approach
-            ? (focusName ? `${approach.title}: ${focusName}` : approach.title)
-            : 'Pick a goal to begin';
-        summary.textContent = approach
-            ? approach.summary
-            : 'Choose one outcome for this session. Change it anytime.';
+            ? (focusName ? `${approach.title} · ${focusName}` : approach.title)
+            : 'Choose your next study move';
+        tryThis.hidden = !approach;
+        if (approach) {
+            const promptFocus = focusName || (selectedGoal === 'solve' ? 'a problem you are practicing' : 'one idea you studied');
+            prompt.textContent = approach.prompt.replace('{focus}', promptFocus);
+        }
         empty.hidden = Boolean(approach);
         status.textContent = approach
             ? family !== ''
-                ? `Showing ${outcomeCount} verified outcome link${outcomeCount === 1 ? '' : 's'}, where available. Duno’s connections are editorial.`
-                : 'General study guidance. Verified outcome links are available for supported NVSU BSCS, BSIS, and BSIT subjects.'
-            : 'Select a subject or topic for tailored guidance. Verified outcomes appear for supported NVSU BSCS, BSIS, and BSIT programs.';
+                ? outcomeCount > 0
+                    ? `CHED outcome notes are tucked into Duno’s field notes; the connections are editorial.`
+                    : 'No CHED outcome is linked to these steps. The study practice is general guidance.'
+                : 'These are general study steps. CHED outcome links appear only for supported NVSU computing subjects.'
+            : 'Choose a goal. Add a subject or topic for a closer fit.';
     };
 
     for (const button of goalButtons) {

@@ -14,9 +14,9 @@
             <?php endif ?>
             <form action="<?= esc(url_to('password.forgot.submit')) ?>" method="post">
                 <?= csrf_field() ?>
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="forgot-email" name="email" inputmode="email" autocomplete="email" placeholder="<?= esc(lang('Auth.email')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="forgot-email"><?= esc(lang('Auth.email')) ?></label>
+                    <input type="email" class="form-control" id="forgot-email" name="email" inputmode="email" autocomplete="email" required>
                 </div>
                 <div class="d-grid mb-3"><button type="submit" class="btn btn-primary"><?= esc(lang('Registration.sendResetCode')) ?></button></div>
                 <p class="text-center mb-0"><a href="<?= esc(url_to('login')) ?>"><?= esc(lang('Registration.backToLogin')) ?></a></p>

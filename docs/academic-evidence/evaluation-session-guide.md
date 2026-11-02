@@ -2,16 +2,16 @@
 
 **Status:** Draft preparation aid. Obtain project owner/adviser approval of the protocol, participant materials, consent/privacy handling, sample, and acceptance criteria before recruiting participants or collecting evaluation data.
 
-**Target:** Owner-confirmed Duno r9, marker `duno-full-release-20261101-r9`. The owner reports r9 was uploaded/extracted. Package SHA-256 recorded locally: `3B87F3EFEF361BA245DA15C1FDC3030993FC0FF5372C5941C04D70EE69CE4736`. Full deployed-file parity and source commit remain unverified. Do not treat later uncommitted local changes as part of r9.
+**Target:** Record the exact hosted Duno release marker at the start of each session. The owner currently reports r12 hosted; r14 is a local candidate and must not be treated as deployed until uploaded and checked. Full hosted-file parity remains unverified.
 
 **Purpose:** Provide repeatable, low-risk sessions for student and IT-professional evaluators and capture evidence for Section 7, Results and Findings. This guide is not an ethics approval, consent form, formal ISO/IEC 25010 evaluation result, or substitute for the protocol in [`iso-iec-25010-evaluation-protocol.md`](iso-iec-25010-evaluation-protocol.md).
 
 ## 1. Before scheduling participants
 
 - [ ] Adviser/project owner approves the evaluation protocol, participant approach, instrument, pass criteria, data retention, and reporting format.
-- [ ] Select the exact environment. Prefer an isolated copy seeded only with synthetic records. If using the hosted r9 site, confirm that evaluation accounts and visible records contain no real student data and do not expose other users' data.
-- [ ] Verify the page shows the r9 marker and record the date/time, timezone, browser/version, operating system, device, viewport, network, host/PHP/DB details available, and migration state.
-- [ ] Create or verify dedicated synthetic student A, student B, and admin accounts. Do not give participants production credentials or account recovery codes.
+- [ ] Select the exact environment. Prefer an isolated copy seeded only with synthetic records. If using the hosted site, confirm that evaluation accounts and visible records contain no real student data and do not expose other users' data.
+- [ ] Verify the hosted release marker and record the date/time, timezone, browser/version, operating system, device, viewport, network, host/PHP/DB details available, and migration state.
+- [x] Create or verify two dedicated synthetic student accounts and two admin accounts through the controlled evaluation import. The owner supplied four active role/identity rows and reported that hosted sign-in worked. Assign accounts by role and session; keep the separate credential sheet private. Do not give participants production credentials or account recovery codes.
 - [ ] Seed a small known dataset with expected Focus order, plan totals, timer session, and Aralytics values. Keep a private fixture sheet that contains no real personal data or passwords.
 - [ ] Confirm test accounts can be reset between participants without modifying any real user's records. Arrange cleanup before creating records.
 - [ ] Prepare the institution-approved information/consent material and a participant code scheme. Do not collect names in result sheets unless the approved method requires them.
@@ -42,11 +42,11 @@ Provide the professional with the same release/environment facts, approved SRS, 
 | Task | Review focus | Capture |
 |---|---|---|
 | IT-01 Role boundaries | Guest, student, and admin route access using assigned accounts and approved URLs. | Route/role, expected and observed denial/allow result, and sanitized status/headers when available. |
-| IT-02 Owner isolation | Review the owner-reported r9 A/B test record. Repeat only approved non-destructive cases; use an isolated environment for writes or forged references. | Exact object/route, account pseudonyms, expected/observed access, and whether any data was disclosed or changed. |
+| IT-02 Owner isolation | Review the owner-reported A/B test record. Repeat only approved non-destructive cases; use an isolated environment for writes or forged references. | Exact object/route, account pseudonyms, expected/observed access, and whether any data was disclosed or changed. |
 | IT-03 Privacy/output review | Check that optional check-ins remain private and do not appear in admin aggregates or the print output. | Surface checked, expected/observed presence, and sanitized evidence. |
 | IT-04 Deployment/security review | Review approved path-denial, session/cache, safe-error, migration, and release-provenance evidence. Do not repeat the prohibited `/.env` probe. | Evidence reviewed, gaps, severity rationale, and recommendation. |
 
-Do not run destructive account deletion, database edits, load tests, or unapproved security probes on the hosted database. The owner reports the r9 account-deletion success flow and progression migration; those are existing owner-reported results, not tasks for evaluators to repeat on shared accounts.
+Do not run destructive account deletion, database edits, load tests, or unapproved security probes on the hosted database. The owner reports an account-deletion success flow and progression migration; those are existing owner-reported results, not tasks for evaluators to repeat on shared accounts.
 
 ## 4. Per-task result record
 
