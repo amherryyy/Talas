@@ -24,4 +24,5 @@
 !docs/2026-10-29-study-history-foreign-key-upgrade.sql
 !docs/2026-11-01-academic-program-upgrade.sql
 !docs/2026-11-01-progression-xp-rewards-upgrade.sql
+!docs/2026-11-02-password-reset-codes-upgrade.sql
 *.zip

@@ -60,6 +60,10 @@ final class StudentAralyticsTest extends CIUnitTestCase
         $response->assertSee('Time by topic');
         $response->assertSee('Study minutes by subject');
         $response->assertSee('Dated sessions');
+        $response->assertSee('Study progress at print time');
+        $response->assertSee('All-time account progress, separate from the selected activity period above.');
+        $response->assertSee('All-time milestones');
+        $response->assertSee('daily visit rewards');
         $response->assertSee('65,000 XP');
         $response->assertSee('60,000 study + 5,000 streak');
         $response->assertDontSee('545,000 XP');

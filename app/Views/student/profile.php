@@ -58,9 +58,9 @@
                 <p class="profile-field-label" id="profile-academic-program-label">Current academic program</p>
                 <div id="profile-academic-program" class="profile-readonly-shell profile-readonly-shell-program" role="group" aria-labelledby="profile-academic-program-label" aria-describedby="profile-academic-program-help">
                     <span class="profile-readonly-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-5 9 5-9 5-9-5Z"></path><path d="M7 11.2v4.3c2.8 2.1 7.2 2.1 10 0v-4.3M21 9v6"></path></svg></span>
-                    <span class="profile-readonly-program-text"><?= esc($academicProgramTitle) ?></span>
+                    <span class="profile-readonly-program-copy"><span class="profile-readonly-program-text"><?= esc($academicProgramTitle) ?></span><small class="profile-readonly-school-text"><?= esc($academicProgramSchool) ?></small></span>
                 </div>
-                <p id="profile-academic-program-help" class="muted">This is your account’s one-time program selection. Subject course-list references are managed separately.</p>
+                <p id="profile-academic-program-help" class="muted">Your school and program are saved once. Any available subject course list is managed separately.</p>
             </div>
         </div>
 

@@ -42,7 +42,7 @@ final class HomeTest extends CIUnitTestCase
         $response->assertSee('Aralytics');
         $response->assertSee('Duno Guide');
         $response->assertSee('A clearer way to begin studying.');
-        $response->assertSee('Explore the tools');
+        $response->assertSee('Meet the tools');
         $response->assertSee('tool-card-focus');
         $response->assertSee('assets/images/duno-mascot.png');
         $response->assertSee('assets/images/duno-mascot-animation.webp');

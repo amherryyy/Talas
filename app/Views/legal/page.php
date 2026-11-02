@@ -28,12 +28,12 @@
         <a href="<?= esc(site_url('cookies')) ?>"<?= $slug === 'cookies' ? ' aria-current="page"' : '' ?>><?= esc(lang('App.cookies')) ?></a>
     </nav>
     <main id="main-content" class="legal-main">
-        <p class="legal-kicker">Duno project notice <span>·</span> Review pending</p>
+        <p class="legal-kicker">Independent student project by Amher B. Bolante</p>
         <h1><?= esc($pageTitle) ?></h1>
         <p class="legal-intro"><?= esc($pageIntro) ?></p>
-        <aside class="legal-review-note" aria-label="Review status">
-            <strong>Preliminary notice</strong>
-            <p>This page describes the current app, but it is not a final legal policy. The project owner and relevant school or institution still need to confirm the responsible publisher, privacy contact, request process, retention, and hosting details.</p>
+        <aside class="legal-review-note" aria-label="Project and hosting information">
+            <strong>Project information</strong>
+            <p>Duno is an independent student project intended for users aged 18 and older. Hosting-provider log and backup retention, and the outgoing email provider configured on the live deployment, have not been verified. Contact <a href="mailto:mhracads@gmail.com">mhracads@gmail.com</a> with questions or privacy requests.</p>
         </aside>
         <article class="legal-content">
             <?php foreach ($sections as $index => $section): ?>
@@ -45,7 +45,7 @@
                 </section>
             <?php endforeach ?>
         </article>
-        <p class="legal-updated">Prepared for review · 1 November 2026</p>
+        <p class="legal-updated">Last updated: 2 November 2026</p>
     </main>
 </div>
 <?= view('partials/app_footer', ['footerGroups' => $footerGroups]) ?>

@@ -2,6 +2,8 @@
 
 **Review date:** 2026-10-31 (hosted schema evidence refreshed)
 
+**Main SRS approval addendum (2026-11-02):** The project owner approved `requirements.md` as the main SRS. The requirement rows below use that approved baseline; this candidate-document crosswalk remains supporting analysis only.
+
 **Release-status addendum (2026-11-01):** The owner uploaded r7 and a fresh cache-busted Brave request returned marker `duno-full-release-20261101-r7`. An older tab still showed r3, so marker cache consistency needs follow-up. Private paths rendered Duno's branded 403 content, signed-out Focus redirected to Login, and static 403/404 fallback pages rendered. HTTP statuses/headers, complete file parity, cross-owner behavior and actual offline operation remain unverified. The stale r6 ZIP predates the final role-denial header fix; see [`deployment.md`](deployment.md) for the current release record.
 
 **Repository revision inspected:** `310c5e5` plus the pre-existing working-tree changes shown by `git status`
@@ -10,7 +12,7 @@
 
 ## How to read this review
 
-The attached SRS is a candidate specification, not an approved scope baseline. Its own approval notice says the three objective statements are paraphrases and its FR/NFR statements are reconstructed candidates. The repository's owner-approved scope is `requirements.md` (F-01 through F-15 and S-01 through S-10), plus the accepted decisions in linked story documents. F-15's bounded installable PWA and public static offline fallback were separately approved on 2026-10-30. Survey results remain evidence, not approval.
+The attached SRS is a candidate specification, not the approved main SRS. Its own notice says the three objective statements are paraphrases and its FR/NFR statements are reconstructed candidates. The project owner approved repository `requirements.md` as the main SRS on 2026-11-02 (F-01 through F-16 and S-01 through S-10), together with accepted decisions in linked story documents. F-15's bounded installable PWA and public static offline fallback were separately approved on 2026-10-30. Survey results remain evidence, not approval.
 
 The owner supplied `Duno App SysFun Proposal.docx` on 2026-10-30. The formal proposal approval provenance is not present in the file. The owner approved topic difficulty in Focus/Plan and mapping Guide content to verified program outcomes; both additions are implemented in the current worktree. The owner applied and verified the two required hosted migrations on 2026-10-31. Matching app release identity and runtime acceptance remain unverified.
 
@@ -72,7 +74,7 @@ Other owner-accepted additions should be listed as supplementary requirements or
 
 ## Evidence conflicts and unavailable source material
 
-1. **Approval:** Both attachments are drafts. The repo `requirements.md` is explicitly owner-approved and contains later decisions. The SRS correctly warns not to treat its reconstructed FR/NFR wording as approved; use the repo baseline until the owner accepts a replacement.
+1. **Approval:** The project owner approved `docs/requirements.md` as the main SRS on 2026-11-02. The supplied SRS attachments and `DUNO_SRS_ALIGNMENT_DRAFT.md` remain supporting drafts; their reconstructed FR/NFR wording is not approved separately and does not replace the main SRS.
 2. **Objectives:** The attached SRS contains paraphrases, but the owner supplied the exact proposal wording on 2026-10-30. The proposal source file and formal approval record are still absent. The identified difficulty and learning-outcome gaps were addressed in the current worktree after explicit owner approval; the relevant hosted schema migrations are now applied, while matching app release verification is pending.
 3. **Prior requirements baseline:** The earlier FR-01?FR-13/NFR-01?NFR-10 wording referenced by the SRS author was not supplied. The new SRS cannot establish whether these are faithful revisions.
 4. **Survey provenance:** `Duno App SRS survey results.docx` now provides the questionnaire text and descriptive analysis. Summary counts are transcribed, not recalculated from individual response rows. The report identifies a Grade 9 answer and a rating-anchor discrepancy between questionnaire text and the response export; both require confirmation.
@@ -85,11 +87,11 @@ Other owner-accepted additions should be listed as supplementary requirements or
 ## Ordered gap-filling plan
 
 1. **Confirm authority and objective provenance.** The supplied proposal file provides the objective source and `requirements.md` is the controlling approved baseline. Formal proposal approval date/sign-off is still missing.
-2. **Reconcile the requirement baseline.** Review reconstructed FR/NFR statements against F-01 through F-15 and S-01 through S-10. Explicitly decide whether to keep, revise, defer, or reject each added acceptance criterion. Reminders remain deferred; F-15 is separately approved for installability and a public static offline fallback only.
+2. **Maintain baseline alignment.** Keep reconstructed FR/NFR statements crosswalked to approved F-01 through F-16 and S-01 through S-10. Any proposed added acceptance criterion must be explicitly accepted before it is added to `requirements.md`. Reminders remain deferred; F-15 is approved for installability and a public static offline fallback only.
 3. **Keep approved scope represented.** The aligned SRS now includes F-14 progression and F-15 bounded PWA behavior. Review accepted supplemental requirements (localization, profile, catalog limits, notifications, and Focus redesign) against the paper requirements without obscuring their approval status.
 4. **Close quality decisions before claiming compliance.** Approve viewport/browser support, accessibility target and test method, performance workload/thresholds, availability/network expectations, and privacy/retention/backup policy. Do not invent numeric thresholds.
 5. **Complete schema/release parity.** The owner applied and verified hosted migrations `2026-10-30-000001` and `2026-10-30-000002` on 2026-10-31, including ledger rows, composite FK metadata, and zero ownership mismatches. The 2026-11-01 addendum records the r5 owner report and clean-source local r7 package. Focused local priority, topic, plan, StudyGuide, session, and ownership tests passed on 2026-10-31. A marker does not prove file-level parity or source commit identity; verify live feature behavior before using it as production acceptance evidence.
-6. **Build requirement-level verification cases.** The [acceptance verification plan](acceptance-verification-plan.md) now maps F-01–F-15 and S-01–S-10 to manual procedures, expected results, and evidence fields. The procedures have not been executed; run applicable automated and manual checks against a named revision with synthetic data.
+6. **Build requirement-level verification cases.** The [acceptance verification plan](acceptance-verification-plan.md) maps F-01–F-16 and S-01–S-10 to manual procedures, expected results, and evidence fields. The procedures have not been executed; run applicable automated and manual checks against a named revision with synthetic data.
 7. **Perform acceptance and release verification.** The owner reports the host is available. Against an identified deployed revision, verify auth/email, response headers, safe error behavior, private-path denial, and core student/admin journeys. Record statuses as passed/failed/not run; the earlier provider 403 remains historical incident context, not a current blocker.
 8. **Baseline the paper artifacts.** The aligned SRS and conflict dispositions are updated from the supplied proposal and survey analysis. Obtain formal stakeholder/adviser review, then align the ERD, architecture, wireframes, and verification evidence to the same approved revision.
 

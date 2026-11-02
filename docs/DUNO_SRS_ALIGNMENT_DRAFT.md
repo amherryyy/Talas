@@ -1,6 +1,6 @@
 # Duno Software Requirements Specification
 
-**Document status:** Aligned working version; repository requirements are the normative baseline. Formal stakeholder/adviser approval is not recorded.
+**Document status:** Supporting SRS-alignment analysis draft; not the authoritative SRS and not separately approved. The project owner approved `docs/requirements.md` as the main SRS on 2026-11-02. This document may support proposal and survey comparison, but it does not amend or supersede that baseline.
 
 **Prepared:** 30 October 2026
 **Version:** 1.1 (aligned working copy)
@@ -11,9 +11,9 @@
 
 ## 1. Purpose and document authority
 
-This SRS organizes the owner-approved Duno scope and aligns the supplied proposal and survey evidence to it. The repository `requirements.md` (F-01 to F-15 and S-01 to S-10) is the normative baseline. The supplied `DUNO_SRS_v1.0.docx` contains reconstructed candidate requirements; where these differ from `requirements.md`, the repository baseline controls unless the owner approves a later change.
+This draft organizes the owner-approved Duno scope and aligns the supplied proposal and survey evidence to it. The repository `requirements.md` (F-01 to F-16 and S-01 to S-10) is the approved main SRS and normative baseline. The supplied `DUNO_SRS_v1.0.docx` contains reconstructed candidate requirements; where these differ from `requirements.md`, the approved main SRS controls unless the owner approves a later change.
 
-The supplied SRS v1.0 is explicitly marked as a draft. Its additional functional and nonfunctional statements are candidates, while survey findings are evidence rather than approval. This aligned version preserves F-01 to F-15 and S-01 to S-10 as normative identifiers and lists proposal/SRS additions separately with a disposition.
+The supplied SRS v1.0 is explicitly marked as a draft. Its additional functional and nonfunctional statements are candidates, while survey findings are evidence rather than approval. This alignment draft maps candidate statements to F-01 to F-16 and S-01 to S-10 and lists proposal/SRS additions separately with a disposition.
 
 ## 2. Objectives and source limitations
 
@@ -174,11 +174,11 @@ The results are descriptive of this respondent group. The analysis identifies no
 Survey responses are evidence of preferences, not approval of requirements, algorithms, deployment architecture, or quality thresholds. The owner separately approved F-15's limited installable/static-shell behavior; survey results do not approve reminders or offline access to study records.
 ## 10. Traceability and verification
 
-The [SRS traceability report](DUNO_SRS_TRACEABILITY.md) crosswalks every draft FR/NFR to its approval/evidence class, implementation status, source files, tests, and gaps. The [acceptance verification plan](acceptance-verification-plan.md) maps approved F-01–F-15 and S-01–S-10 to manual cases and records them as not run until evidence is attached. The [system-design packet](system-design-paper-pack.md) supplies architecture, schema design, wireframes, and nonfunctional design notes. The approved requirement file and story decisions remain the normative acceptance baseline.
+The [SRS traceability report](DUNO_SRS_TRACEABILITY.md) crosswalks candidate FR/NFR statements to their approval/evidence class, implementation status, source files, tests, and gaps. The [acceptance verification plan](acceptance-verification-plan.md) maps approved F-01 through F-16 and S-01 through S-10 to manual cases and records them as not run until evidence is attached. The [system-design packet](system-design-paper-pack.md) supplies architecture, schema design, wireframes, and nonfunctional design notes. `requirements.md` is the approved main SRS and normative acceptance baseline.
 
 For each release, record the source revision, environment, migration state, check result, evidence location, and unresolved defect. Distinguish **Passed**, **Failed**, **Not run**, and **Not applicable**. Code presence, a historical test result, successful file upload, or a single HTTP response is not by itself full production acceptance.
 
-## 11. Open actions before SRS approval
+## 11. Open actions for this supporting alignment draft
 
 1. Record the proposal approval date and approving stakeholders if available; the supplied proposal file is now cited as an objective source.
 2. Verify topic difficulty and Guide outcome mapping in a released build after release approval and the hosted database migration.
@@ -188,13 +188,13 @@ For each release, record the source revision, environment, migration state, chec
 6. Evaluation remains pending as confirmed by the owner. Before conducting it, document the standard edition, characteristics, instrument/method, participants or test conditions, measures, acceptance criteria, and analysis plan; do not report results before execution.
 7. Keep unapproved numeric performance, availability, browser/device, and accessibility-conformance thresholds marked TBD until stakeholders approve measurable targets.
 8. Refresh verification for the current source and schema, then capture stable demo screenshots and deployment identity. The owner reports the site is available; production acceptance still needs route-specific evidence and hosted migration parity.
-9. Obtain formal stakeholder review and approval date before labeling this SRS an approved baseline.
+9. Keep this alignment document labeled as a draft. The main SRS approval is recorded in `requirements.md`; separately approve any proposed change to that baseline before incorporating it.
 
 ## Appendix A. Source documents and evidence provenance
 
 | Source | Use in this SRS | Limit |
 |---|---|---|
-| `requirements.md` and linked approved stories | Normative product and security requirements F-01 to F-15 and S-01 to S-10. | Current hosted behavior and migration state are not inferred from source alone. |
+| `requirements.md` and linked approved stories | Normative product and security requirements F-01 to F-16 and S-01 to S-10; approved main SRS as of 2026-11-02. | Current hosted behavior and migration state are not inferred from source alone. |
 | `Duno App SysFun Proposal.docx` (supplied 30 October 2026) | Proposal objectives, proposed functions, technology, and evaluation intent. | The document does not include a formal approval date or sign-off. Repository requirements remain controlling. |
 | `Duno App SRS survey results.docx` (supplied 30 October 2026) | Questionnaire text and descriptive survey analysis summarized in Section 9. | Raw response rows were not recalculated; eligibility and rating-scale version need confirmation. Findings are not requirements approval. |
 | `DUNO_SRS_v1.0.docx` | Candidate FR/NFR statements and existing SRS narrative. | The document labels itself draft. Its earlier FR/NFR baseline is not available as a separate approved source. |

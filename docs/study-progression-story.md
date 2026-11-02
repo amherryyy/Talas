@@ -51,7 +51,7 @@ As a student, I can see steady progress from the study time I choose to save, ea
 
 ## Verification status
 
-- 2026-11-01 reward increase: study sessions now earn 1,000 XP per saved minute and the first visit per day earns 5,000 XP; thresholds remain 12,000 / 30,000 / 60,000 / 120,000 XP. Session saves display the reward and reductions explain the recalculation. Migration `2026-11-01-000002_ScaleProgressionXpRewards` converts existing 500-XP visit rows to 5,000; the hosted upgrade is pending. The earlier 2026-10-29 scale and host confirmation remain historical and are not current rates.
+- 2026-11-01 reward increase: study sessions now earn 1,000 XP per saved minute and the first visit per day earns 5,000 XP; thresholds remain 12,000 / 30,000 / 60,000 / 120,000 XP. Session saves display the reward and reductions explain the recalculation. Owner-provided phpMyAdmin output on 2026-11-02 confirms migration `2026-11-01-000002_ScaleProgressionXpRewards` in batch 15 and zero remaining 500-XP visit rows. The earlier 2026-10-29 scale and host confirmation remain historical and are not current rates.
 
 - 2026-10-29 XP scale change: saved study minutes now earn 100 XP and the first visit per day earns 500 XP. Migration `2026-10-29-000002_ScaleProgressionXp` multiplies existing streak award rows by 100; study XP is derived from saved session minutes, so no study-session data update is needed. The owner confirmed it is applied on InfinityFree in batch 8. Level thresholds are also scaled by 100, preserving unlock pacing. Its down migration intentionally preserves XP values because it cannot distinguish converted historical rewards from new 500-XP awards; see `deployment.md`.
 

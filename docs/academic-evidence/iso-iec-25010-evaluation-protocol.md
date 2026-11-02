@@ -2,8 +2,10 @@
 
 **Status:** Draft for project owner/adviser review; not an evaluation result.
 **Purpose:** Define a repeatable evaluation of Duno against the four quality characteristics named in the project objective: Functional Suitability, Performance Efficiency, Reliability, and Security.
-**Requirements baseline:** Owner-approved `docs/requirements.md` (F-01–F-15 and S-01–S-10), plus the approved story decisions linked from it.
-**Evaluation target:** Must be recorded before execution. The owner uploaded r7 and Brave returned marker `duno-full-release-20261101-r7` from a fresh cache-busted request. One older tab showed r3, so confirm cache consistency and uploaded-file parity before the formal evaluation. R7 was built from clean source commit `5c7463cc77f4b3a3e1e129da86623c4d02d02ef3` (`docs/deployment.md`). Record the exact release marker, source/package identity, host/environment, and migration state before evaluation.
+**Requirements baseline:** Owner-approved main SRS `docs/requirements.md` (F-01–F-16 and S-01–S-10), approved 2026-11-02, plus the approved story decisions linked from it.
+**Evaluation target:** Owner-confirmed r9 upload, corresponding to local archive `build/duno-full-release-20261101-r9.zip` (SHA-256 `3B87F3EFEF361BA245DA15C1FDC3030993FC0FF5372C5941C04D70EE69CE4736`). The owner supplied the live marker `duno-full-release-20261101-r9` on 2026-11-02. Full uploaded-file parity is not verified, and the archive's clean source commit is unknown. Do not attribute prior r8 observations to r9.
+
+**Artifact and provenance note:** The r9 archive contains 1,253 entries and embeds marker r9; the owner confirmed the matching live marker. Its source provenance and complete file parity are not independently confirmed. The current working tree also contains later uncommitted changes that are not part of the archived r9 candidate. The deployment notes identify those newer changes as pending.
 
 This protocol uses the four project-selected quality characteristics as evaluation categories. It does not claim certification or full conformance to every part of ISO/IEC 25010:2023. The selected measures and acceptance thresholds require project owner/adviser approval before results are collected.
 
@@ -11,7 +13,7 @@ This protocol uses the four project-selected quality characteristics as evaluati
 
 | Characteristic | Evaluation question |
 |---|---|
-| Functional Suitability | Do the selected Duno functions produce the correct and complete outcomes required by the approved F-01–F-15 baseline for the tested scenarios? |
+| Functional Suitability | Do the selected Duno functions produce the correct and complete outcomes required by the approved F-01–F-16 baseline for the tested scenarios? |
 | Performance Efficiency | How long do selected user actions and server responses take under a documented environment and data profile, and do they remain within an approved target? |
 | Reliability | Can selected workflows be completed repeatedly without unexpected failures, lost/duplicated records, unauthorized persistence, or incorrect recovery behavior? |
 | Security | Do the selected authentication, authorization, privacy, validation, session, cache, error and deployment controls resist the defined unauthorized or invalid actions without disclosing protected information? |
@@ -22,10 +24,10 @@ Complete and approve these fields with the project owner/adviser. Values are int
 
 | Decision | Approved value / record |
 |---|---|
-| Evaluated release marker and source/package identity | `duno-full-release-20261101-r8`; package SHA-256 `703F22A55598BC4F831FEAF0A9C85AF0327B678A5BAB8686C21AF0DBDFFA0874`; source commit `120b76665ab062d5133f71ce03117093fb1f7a7f`. Owner reports upload; live marker/selected response checks recorded. Full file parity **not verified**. Source: `docs/deployment.md`. |
+| Evaluated release marker and source/package identity | `duno-full-release-20261101-r9`; package SHA-256 `3B87F3EFEF361BA245DA15C1FDC3030993FC0FF5372C5941C04D70EE69CE4736`; source commit unknown. Owner confirmed upload and supplied the matching live marker; full file parity **not verified**. Previous r8 observations are historical only. |
 | Environment and URL (production, staging, or isolated local) | InfinityFree live host, HTTPS, app domain recorded in `docs/deployment.md`; deployment notes report PHP 8.4.27. Fresh host/runtime identity for this evaluation: **pending capture**. |
-| Database engine/version and migration ledger state | Hosted migration ledger owner-reported through row 18/batch 13. Exact hosted DB engine/version and a fresh ledger capture: **pending**. |
-| Browser(s), OS/device(s), screen sizes and network conditions | Brave and Edge are present in existing owner-reported r8 observations; exact browser versions, OS/device, viewport and network condition for each evaluation run: **pending capture**. |
+| Database engine/version and migration ledger state | Owner-provided phpMyAdmin output on 2026-11-02 confirms progression migration `2026-11-01-000002` in batch 15 and zero remaining 500-XP rows. Exact hosted DB engine/version and a fresh environment capture remain **pending**. |
+| Browser(s), OS/device(s), screen sizes and network conditions | Brave and Edge are present in existing owner-reported r8 observations; exact browser versions, OS/device, viewport and network condition for each r9 evaluation run: **pending capture**. |
 | Evaluation dates, evaluator roles and any external participants | **Pending** |
 | Scenario/task sample and synthetic dataset profile | **Pending** |
 | Repetitions per scenario and stopping rule | **Pending** |
@@ -40,8 +42,8 @@ These are practical project targets proposed to make the protocol executable. Th
 
 | Decision | Suggested default |
 |---|---|
-| Scope | Cover F-01–F-15 and S-01–S-10 using the existing acceptance cases; report each requirement not exercised. |
-| Test environment | Use a local isolated copy of the r8 artifact/schema with synthetic accounts for all writes, errors and privacy tests. Use the live r8 site only for read-only checks unless the owner explicitly approves a dedicated synthetic live account and cleanup plan. |
+| Scope | Cover F-01–F-16 and S-01–S-10 using the existing acceptance cases; report each requirement not exercised. |
+| Test environment | Use a local isolated copy of the r9 artifact/schema with synthetic accounts for all writes, errors and privacy tests. The owner has confirmed the live r9 marker; keep live checks read-only unless the owner explicitly approves a dedicated synthetic account and cleanup plan. |
 | Browser/viewports | Edge and Brave on the available desktop setup; 390×844 and 1365×768 CSS pixels, plus 320px width for auth overflow. Record actual browser/OS versions and do not imply a representative device sample. |
 | Performance repetitions | One separately recorded warm-up then 10 measured trials per action. Report median, min, max, and failures; do not report p95 from this small sample. |
 | Performance targets | ≤3.0 seconds to response-complete for Focus, Plan, and session-save requests; ≤5.0 seconds for Aralytics. These are proposed project targets for the fixed test profile, not standard limits. Also report page render time separately where measured. |

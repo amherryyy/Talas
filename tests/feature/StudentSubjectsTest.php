@@ -155,7 +155,7 @@ final class StudentSubjectsTest extends CIUnitTestCase
 
         $form = $this->getAuthenticated('student/subjects/new');
         $form->assertOK();
-        $form->assertSee('There is no NVSU subject list for');
+        $form->assertSee('Duno has no subject list for');
         $form->assertSee('name="name"');
         $form->assertDontSee('name="course_id"');
 

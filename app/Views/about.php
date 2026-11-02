@@ -58,7 +58,7 @@
             <ol class="about-steps">
                 <li class="about-step">
                     <span class="about-step-number">01</span>
-                    <div><h3>Set up your subjects</h3><p>On your first student sign-in, choose your current NVSU Bayombong program. If Duno has a subject list for it, add subjects from that list. If it has no list yet, type in your own subject names.</p><a href="<?= esc(site_url('student/subjects')) ?>">Go to Subjects <span aria-hidden="true">↗</span></a></div>
+                    <div><h3>Set up your subjects</h3><p>On your first student sign-in, choose a listed NVSU Bayombong program or enter your school and program if they are not listed. Use Duno’s subject list when one is available; otherwise, type in your own subject names.</p><a href="<?= esc(site_url('student/subjects')) ?>">Go to Subjects <span aria-hidden="true">↗</span></a></div>
                 </li>
                 <li class="about-step">
                     <span class="about-step-number">02</span>

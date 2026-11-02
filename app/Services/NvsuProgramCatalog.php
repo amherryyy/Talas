@@ -20,6 +20,8 @@ class NvsuProgramCatalog
                     ]],
                     ['name' => 'College of Arts and Sciences', 'programs' => [
                         ['title' => 'Bachelor of Science in Mathematics'],
+                    ]],
+                    ['name' => 'College of Information Technology Education', 'programs' => [
                         ['title' => 'Bachelor of Science in Computer Science', 'majors' => ['Game Development', 'Robotics'], 'course_source' => 'https://cas.nvsu.edu.ph/courses/bscomsci'],
                         ['title' => 'Bachelor of Science in Information Technology', 'majors' => ['Web & Mobile App Development', 'Network Design & Management'], 'course_source' => 'https://cas.nvsu.edu.ph/courses/bsinfotech'],
                         ['title' => 'Bachelor of Science in Information Systems', 'majors' => ['Business Analytics', 'Service Management'], 'course_source' => 'https://cas.nvsu.edu.ph/courses/infosys'],
