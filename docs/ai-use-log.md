@@ -16,6 +16,18 @@ How the student verified and can explain the result: The original isolated secur
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
+## r10 evaluation release preparation - 2026-11-02
+
+Allowed use confirmed by: The owner asked for the necessary steps to prepare the project for upload and confirmed that merged product changes are ready for the next evaluation release.
+
+Assistance used: Reviewed the local/remote Git state, updated the release marker and deployment/version-control notes for the r10 candidate, tracked the manual academic-school migration SQL, and corrected the authenticated Playwright test's disclosure selector and subject-list selector. Increased the comprehensive multi-viewport test timeout after confirming it completes locally.
+
+Suggestions or code retained: Updated release-preparation documentation, added `docs/2026-11-02-academic-school-upgrade.sql` to tracked files, and adjusted `tests/e2e/responsive.spec.js`. The unrelated untracked `public/assets/images/duno-logo.png` was preserved and excluded. No hosted database or site was changed.
+
+How the student verified and can explain the result: PHPUnit passed 120 tests / 1,319 assertions. All three Playwright scenarios passed when run individually against the isolated `talas_review` database and correctly based local URL. Composer validation passed and the locked dependency audit reported no security advisories. Final GitHub review/merge, package build, and package inventory checks remain to be completed. Hosted migrations and host smoke checks remain owner actions. The temporary local `.env` overrides used to point the review server to its isolated database were restored before handoff.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
 ## Main SRS approval and traceability update - 2026-11-02

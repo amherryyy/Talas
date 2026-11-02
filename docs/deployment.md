@@ -20,6 +20,17 @@ The local Plan form now accepts hours and minutes and normalizes them to the exi
 
 The local auth update adds Shield-compatible rate limits, honeypot handling, and six-digit email password recovery. It requires migration `2026-11-02-000001_CreatePasswordResetCodes`, which creates `password_reset_codes`. Before release, back up the hosted database, confirm the current migration ledger, apply the migration once using [`2026-11-02-password-reset-codes-upgrade.sql`](2026-11-02-password-reset-codes-upgrade.sql) in phpMyAdmin, then confirm the table and migration row. Do not upload the new recovery routes before the table exists. Preserve the hosted `.env`; configure the mail sender/SMTP there without exposing its values, and verify a reset request, delivered code, 15-minute expiry, five-attempt invalidation, password update, one-time use, and generic response for unknown emails using a synthetic account. Confirm throttling behavior on InfinityFree because its cache persistence and writable file path are host-dependent. No hosted migration, upload, or live email check has been performed. The SQL file is deployment documentation and must not be placed in the public web root.
 
+### Evaluation package r10 preflight (2026-11-02)
+
+The next candidate marker is `duno-full-release-20261102-r10`. It includes the security-audit remediation commit and the merged PR #21 changes. The live site is still the owner-confirmed r9; no r10 package has been uploaded. Build only from the clean, reviewed source commit and record that commit with the package hash.
+
+Before upload, make a fresh hosted database backup and inspect the migration ledger and schema. Apply the new migrations in order, only when their version is absent and the corresponding schema is absent:
+
+1. `2026-11-02-000001_CreatePasswordResetCodes`: run [`2026-11-02-password-reset-codes-upgrade.sql`](2026-11-02-password-reset-codes-upgrade.sql), then verify the table and ledger row.
+2. `2026-11-02-000002_AddAcademicSchoolNameToUsers`: run [`2026-11-02-academic-school-upgrade.sql`](2026-11-02-academic-school-upgrade.sql), then verify the nullable `VARCHAR(160)` column and ledger row.
+
+If schema exists without its migration row, stop before rerunning DDL and reconcile the ledger carefully. These SQL files are deployment instructions only; the package builder excludes `docs/`. Preserve the hosted `.env` and writable user data. Before exposing reset links, verify the host's configured email delivery and complete the reset checks above with a synthetic account. After upload, confirm the r10 marker, registration/consent, NVSU and manual-program setup, curriculum-scoped subject behavior, password recovery, security headers, owner isolation, and private-path denials. The r10 evaluation package is not final public-launch acceptance.
+
 ### Progression reward increase (host migration verified)
 
 The owner approved 1,000 XP per saved study minute and 5,000 XP for the first authenticated student visit per app-local day, while keeping the existing 12,000 / 30,000 / 60,000 / 120,000 XP level thresholds. The local app also shows an XP reward after each saved session and explains XP removed when saved study time decreases. Migration `2026-11-01-000002_ScaleProgressionXpRewards` converts stored 500-XP daily visits to 5,000 XP. On 2026-11-02, owner-provided phpMyAdmin output showed this migration in batch 15 and zero rows with `xp_awarded = 500`; treat it as applied and do not run the upgrade SQL again. The SQL remains a deployment record and must not enter the public package.

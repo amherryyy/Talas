@@ -66,7 +66,9 @@ test('login page fits common mobile, tablet, and desktop widths', async ({ page 
 });
 
 test('subject and topic search pages fit common widths for a student', async ({ page }) => {
-  test.setTimeout(120_000);
+  // This scenario exercises many authenticated routes at four viewport widths,
+  // including saved check-in and timer flows on the local PHP server.
+  test.setTimeout(300_000);
   test.skip(!email || !password, 'Provide a synthetic student account in .tools/review-account.txt or set TALAS_E2E_EMAIL and TALAS_E2E_PASSWORD to run authenticated page checks.');
 
   await page.setViewportSize({ width: 400, height: 850 });
@@ -204,7 +206,9 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expect(checkIn).toContainText('Workload: 4/5 · Energy: 3/5');
   const savedTime = await checkIn.locator('time').getAttribute('datetime');
   await page.goto('student/aralytics');
-  await page.getByText('Private check-in trends', { exact: true }).click();
+  const privateTrends = page.locator('details.report-disclosure').filter({ has: page.getByText('Private check-in trends', { exact: true }) });
+  await privateTrends.locator('summary').click();
+  await expect(privateTrends).toHaveAttribute('open', '');
   await expect(page.getByRole('heading', { name: 'Your private check-in pattern' })).toBeVisible();
   const ratingChart = page.getByRole('img', { name: /Workload and energy ratings/ });
   await expect(ratingChart).toBeVisible();
@@ -215,7 +219,8 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expectNoHorizontalOverflow(page, '/student/aralytics');
   await page.setViewportSize({ width: 1280, height: 850 });
   await page.reload();
-  await page.getByText('Private check-in trends', { exact: true }).click();
+  await privateTrends.locator('summary').click();
+  await expect(privateTrends).toHaveAttribute('open', '');
   await expect(ratingChart).toBeVisible();
   await expectNoHorizontalOverflow(page, '/student/aralytics');
   await page.emulateMedia({ media: 'print' });
@@ -259,7 +264,7 @@ test('topic detail and add/edit forms are usable at phone and desktop widths', a
   await loginAsReviewStudent(page);
   await page.goto('student/subjects');
 
-  const subjects = await page.locator('.subject-list a').evaluateAll(links => links.map(link => ({
+  const subjects = await page.locator('.subject-catalog-entry').evaluateAll(links => links.map(link => ({
     href: link.getAttribute('href'),
     name: link.textContent.trim(),
   })));
