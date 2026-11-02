@@ -22,7 +22,7 @@ The local auth update adds Shield-compatible rate limits, honeypot handling, and
 
 ### Evaluation package r10 preflight (2026-11-02)
 
-The next candidate marker is `duno-full-release-20261102-r10`. It includes the security-audit remediation commit and the merged PR #21 changes. The live site is still the owner-confirmed r9; no r10 package has been uploaded. Build only from the clean, reviewed source commit and record that commit with the package hash.
+The next candidate marker is `duno-full-release-20261102-r10`. PR #22 merged the security-audit remediation commit and the accumulated PR #21 changes. The live site is still the owner-confirmed r9; no r10 package has been uploaded. Build only from the clean, reviewed `main` source after the release-record follow-up and record that full commit with the package hash.
 
 Before upload, make a fresh hosted database backup and inspect the migration ledger and schema. Apply the new migrations in order, only when their version is absent and the corresponding schema is absent:
 
