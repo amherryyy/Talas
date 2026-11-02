@@ -407,19 +407,27 @@ $joinUrl = site_url('register');
     <?php if (! $isLoggedIn): ?>
     <section class="public-guide" id="guide" aria-labelledby="guide-heading">
         <h2 id="guide-heading">Duno Guide</h2>
-        <p class="public-guide-intro">Short, general study ideas. Choose what fits your course.</p>
+        <p class="public-guide-intro">Need a way in? Pick a study move; open Duno&rsquo;s field notes for the steps and the why.</p>
         <ul class="public-guide-grid">
             <?php foreach ($suggestions as $suggestion): ?>
             <li>
                 <article class="public-guide-card" aria-labelledby="public-suggestion-<?= esc($suggestion['id']) ?>">
                     <h3 id="public-suggestion-<?= esc($suggestion['id']) ?>"><?= esc($suggestion['title']) ?></h3>
                     <p><?= esc($suggestion['body']) ?></p>
-                    <p class="guide-recommendation"><?= esc($suggestion['recommendation']) ?></p>
+                    <details class="public-guide-details">
+                        <summary>Open the field notes</summary>
+                        <ol>
+                            <?php foreach ($suggestion['steps'] as $step): ?><li><?= esc($step) ?></li><?php endforeach ?>
+                        </ol>
+                        <p><?= esc($suggestion['rationale']) ?></p>
+                        <p class="guide-recommendation"><?= esc($suggestion['recommendation']) ?></p>
+                        <a href="<?= esc($suggestion['source_url']) ?>" rel="noopener noreferrer">Research: <?= esc($suggestion['source_label']) ?></a>
+                    </details>
                 </article>
             </li>
             <?php endforeach ?>
         </ul>
-        <p class="public-guide-source">Adapted from <a href="<?= esc($suggestionSourceUrl) ?>" rel="noopener noreferrer"><?= esc($suggestionSourceName) ?></a>.</p>
+        <p class="public-guide-source">Evidence varies by subject and task. These are practical options to try, not promises.</p>
     </section>
     <?php else: ?>
     <aside class="guide-note" aria-label="Duno Guide"<?= $isStudent ? ' data-tour-target="guide"' : '' ?>>

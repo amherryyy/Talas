@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'adminSignIn' => 'Admin sign in',
+    'studentSignIn' => 'Student sign in',
+    'adminSignInHelp' => 'Gumamit ng approved admin account. Rerebyuhin muna ang request bago bigyan ng access.',
+    'adminRequestHelp' => 'Kailangan ng admin access?',
+    'requestAdminAccess' => 'Mag-send ng request',
     'tourIntro' => 'Bago sa Duno?',
     'tourAction' => 'Take the guided tour',
     'studyXpReward' => '+{0} XP ang nakuha mo sa study session.',

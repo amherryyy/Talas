@@ -24,8 +24,14 @@ This was a source and consistency audit, with a rendered desktop check of the lo
 
 ## Remaining review
 
+- Follow-up from the owner’s phone screenshot: the registration consent paragraph collapsed into a very narrow column. Replaced the Bootstrap `form-check` and grid combination with a dedicated flex row, a fixed checkbox width, and a full-width text column; normal phrases no longer break at arbitrary characters. The owner reports uploading r12, then supplied a phone screenshot showing the checkbox missing. Added an explicit checkbox border and checked state locally; the new styling still needs a hosted phone check.
+
 - Open student and admin pages with representative data at phone, tablet, and desktop widths, including empty states, long translated labels, and the print layout.
 - Check actual mail-recovery and registration-activation states in the browser after the host mail path is available.
 - Recheck keyboard focus and zoom/reflow on the long Plan, Aralytics, and admin analytics pages.
 
 The responsive Playwright check could not start because this Windows environment returned `spawn EPERM`. The updated auth templates were visually checked only on the currently available registration route at desktop width; the recovery views have source-level consistency changes but still need a rendered browser review. No migration is needed.
+
+## Final local auth layout follow-up
+
+Edge device emulation at 360px showed the registration consent checkbox and text laid out together, and the checkbox visibly changed when selected. The admin sign-in route rendered, but the mascot intro occupied much of the first phone viewport. The auth intro is now a compact mascot-and-heading strip through the tablet breakpoint (52rem), preserving the larger desktop layout. Rechecked registration at 360px and 768px, admin sign-in at 360px, registration at desktop width, and the public landing page at 360px, 768px, and desktop width. The remaining student and admin data screens still need hands-on visual acceptance with signed-in accounts; this follow-up does not claim an application-wide rendered pass.

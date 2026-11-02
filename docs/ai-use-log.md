@@ -1,5 +1,105 @@
 # Talas AI-use log
 
+## Duno Guide visual personality polish — 2026-11-02
+
+Allowed use confirmed by: The owner asked to make the Guide wise, eye-catching, and charismatic.
+
+Assistance used: Reworked the Guide's microcopy into a friendly field-guide voice, tightened the initial empty message, added a warmer palette treatment, clearer active-goal state, step badges, a distinctive route stripe, and a branded challenge callout. Kept the expanded rationale and sources collapsed behind native disclosures.
+
+Suggestions or code retained: Updated student and public Guide copy and styling plus the responsive E2E expected labels. Kept CHED source attribution inside the method disclosure when a mapped outcome is present. Source/cache marker r21 reflects the local changes; no archive was built. Nothing was staged, committed, or uploaded.
+
+How the student verified and can explain the result: The visual treatment uses the Duno purple and gold palette and gives the study steps a clear numbered order. No tests or browser checks were run for this update.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Duno Guide progressive disclosure — 2026-11-02
+
+Allowed use confirmed by: The owner asked to hide method links and research sources initially because the Guide felt text-heavy, and to reveal detailed explanations on demand.
+
+Assistance used: Kept the method title, concise summary, and practical steps visible in the signed-in playbook. Moved rationale, evidence notes, CHED associations, and research links into native collapsed `<details>` disclosures. Applied the same structure to public landing-page method cards, with the how-to steps inside the disclosure. Added rationale copy for all seven practices.
+
+Suggestions or code retained: Updated both Guide views, focused disclosure styling, existing unit/E2E expectations, the F-10 story, source/cache marker r19. No JavaScript state or additional dependency was introduced. No tests or browser checks were run, and no archive was built or uploaded.
+
+How the student verified and can explain the result: The visible card gives the quick action. The “Why this can help” or “How to try it” disclosure opens supporting explanation and research links when requested. This is a local uncommitted change.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Duno Guide evidence and pedagogy expansion — 2026-11-02
+
+Allowed use confirmed by: The owner asked to include modern and trending study methods supported by meta-analysis and pedagogy.
+
+Assistance used: Reviewed the F-10 scope and researched contemporary primary/meta-analytic sources. Expanded the static, student-selected Guide with retrieval practice/“blurting,” spaced review, self-explanation, worked-example fading, interleaving, relevant diagrams, and confidence checking. Added method-specific source links and use-context cautions. No generated course answers, adaptive inference, database storage, or AI recommendation was added.
+
+Suggestions or code retained: Updated curated methods on the student dashboard and public landing page, deterministic goal sequences, selected topic prompts, relevant CHED editorial mappings, existing unit/feature/E2E expectations, the F-10 story and traceability note, and source/cache markers. The r16 archive is stale; r18 is source-only and no replacement ZIP has been built. Nothing was staged, committed, or uploaded.
+
+How the student verified and can explain the result: The named techniques are fixed prompts students choose and perform with their own course materials. Popular labels such as “blurting” and “Feynman technique” are explained as familiar names for existing retrieval or self-explanation practices, not as independently proven methods. Tests and browser checks were not run for this update.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Duno Guide content refinement — 2026-11-02
+
+Allowed use confirmed by: The owner said the Study Guide felt too generic and boring.
+
+Assistance used: Rewrote the goal choices and practice steps into short, concrete actions; added a single “Try this” prompt that uses the selected subject/topic title; linked delayed review to Duno Plan. Checked the official WWC practice guide; retained its existing recommendations and source links. Did not add AI, course-generated explanations, outcomes, or a new study method.
+
+Suggestions or code retained: Updates to the Guide view, curated content, interaction copy, styling, and E2E expected labels; the study-suggestions story now records the revised copy. This uncommitted change makes the earlier r16 package stale. Nothing was staged, committed, or uploaded.
+
+How the student verified and can explain the result: The activity prompt is a fixed template with only the chosen subject or topic name inserted as text. The student still supplies answers from their course materials. No tests or browser checks were run during this content edit.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Admin sign-in route repair for InfinityFree — 2026-11-02
+
+Allowed use confirmed by: The owner reported a 400 response after selecting Admin sign in from Register and asked to continue troubleshooting.
+
+Assistance used: Reproduced the failure at `index.php?/login&admin=1`. InfinityFree query-style routing treats the appended `&admin=1` as part of the route. Added the dedicated `admin-sign-in` route, updated Login and Register links and route-aware page labeling, and kept authentication on Shield's existing approved-account login. Built r16 to replace r15. No database or hosted files were changed.
+
+Suggestions or code retained: Route, view, feature-test, auth-story, and release-marker updates; local r16 ZIP. Nothing was staged, committed, or uploaded.
+
+How the student verified and can explain the result: The focused PHPUnit suite passed 10 tests and 81 assertions. Local requests to both `/index.php/admin-sign-in` and `/index.php?/admin-sign-in` returned 200; Register emitted `/index.php/admin-sign-in`. The r16 archive contains 1,272 entries with the expected marker and no backslash paths, `.env`, evaluation credentials, or unrelated logo. Hosted acceptance remains pending because r16 is not uploaded.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Final local functional and auth UI check — 2026-11-02
+
+Allowed use confirmed by: The owner asked for a final working and UI/UX check before evaluation.
+
+Assistance used: Ran the full PHP suite, checked public and signed-out routes, reviewed registration and admin sign-in in Edge at phone, tablet, and desktop widths, and reduced the auth intro height on phone and tablet. Rebuilt the local production candidate as r15 because r14 predates this CSS change. Did not alter authentication behavior or hosted data.
+
+Suggestions or code retained: Compact responsive auth CSS, r15 release marker/cache name, local ZIP candidate, and updated audit/deployment notes. The ZIP is ignored and built from an uncommitted working tree. No stage, commit, push, merge, or upload occurred.
+
+How the student verified and can explain the result: PHPUnit passed 122 tests and 1,334 assertions. Local public pages returned 200 and signed-out admin returned 302. The mobile consent checkbox was visible and selectable; the compact sign-in form appeared within the first phone viewport. The r15 ZIP contains 1,272 forward-slash entries with required root/private-path rules and no `.env`, evaluation credential sheet, or unrelated logo. The local review router returned the landing page for private-file probes, so production direct-file denial still needs a hosted check on the uploaded version. Composer's advisory feed was unreachable; the dependency audit is incomplete. The owner reports all four hosted evaluation accounts work, but that report does not verify the unuploaded r15 UI.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Controlled hosted evaluation account preparation — 2026-11-02
+
+Allowed use confirmed by: The owner requested test accounts for face-to-face evaluation, specifying two admin accounts and two student accounts on the hosted site without email verification.
+
+Assistance used: Prepared a one-time SQL import using the installed Shield user, identity, and group schema. It creates four synthetic active accounts with unique bcrypt cost-12 password hashes and no activation identities. Prepared separate preflight and post-import checks and a private credential sheet. Updated the evaluation guide and deployment notes; the public registration flow was not changed.
+
+Suggestions or code retained: The SQL, generator, and credential sheet are ignored under `build/`; credentials are not included in source-controlled docs or release packages. No database mutation, staging, commit, push, or upload was performed.
+
+How the student verified and can explain the result: Generator PHP syntax passed and generated hashes passed `password_verify`. SQL structure was checked against Shield's installed migrations and role matrix. Hosted preflight, import, login, and role checks remain pending. Automatic approval review rejected inspection of the hosted file-manager window because it could expose private hosting account or file data, so the owner must run the prepared import in phpMyAdmin.
+
+Owner-provided hosted follow-up: The preflight returned zero collisions and selected-database match 1. The owner imported the SQL once and supplied four resulting active rows: IDs 12–13 in the admin group and 14–15 in the student group, each with an email/password identity. Hosted sign-in and role-route behavior remain to be checked; the SQL must not be reimported.
+
+Later owner check: The owner tested the hosted evaluation accounts and reported that all was good. This is owner-reported functional acceptance; exact per-account URLs and screenshots were not provided. The SQL must not be reimported.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Mobile registration checkbox visibility — 2026-11-02
+
+Allowed use confirmed by: The owner reported that the Terms and Privacy checkbox is missing on the hosted phone registration screen.
+
+Assistance used: Compared the owner-reported r12 upload with the r12 ZIP; that archive includes the consent checkbox and flex layout. Gave the checkbox an explicit border, white surface, purple checked state, and visible checkmark at phone widths. Kept it as a required native form control and the whole consent label clickable.
+
+Suggestions or code retained: Local CSS and a registration-rendering assertion. Prepared an r13 ZIP from the uncommitted working tree, including the separately requested admin sign-in entry and a new service-worker cache name. Nothing was staged, committed, or deployed.
+
+How the student verified and can explain the result: The r12 archive contains the checkbox markup and CSS. PHP feature tests passed (10 tests, 79 assertions), including an approved admin signing in and reaching the dashboard; diff checks passed. The r13 archive marker and checkbox CSS were inspected, required ZIP paths passed, and package PHP syntax and source/package hashes matched. A local visual check could not run because local MySQL refused connections and Playwright's browser launch returned EPERM. The new checkbox style remains unverified on a phone until a later upload.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ## Application-wide UI consistency audit - 2026-11-02
 
 Allowed use confirmed by: The project owner requested a full UI/UX audit and fixes across pages, including alignment, organization, visibility, and consistent design.
@@ -9,6 +109,32 @@ Assistance used: Inventoried all 62 view files and audited the shared UI styles 
 Suggestions or code retained: Updated `public/assets/css/duno-ui.css`, `app/Views/auth/forgot_password.php`, `app/Views/auth/reset_password.php`, `app/Views/auth/email_activate_show.php`, and added `docs/ui-ux-audit-2026-11-02.md`. No dependencies or generated assets were added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
 
 How the student verified and can explain the result: Inspected all view templates and shared responsive/footer/control rules at source, and reviewed the local registration page in Edge at desktop width. No tests were run. Authenticated screens and updated phone layouts were not all rendered in this pass; the audit note records these remaining checks.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Admin entry on authentication screens — 2026-11-02
+
+Allowed use confirmed by: The owner asked for an admin option beneath the login and registration cards and selected approval-based admin requests.
+
+Assistance used: Added a compact admin sign-in link under both forms, an admin-labeled view of the existing Shield login form, and an email request link for manual owner review. Public registration remains student-only and cannot grant admin access. Updated the authentication story and requirement traceability.
+
+Suggestions or code retained: Local view, CSS, language, and documentation changes. No admin account provisioning or database change was added. Nothing was staged, committed, or deployed.
+
+How the student verified and can explain the result: PHP syntax and diff checks passed. Focused authentication tests passed (10 tests, 79 assertions), including admin entry rendering and an approved admin signing in and reaching the dashboard. The local browser pages returned HTTP 500 because local MySQL refused the connection, so visual inspection and hosted phone rendering remain unverified.
+
+Follow-up: The admin link was adjusted to append `admin=1` with `&` when the generated login URL already contains a query string, as on InfinityFree's `index.php?/login` form. This superseded the unuploaded r13 ZIP with r14. The r14 archive passed required-entry, PHP syntax, and source/package checks; SHA-256 is recorded in `docs/deployment.md`. Neither candidate was staged, committed, or uploaded.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Registration consent mobile layout repair — 2026-11-02
+
+Allowed use confirmed by: The owner reported the broken registration screen and identified it as the Register page; the phone screenshot shows the consent text collapsed into a narrow column.
+
+Assistance used: Removed Bootstrap `form-check` styling from the consent row and replaced the fragile grid with a flex row: fixed checkbox width and a flexible, full-width text column. Removed arbitrary character wrapping. Advanced the local package marker to r12.
+
+Suggestions or code retained: Updated `app/Views/auth/register.php`, `public/assets/css/duno-ui.css`, `public/assets/release-version.txt`, and the UI audit note. No authentication behavior or database schema changed. The reviewed r12 fix and archive are ready locally; the source change is not staged or committed, and the package has not been uploaded.
+
+How the student verified and can explain the result: PHP syntax passed for the changed registration view and `git diff --check` passed. A local standalone preview using the production stylesheet was inspected at about 384 CSS pixels wide; the consent copy stayed readable across two lines, with the checkbox aligned beside it and no horizontal scroll. The r12 archive marker and required package files were checked; the full hosted phone route still needs review.
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 

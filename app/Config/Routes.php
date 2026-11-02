@@ -13,6 +13,7 @@ $routes->post('language', 'LanguagePreference::update', ['as' => 'language.updat
 
 $routes->group('/', ['filter' => ['auth-rates', 'auth-abuse']], static function (RouteCollection $routes): void {
     service('auth')->routes($routes, ['only' => ['register', 'login', 'auth-actions']]);
+    $routes->get('admin-sign-in', '\\CodeIgniter\\Shield\\Controllers\\LoginController::loginView', ['as' => 'admin.login']);
     $routes->post('auth/a/resend-registration-code', 'RegistrationRecovery::resend', ['as' => 'auth-registration-resend']);
     $routes->post('auth/a/cancel-registration', 'RegistrationRecovery::cancel', ['as' => 'auth-registration-cancel']);
     $routes->get('forgot-password', 'PasswordRecovery::forgot', ['as' => 'password.forgot']);

@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'adminSignIn' => 'Mag-sign in bilang admin',
+    'studentSignIn' => 'Mag-sign in bilang mag-aaral',
+    'adminSignInHelp' => 'Gumamit ng aprubadong admin account. Sinusuri muna ang mga kahilingan bago bigyan ng access.',
+    'adminRequestHelp' => 'Kailangan ng admin access?',
+    'requestAdminAccess' => 'Magpadala ng kahilingan',
     'tourIntro' => 'Bago sa Duno?',
     'tourAction' => 'Tingnan ang gabay',
     'studyXpReward' => '+{0} XP ang nakuha mo sa study session.',

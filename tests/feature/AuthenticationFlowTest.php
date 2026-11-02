@@ -36,6 +36,45 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         service('cache')->deleteMatching('throttler_*');
     }
 
+    public function testAdminEntryUsesExistingLoginWhileRegistrationRemainsStudentOnly(): void
+    {
+        $studentLogin = $this->get('login');
+        $studentLogin->assertSee('Admin sign in');
+        $studentLogin->assertSee('admin-sign-in');
+        $adminLogin = $this->get('admin-sign-in');
+        $adminLogin->assertOK();
+        $adminLogin->assertSee('Send a request');
+        $adminLogin->assertSee('Student sign in');
+        $registration = $this->get('register');
+        $registration->assertSee('Admin sign in');
+        $registration->assertSee('admin-sign-in');
+        $registration->assertSee('registration-consent-checkbox');
+        $this->assertSame('student', config(\Config\AuthGroups::class)->defaultGroup);
+    }
+
+    public function testApprovedAdminCanSignInFromAdminEntryAndReachDashboard(): void
+    {
+        $username = 'approved-admin-' . $this->testSuffix;
+        $users = new UserModel();
+        $userId = $users->insert(new User([
+            'username' => $username,
+            'email' => $username . '@example.test',
+            'password' => 'K9!vP3#rT6@x',
+        ]));
+        $admin = $users->findById((int) $userId);
+        $admin->addGroup('admin');
+        $admin->activate();
+
+        $this->get('admin-sign-in')->assertOK();
+        $this->postWithCsrf('login', [
+            'email' => $username . '@example.test',
+            'password' => 'K9!vP3#rT6@x',
+        ])->assertRedirect();
+
+        $this->assertTrue(auth()->loggedIn());
+        $this->get('admin')->assertOK();
+    }
+
     public function testRegistrationAssignsStudentRoleAndIgnoresSubmittedAdminRole(): void
     {
         $response = $this->postWithCsrf('register', [

@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'adminSignIn' => 'Admin sign in',
+    'studentSignIn' => 'Student sign in',
+    'adminSignInHelp' => 'Use an approved admin account. Requests are reviewed before access is granted.',
+    'adminRequestHelp' => 'Need admin access?',
+    'requestAdminAccess' => 'Send a request',
     'tourIntro' => 'New to Duno?',
     'tourAction' => 'Take the guided tour',
     'language' => 'Language',

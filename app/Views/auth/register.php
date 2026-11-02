@@ -4,6 +4,7 @@
 
 <?= $this->section('main') ?>
 <div class="container d-flex justify-content-center p-4 p-md-5">
+    <div class="auth-card-stack">
     <section class="card col-12 col-md-7 col-lg-6 shadow-sm" aria-labelledby="register-title">
         <div class="card-body p-4 p-md-5">
             <h2 class="card-title mb-4" id="register-title"><?= lang('Auth.register') ?></h2>
@@ -41,10 +42,10 @@
                     <input type="password" class="form-control" id="register-password-confirm" name="password_confirm" autocomplete="new-password" required>
                 </div>
 
-                <div class="form-check registration-consent mb-4">
-                    <input class="form-check-input" type="checkbox" id="terms-privacy-consent" name="terms_privacy_consent" value="1" required<?= old('terms_privacy_consent') === '1' ? ' checked' : '' ?>>
+                <div class="registration-consent mb-4">
+                    <input class="registration-consent-checkbox" type="checkbox" id="terms-privacy-consent" name="terms_privacy_consent" value="1" required<?= old('terms_privacy_consent') === '1' ? ' checked' : '' ?>>
                     <div class="registration-consent-copy">
-                        <label class="form-check-label" for="terms-privacy-consent">
+                        <label class="registration-consent-label" for="terms-privacy-consent">
                             <?= esc(lang('App.registrationConsentLead')) ?>
                             <a href="<?= esc(url_to('legal.terms')) ?>" target="_blank" rel="noopener noreferrer"><?= esc(lang('App.termsAndConditions')) ?></a>
                             <?= esc(lang('App.registrationConsentJoin')) ?>
@@ -61,5 +62,9 @@
             </form>
         </div>
     </section>
+    <div class="auth-role-entry">
+        <a class="auth-role-link" href="<?= esc(url_to('admin.login')) ?>"><?= esc(lang('App.adminSignIn')) ?></a>
+    </div>
+    </div>
 </div>
 <?= $this->endSection() ?>

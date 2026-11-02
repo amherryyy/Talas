@@ -59,6 +59,8 @@ final class StudyGuideOutcomes
             'recall-from-memory' => ['application'],
             'explain-the-idea' => ['analysis', 'communication'],
             'example-then-practice' => ['analysis', 'design'],
+            'interleave-practice' => ['analysis'],
+            'confidence-check' => ['lifelong'],
             default => [],
         };
         $programOutcomes = self::OUTCOMES[$programFamily] ?? [];

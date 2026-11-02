@@ -52,10 +52,13 @@ final class StudentDashboardTest extends CIUnitTestCase
         $response->assertSee('Duno Timer');
         $response->assertSee('Aralytics');
         $response->assertSee('1,000 XP per saved study minute; +5,000 XP for your first app visit each day.');
-        $response->assertSee('Revisit a topic later');
-        $response->assertSee('Try recalling before rereading');
-        $response->assertSee('Explain why or how');
-        $response->assertSee('Read an example, then try one');
+        $response->assertSee('Space the second look');
+        $response->assertSee('Try a two-minute brain dump');
+        $response->assertSee('Teach it back in plain language');
+        $response->assertSee('Fade the worked example');
+        $response->assertSee('Mix up related problem types');
+        $response->assertSee('Sketch the idea from memory');
+        $response->assertSee('Check your confidence against recall');
         $response->assertSee('https://ies.ed.gov/ncee/wwc/practiceguide/1');
         $response->assertSee('rel="noopener noreferrer"');
         $studentHtml = $response->response()->getBody();
@@ -192,7 +195,7 @@ final class StudentDashboardTest extends CIUnitTestCase
         $adminResponse = $this->getAuthenticated('admin');
         $adminResponse->assertOK();
         $adminResponse->assertDontSee('Study ideas');
-        $adminResponse->assertDontSee('Revisit a topic later');
+        $adminResponse->assertDontSee('Space the second look');
         $adminHtml = $adminResponse->response()->getBody();
         $this->assertStringNotContainsString('data-app-tour', $adminHtml);
         $this->assertStringContainsString('aria-label="Admin navigation"', $adminHtml);
