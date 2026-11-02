@@ -4,6 +4,7 @@ namespace Config;
 
 use App\Filters\ExclusiveRoleFilter;
 use App\Filters\AuthAbuseProtectionFilter;
+use App\Filters\DunoSecurityHeadersFilter;
 use App\Filters\ExpiredRegistrationCleanupFilter;
 use App\Filters\LanguagePreferenceFilter;
 use App\Filters\NoStorePagesFilter;
@@ -19,7 +20,6 @@ use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
-use CodeIgniter\Filters\SecureHeaders;
 
 class Filters extends BaseFilters
 {
@@ -37,7 +37,7 @@ class Filters extends BaseFilters
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
-        'secureheaders' => SecureHeaders::class,
+        'secureheaders' => DunoSecurityHeadersFilter::class,
         'cors'          => Cors::class,
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,

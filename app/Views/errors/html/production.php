@@ -7,7 +7,7 @@
 
     <title><?= esc(lang('Errors.whoops')) ?></title>
 
-    <style>
+    <style {csp-style-nonce}>
         <?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'debug.css')) ?>
         .page-navigation { display:flex; flex-wrap:wrap; justify-content:center; gap:.65rem; margin-top:1.5rem; }
         .page-navigation a { display:inline-flex; min-width:6.5rem; min-height:2.75rem; align-items:center; justify-content:center; gap:.4rem; padding:.55rem .85rem; border:1px solid #ddd8f3; border-radius:.75rem; color:#332c5d; background:#fff; font:600 1rem system-ui,sans-serif; text-decoration:none; }
