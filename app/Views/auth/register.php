@@ -21,35 +21,37 @@
             <form action="<?= esc(url_to('register')) ?>" method="post">
                 <?= csrf_field() ?>
 
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="register-email" name="email" inputmode="email" autocomplete="email" placeholder="<?= esc(lang('Auth.email')) ?>" value="<?= esc(old('email')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="register-email"><?= esc(lang('Auth.email')) ?></label>
+                    <input type="email" class="form-control" id="register-email" name="email" inputmode="email" autocomplete="email" value="<?= esc(old('email')) ?>" required>
                 </div>
 
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="register-username" name="username" inputmode="text" autocomplete="username" placeholder="<?= esc(lang('Auth.username')) ?>" value="<?= esc(old('username')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="register-username"><?= esc(lang('Auth.username')) ?></label>
+                    <input type="text" class="form-control" id="register-username" name="username" inputmode="text" autocomplete="username" value="<?= esc(old('username')) ?>" required>
                 </div>
 
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="register-password" name="password" autocomplete="new-password" placeholder="<?= esc(lang('Auth.password')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="register-password"><?= esc(lang('Auth.password')) ?></label>
+                    <input type="password" class="form-control" id="register-password" name="password" autocomplete="new-password" required>
                 </div>
 
-                <div class="form-floating mb-4">
-                    <input type="password" class="form-control" id="register-password-confirm" name="password_confirm" autocomplete="new-password" placeholder="<?= esc(lang('Auth.passwordConfirm')) ?>" required>
+                <div class="form-field mb-4">
                     <label for="register-password-confirm"><?= esc(lang('Auth.passwordConfirm')) ?></label>
+                    <input type="password" class="form-control" id="register-password-confirm" name="password_confirm" autocomplete="new-password" required>
                 </div>
 
-                <div class="form-check mb-4">
+                <div class="form-check registration-consent mb-4">
                     <input class="form-check-input" type="checkbox" id="terms-privacy-consent" name="terms_privacy_consent" value="1" required<?= old('terms_privacy_consent') === '1' ? ' checked' : '' ?>>
-                    <label class="form-check-label" for="terms-privacy-consent">
-                        <?= esc(lang('App.registrationConsentLead')) ?>
-                        <a href="<?= esc(url_to('legal.terms')) ?>" target="_blank" rel="noopener noreferrer"><?= esc(lang('App.termsAndConditions')) ?></a>
-                        <?= esc(lang('App.registrationConsentJoin')) ?>
-                        <a href="<?= esc(url_to('legal.privacy')) ?>" target="_blank" rel="noopener noreferrer"><?= esc(lang('App.privacyNotice')) ?></a>.
-                        <?= esc(lang('App.registrationAdultConfirmation')) ?>
-                    </label>
+                    <div class="registration-consent-copy">
+                        <label class="form-check-label" for="terms-privacy-consent">
+                            <?= esc(lang('App.registrationConsentLead')) ?>
+                            <a href="<?= esc(url_to('legal.terms')) ?>" target="_blank" rel="noopener noreferrer"><?= esc(lang('App.termsAndConditions')) ?></a>
+                            <?= esc(lang('App.registrationConsentJoin')) ?>
+                            <a href="<?= esc(url_to('legal.privacy')) ?>" target="_blank" rel="noopener noreferrer"><?= esc(lang('App.privacyNotice')) ?></a>.
+                            <span class="registration-adult-confirmation"><?= esc(lang('App.registrationAdultConfirmation')) ?></span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="d-grid col-12 col-md-9 mx-auto mb-3">

@@ -23,13 +23,13 @@
 
             <form action="<?= esc(url_to('login')) ?>" method="post">
                 <?= csrf_field() ?>
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="login-email" name="email" inputmode="email" autocomplete="email" placeholder="<?= esc(lang('Auth.email')) ?>" value="<?= esc(old('email')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="login-email"><?= esc(lang('Auth.email')) ?></label>
+                    <input type="email" class="form-control" id="login-email" name="email" inputmode="email" autocomplete="email" value="<?= esc(old('email')) ?>" required>
                 </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="login-password" name="password" autocomplete="current-password" placeholder="<?= esc(lang('Auth.password')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="login-password"><?= esc(lang('Auth.password')) ?></label>
+                    <input type="password" class="form-control" id="login-password" name="password" autocomplete="current-password" required>
                 </div>
                 <?php if (setting('Auth.sessionConfig')['allowRemembering']) : ?>
                     <div class="form-check mb-3">

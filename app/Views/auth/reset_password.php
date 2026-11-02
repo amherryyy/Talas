@@ -21,21 +21,21 @@
             <?php endif ?>
             <form action="<?= esc(url_to('password.reset.submit')) ?>" method="post">
                 <?= csrf_field() ?>
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="reset-email" name="email" inputmode="email" autocomplete="email" placeholder="<?= esc(lang('Auth.email')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="reset-email"><?= esc(lang('Auth.email')) ?></label>
+                    <input type="email" class="form-control" id="reset-email" name="email" inputmode="email" autocomplete="email" required>
                 </div>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="reset-code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" minlength="6" placeholder="<?= esc(lang('Registration.resetCode')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="reset-code"><?= esc(lang('Registration.resetCode')) ?></label>
+                    <input type="text" class="form-control" id="reset-code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" minlength="6" required>
                 </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="reset-password" name="password" autocomplete="new-password" placeholder="<?= esc(lang('Auth.password')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="reset-password"><?= esc(lang('Auth.password')) ?></label>
+                    <input type="password" class="form-control" id="reset-password" name="password" autocomplete="new-password" required>
                 </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="reset-password-confirm" name="password_confirm" autocomplete="new-password" placeholder="<?= esc(lang('Auth.passwordConfirm')) ?>" required>
+                <div class="form-field mb-3">
                     <label for="reset-password-confirm"><?= esc(lang('Auth.passwordConfirm')) ?></label>
+                    <input type="password" class="form-control" id="reset-password-confirm" name="password_confirm" autocomplete="new-password" required>
                 </div>
                 <div class="d-grid mb-3"><button type="submit" class="btn btn-primary"><?= esc(lang('Registration.saveNewPassword')) ?></button></div>
                 <p class="text-center mb-0"><a href="<?= esc(url_to('password.forgot')) ?>"><?= esc(lang('Registration.requestAnotherCode')) ?></a></p>

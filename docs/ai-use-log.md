@@ -1,5 +1,31 @@
 # Talas AI-use log
 
+## Application-wide UI consistency audit - 2026-11-02
+
+Allowed use confirmed by: The project owner requested a full UI/UX audit and fixes across pages, including alignment, organization, visibility, and consistent design.
+
+Assistance used: Inventoried all 62 view files and audited the shared UI styles and component-using templates. Expanded shared workspace form styling to include previously omitted standard input types and fluid min/max widths for small grids; restored compact card surfaces to saved item lists where a later compact-spacing override had flattened them; and unified forgot-password, reset-password, and activation form markup with the current label-first auth field pattern.
+
+Suggestions or code retained: Updated `public/assets/css/duno-ui.css`, `app/Views/auth/forgot_password.php`, `app/Views/auth/reset_password.php`, `app/Views/auth/email_activate_show.php`, and added `docs/ui-ux-audit-2026-11-02.md`. No dependencies or generated assets were added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Inspected all view templates and shared responsive/footer/control rules at source, and reviewed the local registration page in Edge at desktop width. No tests were run. Authenticated screens and updated phone layouts were not all rendered in this pass; the audit note records these remaining checks.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Registration and login mobile layout - 2026-11-02
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner reported a broken mobile registration layout and asked for a more polished gradient treatment on registration and login.
+
+Assistance used: Reworked the consent layout so its text and inline legal links wrap as one readable block beside the checkbox. Separated the adult confirmation visually while keeping it part of the checkbox label, removed redundant field placeholders, updated the password visibility script to find the renamed field wrapper, and added restrained Duno palette gradients and form surfaces across auth layouts.
+
+Suggestions or code retained: Updated `app/Views/auth/register.php`, `app/Views/auth/login.php`, `public/assets/js/auth-password-visibility.js`, and the auth section at the end of `public/assets/css/duno-ui.css`. The unrelated untracked logo was preserved. No Git staging, commit, push, database change, or deployment was performed.
+
+How the student verified and can explain the result: Both changed PHP views passed PHP syntax checks, `git diff --check` passed, and the local registration route returned HTTP 200. A visual browser check could not run because Playwright Chromium launch returned Windows `spawn EPERM` and the browser UI bridge was unavailable for opening the local page. Mobile visual appearance and hosted behavior remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ## Security audit remediation - 2026-11-02
 
 Date / story: 2026-11-02 / apply and stage local security-audit remediations

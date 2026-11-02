@@ -245,11 +245,19 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .duno-workspace main a:not(.button):hover { color: #4635a4; text-decoration-thickness: .12em; }
 .duno-workspace label { display: block; margin: 1rem 0 .35rem; color: var(--duno-ink); font-size: .9rem; font-weight: 680; }
 .duno-workspace input[type="text"],
+.duno-workspace input[type="email"],
+.duno-workspace input[type="password"],
 .duno-workspace input[type="date"],
+.duno-workspace input[type="time"],
+.duno-workspace input[type="datetime-local"],
+.duno-workspace input[type="month"],
+.duno-workspace input[type="week"],
 .duno-workspace input[type="search"],
 .duno-workspace input[type="number"],
+.duno-workspace input[type="url"],
+.duno-workspace input[type="tel"],
 .duno-workspace select,
-.duno-workspace textarea { display: block; width: min(100%, 40rem); min-height: 2.9rem; padding: .7rem .82rem; border: 1px solid #c9c5d8; border-radius: .75rem; color: var(--duno-ink); background: #fff; box-shadow: 0 1px 2px rgb(47 39 95 / 3%); font: inherit; }
+.duno-workspace textarea { display: block; width: min(100%, 40rem); min-width: 0; max-width: 100%; min-height: 2.9rem; padding: .7rem .82rem; border: 1px solid #c9c5d8; border-radius: .75rem; color: var(--duno-ink); background: #fff; box-shadow: 0 1px 2px rgb(47 39 95 / 3%); font: inherit; }
 .duno-workspace select { padding-right: 2.55rem; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235746bd' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right .8rem center; background-size: 1rem; cursor: pointer; }
 .duno-workspace input:hover,
 .duno-workspace select:hover,
@@ -522,7 +530,7 @@ body.duno-auth { display: grid; grid-template-rows: auto 1fr; padding: 1.5rem; }
 .duno-auth .card-title { margin: 0 0 1.35rem; color: var(--duno-ink); font-size: clamp(1.75rem, 5vw, 2.2rem); font-weight: 750; letter-spacing: -.055em; line-height: 1.1; }
 .duno-auth .form-floating { margin-bottom: 1rem; }
 .duno-auth .form-floating label { display: block; margin: 0 0 .35rem; color: var(--duno-ink); font-weight: 650; }
-.duno-auth .form-control { display: block; width: 100%; min-height: 3rem; padding: .7rem .8rem; border: 1px solid #c9c5d8; border-radius: .75rem; color: var(--duno-ink); background: #fff; font: inherit; }
+.duno-auth .form-control { display: block; width: 100%; min-width: 0; max-width: 100%; min-height: 3rem; padding: .7rem .8rem; border: 1px solid #c9c5d8; border-radius: .75rem; color: var(--duno-ink); background: #fff; font: inherit; }
 .duno-auth .form-check { margin: .8rem 0; }
 .duno-auth .form-check-input { margin-right: .4rem; accent-color: var(--duno-purple); }
 .duno-auth .d-grid { display: flex; justify-content: center; margin: 1.35rem 0; }
@@ -624,9 +632,14 @@ body.duno-role { display: grid; min-height: 100vh; place-items: center; padding:
 .duno-workspace .topic-form,
 .duno-workspace .profile-form,
 .duno-workspace .check-in-entry-form { border-radius: var(--duno-radius-surface); box-shadow: 0 3px 12px rgb(47 39 95 / 4%); }
-.duno-workspace .subject-list { gap: .25rem; }
-.duno-workspace .subject-list li { padding: .7rem .25rem; border: 0; border-bottom: 1px solid var(--duno-line); border-radius: 0; background: transparent; box-shadow: none; }
-.duno-workspace .subject-list li:last-child { border-bottom: 0; }
+.duno-workspace .subject-list { gap: .5rem; }
+.duno-workspace .subject-list li {
+    padding: .8rem .95rem;
+    border: 1px solid rgb(226 222 239 / 90%);
+    border-radius: .9rem;
+    background: linear-gradient(125deg, rgb(255 255 255 / 98%), rgb(249 248 255 / 94%));
+    box-shadow: 0 3px 10px rgb(47 39 95 / 4%);
+}
 .duno-workspace .report-section { padding: .85rem; border-radius: var(--duno-radius-surface); box-shadow: none; }
 .duno-workspace .summary-grid { gap: .6rem; margin: .85rem 0; }
 .duno-workspace .summary-card { padding: .85rem; border-radius: var(--duno-radius-surface); box-shadow: none; }
@@ -1316,7 +1329,6 @@ body.duno-landing { background-color: var(--duno-canvas); background-image: var(
 .duno-landing .menu-panel a,
 .duno-landing .menu-button { padding: .58rem .68rem; font-size: .88rem; }
 
-.duno-workspace .subject-list li,
 .duno-workspace .topic-filter-form,
 .duno-workspace .topic-detail-card,
 .duno-workspace .topic-form,
@@ -1345,7 +1357,6 @@ body.duno-landing { background-color: var(--duno-canvas); background-image: var(
     backdrop-filter: blur(14px) saturate(135%);
     -webkit-backdrop-filter: blur(14px) saturate(135%);
 }
-.duno-workspace .subject-list li,
 .duno-workspace .topic-filter-form,
 .duno-workspace .topic-detail-card,
 .duno-workspace .topic-form,
@@ -3288,4 +3299,107 @@ body.duno-landing::after {
 }
 @media (prefers-reduced-motion: reduce) {
     .duno-landing .welcome::before { animation: none; }
+}
+
+/* Auth screens: calm color depth with a single readable form rhythm. */
+body.duno-auth {
+    background-color: #f8f7fc;
+    background-image:
+        radial-gradient(ellipse at 7% 4%, rgb(116 101 216 / 10%), transparent 34rem),
+        radial-gradient(ellipse at 94% 48%, rgb(185 232 209 / 13%), transparent 30rem);
+}
+.duno-auth .auth-aside {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(1.5rem, 3vw, 2.4rem);
+    border: 1px solid rgb(255 255 255 / 88%);
+    border-radius: 1.5rem;
+    background:
+        radial-gradient(circle at 82% 18%, rgb(255 255 255 / 74%), transparent 42%),
+        linear-gradient(145deg, #efecff 0%, #fbfaff 58%, #edf8f2 100%);
+    box-shadow: 0 18px 48px rgb(63 52 120 / 7%), inset 0 1px rgb(255 255 255 / 82%);
+}
+.duno-auth .auth-aside-copy,
+.duno-auth .auth-mascot-stage { z-index: 1; }
+.duno-auth .card {
+    border-color: rgb(255 255 255 / 92%);
+    background: linear-gradient(155deg, #fff 0%, #fff 66%, #f7f5ff 100%);
+    box-shadow: 0 20px 48px rgb(63 52 120 / 9%), inset 0 1px rgb(255 255 255 / 90%);
+}
+.duno-auth .form-field > label {
+    display: block;
+    margin: 0 0 .4rem;
+    color: var(--duno-ink);
+    font-size: .9rem;
+    font-weight: 680;
+}
+.duno-auth .form-field .form-control { background: rgb(255 255 255 / 92%); }
+.duno-auth .form-field.has-password-toggle { position: relative; }
+.duno-auth .form-field.has-password-toggle .form-control { padding-right: 3.4rem; }
+.duno-auth .form-field.has-password-toggle button.password-visibility-toggle { top: 3.15rem; }
+.duno-auth .form-check.registration-consent {
+    display: grid;
+    grid-template-columns: 1.2rem minmax(0, 1fr);
+    align-items: start;
+    gap: .7rem;
+    margin: 1.15rem 0 1.35rem;
+    padding: .9rem 1rem;
+    border: 1px solid #e5e1f4;
+    border-radius: 1rem;
+    background: linear-gradient(115deg, rgb(244 241 255 / 82%), rgb(255 255 255 / 92%) 72%);
+}
+.duno-auth .registration-consent .form-check-input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: .18rem 0 0;
+    accent-color: var(--duno-purple);
+}
+.duno-auth .registration-consent-copy { min-width: 0; }
+.duno-auth .registration-consent .form-check-label {
+    display: block;
+    min-height: 0;
+    color: var(--duno-ink);
+    font-size: .87rem;
+    font-weight: 560;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+.duno-auth .registration-consent .form-check-label a { font-weight: 700; }
+.duno-auth .registration-adult-confirmation {
+    display: block;
+    margin-top: .5rem;
+    color: var(--duno-muted);
+    font-size: .82rem;
+    line-height: 1.45;
+}
+.duno-auth .form-check:not(.registration-consent) {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+}
+.duno-auth .form-check:not(.registration-consent) .form-check-input { margin: 0; }
+.duno-auth .form-check:not(.registration-consent) .form-check-label { display: block; min-height: 0; }
+
+@media (max-width: 52rem) {
+    .duno-auth .auth-aside {
+        min-height: 0;
+        gap: .65rem;
+        padding: 1.15rem;
+        border-radius: 1.2rem;
+        box-shadow: 0 10px 28px rgb(63 52 120 / 6%), inset 0 1px rgb(255 255 255 / 82%);
+    }
+    .duno-auth .card {
+        border: 1px solid rgb(255 255 255 / 90%);
+        border-radius: 1.2rem;
+        background: linear-gradient(155deg, rgb(255 255 255 / 96%), #fff 62%, #f7f5ff 100%);
+        box-shadow: 0 12px 30px rgb(63 52 120 / 7%), inset 0 1px rgb(255 255 255 / 90%);
+    }
+    .duno-auth .card-body { padding: 1.1rem; }
+    .duno-auth .form-check.registration-consent { gap: .6rem; padding: .8rem; }
+}
+
+@media (max-width: 22rem) {
+    .duno-auth .form-check.registration-consent { grid-template-columns: 1rem minmax(0, 1fr); gap: .5rem; }
+    .duno-auth .registration-consent .form-check-label { font-size: .82rem; }
 }
