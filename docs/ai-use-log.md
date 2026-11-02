@@ -16,6 +16,18 @@ How the student verified and can explain the result: The original isolated secur
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
+## r10 host upload and migration confirmation - 2026-11-02
+
+Allowed use confirmed by: The owner supplied the deployed r10 marker and phpMyAdmin results while proceeding with the authorized release preparation.
+
+Assistance used: Recorded the owner-provided r10 marker, both migration versions and batches, package source commit, archive hash, and outstanding host verification in the release/deployment records.
+
+Suggestions or code retained: Updated `README.md`, `docs/ai-agent-workflow.md`, `docs/deployment.md`, and `docs/version-control.md`. No application code or hosted data was changed.
+
+How the student verified and can explain the result: The owner supplied marker `duno-full-release-20261102-r10`, migration `2026-11-02-000001` in batch 16 with `password_reset_codes`, and migration `2026-11-02-000002` in batch 17 with nullable `academic_school_name`. A direct web request from this environment could not reach the InfinityFree domain. Complete uploaded-file parity, email delivery, and post-upload smoke checks remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ## r10 evaluation release preparation - 2026-11-02
 
 Allowed use confirmed by: The owner asked for the necessary steps to prepare the project for upload and confirmed that merged product changes are ready for the next evaluation release.
