@@ -24,7 +24,7 @@ Assistance used: Reviewed the local/remote Git state, updated the release marker
 
 Suggestions or code retained: Updated release-preparation documentation, added `docs/2026-11-02-academic-school-upgrade.sql` to tracked files, and adjusted `tests/e2e/responsive.spec.js`. The unrelated untracked `public/assets/images/duno-logo.png` was preserved and excluded. No hosted database or site was changed.
 
-How the student verified and can explain the result: PHPUnit passed 120 tests / 1,319 assertions. All three Playwright scenarios passed when run individually against the isolated `talas_review` database and correctly based local URL. Composer validation passed and the locked dependency audit reported no security advisories. Final GitHub review/merge, package build, and package inventory checks remain to be completed. Hosted migrations and host smoke checks remain owner actions. The temporary local `.env` overrides used to point the review server to its isolated database were restored before handoff.
+How the student verified and can explain the result: PHPUnit passed 120 tests / 1,319 assertions. All three Playwright scenarios passed when run individually against the isolated `talas_review` database and correctly based local URL. Composer validation passed and the locked dependency audit reported no security advisories. PR #22 merged successfully after GitHub CI passed; the package build and inventory checks remain. Hosted migrations and host smoke checks remain owner actions. The temporary local `.env` overrides used to point the review server to its isolated database were restored before handoff.
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
