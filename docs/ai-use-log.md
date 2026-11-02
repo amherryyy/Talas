@@ -12,6 +12,18 @@ How the student verified and can explain the result: The visual treatment uses t
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
+## Mobile registration consent checkbox visibility - 2026-11-02
+
+Allowed use confirmed by: The owner asked to resolve the mobile registration issue where the required Terms and Privacy Notice / 18+ checkbox was not visible.
+
+Assistance used: Updated the registration consent control to use a wrapping label, retain a native browser checkbox with an explicit mobile-safe size and accent color, and make the entire consent card tappable.
+
+Suggestions or code retained: Changed `app/Views/auth/register.php` and the registration-consent rules in `public/assets/css/duno-ui.css`. No database, configuration, or deployment setting was changed. The work is on branch `fix/mobile-registration-consent-checkbox`; nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the source diff and confirmed `git diff --check` passes. Automated tests and a mobile browser check were not run. The fix must be included in a reviewed release and checked on the affected phone after upload; no live service was accessed.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ## Duno Guide progressive disclosure — 2026-11-02
 
 Allowed use confirmed by: The owner asked to hide method links and research sources initially because the Guide felt text-heavy, and to reveal detailed explanations on demand.

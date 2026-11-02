@@ -3373,29 +3373,18 @@ body.duno-auth {
     border: 1px solid #e5e1f4;
     border-radius: 1rem;
     background: linear-gradient(115deg, rgb(244 241 255 / 82%), rgb(255 255 255 / 92%) 72%);
+    cursor: pointer;
 }
 .duno-auth .registration-consent-checkbox {
     display: block;
-    flex: 0 0 1.4rem;
+    flex: 0 0 1.5rem;
     box-sizing: border-box;
-    width: 1.4rem;
-    height: 1.4rem;
+    width: 1.5rem;
+    min-width: 1.5rem;
+    height: 1.5rem;
     margin: .08rem 0 0;
-    border: 2px solid #8175c9;
-    border-radius: .35rem;
-    appearance: none;
-    -webkit-appearance: none;
-    background: #fff;
-    box-shadow: 0 1px 3px rgb(47 39 95 / 10%);
+    accent-color: var(--duno-purple-deep);
     cursor: pointer;
-}
-.duno-auth .registration-consent-checkbox:checked {
-    border-color: var(--duno-purple-deep);
-    background-color: var(--duno-purple-deep);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' d='m5 12 5 5L19 7'/%3E%3C/svg%3E");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 1rem;
 }
 .duno-auth .registration-consent-checkbox:focus-visible { outline: 3px solid #2f6fcb; outline-offset: 3px; }
 .duno-auth .registration-consent-copy { flex: 1 1 0%; min-width: 0; }
@@ -3453,7 +3442,7 @@ body.duno-auth {
 
 @media (max-width: 22rem) {
     .duno-auth .registration-consent { gap: .5rem; padding: .75rem; }
-    .duno-auth .registration-consent-checkbox { flex-basis: 1.4rem; width: 1.4rem; height: 1.4rem; }
+    .duno-auth .registration-consent-checkbox { flex-basis: 1.5rem; width: 1.5rem; min-width: 1.5rem; height: 1.5rem; }
     .duno-auth .registration-consent-label { font-size: .82rem; }
 }
 
