@@ -3,7 +3,7 @@
 
     # Keep application code, data, tests, documentation, and local tooling private
     # when this repository is placed inside a shared-hosting web root.
-    RewriteRule ^(?:app|builds|docs|tests|vendor|writable|\.git|\.tools)(?:/|$) - [F,L,NC]
+    RewriteRule ^(?:app|build|builds|docs|tests|vendor|writable|\.git|\.tools)(?:/|$) - [F,L,NC]
     RewriteRule ^(?:composer\.(?:json|lock)|env|spark|preload\.php|phpunit\.dist\.xml|AGENTS\.md|README\.md|LICENSE)$ - [F,L,NC]
     RewriteRule (^|/)\. - [F,L]
 RewriteRule ^(?:error_log|php_errorlog|php_error\.log)$ - [F,L,NC]

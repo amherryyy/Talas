@@ -3,7 +3,6 @@
 namespace App\Filters;
 
 use CodeIgniter\Filters\FilterInterface;
-use CodeIgniter\Filters\SecureHeaders;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -35,7 +34,7 @@ class ExclusiveRoleFilter implements FilterInterface
             // after-filter pass, so apply the global response protections here.
             $response = (new NoStorePagesFilter())->after($request, $response);
 
-            return (new SecureHeaders())->after($request, $response);
+            return (new DunoSecurityHeadersFilter())->after($request, $response);
         }
 
         return null;

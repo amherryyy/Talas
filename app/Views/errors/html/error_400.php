@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= esc(lang('Errors.badRequest')) ?></title>
 
-    <style>
+    <style {csp-style-nonce}>
         div.logo {
             height: 200px;
             width: 155px;

@@ -1,5 +1,21 @@
 # Talas AI-use log
 
+## Security audit remediation - 2026-11-02
+
+Date / story: 2026-11-02 / apply and stage local security-audit remediations
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner requested the remediations in a separate worktree and later authorized cleaning and staging.
+
+Assistance used: Added the singular `build/` root deny rule; enabled a production same-origin CSP with nonced style blocks, blocked inline scripts/frames/objects, and an explicit inline style-attribute allowance for existing chart/progress rendering; added one-year HSTS only for secure production requests on the current host; and added reset-code trace redaction. Added a regression test for nonce agreement. Updated the security audit, deployment notes, and traceability. The remediation is being prepared on a focused branch from the current `main` commit; live host checks and password-reset timing remain unverified.
+
+Suggestions or code retained: `.htaccess`, `app/Config/App.php`, `app/Config/ContentSecurityPolicy.php`, `app/Config/Exceptions.php`, `app/Config/Filters.php`, `app/Filters/ExclusiveRoleFilter.php`, the new `app/Filters/DunoSecurityHeadersFilter.php`, two production error views, `tests/unit/ContentSecurityPolicyTest.php`, and the security-audit/deployment/traceability records. Only these reviewed task files are staged. The owner later authorized a local commit and merge; no push, package, or upload was authorized.
+
+How the student verified and can explain the result: The original isolated security snapshot passed 119 PHPUnit tests / 1,280 assertions. The focused worktree based on current `main` passed 120 tests / 1,318 assertions, including the CSP nonce test. A preliminary mixed-snapshot copy produced stale academic-program/subject mismatches and was superseded by the clean current-main-based run. PHP syntax and `git diff --check` passed. `composer audit --locked` was attempted but could not connect to Packagist because the configured proxy at `127.0.0.1:9` refused the connection. A local production `/terms` header check observed CSP, HSTS, no-store, and SecureHeaders. Live InfinityFree behavior, full browser CSP compatibility, and reset SMTP timing remain unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
 ## Main SRS approval and traceability update - 2026-11-02
