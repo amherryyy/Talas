@@ -284,3 +284,7 @@ For release acceptance, inspect the browser's Application/Storage panel: confirm
 ### Historical owner-reported availability update (2026-10-31; superseded by the current status above)
 
 At the time of this 2026-10-31 report, the owner said the live site was available and confirmed marker `duno-full-release-20261029-r3`; local r4 was the candidate then. The 2026-11-01 current-status section above supersedes that release snapshot with the owner's later r5 report and the local r6 package record, which is now marked stale. A marker identifies its text only, not package contents or a source commit. The owner-provided migration ledger and FK output verifies migrations 000001 and 000002. Upload parity, route-specific functional/security smoke tests, and PWA acceptance remain open as recorded in the current status above.
+
+## r11 evaluation upload — 2026-11-02
+
+The owner reported uploading the r11 evaluation archive. A cache-busted Brave request to `https://talas-dev.page.gd/assets/release-version.txt?verify=r11-20261102` returned `duno-full-release-20261102-r11`. The post-upload File Manager listing showed the hosted `.env` and `writable` directory still present under `/htdocs`. The ZIP was built from commit `4e184fa30f3baefd16c11976bb7201b2b8c4cdac`, contains 1,273 entries, and has SHA-256 `42076C1C47B4EF55B1C2BA7A8732062CFD735AAF0460E73A2AFFBD5A1201C3EC`. No database migration is included. Marker and configuration-path presence are verified; full hosted-file parity and evaluation acceptance remain open.

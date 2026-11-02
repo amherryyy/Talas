@@ -3353,3 +3353,15 @@ Suggestions or code retained: Updated `app/Controllers/Legal.php`, `app/Views/le
 How the student verified and can explain the result: Read the NPC's official DPO guidance and data-subject-rights materials. `git diff --check` and PHP syntax checks were run; automated tests, outgoing-mail provider verification, host log/backup inspection, and legal review by an adviser were not performed. The owner remains responsible for confirming the lawful basis and any institutional/legal requirements.
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## r11 evaluation package and host verification — 2026-11-02
+
+Allowed use confirmed by: The owner authorized staging, committing, and uploading the prepared UI/auth update to begin evaluation, then reported that the r11 archive was uploaded.
+
+Assistance used: Committed the reviewed change set as `4e184fa30f3baefd16c11976bb7201b2b8c4cdac`, built the InfinityFree r11 ZIP from that commit, and recorded its archive hash and package checks. After the owner reported the upload, checked the cache-busted live release marker in Brave and confirmed it returned `duno-full-release-20261102-r11`; the post-upload File Manager listing showed the hosted `.env` file and `writable` directory still present.
+
+Suggestions or code retained: Updated deployment and local package provenance records. No database migration was applied. No Git push, pull request, or merge was performed.
+
+How the student verified and can explain the result: Live marker response matched the archive marker. Archive SHA-256: `42076C1C47B4EF55B1C2BA7A8732062CFD735AAF0460E73A2AFFBD5A1201C3EC`. The UI Playwright check remains unavailable because the Windows worker failed with `EPERM`; manual responsive evaluation and functional acceptance remain pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
