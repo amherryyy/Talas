@@ -80,10 +80,17 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await page.setViewportSize({ width, height: 850 });
 
     await page.goto('student');
+    const checkInPrompt = page.getByRole('button', { name: 'Not now' });
+    try {
+      await checkInPrompt.waitFor({ state: 'visible', timeout: 1500 });
+      await checkInPrompt.click();
+    } catch {
+      // The optional prompt does not appear for every test account.
+    }
     await expect(page.getByRole('heading', { name: 'Make a little progress today.' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Duno Guide' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Choose a goal to get started' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'What Works Clearinghouse practice guide (2007)' })).toHaveCount(1);
+    await expect(page.getByRole('heading', { name: 'Pick a goal to begin' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'WWC practice guide (2007)' })).toHaveCount(1);
     await page.getByRole('button', { name: /Understand an idea/ }).click();
     await expect(page.getByRole('heading', { name: 'Build understanding by explaining it' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Read the study-method source' })).toHaveCount(3);
@@ -94,12 +101,9 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     await expectNoHorizontalOverflow(page, '/student/subjects');
 
     await page.goto('student/subjects/templates');
-    await expect(page.getByRole('heading', { name: 'Program and curriculum catalog' })).toBeVisible();
-    await page.getByLabel('NVSU degree program').selectOption('bsit-web-mobile');
-    await page.getByRole('button', { name: 'Preview NVSU course list' }).click();
-    await expect(page.getByRole('heading', { name: /Web and Mobile App Development/ })).toBeVisible();
-    await expect(page.getByText(/Mobile Web Development/)).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Read the NVSU curriculum source (opens in a new tab)' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(page.getByText('NVSU subject list')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Review the NVSU source (opens in a new tab)' })).toBeVisible();
     await expectNoHorizontalOverflow(page, '/student/subjects/templates');
 
     await page.goto('student/topics');
@@ -123,7 +127,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
     if (width <= 832) {
       await expect(page.getByRole('button', { name: 'Add block' })).toBeVisible();
     } else {
-      await expect(page.getByLabel('Available study time for today (minutes)')).toBeVisible();
+      await expect(page.getByRole('group', { name: 'Available study time for today' })).toBeVisible();
     }
     await expectNoHorizontalOverflow(page, '/student/plan');
 
@@ -145,7 +149,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expect(sourceLink).toBeFocused();
 
   await page.goto('student/plan');
-  const availableTime = page.getByLabel('Available study time for today (minutes)');
+  const availableTime = page.locator('#available_hours');
   await tabUntilFocused(page, availableTime);
   await expect(availableTime).toBeFocused();
 
@@ -157,6 +161,8 @@ test('subject and topic search pages fit common widths for a student', async ({ 
 
   await page.goto('student/aralytics');
   const printButton = page.getByRole('button', { name: 'Print report' });
+  const printProgression = page.locator('.aralytics-print-progression');
+  await expect(printProgression).toBeHidden();
   await tabUntilFocused(page, printButton);
   await expect(printButton).toBeFocused();
   const focusRing = await printButton.evaluate(element => {
@@ -180,7 +186,9 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('header')).toBeHidden();
   await expect(page.getByRole('button', { name: 'Print report' })).toBeHidden();
-  await expect(page.getByRole('heading', { name: 'Dated sessions' })).toBeVisible();
+  await expect(printProgression).toHaveCSS('display', 'block');
+  const datedSessionsSection = page.locator('.report-breakdown > section[aria-labelledby="sessions-heading"]');
+  await expect(datedSessionsSection).toHaveCSS('display', 'block');
   await page.emulateMedia({ media: 'screen' });
 
   await page.setViewportSize({ width: 400, height: 850 });
@@ -196,6 +204,7 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expect(checkIn).toContainText('Workload: 4/5 · Energy: 3/5');
   const savedTime = await checkIn.locator('time').getAttribute('datetime');
   await page.goto('student/aralytics');
+  await page.getByText('Private check-in trends', { exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Your private check-in pattern' })).toBeVisible();
   const ratingChart = page.getByRole('img', { name: /Workload and energy ratings/ });
   await expect(ratingChart).toBeVisible();
@@ -206,13 +215,14 @@ test('subject and topic search pages fit common widths for a student', async ({ 
   await expectNoHorizontalOverflow(page, '/student/aralytics');
   await page.setViewportSize({ width: 1280, height: 850 });
   await page.reload();
+  await page.getByText('Private check-in trends', { exact: true }).click();
   await expect(ratingChart).toBeVisible();
   await expectNoHorizontalOverflow(page, '/student/aralytics');
   await page.emulateMedia({ media: 'print' });
   await expect(page.getByRole('heading', { name: 'Your private check-in pattern' })).toBeHidden();
   await expect(ratingChart).toBeHidden();
   await expect(ratingTable).toBeHidden();
-  await expect(page.getByRole('heading', { name: 'Dated sessions' })).toBeVisible();
+  await expect(page.locator('.report-breakdown > section[aria-labelledby="sessions-heading"]')).toHaveCSS('display', 'block');
   await page.emulateMedia({ media: 'screen' });
   await page.goto('student/check-ins');
   await checkIn.getByRole('link', { name: 'Edit' }).click();

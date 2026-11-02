@@ -31,7 +31,7 @@ The detailed ER diagram and table dictionary are in `docs/system-design-paper-pa
 
 Ownership is derived from the authenticated session and enforced in model/controller query paths. Composite foreign keys protect selected nested references, including subject/topic and plan/topic ownership; further foreign keys protect session relations. This is application-enforced row-level access control plus relational constraints. MariaDB native row-level security policies are not configured. Check-ins are separated from admin aggregate views and printed study reports per the approved requirements.
 
-Migration state is environment-specific. The owner-reported hosted ledger is through row 18/batch 13, while the current migration files in the worktree extend through `2026-10-30-000002_EnforceStudyPlanOwnership.php`. The host's exact running application revision remains unverified; see `deployment-evidence.md`.
+Migration state is environment-specific. Owner-provided phpMyAdmin output confirms hosted migration `2026-11-01-000002_ScaleProgressionXpRewards` at batch 15, following the academic-program migration at row 19/batch 14. The host's exact running application revision and complete file parity remain unverified; see `deployment-evidence.md`.
 
 ## Main workflows to describe in a paper
 

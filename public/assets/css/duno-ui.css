@@ -23,6 +23,8 @@
         radial-gradient(ellipse 43rem 36rem at 100% 34%, rgb(185 232 209 / 29%), transparent 72%),
         radial-gradient(ellipse 42rem 32rem at 78% 100%, rgb(205 194 255 / 22%), transparent 74%),
         radial-gradient(ellipse 36rem 28rem at 17% 100%, rgb(255 218 146 / 17%), transparent 72%);
+    --duno-background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+    --duno-background-size: 760px 560px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
     --duno-focus: 0 0 0 3px rgb(116 101 216 / 25%);
     font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
     color: var(--duno-ink);
@@ -44,8 +46,9 @@ body.duno-auth {
     color: var(--duno-ink);
     background-color: var(--duno-canvas);
     background-image: var(--duno-background-contours), var(--duno-background-mesh);
-    background-repeat: repeat, no-repeat;
-    background-size: 760px 560px, auto;
+    /* Specify all five layers to prevent the repeat/size lists cycling onto mesh gradients. */
+    background-repeat: var(--duno-background-repeat);
+    background-size: var(--duno-background-size);
     line-height: 1.55;
 }
 
@@ -348,13 +351,24 @@ body.duno-workspace.has-mobile-navigation { padding-bottom: 2rem; }
 .profile-readonly-lock svg { width: .95rem; height: .95rem; }
 .profile-readonly-shell-program { align-items: flex-start; padding-block: .55rem; }
 .profile-readonly-shell-program .profile-readonly-icon { margin-top: .05rem; }
+.profile-readonly-program-copy { display: grid; min-width: 0; gap: .12rem; }
 .profile-readonly-program-text { min-width: 0; color: #484458; font-size: .83rem; font-weight: 650; line-height: 1.45; overflow-wrap: anywhere; }
+.profile-readonly-school-text { color: var(--duno-muted); font-size: .74rem; line-height: 1.4; overflow-wrap: anywhere; }
 .academic-program-setup { width: min(100%, 46rem); margin: clamp(1.5rem, 7vh, 5rem) auto 4rem; }
 .academic-program-setup h1 { max-width: 17ch; margin: 0; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
 .academic-program-intro { max-width: 58ch; margin: .8rem 0 1.8rem; color: var(--duno-muted); line-height: 1.6; }
 .academic-program-form { display: grid; gap: .75rem; max-width: 40rem; }
-.academic-program-form > label:first-of-type { font-weight: 720; }
+.academic-program-catalog > label { margin: .25rem 0 -.25rem; font-weight: 720; }
 .academic-program-form select { width: 100%; max-width: none; }
+.academic-program-catalog { display: grid; gap: .75rem; }
+.academic-program-catalog[hidden],
+.academic-program-manual-fields[hidden] { display: none !important; }
+.duno-workspace button.academic-program-manual-toggle { justify-self: start; min-height: 2.65rem; padding: .55rem .85rem; border: 1px solid rgb(111 94 214 / 26%); border-radius: .8rem; color: var(--duno-purple-deep); background: linear-gradient(120deg, rgb(242 239 255 / 92%), rgb(255 255 255 / 88%)); font: inherit; font-size: .92rem; font-weight: 700; cursor: pointer; }
+.duno-workspace button.academic-program-manual-toggle:hover { border-color: rgb(111 94 214 / 48%); color: var(--duno-purple-deep); background: #f0edff; box-shadow: 0 5px 14px rgb(82 66 175 / 8%); }
+.academic-program-manual-fields { display: grid; gap: .7rem; padding: 1rem; border: 1px solid rgb(111 94 214 / 18%); border-radius: 1rem; background: linear-gradient(145deg, rgb(247 245 255 / 92%), rgb(245 251 249 / 88%)); }
+.academic-program-manual-fields > p { margin-bottom: .1rem; }
+.academic-program-manual-fields > label { margin: 0; font-weight: 720; }
+.academic-program-manual-fields input { width: 100%; min-width: 0; }
 .academic-program-confirm { display: flex; align-items: flex-start; gap: .65rem; margin-top: .55rem; line-height: 1.45; }
 .academic-program-confirm input { flex: 0 0 auto; width: 1.1rem; height: 1.1rem; margin-top: .15rem; accent-color: var(--duno-purple-deep); }
 .academic-program-note { max-width: 60ch; margin: 0 0 .4rem; color: var(--duno-muted); font-size: .88rem; line-height: 1.5; }
@@ -630,6 +644,7 @@ body.duno-role { display: grid; min-height: 100vh; place-items: center; padding:
 .duno-workspace .report-breakdown[open] > summary::after,
 .duno-workspace .report-disclosure[open] > summary::after { transform: rotate(225deg) translate(-.1rem, -.05rem); }
 .duno-workspace .report-breakdown .report-section { margin-top: .5rem; }
+.duno-workspace .print-only { display: none !important; }
 
 @media (max-width: 52rem) {
     .duno-workspace.has-mobile-navigation { padding-bottom: calc(4.7rem + env(safe-area-inset-bottom)); }
@@ -728,7 +743,7 @@ body.duno-role { display: grid; min-height: 100vh; place-items: center; padding:
     .admin-metric dd { font-size: 1.65rem; }
 }
 
-body.duno-landing { background-color: var(--duno-canvas); background-image: var(--duno-background-contours), var(--duno-background-mesh); background-repeat: repeat, no-repeat; background-size: 760px 560px, auto; color: var(--duno-ink); font-family: "Aptos", "Segoe UI", system-ui, sans-serif; }
+body.duno-landing { background-color: var(--duno-canvas); background-image: var(--duno-background-contours), var(--duno-background-mesh); background-repeat: var(--duno-background-repeat); background-size: var(--duno-background-size); color: var(--duno-ink); font-family: "Aptos", "Segoe UI", system-ui, sans-serif; }
 .duno-landing .topbar { border-bottom-color: var(--duno-line); background: rgb(247 246 252 / 93%); }
 .duno-landing .topbar-inner { min-height: 5.25rem; }
 .duno-landing .wordmark { color: var(--duno-purple); font-size: 1.8rem; letter-spacing: -.075em; }
@@ -1731,6 +1746,7 @@ body.duno-landing { background-color: var(--duno-canvas); background-image: var(
     .duno-workspace a { color: #000; text-decoration: none; }
     .duno-workspace .activity-values > summary { display: none !important; }
     .duno-workspace .activity-values:not([open]) > :not(summary) { display: block !important; }
+    .duno-workspace .print-only { display: block !important; }
 }
 
 /* Auth pages: centered mascot and clear form actions inspired by the supplied mobile reference. */
@@ -2539,7 +2555,7 @@ body.app-tour-welcome-open { overflow: hidden; }
 .duno-landing .section-heading h2 { font-size: clamp(1.6rem, 3.2vw, 2.3rem); letter-spacing: -.055em; }
 .duno-landing .section-heading p { max-width: 26rem; text-align: right; }
 .duno-landing .tool-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(9.5rem, auto); gap: .9rem; }
-.duno-landing .tool-card { position: relative; min-height: 10.5rem; justify-content: flex-start; gap: 1rem; padding: 1.1rem 1.15rem; overflow: hidden; border-radius: 1.2rem; box-shadow: 0 8px 22px rgb(64 51 130 / 5%); }
+.duno-landing .tool-card { position: relative; min-height: 10.5rem; justify-content: flex-start; gap: 1rem; padding: 1.1rem 1.15rem; overflow: hidden; border-radius: 1.2rem; background-image: radial-gradient(ellipse at 100% 0, var(--tool-wash, rgb(116 101 216 / 9%)), transparent 48%), linear-gradient(145deg, rgb(255 255 255 / 98%), rgb(250 249 255 / 96%)); box-shadow: 0 8px 22px rgb(64 51 130 / 5%); }
 .duno-landing .tool-card::after { position: absolute; right: 1.1rem; bottom: .95rem; align-self: auto; color: var(--duno-purple-deep); font-size: 1.1rem; content: "\2197"; }
 .duno-landing .tool-card:active { transform: translateY(1px); }
 .duno-landing .tool-card:focus-visible { outline: 3px solid #527fc5; outline-offset: 3px; }
@@ -2547,15 +2563,23 @@ body.app-tour-welcome-open { overflow: hidden; }
 .duno-landing .tool-card .tool-eyebrow { margin-bottom: .25rem; font-size: .66rem; font-weight: 760; letter-spacing: .075em; }
 .duno-landing .tool-card .tool-name { font-size: 1.18rem; }
 .duno-landing .tool-card .tool-description { max-width: 34ch; margin-top: .28rem; padding-right: .4rem; font-size: .82rem; line-height: 1.45; }
-.duno-landing .tool-card.lavender { border-top: 2px solid #9a8ce9; }
-.duno-landing .tool-card.mint { border-top: 2px solid #8dc8a9; }
-.duno-landing .tool-card.gold { border-top: 2px solid #e6b75b; }
-.duno-landing .tool-card.blue { border-top: 2px solid #87aeda; }
-.duno-landing .tool-card-focus { grid-column: span 2; grid-row: span 2; min-height: 20rem; justify-content: space-between; padding: 1.55rem; border: 1px solid #d8d0fb; border-top: 2px solid #8d7de7; background: linear-gradient(145deg, #eeebff 0%, #f6f4ff 55%, #fff 100%); box-shadow: 0 15px 34px rgb(82 66 170 / 10%); }
+.duno-landing .tool-card.lavender { --tool-wash: rgb(142 127 232 / 20%); border-top: 2px solid #9a8ce9; }
+.duno-landing .tool-card.mint { --tool-wash: rgb(126 205 164 / 22%); border-top: 2px solid #8dc8a9; }
+.duno-landing .tool-card.gold { --tool-wash: rgb(239 190 93 / 22%); border-top: 2px solid #e6b75b; }
+.duno-landing .tool-card.blue { --tool-wash: rgb(124 169 219 / 22%); border-top: 2px solid #87aeda; }
+.duno-landing .tool-card-focus { grid-column: span 2; grid-row: span 2; min-height: 20rem; justify-content: space-between; padding: 1.55rem; border: 1px solid #d8d0fb; border-top: 2px solid #8d7de7; background: radial-gradient(ellipse at 100% 0, rgb(181 169 255 / 34%), transparent 45%), linear-gradient(145deg, #eeebff 0%, #f6f4ff 58%, #fff 100%); box-shadow: 0 15px 34px rgb(82 66 170 / 10%); }
+.duno-landing .tool-card-focus .tool-mark,
+.duno-landing .tool-card-focus .tool-copy,
+.duno-landing .focus-priority-logic { position: relative; z-index: 1; }
 .duno-landing .tool-card-focus .tool-mark { width: 3.3rem; height: 3.3rem; border-radius: 1.1rem; }
 .duno-landing .tool-card-focus .tool-copy { max-width: 20rem; }
 .duno-landing .tool-card-focus .tool-name { font-size: clamp(1.5rem, 2.4vw, 2rem); letter-spacing: -.05em; }
 .duno-landing .tool-card-focus .tool-description { font-size: .93rem; line-height: 1.55; }
+.duno-landing .focus-priority-logic { width: min(100%, 27rem); padding: .85rem 1rem 1rem; border: 1px solid rgb(210 202 246 / 75%); border-radius: 1rem; background: rgb(255 255 255 / 64%); box-shadow: inset 0 1px rgb(255 255 255 / 88%); }
+.duno-landing .focus-logic-heading { display: block; margin-bottom: .6rem; color: #625c80; font-size: .67rem; font-weight: 800; letter-spacing: .075em; text-transform: uppercase; }
+.duno-landing .focus-logic-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .42rem .8rem; }
+.duno-landing .focus-logic-grid > span { display: flex; align-items: center; gap: .45rem; color: #48445c; font-size: .78rem; font-weight: 650; }
+.duno-landing .focus-logic-grid > span > span { display: grid; width: 1.25rem; height: 1.25rem; place-items: center; border-radius: .42rem; background: #eeebff; color: #5949c2; font-size: .75rem; font-weight: 800; }
 .duno-landing .tool-card:nth-child(4) { grid-column: span 2; }
 .duno-landing .guide-note { margin-top: 1rem; padding: 1.05rem 1.2rem; border-radius: 1rem; }
 .duno-landing .guide-note p { align-items: flex-start; }
@@ -2587,10 +2611,15 @@ body.app-tour-welcome-open { overflow: hidden; }
     .duno-landing .tool-card .tool-name { padding-right: .3rem; font-size: 1rem; line-height: 1.15; }
     .duno-landing .tool-card .tool-description { margin-top: .26rem; padding-right: 0; font-size: .74rem; line-height: 1.38; }
     .duno-landing .tool-card::after { right: .8rem; bottom: .65rem; font-size: .95rem; }
-    .duno-landing .tool-card-focus { min-height: 12.2rem; padding: 1rem 1.1rem; }
+    .duno-landing .tool-card-focus { min-height: 15.5rem; padding: 1rem 1.1rem; }
     .duno-landing .tool-card-focus .tool-mark { width: 2.7rem; height: 2.7rem; }
     .duno-landing .tool-card-focus .tool-name { font-size: 1.35rem; }
     .duno-landing .tool-card-focus .tool-description { max-width: 34ch; font-size: .81rem; }
+    .duno-landing .focus-priority-logic { width: 100%; padding: .65rem .75rem .7rem; }
+    .duno-landing .focus-logic-heading { margin-bottom: .4rem; font-size: .58rem; }
+    .duno-landing .focus-logic-grid { gap: .32rem .5rem; }
+    .duno-landing .focus-logic-grid > span { gap: .35rem; font-size: .68rem; }
+    .duno-landing .focus-logic-grid > span > span { width: 1.05rem; height: 1.05rem; }
     .duno-landing .tool-card:nth-child(4) { grid-column: 1 / -1; min-height: 7.5rem; }
     .duno-landing .public-guide { margin-top: 2.3rem; }
     .duno-landing .guide-note { align-items: flex-start; flex-direction: column; gap: .6rem; padding: .9rem; }
@@ -2936,4 +2965,327 @@ body.duno-admin { padding: clamp(.65rem, 2vw, 1.4rem); }
 .duno-workspace .timer-mascot { width: 5.25rem; height: auto; margin: -.35rem 0 .25rem auto; filter: drop-shadow(0 .45rem .55rem rgb(75 61 134 / 13%)); }
 @media (prefers-reduced-motion: reduce) {
     .duno-mascot { animation: none !important; transform: none !important; }
+}
+
+/* Public landing final overrides: keep the new hero and card rhythm authoritative. */
+.duno-landing .welcome { min-height: 35rem; padding: clamp(2rem, 5vw, 4rem); border-color: rgb(255 255 255 / 94%); border-radius: 2.4rem 1rem 2.4rem 2.4rem; background: radial-gradient(ellipse at 84% 43%, rgb(226 220 255 / 68%), transparent 38%), radial-gradient(ellipse at 67% 78%, rgb(225 245 235 / 48%), transparent 35%), linear-gradient(120deg, #fff 0%, #fcfbff 48%, #f2efff 100%); box-shadow: 0 1.5rem 4rem rgb(54 44 111 / 11%), inset 0 1px rgb(255 255 255 / 96%); }
+.duno-landing .welcome::after { display: none; }
+.duno-landing .welcome-layout { grid-template-columns: minmax(0, 1.05fr) minmax(19rem, .95fr); gap: clamp(1rem, 3vw, 3rem); }
+.duno-landing .welcome-copy { max-width: 42rem; }
+.duno-landing .overline { margin-bottom: 1rem; font-size: .82rem; letter-spacing: .13em; }
+.duno-landing h1 { max-width: 10ch; font-size: clamp(3.3rem, 6vw, 5.8rem); line-height: .94; }
+.duno-landing .lead { max-width: 34rem; margin: 1.25rem 0 1.7rem; font-size: clamp(1.08rem, 1.6vw, 1.28rem); line-height: 1.55; }
+.duno-landing .welcome-actions { gap: .7rem; }
+.duno-landing .welcome-actions .pill { min-height: 3.35rem; padding-inline: 1.25rem; }
+.duno-landing .welcome-actions .pill-primary { box-shadow: 0 .8rem 1.8rem rgb(87 70 189 / 24%); }
+.duno-landing .welcome-tools-link { border-color: #ded9f7; background: rgb(255 255 255 / 68%); }
+.duno-landing .welcome-mascot-art { width: min(100%, 28rem); aspect-ratio: 1; }
+.duno-landing .welcome-mascot-art .hero-art-glow { width: 88%; }
+.duno-landing .welcome-mascot-art .hero-orbit-one { width: 100%; height: auto; aspect-ratio: 1; }
+.duno-landing .welcome-mascot-art .hero-orbit-two { width: 76%; height: auto; aspect-ratio: 1; }
+.duno-landing .welcome-mascot-art .welcome-mascot { width: min(88%, 24rem); max-width: none; }
+.duno-landing .section-heading { margin: clamp(2.8rem, 5vw, 4.4rem) 0 1.25rem; }
+.duno-landing .section-heading h2 { font-size: clamp(1.8rem, 3vw, 2.55rem); }
+.duno-landing .tool-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: minmax(11rem, auto); gap: 1rem; }
+.duno-landing .tool-card { position: relative; isolation: isolate; overflow: hidden; min-height: 15rem; padding: clamp(1.25rem, 2.4vw, 2rem); border: 1px solid rgb(255 255 255 / 96%); border-top: 3px solid var(--tool-edge, #8b7be8); border-radius: 1.8rem .75rem 1.8rem 1.8rem; background: linear-gradient(145deg, var(--tool-wash, #f3f0ff), #fff 72%); box-shadow: 0 .9rem 2.5rem rgb(57 47 110 / 7%), inset 0 1px rgb(255 255 255 / 96%); transition: transform .2s ease, box-shadow .2s ease; }
+.duno-landing .tool-card::before { position: absolute; z-index: -1; right: -2.5rem; bottom: -4.5rem; width: 13rem; aspect-ratio: 1; border: 1px solid var(--tool-ring, rgb(116 101 216 / 15%)); border-radius: 50%; box-shadow: 0 0 0 1rem rgb(255 255 255 / 20%), 0 0 0 2rem var(--tool-ring, rgb(116 101 216 / 8%)); content: ""; pointer-events: none; }
+.duno-landing .tool-card::after { color: var(--tool-edge, #6756ce); font-size: 1.35rem; }
+.duno-landing a.tool-card:hover { transform: translateY(-4px); box-shadow: 0 1.35rem 2.8rem rgb(57 47 110 / 13%); }
+.duno-landing .tool-card.lavender { --tool-edge: #7564dc; --tool-wash: #ece8ff; --tool-ring: rgb(116 101 216 / 16%); }
+.duno-landing .tool-card.mint { --tool-edge: #5c9e79; --tool-wash: #e6f6ec; --tool-ring: rgb(76 149 109 / 14%); }
+.duno-landing .tool-card.gold { --tool-edge: #b98628; --tool-wash: #fff2d7; --tool-ring: rgb(191 138 34 / 14%); }
+.duno-landing .tool-card.blue { --tool-edge: #5985b4; --tool-wash: #e8f2ff; --tool-ring: rgb(69 119 176 / 14%); }
+.duno-landing .tool-card .tool-mark { width: 3rem; height: 3rem; border-radius: 1rem; }
+.duno-landing .tool-card .tool-eyebrow { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+.duno-landing .tool-card .tool-name { font-size: clamp(1.25rem, 2vw, 1.75rem); }
+.duno-landing .tool-card .tool-description { max-width: 35ch; font-size: .93rem; line-height: 1.5; }
+.duno-landing .tool-card-focus { grid-column: span 7; grid-row: span 2; min-height: 31rem; justify-content: space-between; padding: clamp(1.6rem, 3vw, 2.5rem); border-radius: 2.3rem .8rem 2.3rem 2.3rem; }
+.duno-landing .tool-card-focus .tool-mark { width: 3.5rem; height: 3.5rem; }
+.duno-landing .tool-card-focus .tool-copy { max-width: 28rem; }
+.duno-landing .tool-card-focus .tool-name { font-size: clamp(2rem, 3vw, 3rem); }
+.duno-landing .tool-card-focus .tool-description { font-size: 1rem; }
+.duno-landing .focus-priority-logic { width: min(100%, 30rem); border-color: rgb(210 202 246 / 85%); background: rgb(255 255 255 / 76%); }
+.duno-landing .tool-card:nth-child(2), .duno-landing .tool-card:nth-child(3) { grid-column: span 5; min-height: 15rem; }
+.duno-landing .tool-card:nth-child(4) { grid-column: span 12; min-height: 11rem; }
+.duno-landing .public-guide-card { border-radius: 1.25rem .6rem 1.25rem 1.25rem; background: linear-gradient(145deg, #fff, #f5f2ff); }
+@media (max-width: 64rem) {
+ .duno-landing .welcome { min-height: 30rem; }
+ .duno-landing .welcome-layout { grid-template-columns: minmax(0, 1fr) minmax(15rem, .8fr); }
+ .duno-landing h1 { font-size: clamp(3rem, 7vw, 4.5rem); }
+ .duno-landing .welcome-mascot-art { width: min(100%, 23rem); }
+ .duno-landing .welcome-mascot-art .welcome-mascot { width: min(90%, 20rem); }
+}
+@media (max-width: 44rem) {
+ .duno-landing .welcome { min-height: 0; padding: 1.35rem 1.1rem 1rem; border-radius: 1.55rem .65rem 1.55rem 1.55rem; }
+ .duno-landing .welcome-layout { grid-template-columns: minmax(0, 1fr); gap: .4rem; }
+ .duno-landing .welcome-copy { max-width: none; }
+ .duno-landing .overline { max-width: 30ch; margin-bottom: .65rem; font-size: .68rem; }
+ .duno-landing h1 { max-width: 12ch; font-size: clamp(2.25rem, 10vw, 3.2rem); }
+ .duno-landing .lead { max-width: 39ch; margin: .85rem 0 1.05rem; font-size: .98rem; }
+ .duno-landing .welcome-actions { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+ .duno-landing .welcome-actions .pill { min-height: 2.9rem; font-size: .8rem; }
+ .duno-landing .welcome-mascot-art { width: min(100%, 17rem); margin: -.15rem auto -1.2rem; }
+ .duno-landing .welcome-mascot-art .welcome-mascot { width: min(88%, 15rem); }
+ .duno-landing .section-heading { align-items: flex-start; flex-direction: column; gap: .2rem; margin: 2.25rem 0 .9rem; }
+ .duno-landing .section-heading h2 { font-size: 1.65rem; }
+ .duno-landing .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(9.2rem, auto); gap: .7rem; }
+ .duno-landing .tool-card { min-height: 10rem; gap: .7rem; padding: .95rem; border-radius: 1.2rem .55rem 1.2rem 1.2rem; }
+ .duno-landing .tool-card .tool-mark { width: 2.6rem; height: 2.6rem; border-radius: .85rem; }
+ .duno-landing .tool-card .tool-name { font-size: 1.08rem; }
+ .duno-landing .tool-card .tool-description { font-size: .78rem; }
+ .duno-landing .tool-card-focus { grid-column: 1 / -1; grid-row: auto; min-height: 18rem; padding: 1.2rem; }
+ .duno-landing .tool-card-focus .tool-name { font-size: 1.65rem; }
+ .duno-landing .tool-card-focus .tool-description { font-size: .85rem; }
+ .duno-landing .focus-priority-logic { padding: .65rem .75rem; }
+ .duno-landing .focus-logic-grid > span { font-size: .68rem; }
+ .duno-landing .tool-card:nth-child(2), .duno-landing .tool-card:nth-child(3) { grid-column: span 1; min-height: 12rem; }
+ .duno-landing .tool-card:nth-child(4) { grid-column: 1 / -1; min-height: 9rem; }
+}
+@media (max-width: 22rem) {
+ .duno-landing .welcome-actions { flex-direction: column; }
+ .duno-landing .welcome-actions .pill { white-space: normal; }
+ .duno-landing .tool-grid { grid-template-columns: 1fr; }
+ .duno-landing .tool-card-focus, .duno-landing .tool-card:nth-child(2), .duno-landing .tool-card:nth-child(3), .duno-landing .tool-card:nth-child(4) { grid-column: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .duno-landing .tool-card { transition: none; } }
+@media (max-width: 44rem) {
+ .duno-landing .welcome { min-height: 0; padding: 1.05rem .9rem 1rem; }
+ .duno-landing .welcome-layout { display: grid; grid-template-columns: minmax(0, 1fr) 9rem; grid-template-areas: "overline art" "title art" "lead lead" "actions actions"; align-items: center; column-gap: .35rem; row-gap: .3rem; }
+ .duno-landing .welcome-copy { display: contents; }
+ .duno-landing .welcome-copy .overline { grid-area: overline; align-self: end; margin: 0; font-size: .62rem; line-height: 1.35; }
+ .duno-landing .welcome-copy h1 { grid-area: title; max-width: 9ch; align-self: start; font-size: clamp(1.8rem, 8.5vw, 2.45rem); line-height: .98; }
+ .duno-landing .welcome-copy .lead { grid-area: lead; max-width: 38ch; margin: .35rem 0 .5rem; font-size: .91rem; line-height: 1.42; }
+ .duno-landing .welcome-actions { grid-area: actions; align-items: center; flex-direction: row; flex-wrap: wrap; gap: .45rem; }
+ .duno-landing .welcome-actions .pill { min-height: 2.65rem; padding: .45rem .7rem; font-size: .76rem; }
+ .duno-landing .welcome-mascot-art { grid-area: art; align-self: center; justify-self: center; width: min(100%, 9rem); margin: 0; aspect-ratio: 1; }
+ .duno-landing .welcome-mascot-art .welcome-mascot { width: 94%; }
+}
+@media (max-width: 22rem) {
+ .duno-landing .welcome-layout { grid-template-columns: minmax(0, 1fr) 7rem; }
+ .duno-landing .welcome-mascot-art { width: 7rem; }
+ .duno-landing .welcome-copy h1 { font-size: 1.8rem; }
+ .duno-landing .welcome-actions { align-items: flex-start; flex-direction: column; }
+}
+
+/* Landing decoration reduction: retain color and depth, remove repeated circles. */
+body.duno-landing {
+    background-color: var(--duno-canvas);
+    background-image:
+        radial-gradient(ellipse 48rem 38rem at 8% 0%, rgb(173 160 239 / 20%), transparent 72%),
+        radial-gradient(ellipse 44rem 38rem at 100% 36%, rgb(185 232 209 / 15%), transparent 74%),
+        radial-gradient(ellipse 44rem 36rem at 72% 100%, rgb(205 194 255 / 12%), transparent 76%);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.duno-landing .welcome-mascot-art .hero-orbit { display: none; }
+.duno-landing .welcome-mascot-art .hero-art-glow { width: 92%; background: radial-gradient(ellipse, rgb(216 209 255 / 32%) 0%, rgb(239 236 255 / 17%) 48%, transparent 75%); }
+.duno-landing .welcome-mascot-art .constellation-track { display: none; }
+.duno-landing .tool-card::before { display: none; }
+.duno-landing .tool-card {
+    border-top-width: 2px;
+    border-radius: 1.35rem .65rem 1.35rem 1.35rem;
+    background: var(--tool-wash, #f4f1ff);
+    box-shadow: 0 .55rem 1.6rem rgb(57 47 110 / 5%);
+}
+.duno-landing .tool-card.lavender { --tool-wash: #f0edff; }
+.duno-landing .tool-card.mint { --tool-wash: #edf8f1; }
+.duno-landing .tool-card.gold { --tool-wash: #fff7e8; }
+.duno-landing .tool-card.blue { --tool-wash: #eff5fc; }
+.duno-landing a.tool-card:hover { box-shadow: 0 .85rem 1.8rem rgb(57 47 110 / 8%); }
+@media (max-width: 44rem) {
+    .duno-landing .tool-card { border-radius: 1.05rem .5rem 1.05rem 1.05rem; }
+    .duno-landing .welcome-mascot-art .hero-art-glow { width: 96%; }
+}
+
+/* Restore gentle visual depth without bringing back repeated outline rings. */
+body.duno-landing {
+    background-image:
+        radial-gradient(ellipse 44rem 34rem at 4% 8%, rgb(173 160 239 / 29%), transparent 72%),
+        radial-gradient(ellipse 42rem 35rem at 98% 34%, rgb(185 232 209 / 23%), transparent 73%),
+        radial-gradient(ellipse 40rem 32rem at 72% 94%, rgb(205 194 255 / 19%), transparent 74%),
+        radial-gradient(ellipse 32rem 24rem at 14% 82%, rgb(255 218 146 / 13%), transparent 72%);
+}
+.duno-landing .welcome {
+    background:
+        radial-gradient(ellipse 24rem 18rem at 92% 16%, rgb(183 169 255 / 29%), transparent 75%),
+        radial-gradient(ellipse 18rem 16rem at 77% 88%, rgb(208 238 220 / 30%), transparent 76%),
+        linear-gradient(120deg, #fff 0%, #fcfbff 48%, #f2efff 100%);
+}
+.duno-landing .welcome-mascot-art .hero-art-glow {
+    width: 96%;
+    background: radial-gradient(ellipse, rgb(216 209 255 / 47%) 0%, rgb(239 236 255 / 27%) 48%, transparent 75%);
+}
+.duno-landing .tool-card {
+    background:
+        radial-gradient(ellipse 17rem 11rem at 100% 0%, color-mix(in srgb, var(--tool-edge) 13%, transparent), transparent 75%),
+        linear-gradient(145deg, var(--tool-wash, #f4f1ff) 0%, #fff 92%);
+    box-shadow: 0 .8rem 1.8rem rgb(57 47 110 / 7%), inset 0 1px rgb(255 255 255 / 90%);
+}
+.duno-landing .tool-card::before {
+    display: block;
+    z-index: -1;
+    top: auto;
+    right: -2.2rem;
+    bottom: -2.8rem;
+    width: 12rem;
+    height: 8rem;
+    border: 0;
+    border-radius: 43% 57% 62% 38% / 55% 42% 58% 45%;
+    background: radial-gradient(ellipse, color-mix(in srgb, var(--tool-edge) 14%, transparent), transparent 72%);
+    box-shadow: none;
+    filter: blur(5px);
+    transform: rotate(-16deg);
+}
+.duno-landing .tool-card:nth-child(2)::before { top: -3rem; right: -2.6rem; bottom: auto; transform: rotate(22deg); }
+.duno-landing .tool-card:nth-child(3)::before { right: -2rem; bottom: -3.2rem; transform: rotate(-26deg); }
+.duno-landing .tool-card:nth-child(4)::before { right: 14%; bottom: -4rem; transform: rotate(11deg); }
+.duno-landing .tool-card-focus {
+    background:
+        radial-gradient(ellipse 22rem 16rem at 100% 100%, rgb(174 160 244 / 20%), transparent 72%),
+        linear-gradient(145deg, #efecff 0%, #fff 62%, #f9f7ff 100%);
+}
+.duno-landing .tool-card.lavender { --tool-wash: #f2efff; }
+.duno-landing .tool-card.mint { --tool-wash: #eef9f2; }
+.duno-landing .tool-card.gold { --tool-wash: #fff8ea; }
+.duno-landing .tool-card.blue { --tool-wash: #f0f6fc; }
+.duno-landing a.tool-card:hover { box-shadow: 0 1.05rem 2.1rem rgb(57 47 110 / 10%), inset 0 1px #fff; }
+@media (max-width: 44rem) {
+    .duno-landing .tool-card::before { width: 9rem; height: 6rem; right: -2rem; bottom: -2rem; }
+    .duno-landing .tool-card:nth-child(2)::before { top: -2rem; right: -2rem; }
+}
+
+/* Small finishing accents for the landing toolkit. */
+.duno-landing .section-heading h2::after {
+    display: block;
+    width: 2.4rem;
+    height: .2rem;
+    margin-top: .48rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--duno-purple), #9b8ff0 68%, #b9e8d1);
+    content: "";
+}
+.duno-landing .tool-card {
+    background-image:
+        linear-gradient(132deg, rgb(255 255 255 / 55%), transparent 44%),
+        radial-gradient(ellipse 17rem 11rem at 100% 0%, color-mix(in srgb, var(--tool-edge) 16%, transparent), transparent 75%),
+        linear-gradient(145deg, var(--tool-wash, #f4f1ff) 0%, #fff 92%);
+}
+.duno-landing .tool-card .tool-mark {
+    border: 1px solid color-mix(in srgb, var(--tool-edge) 18%, white);
+    box-shadow: 0 3px 9px color-mix(in srgb, var(--tool-edge) 10%, transparent), inset 0 1px rgb(255 255 255 / 82%);
+}
+.duno-landing .tool-card .tool-description::before {
+    display: block;
+    width: 1.45rem;
+    height: 2px;
+    margin: .55rem 0 .4rem;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--tool-edge) 70%, white);
+    content: "";
+}
+.duno-landing .tool-card-focus .tool-description::before { width: 2.2rem; height: 3px; }
+.duno-landing .tool-card-focus {
+    border-top-width: 3px;
+    background-image:
+        linear-gradient(132deg, rgb(255 255 255 / 62%), transparent 42%),
+        radial-gradient(ellipse 23rem 17rem at 100% 100%, rgb(174 160 244 / 25%), transparent 72%),
+        linear-gradient(145deg, #efecff 0%, #fff 62%, #f9f7ff 100%);
+}
+.duno-landing .tool-card.mint { background-color: #edf8f1; }
+.duno-landing .tool-card.gold { background-color: #fff6e4; }
+.duno-landing .tool-card.blue { background-color: #edf4fc; }
+@media (max-width: 44rem) {
+    .duno-landing .section-heading h2::after { width: 1.8rem; height: .16rem; margin-top: .34rem; }
+    .duno-landing .tool-card .tool-description::before { margin: .38rem 0 .32rem; }
+}
+
+/* Give landing tool symbols enough scale to read as the card anchors. */
+.duno-landing .tool-card .tool-mark { width: 3.65rem; height: 3.65rem; border-radius: 1.15rem; }
+.duno-landing .tool-card .tool-mark .solar-icon { width: 1.7rem; height: 1.7rem; }
+.duno-landing .tool-card-focus .tool-mark { width: 4.15rem; height: 4.15rem; border-radius: 1.3rem; }
+.duno-landing .tool-card-focus .tool-mark .solar-icon { width: 1.95rem; height: 1.95rem; }
+@media (max-width: 44rem) {
+    .duno-landing .tool-card .tool-mark { width: 3rem; height: 3rem; border-radius: .95rem; }
+    .duno-landing .tool-card .tool-mark .solar-icon { width: 1.45rem; height: 1.45rem; }
+    .duno-landing .tool-card-focus .tool-mark { width: 3.35rem; height: 3.35rem; border-radius: 1.05rem; }
+    .duno-landing .tool-card-focus .tool-mark .solar-icon { width: 1.65rem; height: 1.65rem; }
+}
+
+/* Sparse CSS dust inspired by BrewedOps particle drift; purely decorative. */
+body.duno-landing { position: relative; isolation: isolate; }
+body.duno-landing::before,
+body.duno-landing::after {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    display: block;
+    content: "";
+    pointer-events: none;
+    background-repeat: no-repeat;
+    will-change: transform, opacity;
+}
+body.duno-landing::before {
+    opacity: .42;
+    background-image:
+        radial-gradient(circle 2px at 8% 22%, rgb(116 101 216 / 55%) 0 1px, transparent 2px),
+        radial-gradient(circle 2px at 17% 71%, rgb(255 194 91 / 58%) 0 1px, transparent 2px),
+        radial-gradient(circle 2px at 29% 39%, rgb(116 101 216 / 46%) 0 1px, transparent 2px),
+        radial-gradient(circle 2px at 41% 84%, rgb(116 101 216 / 43%) 0 1px, transparent 2px),
+        radial-gradient(circle 2px at 53% 19%, rgb(255 194 91 / 55%) 0 1px, transparent 2px),
+        radial-gradient(circle 2px at 64% 57%, rgb(116 101 216 / 48%) 0 1px, transparent 2px),
+        radial-gradient(circle 2px at 77% 32%, rgb(116 101 216 / 52%) 0 1px, transparent 2px),
+        radial-gradient(circle 2px at 91% 76%, rgb(255 194 91 / 48%) 0 1px, transparent 2px);
+    animation: duno-dust-drift-a 28s ease-in-out infinite alternate;
+}
+body.duno-landing::after {
+    opacity: .3;
+    background-image:
+        radial-gradient(circle 2.5px at 12% 49%, rgb(185 232 209 / 88%) 0 1.3px, transparent 2.5px),
+        radial-gradient(circle 2.5px at 35% 12%, rgb(116 101 216 / 58%) 0 1.2px, transparent 2.5px),
+        radial-gradient(circle 2.5px at 48% 63%, rgb(185 232 209 / 82%) 0 1.3px, transparent 2.5px),
+        radial-gradient(circle 2.5px at 72% 88%, rgb(116 101 216 / 60%) 0 1.2px, transparent 2.5px),
+        radial-gradient(circle 2.5px at 86% 17%, rgb(255 194 91 / 76%) 0 1.3px, transparent 2.5px);
+    animation: duno-dust-drift-b 36s ease-in-out -11s infinite alternate;
+}
+@keyframes duno-dust-drift-a {
+    from { transform: translate3d(-2px, 4px, 0); }
+    to { transform: translate3d(3px, -10px, 0); }
+}
+@keyframes duno-dust-drift-b {
+    from { transform: translate3d(2px, -6px, 0); }
+    to { transform: translate3d(-3px, 9px, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    body.duno-landing::before,
+    body.duno-landing::after { animation: none; }
+}
+
+/* Let a few dust motes show through the hero's open background area. */
+.duno-landing .welcome { isolation: isolate; }
+.duno-landing .welcome::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    display: block;
+    border-radius: inherit;
+    background-image:
+        radial-gradient(circle 2px at 62% 16%, rgb(116 101 216 / 46%) 0 1px, transparent 2px),
+        radial-gradient(circle 2.4px at 92% 23%, rgb(255 194 91 / 62%) 0 1.2px, transparent 2.4px),
+        radial-gradient(circle 1.8px at 70% 78%, rgb(116 101 216 / 43%) 0 .9px, transparent 1.8px),
+        radial-gradient(circle 2px at 96% 72%, rgb(185 232 209 / 85%) 0 1px, transparent 2px),
+        radial-gradient(circle 2.2px at 54% 88%, rgb(255 194 91 / 54%) 0 1px, transparent 2.2px),
+        radial-gradient(circle 1.8px at 10% 88%, rgb(116 101 216 / 40%) 0 .9px, transparent 1.8px);
+    background-repeat: no-repeat;
+    content: "";
+    opacity: .42;
+    pointer-events: none;
+    animation: duno-hero-dust 30s ease-in-out infinite alternate;
+}
+.duno-landing .welcome-layout { position: relative; z-index: 1; }
+@keyframes duno-hero-dust {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, -5px, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .duno-landing .welcome::before { animation: none; }
 }

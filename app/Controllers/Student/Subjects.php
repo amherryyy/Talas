@@ -247,12 +247,10 @@ class Subjects extends BaseController
         return $subject;
     }
 
-    /** @return array{id: string, title: string, campus: string, college: string, curriculum_id: ?string} */
+    /** @return array{id: string, title: string, campus: string, college: string, curriculum_id: ?string, school: string} */
     private function currentAcademicProgram(): array
     {
-        $selectedId = db_connect()->table('users')->select('academic_program_id')
-            ->where('id', $this->ownerId())->get()->getRow('academic_program_id');
-        $program = is_string($selectedId) ? (new AcademicProgramCatalog())->find($selectedId) : null;
+        $program = (new AcademicProgramCatalog())->forUser($this->ownerId());
 
         if ($program === null) {
             throw PageNotFoundException::forPageNotFound();

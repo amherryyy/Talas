@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Student;
 
 use App\Controllers\BaseController;
+use App\Services\AcademicProgramCatalog;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\RedirectResponse;
@@ -16,11 +17,13 @@ final class Profile extends BaseController
     public function show(): string
     {
         $user = $this->currentUser();
+        $academicProgram = (new AcademicProgramCatalog())->forUser((int) $user->id);
 
         return view('student/profile', [
             'username' => (string) $user->username,
             'email' => (string) ($user->email ?? ''),
-            'academicProgramTitle' => (string) (db_connect()->table('users')->select('academic_program_title')->where('id', (int) $user->id)->get()->getRow('academic_program_title') ?? ''),
+            'academicProgramTitle' => (string) ($academicProgram['title'] ?? ''),
+            'academicProgramSchool' => (string) ($academicProgram['school'] ?? ''),
             'errors' => session()->getFlashdata('errors') ?? [],
             'deleteErrors' => session()->getFlashdata('delete_errors') ?? [],
             'pageTitle' => lang('App.profile'),

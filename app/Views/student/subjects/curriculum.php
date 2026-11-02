@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <p class="back-navigation"><a class="button secondary back-link-button" href="<?= esc(site_url('student/subjects')) ?>"><span aria-hidden="true">â†</span> <?= esc(lang('App.backToSubjects')) ?></a></p>
-<p class="workspace-kicker">NVSU subject list</p>
+<p class="workspace-kicker"><?= $curriculum === null ? 'Subject list' : 'NVSU subject list' ?></p>
 <h1><?= esc($academicProgram['title']) ?></h1>
 
 <?php if ($nvsuErrors !== []): ?>
@@ -12,7 +12,7 @@
 <?php endif ?>
 
 <?php if ($curriculum === null): ?>
-    <p>There is no NVSU subject list for this program yet. Add a subject by typing its name.</p>
+    <p>Duno does not have a subject list for this program yet. Add a subject by typing its name.</p>
     <p><a class="button" href="<?= esc(site_url('student/subjects/new')) ?>">Type a subject name</a></p>
 <?php else: ?>
     <p class="subject-curriculum-context">Choose subjects from the list for your account program. It is tied to <?= esc($academicProgram['campus']) ?>.</p>

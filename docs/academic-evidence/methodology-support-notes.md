@@ -34,7 +34,7 @@ These are evidence notes for later integration. They do not rewrite the manuscri
 
 ## Human confirmations needed for paper accuracy
 
-- Locate and confirm the approved SRS version and formal approval record, or explicitly identify `requirements.md` as the operative project baseline without calling the draft SRS approved.
+- Cite `docs/requirements.md` as the owner-approved main SRS (approval recorded 2026-11-02). Keep `DUNO_SRS_ALIGNMENT_DRAFT.md` and supplied SRS v1.0 clearly labeled as supporting drafts; do not cite them as the approved baseline.
 - Verify proposal and survey source files, respondent eligibility, questionnaire version/anchors and consent/sampling details.
 - Decide the evaluation protocol and selected ISO/IEC 25010:2023 characteristics/measures before collecting or reporting results.
 - Reconcile the deployed application revision and current release state.

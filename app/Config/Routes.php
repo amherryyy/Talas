@@ -11,10 +11,14 @@ $routes->get('privacy', 'Legal::privacy', ['as' => 'legal.privacy']);
 $routes->get('cookies', 'Legal::cookies', ['as' => 'legal.cookies']);
 $routes->post('language', 'LanguagePreference::update', ['as' => 'language.update']);
 
-$routes->group('/', ['filter' => 'auth-rates'], static function (RouteCollection $routes): void {
+$routes->group('/', ['filter' => ['auth-rates', 'auth-abuse']], static function (RouteCollection $routes): void {
     service('auth')->routes($routes, ['only' => ['register', 'login', 'auth-actions']]);
     $routes->post('auth/a/resend-registration-code', 'RegistrationRecovery::resend', ['as' => 'auth-registration-resend']);
     $routes->post('auth/a/cancel-registration', 'RegistrationRecovery::cancel', ['as' => 'auth-registration-cancel']);
+    $routes->get('forgot-password', 'PasswordRecovery::forgot', ['as' => 'password.forgot']);
+    $routes->post('forgot-password', 'PasswordRecovery::sendResetCode', ['as' => 'password.forgot.submit']);
+    $routes->get('reset-password', 'PasswordRecovery::reset', ['as' => 'password.reset']);
+    $routes->post('reset-password', 'PasswordRecovery::updatePassword', ['as' => 'password.reset.submit']);
 });
 
 $routes->post('logout', 'Auth\\LogoutController::logoutAction', ['as' => 'logout']);

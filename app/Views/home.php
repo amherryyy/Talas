@@ -341,7 +341,8 @@ $joinUrl = site_url('register');
                 </p>
                 <div class="welcome-actions">
                     <?php if (! $isLoggedIn): ?>
-                        <a class="pill pill-primary" href="#tools">Explore the tools <span aria-hidden="true">↓</span></a>
+                        <a class="pill pill-primary" href="<?= esc($joinUrl) ?>">Create your study space <span aria-hidden="true">↗</span></a>
+                        <a class="pill welcome-tools-link" href="#tools">Meet the tools <span aria-hidden="true">↓</span></a>
                     <?php elseif ($isStudent): ?>
                         <a class="pill pill-primary" href="#tools">Choose a tool <span aria-hidden="true">↓</span></a>
                     <?php elseif ($workspaceUrl !== null): ?>
@@ -383,6 +384,17 @@ $joinUrl = site_url('register');
                         <span class="tool-name"><?= esc($tool['name']) ?></span>
                         <span class="tool-description"><?= esc($tool['description']) ?></span>
                     </span>
+                    <?php if ($tool['path'] === 'student/priority'): ?>
+                    <span class="focus-priority-logic">
+                        <span class="focus-logic-heading">Priority considers</span>
+                        <span class="focus-logic-grid">
+                            <span><span aria-hidden="true">↗</span> Due date</span>
+                            <span><span aria-hidden="true">✳</span> Importance</span>
+                            <span><span aria-hidden="true">⌁</span> Difficulty</span>
+                            <span><span aria-hidden="true">✓</span> Progress</span>
+                        </span>
+                    </span>
+                    <?php endif ?>
                 <?php if ($canOpenStudentTools): ?>
                 </a>
                 <?php else: ?>

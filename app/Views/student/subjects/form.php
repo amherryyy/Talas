@@ -11,7 +11,7 @@ $curriculum = $nvsuCurricula[0] ?? null;
 <?php if ($curriculum !== null): ?>
     <p class="subject-curriculum-context"><?= esc($academicProgram['title']) ?> has an NVSU subject list. Choose the subject you take from that list.</p>
 <?php else: ?>
-    <p class="subject-curriculum-context">There is no NVSU subject list for <?= esc($academicProgram['title']) ?> yet. Type the subject name from your curriculum.</p>
+    <p class="subject-curriculum-context">Duno has no subject list for <?= esc($academicProgram['title']) ?> at <?= esc($academicProgram['school']) ?> yet. Type the subject name from your curriculum.</p>
 <?php endif ?>
 
 <?php if ($errors !== []): ?>

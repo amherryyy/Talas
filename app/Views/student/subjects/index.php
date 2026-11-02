@@ -2,8 +2,8 @@
 
 <?= $this->section('content') ?>
 <h1><?= esc(lang('App.yourSubjects')) ?></h1>
-<p>Your subjects are for <?= esc($academicProgram['title']) ?>.
-    <?php if ($academicProgram['curriculum_id'] !== null): ?>Choose subjects from its NVSU list.<?php else: ?>Type your subject names because an NVSU list is not available for this program.<?php endif ?>
+<p>Your subjects are for <?= esc($academicProgram['title']) ?> at <?= esc($academicProgram['school']) ?>.
+    <?php if ($academicProgram['curriculum_id'] !== null): ?>Choose subjects from its NVSU list.<?php else: ?>Duno has no subject list for this program yet, so you can type your subject names.<?php endif ?>
 </p>
 <div class="actions">
     <a class="button" href="<?= esc(site_url('student/subjects/new')) ?>"><span class="solar-icon solar-icon-add" aria-hidden="true"></span> <?= esc(lang('App.addSubject')) ?></a>

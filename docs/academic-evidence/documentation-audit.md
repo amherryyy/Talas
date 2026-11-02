@@ -4,7 +4,7 @@
 
 ## Executive finding
 
-The repository has a substantial project record: an owner-approved requirements file, story-level decisions, development and AI-use records, a CodeIgniter design pack, migration history, acceptance procedures, CI configuration, deployment notes, and historical test results. The primary academic gap is that the separate approved SRS/approval record and formal ISO/IEC 25010 evaluation results are not established. The owner uploaded r7 and Brave returned its marker on a fresh cache-busted request. One older tab still showed r3, and full file parity is unverified. Content-level host checks covered signed-out Focus and branded path/error pages; response metadata, actual offline behavior, and cross-owner host acceptance remain open. R6 is stale.
+The 2026-11-01 snapshot found a substantial project record and identified missing SRS approval provenance plus incomplete ISO/IEC 25010 evidence. On 2026-11-02, the owner approved `docs/requirements.md` as the main SRS; see the dated addendum below for that resolution. The evaluation remains unexecuted. The release and verification statements in this original snapshot are historical and are superseded by later records in `docs/deployment.md` and the 2026-11-02 audit addendum.
 
 ## Evidence inspected
 
@@ -40,9 +40,13 @@ No tests, database commands, browser sessions, host requests, external services,
 
 See [requirements traceability](requirements-traceability.md), [testing evidence](testing-evidence.md), [deployment evidence](deployment-evidence.md), and [documentation priorities](documentation-priorities.md).
 
+### Addendum: main SRS approval (2026-11-02)
+
+The project owner approved `docs/requirements.md` as Duno's main SRS on 2026-11-02. It is the authoritative requirements baseline for F-01 through F-16 and S-01 through S-10, including the current documented decisions. This resolves the previously listed question about whether the repository requirements or a separate SRS draft is the approved baseline. `DUNO_SRS_ALIGNMENT_DRAFT.md` and the supplied SRS v1.0 remain supporting drafts; they do not require approval as the main SRS and do not supersede `requirements.md`. The earlier findings about test, deployment, and ISO/IEC 25010 evaluation evidence remain unchanged. This approval does not verify implementation, testing, or deployment of any requirement.
+
 ## Evidence classification
 
-- **Approved requirements:** `docs/requirements.md` F-01–F-15 and S-01–S-10 plus approved linked story decisions.
+- **Approved requirements (current status as of 2026-11-02):** `docs/requirements.md` F-01 through F-16 and S-01 through S-10 plus approved linked story decisions.
 - **Verified implementation (source):** Code and migration files exist in the inspected worktree. This demonstrates implementation artifacts, not successful runtime behavior or deployment.
 - **Reported/historical verification:** Test results and manual observations written in existing records; cite their recorded date and scope, and label owner reports accordingly.
 - **Pending / NOT VERIFIED:** No adequate evidence in the repository for the claim at issue. Do not infer completion from file presence, package construction, owner acceptance of a broader requirement, or a marker string.
@@ -54,3 +58,7 @@ At the original audit snapshot, the checkout contained numerous modified applica
 ### Addendum: current release-record reconciliation (2026-11-01)
 
 At the project owner's request, current repository and evidence notes were reconciled after the original audit snapshot. The owner uploaded r7 and a fresh Brave marker request returned r7. One older tab retained r3. Content-level host checks now cover signed-out Focus, branded 403/404 pages, private paths, and PWA static files; exact HTTP metadata, complete file parity, actual offline behavior, and cross-owner acceptance remain unverified. R6 is stale. See `docs/deployment.md`, `docs/version-control.md`, and `docs/acceptance-verification-plan.md` for current details. The assistance is logged in `docs/ai-use-log.md`.
+
+### Addendum: source and release checkpoint (2026-11-02)
+
+Git now has PR #20 merged: local `main` and `origin/main` both point to `60513916e73af45ad3d5c3dae1e67028827ec1f9`. This resolves the stale snapshot above that stopped at `310c5e5`/PR #15. On 2026-11-02, the owner confirmed uploading/extracting r9 and supplied the cache-busted live marker `duno-full-release-20261101-r9`. The owner also reports successful r9 account deletion and cross-account write-isolation checks. Owner-provided phpMyAdmin output confirms the progression migration at batch 15 and zero remaining 500-XP rows. Clean-source provenance and full file parity are still not established; other live checks remain associated with their recorded releases unless repeated on r9. The accumulated worktree was moved to `work/r9-readiness-evidence` without staging or committing. See `docs/version-control.md`, `docs/project-overview-and-restart.md`, and `docs/deployment.md` for the reconciled snapshot.

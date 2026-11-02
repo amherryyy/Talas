@@ -24,6 +24,28 @@
         <div class="summary-card"><h3>Average session</h3><p><?= $summary['average_minutes'] === null ? '—' : esc(number_format($summary['average_minutes'], 1)) . ' min' ?></p></div>
     </section>
 
+    <section class="aralytics-print-progression print-only" aria-labelledby="print-progression-heading">
+        <h3 id="print-progression-heading">Study progress at print time</h3>
+        <p class="muted">All-time account progress, separate from the selected activity period above.</p>
+        <table class="report-table">
+            <tbody>
+                <tr><th scope="row">Current level</th><td>Level <?= esc((string) $progression['level']) ?> · <?= esc($progression['level_name']) ?></td></tr>
+                <tr><th scope="row">All-time XP</th><td><?= esc(number_format((int) $progression['xp'])) ?> XP (<?= esc(number_format((int) $progression['study_xp'])) ?> study + <?= esc(number_format((int) $progression['streak_xp'])) ?> daily visit rewards)</td></tr>
+                <tr><th scope="row">Current visit streak</th><td><?= esc((string) $progression['current_streak']) ?> <?= $progression['current_streak'] === 1 ? 'day' : 'days' ?></td></tr>
+                <tr><th scope="row">Next level</th><td><?= $progression['next_level_name'] === null ? 'All current levels reached' : 'Level ' . esc((string) ($progression['level'] + 1)) . ' · ' . esc($progression['next_level_name']) . ' at ' . esc(number_format((int) $progression['next_level_xp'])) . ' XP' ?></td></tr>
+            </tbody>
+        </table>
+        <h4>All-time milestones</h4>
+        <table class="report-table">
+            <thead><tr><th scope="col">Milestone</th><th scope="col">Status</th></tr></thead>
+            <tbody>
+                <?php foreach ($progression['badges'] as $badge): ?>
+                    <tr><th scope="row"><?= esc($badge['name']) ?></th><td><?= $badge['unlocked'] ? 'Earned' : 'In progress' ?></td></tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+    </section>
+
     <?php if ($summary['sessions'] === []): ?>
         <p class="notice" role="status">No sessions in this period.</p>
     <?php endif ?>

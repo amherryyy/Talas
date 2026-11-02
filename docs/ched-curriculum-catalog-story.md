@@ -4,7 +4,7 @@
 
 ## User outcome
 
-A student can browse NVSU undergraduate degree offerings by campus and start a personal subject list from a separately labeled CHED template or one of nine sourced NVSU reference course lists. An NVSU degree listing is not an NVSU subject plan. The six CAS references are effective S.Y. 2019–2020; none confirms a current approved plan.
+A student can browse NVSU undergraduate degree offerings by campus and start a personal subject list from a separately labeled CHED template or one of nine sourced NVSU reference course lists. An NVSU degree listing is not an NVSU subject plan. The six CAS references are effective S.Y. 2019–2020; none confirms a current approved plan. NVSU transferred BSCS, BSIT, and BSIS from CAS to the College of Information Technology Education in 2025; the old CAS pages remain the source of the dated reference lists. [NVSU CITE history](https://cite.nvsu.edu.ph/about/about-us)
 
 ## Owner decision
 

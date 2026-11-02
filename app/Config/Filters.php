@@ -3,9 +3,11 @@
 namespace Config;
 
 use App\Filters\ExclusiveRoleFilter;
+use App\Filters\AuthAbuseProtectionFilter;
 use App\Filters\ExpiredRegistrationCleanupFilter;
 use App\Filters\LanguagePreferenceFilter;
 use App\Filters\NoStorePagesFilter;
+use App\Filters\RegistrationConsentFilter;
 use App\Filters\StudentStreakFilter;
 use App\Filters\StudentAcademicProgramFilter;
 use CodeIgniter\Config\Filters as BaseFilters;
@@ -46,6 +48,8 @@ class Filters extends BaseFilters
         'language-preference' => LanguagePreferenceFilter::class,
         'no-store-pages' => NoStorePagesFilter::class,
         'expired-registration-cleanup' => ExpiredRegistrationCleanupFilter::class,
+        'registration-consent' => RegistrationConsentFilter::class,
+        'auth-abuse' => AuthAbuseProtectionFilter::class,
     ];
 
     /**
@@ -84,13 +88,14 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
+            'honeypot',
             'language-preference',
             'csrf',
             // 'invalidchars',
         ],
         'after' => [
             'no-store-pages',
+            'honeypot',
             'secureheaders',
         ],
     ];
@@ -121,5 +126,6 @@ class Filters extends BaseFilters
      */
     public array $filters = [
         'expired-registration-cleanup' => ['before' => ['register']],
+        'registration-consent' => ['before' => ['register']],
     ];
 }

@@ -1,11 +1,13 @@
-# ISO/IEC 25010:2023 evaluation run sheet — Duno r8
+# ISO/IEC 25010:2023 evaluation run sheet — Duno r9 candidate
 
-**Target:** `duno-full-release-20261101-r8` (latest uploaded release recorded in `docs/deployment.md` as of 2026-11-01).
-**Package SHA-256:** `703F22A55598BC4F831FEAF0A9C85AF0327B678A5BAB8686C21AF0DBDFFA0874`.
-**Source commit:** `120b76665ab062d5133f71ce03117093fb1f7a7f`.
-**Target caveat:** Owner reports r8 was uploaded and a cache-busted marker was observed. Complete uploaded-file parity was not independently established. Treat results as “tested against the r8 live marker” unless artifact parity is later verified.
+**Target:** Owner-confirmed upload of `duno-full-release-20261101-r9` on 2026-11-02.
+**Package SHA-256:** `3B87F3EFEF361BA245DA15C1FDC3030993FC0FF5372C5941C04D70EE69CE4736` (local r9 archive).
+**Source commit:** Unknown; provenance has not been recorded.
+**Target caveat:** The owner supplied the live r9 marker. Full uploaded-file parity is not independently confirmed. Do not attribute prior r8 checks to r9.
 
-This is an execution worksheet, not a completed evaluation. All rows start **Not run in this evaluation**. Earlier checks are identified as prior records; they do not count as run-sheet results. Use alongside [the protocol](iso-iec-25010-evaluation-protocol.md) and [`docs/acceptance-verification-plan.md`](../acceptance-verification-plan.md).
+**Recheck on 2026-11-02:** The owner confirmed r9 upload and supplied the live marker. Its local archive contains 1,253 entries and embeds marker r9; the source commit is unknown. Current auth and Plan changes after the archive build remain pending and should not be presumed part of r9.
+
+This is an execution worksheet, not a completed evaluation. All rows start **Not run in this evaluation**. Earlier checks are identified as prior records; they do not count as run-sheet results. Use alongside [the protocol](iso-iec-25010-evaluation-protocol.md), the draft [evaluation session guide](evaluation-session-guide.md), and [`docs/acceptance-verification-plan.md`](../acceptance-verification-plan.md).
 
 ## A. Run metadata — complete before testing
 
@@ -18,7 +20,7 @@ This is an execution worksheet, not a completed evaluation. All rows start **Not
 | Release marker response and response headers | Pending fresh capture |
 | Package hash / source commit confirmation | Recorded above; deployed-file parity pending |
 | Host, PHP runtime, DB engine/version | Host: InfinityFree; PHP 8.4.27 is owner-reported; exact runtime/DB capture pending |
-| Migration ledger | Owner reports rows through 18, batch 13; fresh confirmation pending |
+| Migration ledger | Owner-provided phpMyAdmin output confirms `2026-11-01-000002_ScaleProgressionXpRewards`, batch 15; zero rows with `xp_awarded = 500` (2026-11-02). Other schema/engine details should be matched to the release before the evaluation run. |
 | Browser/version, OS/device, viewport, network | Pending per run |
 | Synthetic data profile and account IDs (pseudonyms only) | Pending; do not record credentials or real identities |
 | Approved repetitions and exclusion rules | Pending owner/adviser approval |
@@ -28,14 +30,14 @@ This is an execution worksheet, not a completed evaluation. All rows start **Not
 
 ## A1. Existing evidence to carry forward (not new evaluation runs)
 
-The following is already recorded in `docs/acceptance-verification-plan.md` and `docs/deployment.md`. Retain its original attribution and scope. Do not count an older r5 check as r8 acceptance.
+The following is already recorded in `docs/acceptance-verification-plan.md` and `docs/deployment.md`. Retain its original attribution and scope. These checks concern earlier releases and do not count as r9 acceptance.
 
 | Characteristic | Existing record | Limitation for this evaluation |
 |---|---|---|
-| Functional Suitability | Local PHPUnit passed 103 tests/1,031 assertions on 2026-11-01; local Playwright passed 3/3 on the isolated review DB. r5 owner reports cover Focus, Plan, Timer and Aralytics; r8 has selected auth redirect, route denial, two-account read isolation and report observations. | Local automation, r5 checks and partial r8 observations do not cover all F/S cases or prove full uploaded-file parity. |
+| Functional Suitability | Local PHPUnit passed 103 tests/1,031 assertions on 2026-11-01; local Playwright passed 3/3 on the isolated review DB. r5 owner reports cover Focus, Plan, Timer and Aralytics; r8 has selected auth redirect, route denial, two-account read isolation and report observations. | Local automation, r5 checks and partial r8 observations do not cover all F/S cases or prove r9 behavior or uploaded-file parity. |
 | Performance Efficiency | No controlled response-time benchmark or approved latency target is recorded. | No performance result; measure under a fixed profile after criteria are approved. |
-| Reliability | r8 offline PWA check reported successful offline recovery pages. A Timer POST failed offline, then manual refresh after reconnect replayed it and created session 5. | No repeated-trial reliability study. Form replay needs isolated follow-up; don't repeat against current live test data. |
-| Security | r8 observations report four path-specific 403s with selected headers and branded body, signed-out Focus 302, unknown route 404, and selected A/B read privacy checks. Cross-owner writes/forged references remain unverified. | Owner-reported observations are partial. Full route/header matrix, all write cases, and independent artifact parity remain open. |
+| Reliability | r8 offline PWA check reported successful offline recovery pages. A Timer POST failed offline, then manual refresh after reconnect replayed it and created session 5. | No repeated-trial reliability study. Form replay needs isolated follow-up; don't repeat against current live test data. No r9 behavior is verified. |
+| Security | r8 observations report four path-specific 403s with selected headers and branded body, signed-out Focus 302, unknown route 404, and selected A/B read privacy checks. The owner reports cross-account write-isolation passed on r9. | Owner-reported r9 write check lacks route/action detail. Full route/header matrix, forged-reference cases, and remaining r9 behavior remain open. |
 
 The latest deployment record also identifies temporary synthetic topic 7 and sessions 4–5 requiring owner cleanup. Leave those records untouched and do not use those accounts as evaluation fixtures.
 
@@ -60,6 +62,7 @@ Use dedicated synthetic accounts and the expected outcomes in `acceptance-verifi
 | FS-13 | F-13 / F-13-UI | Exercise public/auth/student/admin flows at approved viewport/device matrix; keyboard navigation, onboarding skip/replay, contextual back/cancel and print. | Browser/device/viewport, overflow, focus/labels, tour state and print observations. | Not run |
 | FS-14 | F-14 / F-14-PROGRESSION | For a new synthetic student, repeat visits same day, save known session time, cross dates/missed day, submit check-in. | Expected/actual XP, streak, level/unlocks; confirm check-in adds no XP. | Not run |
 | FS-15 | F-15 / F-15-PWA | Inspect manifest/worker/cache; online/offline navigation, authenticated pages and attempted write; install if supported. | Exact cache entry list, navigations, write outcome, browser/version. | Not run |
+| FS-16 | F-16 | In an isolated disposable environment, delete a synthetic account with the correct password and exact `DELETE`; exercise invalid confirmation/password and a safe transaction failure. | Confirm owned records are removed atomically on success, session ends, and all records remain after rejected/failed deletion. | Not run |
 
 ### Functional summary
 
@@ -106,7 +109,7 @@ Use acceptance-plan security cases. The protocol forbids repeating the inconclus
 | Run ID | Requirement / case | Scope | Prior r8 evidence (not a new run) | New result |
 |---|---|---|---|---|
 | SE-01 | S-01 / SEC-CSRF and F-02-ROLE | Authenticated role boundaries and state-changing request protection | Selected role routes and some headers reported in `deployment.md`; full matrix not recorded. | Not run |
-| SE-02 | S-02 / SEC-OWNER | A/B read, edit, delete, count and forged foreign references for subject/topic/session/plan | Live owner reads/selected edits reported; cross-owner writes and forged references explicitly remain unverified. | Not run |
+| SE-02 | S-02 / SEC-OWNER | A/B read, edit, delete, count and forged foreign references for subject/topic/session/plan | Owner reports r9 cross-account write-isolation passed; exact operations/evidence not recorded. Other reads/counts/exports and forged foreign references remain unverified. | Partially reported passed |
 | SE-03 | S-03 / SEC-INPUT | Invalid boundaries, harmless HTML-shaped input, output escaping and query safety | Source/test evidence exists; no full r8 input matrix recorded. | Not run |
 | SE-04 | S-04 / SEC-CSRF | Missing/invalid/valid CSRF and session/cookie settings over HTTPS | Not fully captured for r8. | Not run |
 | SE-05 | S-05 / SEC-SECRETS | Repository/release artifact/log review for secrets or real records | r8 ZIP inventory excludes root `.env` and Composer root manifests; no comprehensive evidence scan recorded here. | Not run |
@@ -137,4 +140,4 @@ Use acceptance-plan security cases. The protocol forbids repeating the inconclus
 
 ## G. Execution rule
 
-The worksheet is ready for configuration, but not execution. First approve the protocol's thresholds, scenario subset, repetition count, browser/environment, synthetic account plan and evidence retention. Obtain explicit owner approval before write, interruption, error-injection or other state-changing checks on the live r8 site. The release record identifies existing temporary test data, so keep it untouched and avoid using those accounts as fixtures.
+The worksheet is ready for configuration, but not execution. First approve the protocol's thresholds, scenario subset, repetition count, browser/environment, synthetic account plan and evidence retention. The owner has confirmed the live r9 marker. Obtain explicit owner approval before write, interruption, error-injection or other state-changing checks on the live site. The release record identifies existing temporary test data, so keep it untouched and avoid using those accounts as fixtures.

@@ -22,9 +22,7 @@ class Dashboard extends BaseController
         $today = new DateTimeImmutable('now', $timezone);
         $todayDate = $today->format('Y-m-d');
         $ownerId = (int) auth()->id();
-        $programId = db_connect()->table('users')->select('academic_program_id')
-            ->where('id', $ownerId)->get()->getRow('academic_program_id');
-        $academicProgram = is_string($programId) ? (new AcademicProgramCatalog())->find($programId) : null;
+        $academicProgram = (new AcademicProgramCatalog())->forUser($ownerId);
         $curriculumId = $academicProgram['curriculum_id'] ?? null;
         $subjects = (new SubjectModel())->findAllForAcademicProgram($ownerId, $curriculumId);
         $subjectIds = array_fill_keys(array_map(static fn (array $subject): int => (int) $subject['id'], $subjects), true);

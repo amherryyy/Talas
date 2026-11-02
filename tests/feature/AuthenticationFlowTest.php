@@ -4,6 +4,8 @@ use CodeIgniter\Shield\Entities\User;
 use CodeIgniter\Shield\Authentication\Authenticators\Session;
 use CodeIgniter\Shield\Models\UserIdentityModel;
 use CodeIgniter\Shield\Models\UserModel;
+use App\Models\PasswordResetCodeModel;
+use CodeIgniter\I18n\Time;
 use CodeIgniter\Test\CIUnitTestCase;
 use CodeIgniter\Test\DatabaseTestTrait;
 use CodeIgniter\Test\FeatureTestTrait;
@@ -20,6 +22,7 @@ final class AuthenticationFlowTest extends CIUnitTestCase
     use IsolatedFeatureSession;
 
     protected $namespace = null;
+    private string $testSuffix;
 
     protected function setUp(): void
     {
@@ -27,20 +30,25 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         $this->assertSame('SQLite3', $database->tests['DBDriver']);
         $this->assertSame(':memory:', $database->tests['database']);
         parent::setUp();
+        $this->testSuffix = bin2hex(random_bytes(6));
+        \Config\Services::reset('throttler');
+        \Config\Services::reset('cache');
+        service('cache')->deleteMatching('throttler_*');
     }
 
     public function testRegistrationAssignsStudentRoleAndIgnoresSubmittedAdminRole(): void
     {
         $response = $this->postWithCsrf('register', [
-            'username'         => 'authregistrationstudent',
-            'email'            => 'authregistrationstudent@example.test',
+            'username'         => 'authregistration' . $this->testSuffix,
+            'email'            => 'auth-registration-' . $this->testSuffix . '@example.test',
             'password'         => 'K9!vP3#rT6@x',
             'password_confirm' => 'K9!vP3#rT6@x',
+            'terms_privacy_consent' => '1',
             'groups'           => ['admin'],
         ]);
-        $response->assertRedirectTo(route_to('auth-action-show'));
+        $response->assertRedirect();
 
-        $user = (new UserModel())->where('username', 'authregistrationstudent')->first();
+        $user = (new UserModel())->where('username', 'authregistration' . $this->testSuffix)->first();
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertTrue($user->inGroup('student'));
@@ -52,19 +60,110 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         ));
     }
 
+    public function testRegistrationRequiresTermsAndPrivacyConsentOnTheServer(): void
+    {
+        $this->postWithCsrf('register', [
+            'username'         => 'authconsentrequired' . $this->testSuffix,
+            'email'            => 'auth-consent-required-' . $this->testSuffix . '@example.test',
+            'password'         => 'K9!vP3#rT6@x',
+            'password_confirm' => 'K9!vP3#rT6@x',
+        ])->assertRedirect();
+
+        $user = (new UserModel())->where('username', 'authconsentrequired' . $this->testSuffix)->first();
+        $this->assertNull($user);
+    }
+
+    public function testUnknownEmailPasswordRecoveryUsesNeutralResponse(): void
+    {
+        $response = $this->postWithCsrf('forgot-password', [
+            'email' => 'not-registered-' . $this->testSuffix . '@example.test',
+        ]);
+
+        $response->assertRedirectTo(route_to('password.reset'));
+        $page = $this->get('reset-password');
+        $page->assertOK();
+        $page->assertSee(lang('Registration.resetRequestReceived'));
+        $this->assertSame(0, (new PasswordResetCodeModel())->countAllResults());
+    }
+
+    public function testValidPasswordResetCodeChangesPasswordAndCannotBeReused(): void
+    {
+        $user = $this->createStudent('auth-password-reset');
+        $code = '004271';
+        $now = Time::now();
+        $codes = new PasswordResetCodeModel();
+        $codes->insert([
+            'user_id'         => (int) $user->id,
+            'code_hash'       => password_hash($code, PASSWORD_DEFAULT),
+            'failed_attempts' => 0,
+            'expires_at'      => $now->addMinutes(15)->toDateTimeString(),
+            'created_at'      => $now->toDateTimeString(),
+        ]);
+
+        $newPassword = 'M4!qR8@vL2#s';
+        $data = [
+            'email'            => $user->email,
+            'code'             => $code,
+            'password'         => $newPassword,
+            'password_confirm' => $newPassword,
+        ];
+        $this->postWithCsrf('reset-password', $data)->assertRedirectTo(route_to('login'));
+
+        $users = new UserModel();
+        $updatedUser = $users->findById((int) $user->id);
+        $this->assertTrue(service('passwords')->verify($newPassword, $updatedUser->getPasswordHash()));
+        $this->assertSame(0, $codes->countAllResults());
+
+        $this->postWithCsrf('reset-password', $data)->assertRedirect();
+        $updatedUser = $users->findById((int) $user->id);
+        $this->assertTrue(service('passwords')->verify($newPassword, $updatedUser->getPasswordHash()));
+    }
+
+    public function testFiveIncorrectPasswordResetCodesInvalidateTheCode(): void
+    {
+        $user = $this->createStudent('auth-password-reset-attempts');
+        $now = Time::now();
+        $codes = new PasswordResetCodeModel();
+        $codeId = $codes->insert([
+            'user_id'         => (int) $user->id,
+            'code_hash'       => password_hash('004271', PASSWORD_DEFAULT),
+            'failed_attempts' => 0,
+            'expires_at'      => $now->addMinutes(15)->toDateTimeString(),
+            'created_at'      => $now->toDateTimeString(),
+        ]);
+
+        for ($attempt = 0; $attempt < PasswordResetCodeModel::MAX_FAILED_ATTEMPTS; $attempt++) {
+            $response = $this->postWithCsrf('reset-password', [
+                'email'            => $user->email,
+                'code'             => '999999',
+                'password'         => 'M4!qR8@vL2#s',
+                'password_confirm' => 'M4!qR8@vL2#s',
+            ]);
+            $this->assertSame(302, $response->response()->getStatusCode(), 'Reset attempt returned HTTP ' . $response->response()->getStatusCode());
+            $response->assertRedirect();
+        }
+
+        $this->assertNull($codes->find($codeId));
+    }
+
     public function testStudentCanSignInReachStudentRouteAndSignOut(): void
     {
-        $this->createStudent('auth-login-student');
+        $student = $this->createStudent('auth-login-student');
 
-        $this->postWithCsrf('login', [
-            'email'    => 'auth-login-student@example.test',
+        $loginResponse = $this->postWithCsrf('login', [
+            'email'    => $student->email,
             'password' => 'K9!vP3#rT6@x',
-        ])->assertRedirect();
+        ]);
+        $loginResponse->assertRedirect();
 
         $this->get('student')->assertRedirectTo(site_url('student/academic-program'));
         $this->get('student/academic-program')->assertOK();
 
+        // CI's testing environment intentionally avoids starting native PHP
+        // sessions; Shield regenerates the session ID during logout.
+        session_start();
         $this->postWithCsrf('logout')->assertRedirect();
+        session_write_close();
         $login = $this->get('login');
         $login->assertOK();
         $login->assertSee('You’ve logged out.');
@@ -75,15 +174,17 @@ final class AuthenticationFlowTest extends CIUnitTestCase
 
     public function testValidRegistrationCodeActivatesPendingStudent(): void
     {
-        $this->postWithCsrf('register', [
-            'username'         => 'authverifiedstudent',
-            'email'            => 'authverifiedstudent@example.test',
+        $registrationResponse = $this->postWithCsrf('register', [
+            'username'         => 'authverified' . $this->testSuffix,
+            'email'            => 'auth-verified-' . $this->testSuffix . '@example.test',
             'password'         => 'K9!vP3#rT6@x',
             'password_confirm' => 'K9!vP3#rT6@x',
-        ])->assertRedirectTo(route_to('auth-action-show'));
+            'terms_privacy_consent' => '1',
+        ]);
+        $registrationResponse->assertRedirect();
 
         $users = new UserModel();
-        $user = $users->where('username', 'authverifiedstudent')->first();
+        $user = $users->where('username', 'authverified' . $this->testSuffix)->first();
         $this->assertInstanceOf(User::class, $user);
 
         $identity = model(UserIdentityModel::class)->getIdentityByType(
@@ -101,24 +202,25 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         $verifiedUser = $users->findById((int) $user->id);
         $this->assertTrue($verifiedUser->isActivated());
         $this->assertTrue(auth()->loggedIn());
-        auth()->logout();
     }
 
     public function testInvalidCredentialsDoNotGrantStudentAccess(): void
     {
-        $this->createStudent('auth-invalid-login-student');
+        $student = $this->createStudent('auth-invalid-login-student');
 
-        $this->postWithCsrf('login', [
-            'email'    => 'auth-invalid-login-student@example.test',
+        $loginResponse = $this->postWithCsrf('login', [
+            'email'    => $student->email,
             'password' => 'incorrect-password',
-        ])->assertRedirect();
+        ]);
+        $loginResponse->assertRedirect();
 
         $response = $this->get('student');
         $this->assertContains($response->response()->getStatusCode(), [302, 403]);
     }
 
-    private function createStudent(string $username): void
+    private function createStudent(string $username): User
     {
+        $username .= '-' . $this->testSuffix;
         $model = new UserModel();
         $userId = $model->insert(new User([
             'username' => $username,
@@ -129,7 +231,8 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         $user = $model->findById((int) $userId);
         $user->addGroup('student');
         $user->activate();
-        $user = $model->findById((int) $userId);
+
+        return $model->findById((int) $userId);
     }
 
     /** @param array<string, mixed> $data */

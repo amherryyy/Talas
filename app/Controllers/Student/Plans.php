@@ -300,7 +300,7 @@ class Plans extends BaseController
         return (int) $user->id;
     }
 
-    /** @return array{id: string, title: string, campus: string, college: string, curriculum_id: ?string} */
+    /** @return array{id: string, title: string, campus: string, college: string, curriculum_id: ?string, school: string} */
     private function currentAcademicProgram(): array
     {
         $program = (new AcademicProgramCatalog())->forUser($this->ownerId());

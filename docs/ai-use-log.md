@@ -2,6 +2,112 @@
 
 Use this log to support the disclosure format required by the instructor. Do not record passwords, private student data, or full prompts that contain sensitive material.
 
+## Main SRS approval and traceability update - 2026-11-02
+
+Date / story: 2026-11-02 / approval of `docs/requirements.md` as the main SRS
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The project owner explicitly approved `docs/requirements.md` as the main SRS and requested the necessary documentation updates.
+
+Assistance used: Recorded the approval date and document authority in the requirements file. Updated the supporting SRS alignment draft, candidate crosswalk, requirements traceability, system-design packet, acceptance plan, ISO/IEC 25010 protocol references, documentation priorities, audit addendum, and methodology notes. Added F-16 account deletion to the requirement-level evaluation records while preserving its unverified implementation status. Clarified that the separate SRS materials remain supporting drafts and that approval of the baseline does not establish implementation or evaluation results.
+
+Suggestions or code retained: Documentation-only changes to the files listed above; no application behavior, database records, deployment configuration, or Git state was changed.
+
+Student changes and decisions: The owner designated the current `docs/requirements.md` as the authoritative SRS. No staging, commit, push, merge, package, or deployment was performed.
+
+How the student verified and can explain the result: Reviewed the updated authority statements and requirement ranges for consistency. Tests were not run because this task changed documentation only.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Final pre-PR review and legal-page test alignment - 2026-11-02
+
+Allowed use confirmed by: The owner asked for the accumulated uncommitted work to be analyzed and taken through commit, pull request, merge, and staging, with no release upload.
+
+Assistance used: Reviewed repository state, ignored files, implementation scope, CI workflow, and version-control instructions. Updated the legal-page feature test to assert the current published page titles and sections, and refreshed the dated test/audit evidence.
+
+Suggestions or code retained: Modified `tests/feature/LegalPagesTest.php` and `docs/academic-evidence/testing-evidence.md`. No secret or ignored local/runtime files were included. This change has not yet been staged or committed at the time of this log entry.
+
+How the student verified and can explain the result: The legal-page feature test passed 1 test / 24 assertions. The full local PHPUnit suite passed 119 tests / 1,313 assertions on PHP 8.2.12 with SQLite `:memory:`. PHP syntax passed for `spark`, `preload.php`, and all PHP files under `app`, `public`, and `tests`; `composer validate --strict` and `git diff --check` passed. The isolated review database had both new migrations applied. The local Playwright suite passed 2 scenarios; its third topic-form scenario skipped because the synthetic account has no subject to select. The current `composer audit --locked` could not reach Packagist because the configured proxy at `127.0.0.1:9` refused the connection. No release upload or hosted database change was performed.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Aralytics print report scope - 2026-11-02
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to update the scoped content of the Aralytics print report.
+
+Assistance used: Added a print-only progression summary for current level, all-time XP and its study/daily-visit split, current visit streak, next level, and milestone status. The report labels this as all-time, separately from the selected activity period. Private check-ins remain excluded from print.
+
+Suggestions or code retained: Updated `app/Views/student/aralytics/index.php`, print rules in `public/assets/css/duno-ui.css`, and Aralytics feature/browser assertions. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Aralytics feature tests passed (4 tests / 51 assertions); the authenticated Playwright responsive scenario passed, including screen-hidden/print-visible checks for progression. PHP view lint, JavaScript syntax, and `git diff --check` passed. Hosted print behavior remains unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Manual school and program selection - 2026-11-02
+
+Allowed use confirmed by: The owner requested that students from schools outside the NVSU catalog can still use Duno.
+
+Assistance used: Added a toggle on the one-time program setup form for manually entering a school and program. Stored the school separately, retained an explicit non-catalog program identifier, and routed manual selections to typed subject entry without an NVSU curriculum. Updated the Profile display, About/Privacy copy, requirements, deployment notes, and acceptance plan.
+
+Suggestions or code retained: Added migration `2026-11-02-000002_AddAcademicSchoolNameToUsers` and its phpMyAdmin SQL upgrade file. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Static checks only. Automated tests and browser interaction checks were not run. The new nullable school column must be applied before deploying the application changes.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## R9 evidence reconciliation - 2026-11-02
+
+Date / story: 2026-11-02 / r9 evaluation-readiness evidence
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner requested that existing r9 checks and the account-deletion result be recorded, and supplied phpMyAdmin query output for the progression migration.
+
+Assistance used: Recorded the owner-reported r9 cross-account write-isolation result, successful account deletion, and the hosted progression XP migration result in the acceptance plan, deployment notes, implementation status, requirements traceability, and academic evidence. Classified the owner's seven distinct r9 screenshots as System Outputs and recorded their capture metadata. Created `work/r9-readiness-evidence` at the existing base commit while preserving the pre-existing dirty worktree; no files were staged or committed.
+
+Suggestions or code retained: Documentation updates only. No application source, database records, hosting configuration, or deployment files were changed.
+
+How the student verified and can explain the result: The supplied phpMyAdmin output showed migration `2026-11-01-000002` / `App\Database\Migrations\ScaleProgressionXpRewards` at batch 15 and zero rows with `xp_awarded = 500`. The owner reports cross-account write-isolation and account deletion passed on r9. The owner identified seven distinct screenshots as r9 outputs captured in Microsoft Edge on 2026-11-02; the print-preview image was duplicated. The images remain in the conversation, not the repository, and the synthetic/owner-record status of displayed study data was not stated. Specific routes, account type, and retained manual-test artifacts were not supplied. No live database or host was accessed by Codex. No staging or commit was performed.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Git and release status reconciliation - 2026-11-02
+
+Date / story: 2026-11-02 / current repository, artifact, and hosted-release status reconciliation
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner raised a discrepancy in the version-control/audit report, then confirmed that r9 had been uploaded.
+
+Assistance used: Compared local and remote Git state, release package records, and project status reports. Confirmed `main` and `origin/main` both point at PR #20 merge `60513916e73af45ad3d5c3dae1e67028827ec1f9`; recorded the owner-confirmed r9 upload and matching live marker while keeping clean-source provenance, full file parity, and r9 feature acceptance open. Kept earlier r8 observations attributed to r8 and left verification gates pending where current evidence is absent.
+
+Suggestions or code retained: Reconciled `README.md`, `docs/version-control.md`, `docs/project-overview-and-restart.md`, `docs/development-blueprint.md`, `docs/ai-agent-workflow.md`, `docs/deployment.md`, the implementation-status and ISO evaluation records, and `docs/DUNO_SYSTEM_ANALYSIS_EVIDENCE_REPORT.md`. No application code was changed for this audit. Nothing was staged, committed, pushed, merged, or uploaded.
+
+How the student verified and can explain the result: `git status` confirmed local `main` matches `origin/main` and the existing worktree remains dirty. The r9 archive hash and embedded marker were read locally; the owner then supplied the cache-busted live response text `duno-full-release-20261101-r9`. Direct requests from this session failed, so the live marker is owner-observed rather than independently fetched. `git diff --check` passed; tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## R9 smoke-test attempt and local suite - 2026-11-02
+
+Date / story: 2026-11-02 / verify the owner-confirmed r9 release and current local test suite
+
+Tool and model: OpenAI Codex; exact serving model identifier was not exposed in the session
+
+Allowed use confirmed by: The owner asked to continue with testing after confirming that the live marker returned r9.
+
+Assistance used: Attempted direct read-only requests to public, login, registration, and signed-out Focus URLs. Curl could not connect through the environment proxy; Node fetch reached InfinityFree but received its JavaScript verification wrapper (`200 text/html`) rather than the Duno route responses. Did not attempt to bypass the wrapper. Ran the local PHPUnit suite with the available SQLite extensions enabled. Independently checked the local r9 ZIP SHA-256 and extracted marker against the marker supplied by the owner.
+
+Suggestions or code retained: Updated `docs/acceptance-verification-plan.md` to record the owner-observed r9 marker and distinguish r8 feature evidence from r9. No application code or live student data was changed.
+
+Student changes and decisions: The owner confirmed the cache-busted live marker text `duno-full-release-20261101-r9`. No staging, commit, push, merge, or upload was performed.
+
+How the student verified and can explain the result: Local PHPUnit passed 118 tests with 1,275 assertions after explicitly enabling the installed SQLite PDO and SQLite3 extensions. PHPUnit reported only that no coverage driver was available. The first attempt without SQLite extensions produced 92 environment errors, then the configured run passed. The r9 ZIP hash matched `3B87F3EFEF361BA245DA15C1FDC3030993FC0FF5372C5941C04D70EE69CE4736`, and the extracted release marker matched the owner's live marker. The host verification wrapper prevented the live route smoke check, so no r9 application workflows are claimed as tested.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ### Lightweight Duno mascot animation system
 
 Date / story: 2026-11-01 / reusable mascot gestures
@@ -3021,5 +3127,163 @@ Suggestions or code retained: Updated `docs/academic-program-onboarding-story.md
 Student changes and decisions: The owner requested the hosted migration after confirming the backup. No application files were uploaded, and nothing was staged, committed, or pushed.
 
 How the student verified and can explain the result: phpMyAdmin reported one migration row inserted. Final SQL output showed ID 19, version `2026-11-01-000001`, class `App\Database\Migrations\AddAcademicProgramToUsers`, batch 14, and all three nullable columns. Application runtime checks remain pending until the reviewed code is uploaded.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## NVSU CITE program grouping update - 2026-11-01
+
+Allowed use confirmed by: The owner asked to move BSIT, BSIS, and BSCS under NVSU's College of Information Technology Education in the onboarding/program selection.
+
+Assistance used: Verified the current college name and 2025 transfer against NVSU CITE's official history page. Updated the NVSU directory grouping and account-level catalog. Preserved the legacy CAS-derived program IDs so existing account selections remain valid, and kept the historical course-list source IDs unchanged.
+
+Suggestions or code retained: Modified `app/Services/NvsuProgramCatalog.php`, `app/Services/AcademicProgramCatalog.php`, and the academic-program, curriculum, requirements, and README documentation. No database migration is needed; no data is rewritten.
+
+Student changes and decisions: The owner requested this college regrouping. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks passed for both catalog services, and `git diff --check` passed. The catalog and onboarding source diff was reviewed. Automated tests and browser checks were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Registration Terms and Privacy agreement - 2026-11-01
+
+Allowed use confirmed by: The owner approved the current Terms and Privacy pages for a required registration agreement.
+
+Assistance used: Replaced Shield's registration view with a project view that includes a required agreement checkbox linking to the current Terms and Conditions and Privacy Notice pages. Added server-side registration filtering so submitting without the checked value redirects back with a localized error. Added English, Filipino, and Taglish labels and updated requirement F-01.
+
+Suggestions or code retained: Modified `app/Config/Auth.php`, `app/Config/Filters.php`, `app/Views/auth/register.php`, `app/Filters/RegistrationConsentFilter.php`, app language files, and `docs/requirements.md`. No database schema or user data changed. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP syntax checks and `git diff --check` passed. Automated tests and manual browser checks were not run in this turn.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Public home tool section visual refinement - 2026-11-01
+
+Allowed use confirmed by: The owner asked to improve the plain-looking home tool section shown in a screenshot.
+
+Assistance used: Added a compact, explanatory priority-input panel inside the featured Duno Focus tile and refined tool-card surfaces with low-opacity palette-matched color washes. Kept the existing destinations, card order, responsive grid, and product copy intact.
+
+Suggestions or code retained: Modified `app/Views/home.php` and `public/assets/css/duno-ui.css`. No dependencies added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `php -l app/Views/home.php` and `git diff --check` passed. No browser review or automated tests were run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Background gradient seam correction - 2026-11-01
+
+Allowed use confirmed by: The owner pointed out the visible intersecting background seams on the academic program selection page.
+
+Assistance used: Traced the seams to CSS background layer lists cycling `repeat` and `background-size` values across four radial gradients. Assigned explicit no-repeat and full-page sizing to each gradient layer for workspace, admin, auth, and landing backgrounds.
+
+Suggestions or code retained: Modified `public/assets/css/duno-ui.css`. No assets or dependencies changed. Nothing was staged, committed, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. No browser review or automated tests were run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+## Public landing hero and tool card redesign - 2026-11-02
+
+Allowed use confirmed by: The owner asked for a more eye-catching landing page and a larger mascot.
+
+Assistance used: Strengthened the welcome hero with a much larger mascot stage, clearer hierarchy, and a registration-focused primary action. Reworked the study tool area into an asymmetric, responsive layout with distinct Duno palette treatments and restrained decorative detail.
+
+Suggestions or code retained: Modified `app/Views/home.php` and `public/assets/css/duno-ui.css`. No dependencies or assets added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the local page at desktop and phone widths. `git diff --check` passed. Automated tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Landing page pattern reduction - 2026-11-02
+
+Allowed use confirmed by: The owner asked to make the landing page decoration more minimal, especially the repeated circle patterns.
+
+Assistance used: Removed the concentric card rings and mascot orbit outlines. Softened the landing background to three broad, low-opacity palette glows and flattened the card surfaces while preserving their distinct color accents.
+
+Suggestions or code retained: Modified `public/assets/css/duno-ui.css`. No dependencies or assets added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the local page at phone and desktop widths. `git diff --check` passed. Automated tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Landing visual depth adjustment - 2026-11-02
+
+Allowed use confirmed by: The owner said the minimal landing page became too plain and asked for more visual character while retaining reduced circle patterns.
+
+Assistance used: Added layered, low-opacity palette washes to the page and hero, soft organic card blooms, and a slightly richer focus panel. Kept repeated outlined circles removed.
+
+Suggestions or code retained: Modified `public/assets/css/duno-ui.css`. No dependencies or assets added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. Automated tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Landing toolkit detail pass - 2026-11-02
+
+Allowed use confirmed by: The owner requested a little more visual detail after reviewing the simplified landing page.
+
+Assistance used: Added a small gradient marker under the toolkit heading, subtle icon-chip rims, and short palette-matched divider strokes in card descriptions. Kept the styling restrained and left the removed circle outlines out.
+
+Suggestions or code retained: Modified `public/assets/css/duno-ui.css`. No dependencies or assets added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the local desktop card section. `git diff --check` passed. Automated tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Landing toolkit icon emphasis - 2026-11-02
+
+Allowed use confirmed by: The owner asked to make the landing page tool icons larger and more prominent.
+
+Assistance used: Increased the tool badge and Solar icon sizes, with a stronger size for the featured Focus card and responsive dimensions for mobile.
+
+Suggestions or code retained: Modified `public/assets/css/duno-ui.css`. No dependencies or assets added. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the local landing tool cards at desktop width. `git diff --check` passed. Automated tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Landing dust particle background - 2026-11-02
+
+Allowed use confirmed by: The owner asked for subtle background dust particles inspired by the BrewedOps Motion Library.
+
+Assistance used: Added two sparse, low-opacity CSS particle layers that drift slowly behind landing content, with reduced-motion support. The treatment adapts the library’s Particle drift concept without adding JavaScript, assets, or runtime dependencies.
+
+Suggestions or code retained: Modified `public/assets/css/duno-ui.css`. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: `git diff --check` passed. The particle layer was checked in the local browser; automated tests were not run.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Authentication throttling and password recovery - 2026-11-02
+
+Allowed use confirmed by: The owner authorized implementation of endpoint throttling, account password recovery, and honeypot protection.
+
+Assistance used: Added endpoint and email-identifier request limits on top of Shield's existing auth IP limit; added a 15-minute, six-digit password-reset code flow that stores code hashes and sends email through the existing CodeIgniter mail configuration; enabled the framework honeypot globally; updated the login view, privacy notice, requirement traceability, and deployment notes.
+
+Suggestions or code retained: Added the password reset code migration/model, recovery controller and views, auth abuse filter, email template, and a phpMyAdmin SQL upgrade script. Existing registration verification caps and Shield password validators remain in place.
+
+Student changes and decisions: The owner chose recommendations 1, 3, and 4. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: PHP lint passed for all changed PHP files; `spark routes` listed the login, registration, forgot-password, and reset-password endpoints with the auth-abuse and honeypot filters; `git diff --check` passed. On 2026-11-02 the focused authentication suite passed 8 tests / 64 assertions and the full local PHPUnit suite passed 118 tests / 1,275 assertions using SQLite `:memory:`. The test work corrected Shield-invalid hyphenated usernames, isolated throttler cache state, and aligned one homepage assertion with the current “Meet the tools” copy. Browser interaction checks, mail delivery, cache persistence on the host, database migration on the host, and hosted behavior remain unverified. The local PHP invocation emitted a harmless warning that `intl` was already loaded by the local configuration.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Evaluation session preparation guide - 2026-11-02
+
+Allowed use confirmed by: The owner asked for remaining work to make Duno ready for testing and evaluation.
+
+Assistance used: Prepared a draft, repeatable session guide for student feature tasks and IT-professional review, with synthetic-account safeguards, per-task evidence capture, performance-run controls, and a Section 7 evidence checklist. Linked it from the testing evidence inventory and evaluation run sheet.
+
+Suggestions or code retained: Added `docs/academic-evidence/evaluation-session-guide.md` and cross-references in the testing evidence inventory and ISO/IEC 25010 run sheet. No application code, database, deployment, or evaluation result was changed. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the guide against the existing protocol, run sheet, and dated evidence inventory. `git diff --check` passed. No automated tests, participant sessions, live-host checks, or performance measurements were run. Participant materials, protocol, criteria, and handling of evidence remain pending owner/adviser approval.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+## Terms, privacy, and browser-storage notices - 2026-11-02
+
+Allowed use confirmed by: The owner asked to finalize the Terms and Conditions, Privacy Notice, and related notices, and confirmed the independent-project identity, contact address, and 18+ audience.
+
+Assistance used: Rewrote the user-facing notices to describe the owner-confirmed project identity and age eligibility, current account/study data categories, privacy request contact, in-app deletion, optional private check-ins, cookies/browser storage, and separate handling of academic evaluation. Kept unknown hosted mail-provider and log/backup retention details explicitly unverified. Added the adult-only decision to the approved SRS and evaluation guide.
+
+Suggestions or code retained: Updated `app/Controllers/Legal.php`, `app/Views/legal/page.php`, `docs/requirements.md`, and `docs/academic-evidence/evaluation-session-guide.md`. No database, deployment, or Git state was changed. Nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Read the NPC's official DPO guidance and data-subject-rights materials. `git diff --check` and PHP syntax checks were run; automated tests, outgoing-mail provider verification, host log/backup inspection, and legal review by an adviser were not performed. The owner remains responsible for confirming the lawful basis and any institutional/legal requirements.
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
