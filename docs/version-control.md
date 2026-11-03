@@ -4,7 +4,13 @@ The project owner reviews and accepts changes. Agents may edit and prepare revie
 
 ## Audited repository and release state
 
-Checked 2026-11-02:
+Checked 2026-11-03:
+
+- PR #26 (`release/duno-r25-evaluation`) merged to GitHub `main` as `8116628d53729a114078bda828fe12dc6d24457e`; the release branch source commit is `946ede9e127b84b417854b36fba7e553c3222891`. Their Git trees match.
+- The r25 package `build/duno-full-release-20261103-r25.zip` has 1,273 entries, 15,470,289 uncompressed bytes, and SHA-256 `F8F5D3D8ABAF845E48D0F8773751695E80E2B291D4801BE31A443D73AA53312F`. It was built from the merged tree, excludes `.env`, and requires no database migration. InfinityFree upload is pending owner sign-in; no live r25 marker or post-upload behavior has been verified.
+- The full local PHPUnit suite passed with 123 tests and 1,389 assertions. GitHub PHP CI run 46 passed. Composer audit could not reach Packagist; live browser checks remain pending.
+
+Historical release-state audit checked 2026-11-02:
 
 - GitHub `main` includes PR #23 merge `80e0a6a7366acb8d72a9b8c21b81fe715ca0cc84`, following PR #22. Local `main` still points at security remediation commit `88c5c19fdcadcbba898b2570ed73a9d880d6f6f0`; the current follow-up branch is `docs/r10-host-confirmation`.
 - On 2026-11-02, accumulated product work was merged as PR #21, security remediations and r10 preparation as PR #22, and release-state records as PR #23. The owner reports r10 uploaded and supplied its marker; phpMyAdmin output confirms both new migration rows and schemas. Full hosted-file parity and post-upload smoke checks remain unverified.

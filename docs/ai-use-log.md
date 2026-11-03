@@ -3551,3 +3551,15 @@ Suggestions or code retained: Updated `app/Config/Routes.php`, `app/Controllers/
 How the student verified and can explain the result: On 2026-11-03, the full PHPUnit suite passed (123 tests, 1,389 assertions), including the selected-date Plan case. PHP and JavaScript syntax checks, manifest JSON parsing, and `git diff --check` passed. Physical phone and hosted Plan behavior remain unverified until post-upload smoke-check.
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## r25 evaluation release packaging - 2026-11-03
+
+Allowed use confirmed by: The owner explicitly asked to stage, commit, merge, package, and upload the accumulated uncommitted changes.
+
+Assistance used: Combined the mobile Plan fix, temporary shared-IP auth limits, and offline-retry correction in `release/duno-r25-evaluation`; committed source as `946ede9e127b84b417854b36fba7e553c3222891`. PR #26 passed GitHub PHP CI run 46 and merged to `main` as `8116628d53729a114078bda828fe12dc6d24457e`. Built and inspected `build/duno-full-release-20261103-r25.zip`: 1,273 entries, 15,470,289 uncompressed bytes, SHA-256 `F8F5D3D8ABAF845E48D0F8773751695E80E2B291D4801BE31A443D73AA53312F`; no `.env`, no missing required release files, and no nonportable archive paths. No database migration was included.
+
+Suggestions or code retained: Source changes are in merged `main`; the package remains local and is not uploaded yet. The owner must sign in to the InfinityFree dashboard before File Manager access. No credentials were entered or transmitted.
+
+How the student verified and can explain the result: The full PHPUnit suite passed (123 tests, 1,389 assertions); changed PHP/JavaScript syntax checks, manifest JSON parsing, and `git diff --check` passed. Composer audit could not connect to Packagist. The InfinityFree dashboard redirected Edge to its sign-in page, so the upload and all post-upload smoke checks remain pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
