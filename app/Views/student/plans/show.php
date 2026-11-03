@@ -14,21 +14,20 @@ $formatPlanTime = static function (mixed $time): string {
 };
 $displayStartTime = $formatPlanTime($startTime);
 $displayAgendaTime = $formatPlanTime($agendaDefaultTime);
+$planUrlForDate = static fn (string $date): string => site_url('student/plan/date/' . rawurlencode($date));
 ?>
 <h1>Duno Plan</h1>
 <p class="muted plan-desktop-intro">Plan for today · <?= esc($today) ?>. Blocks follow topic priority; adjust, move, or remove them.</p>
 
 <section class="plan-mobile-agenda" aria-labelledby="agenda-heading" data-plan-agenda>
-    <?php $selectedWeekIndex = array_search(true, array_column($weekDays, 'selected'), true); ?>
     <header class="plan-agenda-header">
         <div><p class="workspace-kicker">DUNO PLAN</p><h2 id="agenda-heading"><?= esc($selectedDateLabel) ?></h2></div>
         <button class="plan-agenda-add" type="button" data-agenda-open<?= $topicOptions === [] ? ' disabled' : '' ?> aria-haspopup="dialog" aria-controls="agenda-add-sheet"><span aria-hidden="true">+</span><span>Add block</span></button>
     </header>
-    <div class="plan-agenda-week-heading"><a href="<?= esc(site_url('student/plan?date=' . $previousWeekDate)) ?>" aria-label="Previous week">‹</a><strong><?= esc($weekLabel) ?></strong><a href="<?= esc(site_url('student/plan?date=' . $nextWeekDate)) ?>" aria-label="Next week">›</a></div>
+    <div class="plan-agenda-week-heading"><a href="<?= esc($planUrlForDate($previousWeekDate)) ?>" aria-label="Previous week">‹</a><strong><?= esc($weekLabel) ?></strong><a href="<?= esc($planUrlForDate($nextWeekDate)) ?>" aria-label="Next week">›</a></div>
     <nav class="plan-agenda-week" aria-label="Days of the week">
-        <span class="plan-agenda-selected-pill" style="--selected-day: <?= esc((string) ($selectedWeekIndex === false ? 0 : $selectedWeekIndex)) ?>" aria-hidden="true"></span>
         <?php foreach ($weekDays as $day): ?>
-            <a class="plan-agenda-day<?= $day['selected'] ? ' is-selected' : '' ?><?= $day['today'] ? ' is-today' : '' ?>" href="<?= esc(site_url('student/plan?date=' . $day['date'])) ?>"<?= $day['today'] ? ' aria-current="date"' : '' ?><?= $day['selected'] ? ' aria-label="' . esc($day['weekday'] . ', ' . $day['date'] . ', selected') . '"' : ' aria-label="' . esc($day['weekday'] . ', ' . $day['date']) . '"' ?>>
+            <a class="plan-agenda-day<?= $day['selected'] ? ' is-selected' : '' ?><?= $day['today'] ? ' is-today' : '' ?>" href="<?= esc($planUrlForDate($day['date'])) ?>"<?= $day['today'] ? ' aria-current="date"' : '' ?><?= $day['selected'] ? ' aria-label="' . esc($day['weekday'] . ', ' . $day['date'] . ', selected') . '"' : ' aria-label="' . esc($day['weekday'] . ', ' . $day['date']) . '"' ?>>
                 <span><?= esc($day['weekday']) ?></span><strong><?= esc($day['day']) ?></strong><i class="plan-agenda-dots" aria-hidden="true"><?php for ($dot = 0; $dot < min(3, $day['count']); $dot++): ?><b></b><?php endfor ?></i>
             </a>
         <?php endforeach ?>

@@ -1,6 +1,6 @@
 /* Duno keeps a small cache of public static files only. */
 const CACHE_PREFIX = 'duno-public-static-';
-const CACHE_NAME = `${CACHE_PREFIX}20261102-guide-r21`;
+const CACHE_NAME = `${CACHE_PREFIX}20261103-mobile-plan-offline-r25`;
 const APP_BASE = new URL('./', self.location.href);
 const OFFLINE_PAGE = new URL('offline.html', APP_BASE);
 const PRECACHE_URLS = [

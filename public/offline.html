@@ -35,8 +35,8 @@
     <img src="./assets/images/duno-pwa-icon-192.png" width="192" height="192" alt="">
     <p class="overline">duno. · Your Little Study Buddy.</p>
     <p class="connection-status" id="connection-status" role="status" aria-live="polite" data-state="offline">No internet connection</p>
-    <h1>You're offline right now.</h1>
-    <p>Your account and saved study data need an internet connection. Duno does not save changes while you are offline.</p>
+    <h1>Duno couldn't connect.</h1>
+    <p>Your account and saved study data need an internet connection. Wi-Fi can be connected while Duno or the internet is temporarily unreachable. Duno does not save changes offline.</p>
     <button type="button" id="retry-connection">Try again</button>
     <p class="note">This page and selected public design files are available offline. Your study pages and records are not stored on this device for offline use.</p>
 </main>
@@ -44,28 +44,60 @@
     const retryButton = document.getElementById('retry-connection');
     const connectionStatus = document.getElementById('connection-status');
 
-    function showOffline() {
+    let isChecking = false;
+
+    function showOffline(message = 'No internet connection') {
         connectionStatus.dataset.state = 'offline';
-        connectionStatus.textContent = 'No internet connection';
+        connectionStatus.textContent = message;
+        retryButton.disabled = false;
+        retryButton.textContent = 'Try again';
     }
 
-    window.addEventListener('offline', showOffline);
-    window.addEventListener('online', () => {
-        connectionStatus.dataset.state = 'online';
-        connectionStatus.textContent = 'Connection restored. Reopening Duno…';
+    async function checkDunoConnection() {
+        if (isChecking) return;
+        isChecking = true;
         retryButton.disabled = true;
-        retryButton.textContent = 'Reopening Duno…';
-        window.setTimeout(() => window.location.reload(), 700);
-    });
+        retryButton.textContent = 'Checking Duno...';
+        connectionStatus.dataset.state = 'offline';
+        connectionStatus.textContent = 'Checking your connection to Duno...';
 
-    retryButton.addEventListener('click', () => {
-        retryButton.disabled = true;
-        retryButton.textContent = 'Checking connection…';
-        window.setTimeout(() => window.location.reload(), 120);
-    });
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 10000);
+
+        try {
+            // navigator.onLine only reports a network link, not reachability of Duno.
+            const response = await fetch(new URL('./', window.location.href), {
+                method: 'GET',
+                cache: 'no-store',
+                credentials: 'same-origin',
+                redirect: 'follow',
+                signal: controller.signal,
+            });
+            if (!response.ok) {
+                throw new Error(`Duno returned HTTP ${response.status}`);
+            }
+
+            connectionStatus.dataset.state = 'online';
+            connectionStatus.textContent = 'Duno is reachable. Reopening your page...';
+            retryButton.textContent = 'Reopening Duno...';
+            window.setTimeout(() => window.location.reload(), 250);
+        } catch {
+            showOffline(navigator.onLine
+                ? 'Wi-Fi is connected, but Duno could not be reached. Check internet access and try again.'
+                : 'No internet connection. Connect, then try again.');
+            isChecking = false;
+        } finally {
+            window.clearTimeout(timeout);
+        }
+    }
+
+    window.addEventListener('offline', () => showOffline());
+    window.addEventListener('online', checkDunoConnection);
+
+    retryButton.addEventListener('click', checkDunoConnection);
 
     if (navigator.onLine) {
-        connectionStatus.textContent = 'Connection may be available. Tap Try again.';
+        checkDunoConnection();
     }
 </script>
 </body>

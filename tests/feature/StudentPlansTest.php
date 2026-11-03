@@ -322,11 +322,48 @@ final class StudentPlansTest extends CIUnitTestCase
         }
         $this->authenticateAs($student);
 
-        $page = $this->getAuthenticated('student/plan?date=' . $selectedDate);
+        $page = $this->getAuthenticated('student/plan/date/' . $selectedDate);
         $page->assertOK();
+        $selectedLabel = (new DateTimeImmutable($selectedDate))->format('l, F j');
+        $this->assertStringContainsString('id="agenda-heading">' . $selectedLabel . '</h2>', $page->getBody());
         $this->assertStringContainsString('value="10:30 AM"', $page->getBody());
     }
 
+    public function testMobileAgendaCanNavigateAddAndMarkDoneOnASelectedDate(): void
+    {
+        $student = $this->createUser('agenda-selected-date', 'student');
+        $subjectId = $this->createSubject((int) $student->id, 'Biology');
+        $topicId = $this->insertTopic($subjectId, 'Cell structure', 'high', 'not_started');
+        $selectedDate = (new DateTimeImmutable($this->today()))->modify('+2 days')->format('Y-m-d');
+        $this->authenticateAs($student);
+
+        $page = $this->getAuthenticated('student/plan/date/' . $selectedDate);
+        $page->assertOK();
+        $selectedLabel = (new DateTimeImmutable($selectedDate))->format('l, F j');
+        $this->assertStringContainsString('id="agenda-heading">' . $selectedLabel . '</h2>', $page->getBody());
+        $this->assertStringContainsString('href="' . site_url('student/plan/date/' . $selectedDate) . '"', $page->getBody());
+        $this->assertStringContainsString('name="plan_date" value="' . $selectedDate . '"', $page->getBody());
+
+        $this->postAuthenticated('student/plan/items', [
+            'plan_date' => $selectedDate,
+            'agenda_item' => 'topic-' . $topicId,
+            'duration_minutes' => '25',
+            'start_time' => '9:00 AM',
+            'available_hours' => '1',
+            'available_remainder_minutes' => '0',
+        ])->assertRedirect();
+
+        $plan = (new StudyPlanModel())->findForOwnerDate((int) $student->id, $selectedDate);
+        $this->assertIsArray($plan);
+        $this->assertCount(1, $plan['items']);
+        $itemId = (int) $plan['items'][0]['id'];
+
+        $this->postAuthenticated('student/plan/items/' . $itemId . '/progress', [
+            'plan_date' => $selectedDate,
+            'done' => '1',
+        ])->assertRedirect();
+        $this->assertSame('done', (new TopicModel())->find($topicId)['progress']);
+    }
     private function planFor(int $ownerId): array
     {
         $plan = (new StudyPlanModel())->findForOwnerDate($ownerId, $this->today());

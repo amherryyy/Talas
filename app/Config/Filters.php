@@ -4,6 +4,7 @@ namespace Config;
 
 use App\Filters\ExclusiveRoleFilter;
 use App\Filters\AuthAbuseProtectionFilter;
+use App\Filters\AuthPageRateFilter;
 use App\Filters\DunoSecurityHeadersFilter;
 use App\Filters\ExpiredRegistrationCleanupFilter;
 use App\Filters\LanguagePreferenceFilter;
@@ -50,6 +51,7 @@ class Filters extends BaseFilters
         'expired-registration-cleanup' => ExpiredRegistrationCleanupFilter::class,
         'registration-consent' => RegistrationConsentFilter::class,
         'auth-abuse' => AuthAbuseProtectionFilter::class,
+        'auth-page-rates' => AuthPageRateFilter::class,
     ];
 
     /**

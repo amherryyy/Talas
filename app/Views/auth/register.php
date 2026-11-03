@@ -42,18 +42,18 @@
                     <input type="password" class="form-control" id="register-password-confirm" name="password_confirm" autocomplete="new-password" required>
                 </div>
 
-                <div class="registration-consent mb-4">
+                <label class="registration-consent mb-4" for="terms-privacy-consent">
                     <input class="registration-consent-checkbox" type="checkbox" id="terms-privacy-consent" name="terms_privacy_consent" value="1" required<?= old('terms_privacy_consent') === '1' ? ' checked' : '' ?>>
-                    <div class="registration-consent-copy">
-                        <label class="registration-consent-label" for="terms-privacy-consent">
+                    <span class="registration-consent-copy">
+                        <span class="registration-consent-label">
                             <?= esc(lang('App.registrationConsentLead')) ?>
                             <a href="<?= esc(url_to('legal.terms')) ?>" target="_blank" rel="noopener noreferrer"><?= esc(lang('App.termsAndConditions')) ?></a>
                             <?= esc(lang('App.registrationConsentJoin')) ?>
                             <a href="<?= esc(url_to('legal.privacy')) ?>" target="_blank" rel="noopener noreferrer"><?= esc(lang('App.privacyNotice')) ?></a>.
                             <span class="registration-adult-confirmation"><?= esc(lang('App.registrationAdultConfirmation')) ?></span>
-                        </label>
-                    </div>
-                </div>
+                        </span>
+                    </span>
+                </label>
 
                 <div class="d-grid col-12 col-md-9 mx-auto mb-3">
                     <button type="submit" class="btn btn-primary"><?= lang('Auth.register') ?></button>

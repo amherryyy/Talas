@@ -12,6 +12,30 @@ How the student verified and can explain the result: The visual treatment uses t
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
 
+## Mobile registration consent checkbox follow-up - 2026-11-02
+
+Allowed use confirmed by: The owner reported that the consent checkbox remained invisible after uploading r22 and asked to resolve the issue.
+
+Assistance used: Inspected the repository state and the hosted registration HTML and Duno stylesheet in Brave. The hosted source contained the required checkbox input and the r22 selector; the phone screenshot still showed no visible control. Found that the service-worker cache identifier was still `20261102-guide-r21` while the release marker was r22. Updated the checkbox to draw unchecked and checked states explicitly with CSS while retaining the real required checkbox input and visible focus indicator, advanced the service-worker cache identifier, and set the candidate release marker to r23.
+
+Suggestions or code retained: Updated `public/assets/css/duno-ui.css`, `public/sw.js`, `public/assets/release-version.txt`, `docs/deployment.md`, and this AI-use log. Built `build/duno-full-release-20261102-r23.zip` from the r22 release staging tree with the follow-up assets replaced. No database records, hosting settings, or Git state were changed. Nothing was staged, committed, or uploaded.
+
+How the student verified and can explain the result: Confirmed the live page source and stylesheet contain the checkbox markup and r22 rules and inspected the local r22-era service-worker cache identifier; reviewed the local CSS and release invalidation changes and Git diff. Validated the r23 ZIP has 1,272 entries, includes `.htaccess`, CSS and service-worker updates and the r23 marker, excludes `.env`, and uses forward-slash ZIP paths. The r23 candidate has not been uploaded or tested on a physical phone, so the live mobile result remains unverified.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Mobile registration consent checkbox visibility - 2026-11-02
+
+Allowed use confirmed by: The owner asked to resolve the mobile registration issue where the required Terms and Privacy Notice / 18+ checkbox was not visible.
+
+Assistance used: Updated the registration consent control to use a wrapping label, retain a native browser checkbox with an explicit mobile-safe size and accent color, and make the entire consent card tappable.
+
+Suggestions or code retained: Changed `app/Views/auth/register.php` and the registration-consent rules in `public/assets/css/duno-ui.css`. No database, configuration, or deployment setting was changed. The work is on branch `fix/mobile-registration-consent-checkbox`; nothing was staged, committed, pushed, merged, packaged, or uploaded.
+
+How the student verified and can explain the result: Reviewed the source diff and confirmed `git diff --check` passes. Automated tests and a mobile browser check were not run. The fix must be included in a reviewed release and checked on the affected phone after upload; no live service was accessed.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
 ## Duno Guide progressive disclosure — 2026-11-02
 
 Allowed use confirmed by: The owner asked to hide method links and research sources initially because the Guide felt text-heavy, and to reveal detailed explanations on demand.
@@ -3489,5 +3513,41 @@ Assistance used: Committed the reviewed change set as `4e184fa30f3baefd16c11976b
 Suggestions or code retained: Updated deployment and local package provenance records. No database migration was applied. No Git push, pull request, or merge was performed.
 
 How the student verified and can explain the result: Live marker response matched the archive marker. Archive SHA-256: `42076C1C47B4EF55B1C2BA7A8732062CFD735AAF0460E73A2AFFBD5A1201C3EC`. The UI Playwright check remains unavailable because the Windows worker failed with `EPERM`; manual responsive evaluation and functional acceptance remain pending.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Temporary shared-IP auth limits for evaluation - 2026-11-02
+
+Allowed use confirmed by: The owner asked what would reduce rate-limit lockouts for evaluation users sharing a mobile-carrier or Wi-Fi public IP, then approved applying the recommended temporary evaluation profile.
+
+Assistance used: Replaced Shield's fixed 10-auth-page-requests-per-minute filter on Duno auth routes with an application filter capped at 60 requests per minute per IP. Raised endpoint IP limits to 30 login submissions per 5 minutes, 30 registrations per hour, 20 recovery requests per hour, and 30 reset submissions per hour. Kept the existing per-email caps and all verification-code expiry, attempt, resend cooldown, and daily-send controls unchanged. Marked the higher IP limits as temporary in the approved SRS requirement.
+
+Suggestions or code retained: Added `app/Filters/AuthPageRateFilter.php`, registered it in `app/Config/Filters.php`, routed auth endpoints through it in `app/Config/Routes.php`, and adjusted IP capacities in `app/Filters/AuthAbuseProtectionFilter.php`. Updated `docs/requirements.md` and this log. No database, deployment settings, release marker, or hosting state was changed. Nothing was staged, committed, packaged, or uploaded.
+
+How the student verified and can explain the result: On 2026-11-03, the full PHPUnit suite passed (123 tests, 1,389 assertions), including authentication flows through the new page-rate filter. All PHP files under `app`, `public`, and `tests` passed `php -l`. The rate thresholds were inspected in source. Browser and hosted throttling behavior remain unverified; the per-IP thresholds are temporary for evaluation and should be reviewed afterward.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Offline recovery retry diagnosis - 2026-11-02
+
+Allowed use confirmed by: The owner reported that a tester continued seeing the offline recovery page despite having Wi-Fi access.
+
+Assistance used: Updated the offline recovery copy to distinguish a connected Wi-Fi link from actual Duno reachability. The page now probes the requested URL without using the browser cache, limits the probe to ten seconds, reloads when Duno responds, and keeps the retry control available with a clearer message when the request fails. Advanced the service-worker cache identifier and local candidate marker to r24 so the updated offline page can replace cached copies.
+
+Suggestions or code retained: Updated `public/offline.html`, `public/sw.js`, `public/assets/release-version.txt`, `docs/deployment.md`, and this AI-use log. No database, hosting setting, or Git state was changed. Nothing was staged, committed, packaged, or uploaded.
+
+How the student verified and can explain the result: On 2026-11-03, the full PHPUnit suite passed (123 tests, 1,389 assertions), PHP syntax checks passed, `node --check public/sw.js` passed, and `git diff --check` passed. Reviewed that retry now probes the app root and requires a successful HTTP status. Browser offline/reconnect behavior and hosted behavior remain unverified until smoke-checked after upload.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Mobile Plan date navigation and progress - 2026-11-03
+
+Allowed use confirmed by: The owner reported that mobile Plan dates besides today could not be selected, blocks could not be marked done, and requested that the issue be resolved.
+
+Assistance used: Changed mobile Plan date links and redirects to an explicit `student/plan/date/YYYY-MM-DD` route after the owner supplied a query-style hosting URL (`index.php?/student/plan?date=...`). The controller reads the path date. Removed the animated selected-day overlay, increased the progress-checkbox touch target, and captured form data before disabling the checkbox so the checked state is submitted. Added the recommended `mobile-web-app-capable` meta tag. No schema change was made.
+
+Suggestions or code retained: Updated `app/Config/Routes.php`, `app/Controllers/Student/Plans.php`, `app/Views/partials/pwa_head.php`, `app/Views/student/plans/show.php`, `public/assets/css/duno-ui.css`, `public/assets/js/plan-agenda.js`, `tests/feature/StudentPlansTest.php`, and this story. Changes are included in `release/duno-r25-evaluation`. They have not been deployed.
+
+How the student verified and can explain the result: On 2026-11-03, the full PHPUnit suite passed (123 tests, 1,389 assertions), including the selected-date Plan case. PHP and JavaScript syntax checks, manifest JSON parsing, and `git diff --check` passed. Physical phone and hosted Plan behavior remain unverified until post-upload smoke-check.
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
