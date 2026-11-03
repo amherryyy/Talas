@@ -16,13 +16,15 @@ use DateTimeZone;
 
 class Plans extends BaseController
 {
-    public function show(): string
+    public function show(?string $dateFromPath = null): string
     {
         $ownerId = $this->ownerId();
         $program = $this->currentAcademicProgram();
         $curriculumId = $program['curriculum_id'];
         $today = $this->today();
-        $selectedDate = $this->validDate($this->request->getGet('date')) ?? $today;
+        $selectedDate = $this->validDate($dateFromPath)
+            ?? $this->validDate($this->request->getGet('date'))
+            ?? $today;
         $selectedDay = new DateTimeImmutable($selectedDate, new DateTimeZone(config('App')->appTimezone));
         $weekStart = $selectedDay->modify('monday this week');
         $weekEnd = $weekStart->modify('+6 days');
@@ -348,7 +350,7 @@ class Plans extends BaseController
 
     private function planUrl(string $date): string
     {
-        return site_url('student/plan') . '?date=' . rawurlencode($date);
+        return site_url('student/plan/date/' . rawurlencode($date));
     }
 
     private function requestedAvailableMinutes(): ?int

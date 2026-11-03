@@ -11,7 +11,7 @@ $routes->get('privacy', 'Legal::privacy', ['as' => 'legal.privacy']);
 $routes->get('cookies', 'Legal::cookies', ['as' => 'legal.cookies']);
 $routes->post('language', 'LanguagePreference::update', ['as' => 'language.update']);
 
-$routes->group('/', ['filter' => ['auth-rates', 'auth-abuse']], static function (RouteCollection $routes): void {
+$routes->group('/', ['filter' => ['auth-page-rates', 'auth-abuse']], static function (RouteCollection $routes): void {
     service('auth')->routes($routes, ['only' => ['register', 'login', 'auth-actions']]);
     $routes->get('admin-sign-in', '\\CodeIgniter\\Shield\\Controllers\\LoginController::loginView', ['as' => 'admin.login']);
     $routes->post('auth/a/resend-registration-code', 'RegistrationRecovery::resend', ['as' => 'auth-registration-resend']);
@@ -47,6 +47,7 @@ $routes->group('student', ['filter' => ['session', 'exclusive-role:student', 'st
     $routes->get('topics', 'Student\\Topics::all', ['as' => 'student.topics.all']);
     $routes->post('topics', 'Student\\Topics::all', ['as' => 'student.topics.filter']);
     $routes->get('priority', 'Student\\Topics::priority', ['as' => 'student.priority']);
+    $routes->get('plan/date/(:segment)', 'Student\\Plans::show/$1', ['as' => 'student.plan.date']);
     $routes->get('plan', 'Student\\Plans::show', ['as' => 'student.plan']);
     $routes->post('plan/generate', 'Student\\Plans::generate', ['as' => 'student.plan.generate']);
     $routes->post('plan/items', 'Student\\Plans::addBlock', ['as' => 'student.plan.items.add']);

@@ -9,7 +9,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 
-/** Adds short-lived, endpoint-specific limits on top of Shield's auth limit. */
+/** Adds endpoint-specific IP and identity limits to authentication submissions. */
 final class AuthAbuseProtectionFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
@@ -31,19 +31,19 @@ final class AuthAbuseProtectionFilter implements FilterInterface
 
         $limits = match (true) {
             $route === 'login' => [
-                ['login-ip:' . $ip, 8, 300],
+                ['login-ip:' . $ip, 30, 300],
                 ['login-identity:' . $identifier, 10, 900],
             ],
             $route === 'register' => [
-                ['register-ip:' . $ip, 5, 3600],
+                ['register-ip:' . $ip, 30, 3600],
                 ['register-identity:' . $identifier, 3, 3600],
             ],
             $route === 'forgot-password' => [
-                ['recovery-ip:' . $ip, 3, 3600],
+                ['recovery-ip:' . $ip, 20, 3600],
                 ['recovery-identity:' . $identifier, 3, 3600],
             ],
             $route === 'reset-password' => [
-                ['reset-ip:' . $ip, 10, 3600],
+                ['reset-ip:' . $ip, 30, 3600],
                 ['reset-identity:' . $identifier, 10, 3600],
             ],
             default => [],

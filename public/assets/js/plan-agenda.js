@@ -1,14 +1,14 @@
 (() => {
     const agenda = document.querySelector('[data-plan-agenda]');
     const sheet = document.querySelector('[data-agenda-sheet]');
-    if (!(agenda instanceof HTMLElement) || typeof HTMLDialogElement === 'undefined' || !(sheet instanceof HTMLDialogElement)) return;
+    if (!(agenda instanceof HTMLElement)) return;
 
     const openButton = agenda.querySelector('[data-agenda-open]');
-    const closeButtons = [...sheet.querySelectorAll('[data-agenda-close]')];
-    const firstField = sheet.querySelector('select, input:not([type="hidden"])');
-    const choice = sheet.querySelector('[data-agenda-choice]');
-    const duration = sheet.querySelector('#agenda-duration');
-    agenda.classList.add('is-enhanced');
+    const dialogSupported = typeof HTMLDialogElement !== 'undefined' && sheet instanceof HTMLDialogElement;
+    const closeButtons = dialogSupported ? [...sheet.querySelectorAll('[data-agenda-close]')] : [];
+    const firstField = dialogSupported ? sheet.querySelector('select, input:not([type="hidden"])') : null;
+    const choice = dialogSupported ? sheet.querySelector('[data-agenda-choice]') : null;
+    const duration = dialogSupported ? sheet.querySelector('#agenda-duration') : null;
 
     const refreshCsrfTokens = (csrf) => {
         if (!csrf?.name || !csrf?.hash) return;
@@ -24,12 +24,14 @@
         if (!(form instanceof HTMLFormElement)) return;
         const label = form.querySelector('label span');
         const previousProgress = form.dataset.progress === 'done' ? 'done' : 'in_progress';
+        // FormData must capture the checked value before the input is disabled.
+        const payload = new FormData(form);
         toggle.disabled = true;
         form.classList.add('is-saving');
         try {
             const response = await fetch(form.action, {
                 method: 'POST',
-                body: new FormData(form),
+                body: payload,
                 credentials: 'same-origin',
                 headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
             });
@@ -48,6 +50,9 @@
             form.classList.remove('is-saving');
         }
     });
+
+    if (!dialogSupported) return;
+    agenda.classList.add('is-enhanced');
 
     choice?.addEventListener('change', () => {
         const option = choice.selectedOptions[0];

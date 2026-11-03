@@ -1,7 +1,7 @@
 # Story: daily plan generation
 
 **Requirement:** F-07
-**Status:** Core plan generation was accepted by the owner on 2026-10-16. The owner reports the authenticated Plan journey review is complete with no current issue on 2026-10-25. The checklist-card follow-up was requested on 2026-10-29. The mobile agenda follow-up was approved on 2026-10-29; its tests and browser checks have not yet been run.
+**Status:** Core plan generation was accepted by the owner on 2026-10-16. The owner reports the authenticated Plan journey review is complete with no current issue on 2026-10-25. The checklist-card follow-up was requested on 2026-10-29. The mobile agenda follow-up was approved on 2026-10-29. Selected-date navigation, adding a block on a non-current date, and marking it done through the mobile form are covered by the feature suite; physical-device review remains pending.
 
 ## User story
 
@@ -49,3 +49,9 @@ The owner approved the mobile agenda adaptation on 2026-10-29. It uses `study_pl
 - With JavaScript enabled, the progress bar and completion badge update in place. With JavaScript disabled, the normal CSRF-protected form still updates the topic and reloads the Plan page.
 - Routes require student authorization and state changes require CSRF.
 - Keyboard and narrow-screen browser review covers generation and adjustments. The owner reports the authenticated Plan journey review is complete with no current issue on 2026-10-25. Playwright previously could not start a worker (`spawn EPERM`); no automated browser matrix was run for that attempt.
+
+## Mobile interaction reliability follow-up - 2026-11-03
+
+Mobile day links use an explicit `student/plan/date/YYYY-MM-DD` route. The deployed console showed query-style routing as `index.php?/student/plan?date=...`; a date path segment avoids relying on a second query parameter in that hosting mode. The controller reads the path date and all Plan redirects retain it. The animated selected-day overlay was removed; the selected color is applied directly to its link. The mobile progress handler builds its request data before disabling the checkbox, preserving the checked value, and its touch target is larger. Added the standard `mobile-web-app-capable` meta tag to remove the deprecated-meta warning. No schema change was made.
+
+Verification on 2026-11-03: the full PHPUnit suite passed (123 tests, 1,389 assertions) with coverage disabled, including the selected-date Plan case. Changed PHP files and JavaScript syntax checks, local manifest JSON parsing, and `git diff --check` passed. A live mobile browser or hosted response check remains pending; the production manifest response is unverified.
