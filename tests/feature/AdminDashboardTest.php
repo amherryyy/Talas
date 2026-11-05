@@ -157,6 +157,38 @@ final class AdminDashboardTest extends CIUnitTestCase
         $this->assertSame(10, $summary['monthly_registrations'][5]['value']);
     }
 
+    public function testAdminPlanningPatternsSummarizePlansWhenPrivacyThresholdIsMet(): void
+    {
+        for ($index = 1; $index <= 10; $index++) {
+            $student = $this->createUser('admin-planning-student-' . $index, ['student']);
+
+            if ($index > 5) {
+                continue;
+            }
+
+            $planId = $this->createPlan((int) $student->id, date('Y-m-d'));
+            db_connect()->table('study_plan_items')->insert([
+                'user_id' => (int) $student->id,
+                'plan_id' => $planId,
+                'topic_id' => null,
+                'topic_title' => 'Synthetic review topic',
+                'subject_name' => 'Synthetic subject',
+                'duration_minutes' => 25,
+                'position' => 1,
+                'start_time' => null,
+            ]);
+        }
+
+        $summary = (new AdminDashboardSummaryService())->summarize();
+
+        $this->assertSame(5, $summary['planning_patterns']['planner_count']);
+        $this->assertSame(50.0, $summary['planning_patterns']['coverage_percent']);
+        $this->assertSame(1.0, $summary['planning_patterns']['median_plan_days']);
+        $this->assertSame(25.0, $summary['planning_patterns']['median_planned_minutes']);
+        $this->assertSame(1.0, $summary['planning_patterns']['median_blocks_per_day']);
+        $this->assertSame(41.7, $summary['planning_patterns']['median_capacity_percent']);
+    }
+
     public function testStudentAndSignedOutVisitorsCannotAccessAdminDashboard(): void
     {
         $student = $this->createUser('admin-summary-denied', ['student']);

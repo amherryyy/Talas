@@ -3563,3 +3563,15 @@ Suggestions or code retained: Source changes are in merged `main`; the package r
 How the student verified and can explain the result: The full PHPUnit suite passed (123 tests, 1,389 assertions); changed PHP/JavaScript syntax checks, manifest JSON parsing, and `git diff --check` passed. Composer audit could not connect to Packagist. The InfinityFree dashboard redirected Edge to its sign-in page, so the upload and all post-upload smoke checks remain pending.
 
 Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.
+
+## Admin analytics planning-pattern 500 diagnosis - 2026-11-05
+
+Allowed use confirmed by: The owner supplied the hosted CodeIgniter application log and authorized a focused hotfix branch, staging, commit, and pull request.
+
+Assistance used: Traced `Undefined variable $array_map` in `AdminDashboardSummaryService::planningPatterns()` to an accidental variable prefix in the plan-days median calculation. Replaced it with PHP's `array_map()` function and added a feature regression test that exercises planning metrics when the aggregation privacy threshold is met. No hosted files, production data, or deployment settings were accessed or changed.
+
+Suggestions or code retained: The focused change is limited to `app/Services/AdminDashboardSummaryService.php` and `tests/feature/AdminDashboardTest.php`.
+
+How the student verified and can explain the result: The focused admin dashboard suite passed (5 tests, 60 assertions) on PHP 8.2.12 using the isolated SQLite test database; both modified PHP files passed syntax checks and `git diff --check`. The hosted fix still requires owner-reviewed deployment and a post-upload admin dashboard check.
+
+Disclosure location or requirement: This entry; the owner handles any course-specific disclosure requirements.

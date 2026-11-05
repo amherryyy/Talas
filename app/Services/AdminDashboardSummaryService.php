@@ -358,7 +358,7 @@ class AdminDashboardSummaryService
         return [
             'planner_count' => count($plannerIds),
             'coverage_percent' => $studentCount > 0 ? round((count($plannerIds) / $studentCount) * 100, 1) : null,
-            'median_plan_days' => $this->percentile($array_map('floatval', $planDays), 0.5),
+            'median_plan_days' => $this->percentile(array_map('floatval', $planDays), 0.5),
             'median_planned_minutes' => $this->percentile($plannedMinutesPerDay, 0.5),
             'median_blocks_per_day' => $this->percentile($blocksPerDay, 0.5),
             'median_capacity_percent' => $capacityPercent === []
